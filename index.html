@@ -18,7 +18,7 @@
       $(document).ready(function() {
         var wcWindow = new wcMainWindow($('body'));
         if (wcWindow) {
-          wcWindow.center().addItem($('<div style="text-align:center">Center Window</div>'), 0, 0);
+          wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>(Press spacebar)</div>'), 0, 0);
 
           wcWindow.newDockWidgetType('testA', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testA</div>'), 0, 0, 1, 2);
