@@ -20,7 +20,7 @@
         if (wcWindow) {
           wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>(Press spacebar)</div>'), 0, 0);
 
-          wcWindow.newDockWidgetType('testA', function(widget) {
+          wcWindow.registerDockWidgetType('testA', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testA</div>'), 0, 0, 1, 2);
             widget.layout().addItem($('<div style="text-align:center">top right</div>'), 1, 0);
             widget.layout().addItem($('<div style="text-align:center">bot left</div>'), 1, 1);
@@ -28,11 +28,11 @@
             widget.layout().addItem($('<div style="text-align:center;verticle-align:middle;height:999999px">v-stretch</div>'), 0, 3, 2);
           });
 
-          wcWindow.newDockWidgetType('testB', function(widget) {
+          wcWindow.registerDockWidgetType('testB', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testB</div>'), 0, 0);
           });
 
-          wcWindow.newDockWidgetType('testC', function(widget) {
+          wcWindow.registerDockWidgetType('testC', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testC</div>'), 0, 0, 0, 3);
             widget.layout().addItem($('<div style="text-align:center">top</div>'), 1, 0, 2);
             widget.layout().addItem($('<div style="text-align:center">x</div>'), 1, 1);
@@ -40,28 +40,28 @@
             widget.layout().addItem($('<div style="text-align:center">bottom</div>'), 1, 2, 2);
           });
 
-          wcWindow.newDockWidgetType('thin', function(widget) {
+          wcWindow.registerDockWidgetType('thin', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">thin</div>'), 0, 0);
             widget.size(100, 100);
           });
 
-          wcWindow.newDockWidgetType('testC split', function(widget) {
+          wcWindow.registerDockWidgetType('testC split', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testC split</div>'), 0, 0);
             widget.size(400, 100);
           });
 
-          wcWindow.newDockWidgetType('testA split', function(widget) {
+          wcWindow.registerDockWidgetType('testA split', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testA split</div>'), 0, 0);
             widget.size(100, 300);
             widget.minSize(200, 100);
           });
 
-          wcWindow.newDockWidgetType('center split', function(widget) {
+          wcWindow.registerDockWidgetType('center split', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">center split</div>'), 0, 0);
             widget.size(300, 300);
           });
 
-          wcWindow.newDockWidgetType('floater', function(widget) {
+          wcWindow.registerDockWidgetType('floater', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">floater</div>'), 0, 0);
             widget.size(600, 300);
           });

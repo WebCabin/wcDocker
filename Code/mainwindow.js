@@ -210,7 +210,7 @@ wcMainWindow.prototype = {
     __iterateParents.call(this, this._root);
   },
 
-  // Creates a new dock widget type.
+  // Registers a new dock widget type to be used later.
   // Params:
   //    name          The name for this new type.
   //    createFunc    The function that populates the contents of
@@ -220,7 +220,7 @@ wcMainWindow.prototype = {
   // Returns:
   //    true        The new type has been added successfully.
   //    false       Failure, the type name already exists.
-  newDockWidgetType: function(name, createFunc) {
+  registerDockWidgetType: function(name, createFunc) {
     for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
       if (this._dockWidgetTypeList[i].name === name) {
         return false;
