@@ -10,6 +10,16 @@ function wcFrameWidget($container, parent, isFloating) {
   this._curTab = -1;
   this._widgetList = [];
 
+  this._pos = {
+    x: 700,
+    y: 400,
+  };
+
+  this._size = {
+    x: 400,
+    y: 400,
+  };
+
   this._init();
 };
 
@@ -32,8 +42,15 @@ wcFrameWidget.prototype = {
     this.$center.css('top', '25px');
     this.$center.css('bottom', '0px');
 
-    if (this._curTab > -1 && this._curTab < this._widgetList.length) {
+    // Floating windows manage their own sizing.
+    if (this._isFloating) {
+      this.$frame.css('left', this._pos.x + 'px');
+      this.$frame.css('top', this._pos.y + 'px');
+      this.$frame.css('width', this._size.x + 'px');
+      this.$frame.css('height', this._size.y + 'px');
+    }
 
+    if (this._curTab > -1 && this._curTab < this._widgetList.length) {
       this._widgetList[this._curTab].update();
     }
   },
@@ -57,7 +74,7 @@ wcFrameWidget.prototype = {
   },
 
   // Gets the minimum size of the widget.
-  minSize: function(x, y) {
+  minSize: function() {
     var size = {
       x: -1,
       y: -1,
@@ -75,7 +92,7 @@ wcFrameWidget.prototype = {
   },
 
   // Gets the desired size of the widget.
-  maxSize: function(x, y) {
+  maxSize: function() {
     var size = {
       x: Infinity,
       y: Infinity,
@@ -115,7 +132,35 @@ wcFrameWidget.prototype = {
       this._curTab = 0;
       this._widgetList[this._curTab].layout().container(this.$center);
       this._widgetList[this._curTab].container(this.$center);
-      this._widgetList[this._curTab].parent(this);
+    }
+    this._widgetList[this._curTab].parent(this);
+
+    this._size = this.size();
+  },
+
+  // Remvoes a given widget from the tab item.
+  // Params:
+  //    widget      The widget to remove.
+  removeWidget: function(widget) {
+    for (var i = 0; i < this._widgetList.length; ++i) {
+      if (this._widgetList[i] === widget) {
+        if (this._curTab === i) {
+          this._curTab--;
+        }      
+
+        this._widgetList[i].layout().container(null);
+        this._widgetList[i].container(null);
+        this._widgetList[i].parent(null);
+
+        this._widgetList.splice(i, 1);
+        break;
+      }
+    }
+
+    if (this._curTab === -1 && this._widgetList.length) {
+      this._curTab = 0;
+      this._widgetList[this._curTab].layout().container(this.$center);
+      this._widgetList[this._curTab].container(this.$center);
     }
   },
 
@@ -130,6 +175,7 @@ wcFrameWidget.prototype = {
       return this.$container;
     }
 
+    this.$frame.remove();
     this.$container = $container;
     if (this.$container) {
       this.$container.append(this.$frame);
@@ -149,5 +195,19 @@ wcFrameWidget.prototype = {
 
     this._parent = parent;
     return this._parent;
+  },
+
+  // Disconnects and prepares this widget for destruction.
+  destroy: function() {
+    this._curTab = -1;
+    for (var i = 0; i < this._widgetList.length; ++i) {
+      this._widgetList[i].layout().container(null);
+      this._widgetList[i].container(null);
+      this._widgetList[i].parent(null);
+    }
+
+    this._widgetList = [];
+    this.container(null);
+    this.parent(null);
   },
 };

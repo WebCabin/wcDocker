@@ -61,26 +61,110 @@
             widget.size(300, 300);
           });
 
-          var testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
-          wcWindow.update();
+          wcWindow.newDockWidgetType('floater', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">floater</div>'), 0, 0);
+            widget.size(600, 300);
+          });
 
-          var testC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
-          wcWindow.update();
+          var testA, testB, testC, testASplit, testCSplit, floater;
+          var testIndex = 0;
+          $('body').keydown(function(event) {
+            switch (event.which) {
+              case ' '.charCodeAt(0):
 
-          wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, testA);
-          wcWindow.update();
+                switch (testIndex) {
+                  case 16:
+                    testIndex = 0;
 
-          wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, testC);
-          wcWindow.update();
+                  case 0:
+                    testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
+                    wcWindow.update();
+                    break;
 
-          wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
-          wcWindow.update();
+                  case 1:
+                    testC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
+                    wcWindow.update();
+                    break;
 
-          wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
-          wcWindow.update();
+                  case 2:
+                    testASplit = wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, testA);
+                    wcWindow.update();
+                    break;
 
-          wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
-          wcWindow.update();
+                  case 3:
+                    testCSplit = wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, testC);
+                    wcWindow.update();
+                    break;
+
+                  case 4:
+                    floater = wcWindow.addDockWidget('floater', wcGLOBALS.DOCK_LOC.FLOAT, false);
+                    wcWindow.update();
+                    break;
+
+                  case 5:
+                    testB = wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
+                    wcWindow.update();
+                    break;
+
+                  case 6:
+                    wcWindow.removeDockWidget(testA);
+                    wcWindow.update();
+                    break;
+
+                  case 7:
+                    thin = wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
+                    wcWindow.update();
+                    break;
+
+                  case 8:
+                    centerSplit = wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
+                    wcWindow.update();
+                    break;
+
+                  case 9:
+                    wcWindow.removeDockWidget(centerSplit);
+                    wcWindow.update();
+                    break;
+
+                  case 10:
+                    wcWindow.removeDockWidget(testCSplit);
+                    wcWindow.update();
+                    break;
+
+                  case 11:
+                    wcWindow.removeDockWidget(testC);
+                    wcWindow.update();
+                    break;
+
+                  case 12:
+                    wcWindow.removeDockWidget(thin);
+                    wcWindow.update();
+                    break;
+
+                  case 13:
+                    wcWindow.removeDockWidget(testASplit);
+                    wcWindow.update();
+                    break;
+
+                  case 14:
+                    wcWindow.removeDockWidget(testB);
+                    wcWindow.update();
+                    break;
+
+                  case 15:
+                    wcWindow.removeDockWidget(floater);
+                    wcWindow.update();
+                    break;
+                }
+
+                testIndex++;
+
+                event.stopPropagation();
+                event.preventDefault();
+                return false;
+                break;
+            }
+          });
         }
       });
     </script>

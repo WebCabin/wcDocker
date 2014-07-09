@@ -244,10 +244,68 @@ wcMainWindow.prototype = {
     return false;
   },
 
+  // Removes a dock widget from the window.
+  // Params:
+  //    widget        The widget to remove.
+  // Returns:
+  //    true          The widget was removed.
+  //    false         There was a problem.
+  removeDockWidget: function(widget) {
+    if (!widget) {
+      return false;
+    }
+
+    var parentFrame = widget.parent();
+    if (parentFrame instanceof wcFrameWidget) {
+      var parentSplitter = parentFrame.parent();
+      if (parentSplitter instanceof wcSplitter) {
+        var left  = parentSplitter.pane(0);
+        var right = parentSplitter.pane(1);
+        var other;
+        if (left === parentFrame) {
+          other = right;
+        } else {
+          other = left;
+        }
+
+        parent = parentSplitter.parent();
+        parentContainer = parentSplitter.container();
+        parentSplitter.destroy();
+        parentFrame.destroy();
+
+        if (parent instanceof wcSplitter) {
+          parent.removeChild(parentSplitter);
+          if (!parent.pane(0)) {
+            parent.pane(0, other);
+          } else if (!parent.pane(1)) {
+            parent.pane(1, other);
+          }
+        } else if (parent === this) {
+          this._root = other;
+          other.parent(this);
+          other.container(parentContainer);
+        }
+        return true;
+      } else if (parentSplitter === this) {
+        for (var i = 0; i < this._floatingList.length; ++i) {
+          if (this._floatingList[i] === parentFrame) {
+            this._floatingList.splice(i, 1);
+          }
+        }
+        parentFrame.destroy();
+      }
+    }
+    return false;
+  },
+
   // Updates the sizing of all widgets inside this window.
   update: function() {
     if (this._root) {
       this._root.update();
+    }
+
+    for (var i = 0; i < this._floatingList.length; ++i) {
+      this._floatingList[i].update();
     }
   },
 

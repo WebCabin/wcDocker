@@ -157,7 +157,7 @@ wcSplitter.prototype = {
   },
 
   // Gets the minimum size of the widget.
-  minSize: function(x, y) {
+  minSize: function() {
     // Splitters will only enforce a size if both panes contain a frame
     if (this._pane[0] && this._pane[0] instanceof wcFrameWidget &&
         this._pane[1] && this._pane[1] instanceof wcFrameWidget) {
@@ -175,7 +175,7 @@ wcSplitter.prototype = {
   },
 
   // Gets the desired size of the widget.
-  maxSize: function(x, y) {
+  maxSize: function() {
     // Splitters will only enforce a size if both panes contain a frame
     if (this._pane[0] && this._pane[0] instanceof wcFrameWidget &&
         this._pane[1] && this._pane[1] instanceof wcFrameWidget) {
@@ -190,6 +190,19 @@ wcSplitter.prototype = {
     }
 
     return false;
+  },
+
+  // Get, or Set a splitter position.
+  // Params:
+  //    pos           If supplied, assigns a new splitter percentage (0-1).
+  // Returns:
+  //    number        The current position.
+  pos: function(pos) {
+    if (typeof pos === 'undefined') {
+      return this._pos;
+    }
+    this._pos = pos;
+    return this._pos;
   },
 
   // Gets, or Sets a new container for this layout.
@@ -228,6 +241,24 @@ wcSplitter.prototype = {
     return this._parent;
   },
 
+  // Removes a child from this widget.
+  // Params:
+  //    child         The child to remove.
+  removeChild: function(child) {
+    if (this._pane[0] === child) {
+      this._pane[0] = false;
+    } else if (this._pane[1] === child) {
+      this._pane[1] = false;
+    } else {
+      return;
+    }
+ 
+    if (child) {
+      child.container(null);
+      child.parent(null);
+    }
+  },
+
   // Sets, or Gets the widget at a given pane
   // Params:
   //    index     The pane index, only 0 or 1 are valid.
@@ -255,7 +286,16 @@ wcSplitter.prototype = {
     return false;
   },
 
-  pos: function(pos) {
-    this._pos = pos;
+  // Disconnects and prepares this widget for destruction.
+  destroy: function() {
+    if (this._pane[0]) {
+      this._pane[0].container(null);
+    }
+    if (this._pane[1]) {
+      this._pane[1].container(null);
+    }
+
+    this.container(null);
+    this.parent(null);
   },
 };

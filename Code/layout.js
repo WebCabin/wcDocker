@@ -179,4 +179,10 @@ wcLayout.prototype = {
     this._parent = parent;
     return this._parent;
   },
+
+  // Removes a child from this widget.
+  // Params:
+  //    child         The child to remove.
+  removeChild: function(child) {
+  },
 };

@@ -21,6 +21,7 @@ html, body {
 
 .wcFloating {
   position: fixed;
+  z-index: 100;
 }
 
 .wcLayout, .wcLayout tr, .wcLayout td {
