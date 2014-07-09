@@ -1,0 +1,1 @@
+wcDocker (Web Cabin Docker) is a an experimental project intended as a framework for a docked window view.  You will be able to add as many docked windows as you wish, and users will be able to drag-drop and move them around at will.  Dock widgets can be grouped into multi-tabbed dock windows, or pulled outside as their own floating window.
