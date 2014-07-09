@@ -234,6 +234,10 @@ wcMainWindow.prototype = {
     return true;
   },
 
+  moveDockWidget: function(widget, location, allowGroup, parentWidget) {
+
+  },
+
   // Add a new dock widget to the window of a given type.
   // Params:
   //    typeName      The type of widget to create.

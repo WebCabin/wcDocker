@@ -8,7 +8,8 @@ function wcSplitter($container, parent, isHorizontal) {
 
   this._pane = [false, false];
   this.$pane = [];
-  this._pos = -1;
+  this.$bar;
+  this._pos;
 
   this._init();
 };
@@ -17,13 +18,16 @@ wcSplitter.prototype = {
   _init: function() {
     this.$pane.push($('<div class="wcLayoutPane">'));
     this.$pane.push($('<div class="wcLayoutPane">'));
+    this.$bar = $('<div class="wcSplitterBar">');
 
     if (this._horizontal) {
       this.$pane[0].addClass('wcTall');
       this.$pane[1].addClass('wcTall');
+      this.$bar.addClass('wcTall').addClass('wcSplitterBarV');
     } else {
       this.$pane[0].addClass('wcWide');
       this.$pane[1].addClass('wcWide');
+      this.$bar.addClass('wcWide').addClass('wcSplitterBarH');
     }
 
     this.container(this.$container);
@@ -52,8 +56,10 @@ wcSplitter.prototype = {
 
     if (pane > -1 && size) {
       if (this._horizontal) {
-        if (this._pos > -1) {
+        if (typeof this._pos !== 'undefined') {
           size.x = width * this._pos;
+        } else {
+          this.pos(size.x / width);
         }
 
         if (typeof this._pane[0].minSize === 'function') {
@@ -77,14 +83,17 @@ wcSplitter.prototype = {
           }
         }
 
+
         this.$pane[pane].css('width', size.x + 'px');
         if (pane === 0) {
+          this.$bar.css('left', size.x);
           this.$pane[0].css('left',  '0px');
           this.$pane[0].css('right', '');
           this.$pane[1].css('left',  '');
           this.$pane[1].css('right', '0px');
           this.$pane[1].css('width', width - size.x - 5 + 'px');
         } else {
+          this.$bar.css('right', size.x);
           this.$pane[1].css('left',  '');
           this.$pane[1].css('right', '0px');
           this.$pane[0].css('left',  '0px');
@@ -92,8 +101,10 @@ wcSplitter.prototype = {
           this.$pane[0].css('width', width - size.x - 5 + 'px');
         }
       } else {
-        if (this._pos > -1) {
+        if (typeof this._pos !== 'undefined') {
           size.y = height * this._pos;
+        } else {
+          this.pos(size.y / height);
         }
 
         if (typeof this._pane[0].minSize === 'function') {
@@ -119,12 +130,14 @@ wcSplitter.prototype = {
 
         this.$pane[pane].css('height', size.y + 'px');
         if (pane === 0) {
+          this.$bar.css('top', size.y);
           this.$pane[0].css('top',    '0px');
           this.$pane[0].css('bottom', '');
           this.$pane[1].css('top',    '');
           this.$pane[1].css('bottom', '0px');
           this.$pane[1].css('height', height - size.y - 5 + 'px');
         } else {
+          this.$bar.css('bottom', size.y);
           this.$pane[1].css('top',    '');
           this.$pane[1].css('bottom', '0px');
           this.$pane[0].css('top',    '0px');
@@ -218,11 +231,13 @@ wcSplitter.prototype = {
 
     this.$pane[0].remove();
     this.$pane[1].remove();
+    this.$bar.remove();
     this.$container = $container;
 
     if (this.$container) {
       this.$container.append(this.$pane[0]);
       this.$container.append(this.$pane[1]);
+      this.$container.append(this.$bar);
     }
     return this.$container;
   },

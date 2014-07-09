@@ -53,7 +53,7 @@ wcLayout.prototype = {
         if (item.$el) {
           if (!$row) {
             $row = $('<tr>');
-            $table.append($row);
+            this.$table.append($row);
           }
 
           $row.append(item.$el);
@@ -112,6 +112,11 @@ wcLayout.prototype = {
 
   // Updates the size of the layout.
   update: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    this.$table.css('width', width + 'px');
+    this.$table.css('height', height + 'px');
   },
 
   // Adds an item into the layout, expanding the grid

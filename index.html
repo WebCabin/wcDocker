@@ -25,7 +25,7 @@
             widget.layout().addItem($('<div style="text-align:center">top right</div>'), 1, 0);
             widget.layout().addItem($('<div style="text-align:center">bot left</div>'), 1, 1);
             widget.layout().addItem($('<div style="text-align:center">bottom</div>'), 0, 2, 2, 1);
-            widget.layout().addItem($('<div style="text-align:center;verticle-align:middle;height:999999px">v-stretch</div>'), 0, 3, 2);
+            widget.layout().addItem($('<div style="text-align:center;verticle-align:middle;height:1000px"></div>'), 0, 3, 2);
             widget.layout().grid(true);
           });
 
@@ -66,6 +66,16 @@
             widget.layout().addItem($('<div style="text-align:center">floater</div>'), 0, 0);
             widget.size(600, 300);
           });
+
+          testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
+          testC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
+          testASplit = wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, testA);
+          testCSplit = wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, testC);
+          floater = wcWindow.addDockWidget('floater', wcGLOBALS.DOCK_LOC.FLOAT, false);
+          testB = wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
+          thin = wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
+          centerSplit = wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
+          wcWindow.update();
 
           var testA, testB, testC, testASplit, testCSplit, floater;
           var testIndex = 0;

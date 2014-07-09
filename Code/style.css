@@ -22,16 +22,18 @@ html, body {
 }
 
 .wcFrameTitle {
+  margin-top: 3px;
+  margin-left: 5px;
 }
 
 .wcFrameClose {
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
   top: 0px;
   right: 0px;
   position: absolute;
   border: 3px outset #444444;
-  font-size: 20px;
+  font-size: 16px;
   cursor: pointer;
   text-align: center;
 
@@ -50,8 +52,7 @@ html, body {
 
 .wcFrameCenter {
   border-top: 1px solid black;
-
-  position: absolute;
+  overflow: hidden;
 }
 
 .wcFloating {
@@ -66,6 +67,13 @@ html, body {
   background-color: transparent;
 }
 
+.wcLayout {
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+}
+
 .wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
   border: 1px dashed #555555;
 }
@@ -76,6 +84,22 @@ html, body {
 
 .wcTall {
   height: 100%;
+}
+
+.wcSplitterBar {
+  position: absolute;
+  /*border: 2px outset #888888;*/
+  /*background-color: gray;*/
+}
+
+.wcSplitterBarV {
+  width: 6px;
+  cursor: e-resize;
+}
+
+.wcSplitterBarH {
+  height: 6px;
+  cursor: s-resize;
 }
 
 .wcLayoutPane {
