@@ -27,7 +27,7 @@ wcFrameWidget.prototype = {
   _init: function() {
     this.$frame = $('<div class="wcFrameWidget wcWide wcTall">');
     this.$title = $('<div class="wcFrameTitle wcWide">');
-    this.$close = $('<button class="wcFrameClose">X</button>');
+    this.$close = $('<div class="wcFrameClose">X</div>');
     this.$center = $('<div class="wcFrameCenter wcWide">');
     this.$frame.append(this.$title);
     this.$frame.append(this.$close);
