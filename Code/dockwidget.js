@@ -14,8 +14,8 @@ function wcDockWidget($container, parent) {
   };
 
   this._minSize = {
-    x: Infinity,
-    y: Infinity,
+    x: 0,
+    y: 0,
   };
 
   this._maxSize = {

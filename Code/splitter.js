@@ -56,11 +56,25 @@ wcSplitter.prototype = {
           size.x = width * this._pos;
         }
 
-        if (size.x > width) {
-          size.x = Math.max(this._pane[0].minSize().x, size.x);
-          size.x = Math.max(this._pane[1].minSize().x, size.x);
-          size.x = Math.min(this._pane[0].maxSize().x, size.x);
-          size.x = Math.min(this._pane[1].maxSize().x, size.x);
+        if (typeof this._pane[0].minSize === 'function') {
+          var minSize = this._pane[0].minSize();
+          if (minSize) {
+            size.x = Math.max(minSize.x, size.x);
+          }
+          var maxSize = this._pane[0].maxSize();
+          if (maxSize) {
+            size.x = Math.min(maxSize.x, size.x);
+          }
+        }
+        if (typeof this._pane[1].minSize === 'function') {
+          var minSize = this._pane[1].minSize();
+          if (minSize) {
+            size.x = Math.max(minSize.x, size.x);
+          }
+          var maxSize = this._pane[1].maxSize();
+          if (maxSize) {
+            size.x = Math.min(maxSize.x, size.x);
+          }
         }
 
         this.$pane[pane].css('width', size.x + 'px');
@@ -82,11 +96,25 @@ wcSplitter.prototype = {
           size.y = height * this._pos;
         }
 
-        if (size.y > height) {
-          size.y = Math.max(this._pane[0].minSize().y, size.y);
-          size.y = Math.max(this._pane[1].minSize().y, size.y);
-          size.y = Math.min(this._pane[0].maxSize().y, size.y);
-          size.y = Math.min(this._pane[1].maxSize().y, size.y);
+        if (typeof this._pane[0].minSize === 'function') {
+          var minSize = this._pane[0].minSize();
+          if (minSize) {
+            size.y = Math.max(minSize.y, size.y);
+          }
+          var maxSize = this._pane[0].maxSize();
+          if (maxSize) {
+            size.y = Math.min(maxSize.y, size.y);
+          }
+        }
+        if (typeof this._pane[1].minSize === 'function') {
+          var minSize = this._pane[1].minSize();
+          if (minSize) {
+            size.y = Math.max(minSize.y, size.y);
+          }
+          var maxSize = this._pane[1].maxSize();
+          if (maxSize) {
+            size.y = Math.min(maxSize.y, size.y);
+          }
         }
 
         this.$pane[pane].css('height', size.y + 'px');
@@ -130,38 +158,38 @@ wcSplitter.prototype = {
 
   // Gets the minimum size of the widget.
   minSize: function(x, y) {
-    var size = {
-      x: -1,
-      y: -1,
-    };
-
-    for (var i = 0; i < this._widgetList.length; ++i) {
-      if (size.x === -1 || size.x > this._widgetList[i].minSize().x) {
-        size.x = this._widgetList[i].minSize().x;
+    // Splitters will only enforce a size if both panes contain a frame
+    if (this._pane[0] && this._pane[0] instanceof wcFrameWidget &&
+        this._pane[1] && this._pane[1] instanceof wcFrameWidget) {
+      var size = this._pane[1].minSize();
+      if (!size) {
+        size = this._pane[0].minSize();
+      } else if (this._pane[0].minSize()) {
+        size.x = Math.max(this._pane[0].minSize().x, size.x);
+        size.y = Math.max(this._pane[0].minSize().y, size.y);
       }
-      if (size.y === -1 || size.y > this._widgetList[i].minSize().y) {
-        size.y = this._widgetList[i].minSize().y;
-      }
+      return size;
     }
-    return size;
+
+    return false;
   },
 
   // Gets the desired size of the widget.
   maxSize: function(x, y) {
-    var size = {
-      x: -1,
-      y: -1,
-    };
-
-    for (var i = 0; i < this._widgetList.length; ++i) {
-      if (size.x === -1 || size.x > this._widgetList[i].maxSize().x) {
-        size.x = this._widgetList[i].maxSize().x;
+    // Splitters will only enforce a size if both panes contain a frame
+    if (this._pane[0] && this._pane[0] instanceof wcFrameWidget &&
+        this._pane[1] && this._pane[1] instanceof wcFrameWidget) {
+      var size = this._pane[1].maxSize();
+      if (!size) {
+        size = this._pane[0].maxSize();
+      } else if (this._pane[0].maxSize()) {
+        size.x = Math.max(this._pane[0].maxSize().x, size.x);
+        size.y = Math.max(this._pane[0].maxSize().y, size.y);
       }
-      if (size.y === -1 || size.y > this._widgetList[i].maxSize().y) {
-        size.y = this._widgetList[i].maxSize().y;
-      }
+      return size;
     }
-    return size;
+
+    return false;
   },
 
   // Gets, or Sets a new container for this layout.

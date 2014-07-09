@@ -82,10 +82,10 @@ wcFrameWidget.prototype = {
     };
 
     for (var i = 0; i < this._widgetList.length; ++i) {
-      if (size.x === -1 || size.x > this._widgetList[i].maxSize().x) {
+      if (size.x === Infinity || size.x > this._widgetList[i].maxSize().x) {
         size.x = this._widgetList[i].maxSize().x;
       }
-      if (size.y === -1 || size.y > this._widgetList[i].maxSize().y) {
+      if (size.y === Infinity || size.y > this._widgetList[i].maxSize().y) {
         size.y = this._widgetList[i].maxSize().y;
       }
     }

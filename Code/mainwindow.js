@@ -231,12 +231,12 @@ wcMainWindow.prototype = {
     for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
       if (this._dockWidgetTypeList[i].name === typeName) {
         var widget = new wcDockWidget();
+        this._dockWidgetTypeList[i].create(widget);
         if (allowGroup) {
           this._addDockWidgetGrouped(widget, location, parentWidget);
         } else {
           this._addDockWidgetAlone(widget, location, parentWidget);
         }
-        this._dockWidgetTypeList[i].create(widget);
         return widget;
       }
     }

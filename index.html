@@ -25,6 +25,7 @@
             widget.layout().addItem($('<div style="text-align:center">top right</div>'), 1, 0);
             widget.layout().addItem($('<div style="text-align:center">bot left</div>'), 1, 1);
             widget.layout().addItem($('<div style="text-align:center">bottom</div>'), 0, 2, 2, 1);
+            widget.layout().addItem($('<div style="text-align:center;verticle-align:middle;height:999999px">v-stretch</div>'), 0, 3, 2);
           });
 
           wcWindow.newDockWidgetType('testB', function(widget) {
@@ -51,18 +52,34 @@
 
           wcWindow.newDockWidgetType('testA split', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testA split</div>'), 0, 0);
-            widget.size(10, 300);
+            widget.size(100, 300);
+            widget.minSize(200, 10);
           });
 
-          var widgetA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
-          var widgetC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
+          wcWindow.newDockWidgetType('center split', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">center split</div>'), 0, 0);
+            widget.size(300, 300);
+          });
 
-          wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, widgetA);
-          wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, widgetC);
+          var testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
+          wcWindow.update();
+
+          var testC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
+          wcWindow.update();
+
+          wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, testA);
+          wcWindow.update();
+
+          wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, testC);
+          wcWindow.update();
 
           wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
-          wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
+          wcWindow.update();
 
+          wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
+          wcWindow.update();
+
+          wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
           wcWindow.update();
         }
       });
