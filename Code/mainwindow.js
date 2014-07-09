@@ -13,7 +13,11 @@ function wcMainWindow($container) {
   this._floatingList = [];
 
   this._frameList = [];
+  this._splitterList = [];
+
   this._dockWidgetTypeList = [];
+
+  this._draggingSplitter = false;
 
   this._init();
 };
@@ -40,6 +44,63 @@ wcMainWindow.prototype = {
         self.update();
       }
     });
+
+    $('body').on('mousedown', '.wcSplitterBar', function(event) {
+      var offset = self._mouseOffset(event);
+      for (var i = 0; i < self._splitterList.length; ++i) {
+        if (self._splitterList[i].$bar[0] === this) {
+          self._draggingSplitter = self._splitterList[i];
+          break;
+        }
+      }
+    });
+
+    $('body').on('mousemove', function(event) {
+      if (self._draggingSplitter) {
+        var mouse = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+        var offset = self.$container.offset();
+        // mouse.x -= offset.left;
+        // mouse.y -= offset.top;
+        self._draggingSplitter.moveBar(mouse);
+        self.update();
+      }
+    });
+
+    $('body').on('mouseout', function(event) {
+      if (event.target === self.$container[0]) {
+        self._draggingSplitter = false;
+      }
+    });
+
+    $('body').on('mouseup', function(event) {
+      self._draggingSplitter = false;
+    });
+  },
+
+  // Retrieves the mouse offset from a mouse event in a way that is
+  // compatible with multiple browsers.
+  // Params:
+  //    event         The mouse event.
+  // Returns:
+  //    object        The mouse offset.
+  //      x           Mouse X coordinate.
+  //      y           Mouse Y coordinate.
+  _mouseOffset: function(event) {
+    if (typeof event.offsetX !== 'undefined') {
+      return {x: event.offsetX, y: event.offsetY};
+    }
+    if (typeof event.layerX !== 'undefined') {
+      return {x: event.layerX, y: event.layerY};
+    }
+    if (typeof event.clientX !== 'undefined') {
+      return {
+        x: event.clientX - $(event.target).offset().left,
+        y: event.clientY - $(event.target).offset().top,
+      };
+    }
   },
 
   // On window resized event.
@@ -72,6 +133,7 @@ wcMainWindow.prototype = {
           }
 
           if (splitter) {
+            this._splitterList.push(splitter);
             frame = new wcFrameWidget(null, splitter, false);
             this._frameList.push(frame);
             if (location === wcGLOBALS.DOCK_LOC.LEFT) {
@@ -122,6 +184,7 @@ wcMainWindow.prototype = {
     }
 
     if (splitter) {
+      this._splitterList.push(splitter);
       var frame = new wcFrameWidget(null, splitter, false);
       this._frameList.push(frame);
 
@@ -298,6 +361,11 @@ wcMainWindow.prototype = {
           this._frameList.splice(index, 1);
         }
 
+        index = this._splitterList.indexOf(parentSplitter);
+        if (index !== -1) {
+          this._splitterList.splice(index, 1);
+        }
+
         parent = parentSplitter.parent();
         parentContainer = parentSplitter.container();
         parentSplitter.destroy();
@@ -322,6 +390,12 @@ wcMainWindow.prototype = {
             this._floatingList.splice(i, 1);
           }
         }
+
+        var index = this._frameList.indexOf(parentFrame);
+        if (index !== -1) {
+          this._frameList.splice(index, 1);
+        }
+
         parentFrame.destroy();
       }
     }

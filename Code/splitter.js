@@ -38,19 +38,58 @@ wcSplitter.prototype = {
     return this._horizontal;
   },
 
+  // Moves the slider bar based on a mouse position.
+  // Params:
+  //    mouse       The mouse offset position.
+  moveBar: function(mouse) {
+    var width = this.$container.width();
+    var height = this.$container.height();
+    var offset = this.$container.offset();
+
+    mouse.x -= offset.left;
+    mouse.y -= offset.top;
+
+    var size;
+    var pane = -1;
+    if (this._pane[1] && typeof this._pane[1].size === 'function') {
+      size = this._pane[1].size();
+      pane = 1;
+    }
+
+    if (!size && this._pane[0] && typeof this._pane[0].size === 'function') {
+      size = this._pane[0].size();
+      pane = 0;
+    }
+
+    if (this._horizontal) {
+      if (pane === 0) {
+        this.pos(mouse.x / width);
+      } else {
+        this.pos(1.0 - mouse.x / width)
+      }
+    } else {
+      if (pane === 0) {
+        this.pos(mouse.y / height);
+      } else {
+        this.pos(1.0 - mouse.y / height);
+      }
+    }
+  },
+
   // Updates the size of the splitter.
   update: function() {
     var width = this.$container.width();
     var height = this.$container.height();
 
     var pane = -1;
+    var size;
     if (this._pane[1] && typeof this._pane[1].size === 'function') {
-      var size = this._pane[1].size();
+      size = this._pane[1].size();
       pane = 1;
     }
 
     if (!size && this._pane[0] && typeof this._pane[0].size === 'function') {
-      var size = this._pane[0].size();
+      size = this._pane[0].size();
       pane = 0;
     }
 
