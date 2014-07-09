@@ -60,10 +60,14 @@ html, body {
 }
 
 .wcLayout, .wcLayout tr, .wcLayout td {
-  border: 1px dashed #555555;
+  border: 0px;
   margin: 0px;
   padding: 0px;
   background-color: transparent;
+}
+
+.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
+  border: 1px dashed #555555;
 }
 
 .wcWide {

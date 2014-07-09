@@ -141,6 +141,20 @@ wcLayout.prototype = {
     return this._grid[y][x].$el;
   },
 
+  // Gets, or Sets the visible status of the layout grid.
+  // Params:
+  //    enabled     If supplied, will set the grid shown or hidden.
+  // Returns:
+  //    bool        The current visibility of the grid.
+  grid: function(enabled) {
+    if (typeof enabled === 'undefined') {
+      return this.$table.hasClass('wcLayoutGrid');
+    }
+
+    this.$table.toggleClass('wcLayoutGrid', enabled);
+    return this.$table.hasClass('wcLayoutGrid');
+  },
+
   // Clears the layout.
   clear: function() {
     this._init();
@@ -178,11 +192,5 @@ wcLayout.prototype = {
 
     this._parent = parent;
     return this._parent;
-  },
-
-  // Removes a child from this widget.
-  // Params:
-  //    child         The child to remove.
-  removeChild: function(child) {
   },
 };

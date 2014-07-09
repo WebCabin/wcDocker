@@ -16,7 +16,7 @@
     <!-- Initialization -->
     <script>
       $(document).ready(function() {
-        var wcWindow = new wcMainWindow($('body'));
+        var wcWindow = new wcMainWindow($('#MainWindow'));
         if (wcWindow) {
           wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>(Press spacebar)</div>'), 0, 0);
 
@@ -26,6 +26,7 @@
             widget.layout().addItem($('<div style="text-align:center">bot left</div>'), 1, 1);
             widget.layout().addItem($('<div style="text-align:center">bottom</div>'), 0, 2, 2, 1);
             widget.layout().addItem($('<div style="text-align:center;verticle-align:middle;height:999999px">v-stretch</div>'), 0, 3, 2);
+            widget.layout().grid(true);
           });
 
           wcWindow.registerDockWidgetType('testB', function(widget) {
@@ -130,5 +131,7 @@
     </script>
   </head>
   <body style="background-color: darkgray;">
+    <div style="position:absolute;top:0px;left:0px;width:100%;height:40px;">Toolbar</div>
+    <div id="MainWindow" style="position:absolute;top:40px;left:0px;right:0px;bottom:0px;"></div>
   </body>
 </html>

@@ -4,7 +4,7 @@
   The $parent is a JQuery object of the container element.
 */
 function wcMainWindow($container) {
-  this.$container = $container;
+  this.$container = $container.addClass('wcMainWindow');
   $container.css('width', '100%');
   $container.css('height', '100%');
 
