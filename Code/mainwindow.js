@@ -66,12 +66,6 @@ wcMainWindow.prototype = {
       }
     });
 
-    $('body').on('mouseout', function(event) {
-      if (event.target === self.$container[0]) {
-        self._draggingSplitter = false;
-      }
-    });
-
     $('body').on('mouseup', function(event) {
       self._draggingSplitter = false;
     });
