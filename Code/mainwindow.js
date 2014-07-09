@@ -46,7 +46,6 @@ wcMainWindow.prototype = {
     });
 
     $('body').on('mousedown', '.wcSplitterBar', function(event) {
-      var offset = self._mouseOffset(event);
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
