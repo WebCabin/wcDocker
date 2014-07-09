@@ -2,9 +2,11 @@
   The dock widget item is the smallest part of the dock window system, it will
   contain all of the contents for the actual widget.
 */
-function wcDockWidget($container, parent) {
-  this.$container = $container;
-  this._parent = parent;
+function wcDockWidget(title) {
+  this.$container = null;
+  this._parent = null;
+
+  this._title = title;
 
   this._layout = null;
 
@@ -29,6 +31,11 @@ function wcDockWidget($container, parent) {
 wcDockWidget.prototype = {
   _init: function() {
     this._layout = new wcLayout(this.$container, this);
+  },
+
+  // Gets the title for this dock widget.
+  title: function() {
+    return this._title;
   },
 
   // Updates the size of the layout.

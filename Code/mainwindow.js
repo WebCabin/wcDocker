@@ -12,6 +12,7 @@ function wcMainWindow($container) {
   this._center = null;
   this._floatingList = [];
 
+  this._frameList = [];
   this._dockWidgetTypeList = [];
 
   this._init();
@@ -22,7 +23,23 @@ wcMainWindow.prototype = {
     this._center = new wcLayout(this.$container, this);
     this._root = this._center;
 
-    $(window).resize(this._resize.bind(this));
+
+    var self = this;
+    $(window).resize(self._resize.bind(self));
+
+    $('body').on('click', '.wcFrameClose', function() {
+      var frame;
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i].$close[0] == this) {
+          frame = self._frameList[i];
+          break;
+        }
+      }
+      if (frame) {
+        self.removeDockWidget(frame.widget());
+        self.update();
+      }
+    });
   },
 
   // On window resized event.
@@ -56,6 +73,7 @@ wcMainWindow.prototype = {
 
           if (splitter) {
             frame = new wcFrameWidget(null, splitter, false);
+            this._frameList.push(frame);
             if (location === wcGLOBALS.DOCK_LOC.LEFT) {
               splitter.pane(0, frame);
               splitter.pane(1, parentFrame);
@@ -76,6 +94,7 @@ wcMainWindow.prototype = {
     // Floating windows need no placement.
     if (location === wcGLOBALS.DOCK_LOC.FLOAT) {
       var frame = new wcFrameWidget(this.$container, this, true);
+      this._frameList.push(frame);
       this._floatingList.push(frame);
       frame.addWidget(widget);
       return;
@@ -104,6 +123,8 @@ wcMainWindow.prototype = {
 
     if (splitter) {
       var frame = new wcFrameWidget(null, splitter, false);
+      this._frameList.push(frame);
+
       if (location === wcGLOBALS.DOCK_LOC.LEFT) {
         splitter.pane(0, frame);
         splitter.pane(1, this._center);
@@ -230,7 +251,7 @@ wcMainWindow.prototype = {
   addDockWidget: function(typeName, location, allowGroup, parentWidget) {
     for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
       if (this._dockWidgetTypeList[i].name === typeName) {
-        var widget = new wcDockWidget();
+        var widget = new wcDockWidget(typeName);
         this._dockWidgetTypeList[i].create(widget);
         if (allowGroup) {
           this._addDockWidgetGrouped(widget, location, parentWidget);
@@ -266,6 +287,11 @@ wcMainWindow.prototype = {
           other = right;
         } else {
           other = left;
+        }
+
+        var index = this._frameList.indexOf(parentFrame);
+        if (index !== -1) {
+          this._frameList.splice(index, 1);
         }
 
         parent = parentSplitter.parent();

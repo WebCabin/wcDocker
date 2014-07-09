@@ -47,13 +47,13 @@
 
           wcWindow.newDockWidgetType('testC split', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testC split</div>'), 0, 0);
-            widget.size(400, 10);
+            widget.size(400, 100);
           });
 
           wcWindow.newDockWidgetType('testA split', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testA split</div>'), 0, 0);
             widget.size(100, 300);
-            widget.minSize(200, 10);
+            widget.minSize(200, 100);
           });
 
           wcWindow.newDockWidgetType('center split', function(widget) {
@@ -73,7 +73,7 @@
               case ' '.charCodeAt(0):
 
                 switch (testIndex) {
-                  case 16:
+                  case 8:
                     testIndex = 0;
 
                   case 0:
@@ -107,52 +107,12 @@
                     break;
 
                   case 6:
-                    wcWindow.removeDockWidget(testA);
-                    wcWindow.update();
-                    break;
-
-                  case 7:
                     thin = wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
                     wcWindow.update();
                     break;
 
-                  case 8:
+                  case 7:
                     centerSplit = wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
-                    wcWindow.update();
-                    break;
-
-                  case 9:
-                    wcWindow.removeDockWidget(centerSplit);
-                    wcWindow.update();
-                    break;
-
-                  case 10:
-                    wcWindow.removeDockWidget(testCSplit);
-                    wcWindow.update();
-                    break;
-
-                  case 11:
-                    wcWindow.removeDockWidget(testC);
-                    wcWindow.update();
-                    break;
-
-                  case 12:
-                    wcWindow.removeDockWidget(thin);
-                    wcWindow.update();
-                    break;
-
-                  case 13:
-                    wcWindow.removeDockWidget(testASplit);
-                    wcWindow.update();
-                    break;
-
-                  case 14:
-                    wcWindow.removeDockWidget(testB);
-                    wcWindow.update();
-                    break;
-
-                  case 15:
-                    wcWindow.removeDockWidget(floater);
                     wcWindow.update();
                     break;
                 }

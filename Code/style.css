@@ -13,6 +13,17 @@ html, body {
   position: relative;
 }
 
+.wcFrameTitle {
+}
+
+.wcFrameClose {
+  width: 20px;
+  height: 20px;
+  top: 0px;
+  right: 0px;
+  position: absolute;
+}
+
 .wcFrameCenter {
   border-top: 1px solid black;
 

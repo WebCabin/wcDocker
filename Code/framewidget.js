@@ -26,7 +26,11 @@ function wcFrameWidget($container, parent, isFloating) {
 wcFrameWidget.prototype = {
   _init: function() {
     this.$frame = $('<div class="wcFrameWidget wcWide wcTall">');
+    this.$title = $('<div class="wcFrameTitle wcWide">');
+    this.$close = $('<button class="wcFrameClose">X</button>');
     this.$center = $('<div class="wcFrameCenter wcWide">');
+    this.$frame.append(this.$title);
+    this.$frame.append(this.$close);
     this.$frame.append(this.$center);
 
     // Floating windows have no container.
@@ -132,6 +136,7 @@ wcFrameWidget.prototype = {
       this._curTab = 0;
       this._widgetList[this._curTab].layout().container(this.$center);
       this._widgetList[this._curTab].container(this.$center);
+      this.$title.text(this._widgetList[this._curTab].title());
     }
     this._widgetList[this._curTab].parent(this);
 
@@ -146,7 +151,7 @@ wcFrameWidget.prototype = {
       if (this._widgetList[i] === widget) {
         if (this._curTab === i) {
           this._curTab--;
-        }      
+        }
 
         this._widgetList[i].layout().container(null);
         this._widgetList[i].container(null);
@@ -162,6 +167,13 @@ wcFrameWidget.prototype = {
       this._widgetList[this._curTab].layout().container(this.$center);
       this._widgetList[this._curTab].container(this.$center);
     }
+  },
+
+  widget: function() {
+    if (this._widgetList.length) {
+      return this._widgetList[0];
+    }
+    return false;
   },
 
   // Gets, or Sets a new container for this layout.
