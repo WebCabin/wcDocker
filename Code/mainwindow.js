@@ -62,8 +62,6 @@ wcMainWindow.prototype = {
           y: event.clientY,
         };
         var offset = self.$container.offset();
-        // mouse.x -= offset.left;
-        // mouse.y -= offset.top;
         self._draggingSplitter.moveBar(mouse);
         self.update();
       }
@@ -78,29 +76,6 @@ wcMainWindow.prototype = {
     $('body').on('mouseup', function(event) {
       self._draggingSplitter = false;
     });
-  },
-
-  // Retrieves the mouse offset from a mouse event in a way that is
-  // compatible with multiple browsers.
-  // Params:
-  //    event         The mouse event.
-  // Returns:
-  //    object        The mouse offset.
-  //      x           Mouse X coordinate.
-  //      y           Mouse Y coordinate.
-  _mouseOffset: function(event) {
-    if (typeof event.offsetX !== 'undefined') {
-      return {x: event.offsetX, y: event.offsetY};
-    }
-    if (typeof event.layerX !== 'undefined') {
-      return {x: event.layerX, y: event.layerY};
-    }
-    if (typeof event.clientX !== 'undefined') {
-      return {
-        x: event.clientX - $(event.target).offset().left,
-        y: event.clientY - $(event.target).offset().top,
-      };
-    }
   },
 
   // On window resized event.
