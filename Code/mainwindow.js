@@ -5,8 +5,8 @@
 */
 function wcMainWindow($container) {
   this.$container = $container.addClass('wcMainWindow');
-  $container.css('width', '100%');
-  $container.css('height', '100%');
+  // $container.css('width', '100%');
+  // $container.css('height', '100%');
 
   this._root = null;
   this._center = null;
@@ -18,6 +18,10 @@ function wcMainWindow($container) {
   this._dockWidgetTypeList = [];
 
   this._draggingSplitter = false;
+  this._draggingFrame = false;
+  this._draggingFrameSizer = false;
+  this._ghost = false;
+  this._anchorDrop = false;
 
   this._init();
 };
@@ -31,7 +35,8 @@ wcMainWindow.prototype = {
     var self = this;
     $(window).resize(self._resize.bind(self));
 
-    $('body').on('click', '.wcFrameClose', function() {
+    // Close button on frames should destroy those widgets.
+    $('body').on('click', '.wcFrameCloseButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$close[0] == this) {
@@ -41,10 +46,23 @@ wcMainWindow.prototype = {
       }
       if (frame) {
         self.removeDockWidget(frame.widget());
-        self.update();
+        self._focusFloatingFrame(frame);
       }
     });
 
+    // Dock button on floating frames should allow them to dock.
+    $('body').on('click', '.wcFrameDockButton', function() {
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i]._isFloating && self._frameList[i].$dock[0] == this) {
+          self._frameList[i].$dock.toggleClass('wcFrameDockButtonLocked');
+
+          self._focusFloatingFrame(self._frameList[i]);
+          break;
+        }
+      }
+    });
+
+    // Mouse down on a splitter bar will allow you to resize them.
     $('body').on('mousedown', '.wcSplitterBar', function(event) {
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
@@ -54,25 +72,280 @@ wcMainWindow.prototype = {
       }
     });
 
+    // Mouse down on a frame title will allow you to move them.
+    $('body').on('mousedown', '.wcFrameTitle', function(event) {
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i].$title[0] == this) {
+          self._draggingFrame = self._frameList[i];
+
+          var mouse = {
+            x: event.clientX,
+            y: event.clientY,
+          };
+          self._draggingFrame.anchorMove(mouse);
+
+          // If the window is able to be docked, give it a dark shadow tint and
+          // begin the movement process
+          if (!self._draggingFrame._isFloating || !self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked')) {
+            self._draggingFrame.shadow(true);
+            var rect = self._draggingFrame.rect();
+            self._ghost = new wcGhost(rect, mouse);
+
+            // Also fade out all floating windows as they are not dockable.
+            for (var a = 0; a < self._frameList.length; ++a) {
+              if (self._frameList[a]._isFloating) {
+                self._frameList[a].shadow(true);
+              }
+            }
+          }
+          break;
+        }
+      }
+      if (self._draggingFrame) {
+        self._focusFloatingFrame(self._draggingFrame);
+      }
+    });
+
+    // Mouse down on a frame title will allow you to move them.
+    $('body').on('mousedown', '.wcFrameCenter', function(event) {
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i].$center[0] == this) {
+          self._focusFloatingFrame(self._frameList[i]);
+          break;
+        }
+      }
+    });
+
+    // Floating frames have resizable edges.
+    $('body').on('mousedown', '.wcFrameEdge', function(event) {
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i]._isFloating) {
+          if (self._frameList[i].$top[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['top'];
+            break;
+          } else if (self._frameList[i].$bottom[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['bottom'];
+            break;
+          } else if (self._frameList[i].$left[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['left'];
+            break;
+          } else if (self._frameList[i].$right[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['right'];
+            break;
+          } else if (self._frameList[i].$corner1[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['top', 'left'];
+            break;
+          } else if (self._frameList[i].$corner2[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['top', 'right'];
+            break;
+          } else if (self._frameList[i].$corner3[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['bottom', 'right'];
+            break;
+          } else if (self._frameList[i].$corner4[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['bottom', 'left'];
+            break;
+          }
+        }
+      }
+      if (self._draggingFrame) {
+        self._focusFloatingFrame(self._draggingFrame);
+      }
+    });
+
+    // Mouse move will allow you to move an object that is being dragged.
     $('body').on('mousemove', function(event) {
       if (self._draggingSplitter) {
         var mouse = {
           x: event.clientX,
           y: event.clientY,
         };
-        var offset = self.$container.offset();
         self._draggingSplitter.moveBar(mouse);
         self.update();
+      } else if (self._draggingFrameSizer) {
+        var mouse = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+
+        var offset = self.$container.offset();
+        mouse.x += offset.left;
+        mouse.y += offset.top;
+
+        self._draggingFrame.resize(self._draggingFrameSizer, mouse);
+        self.update();
+      } else if (self._draggingFrame) {
+        var mouse = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+
+        // Floating widgets without their dock button active just move without docking.
+        if (self._draggingFrame._isFloating && self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked')) {
+          self._draggingFrame.move(mouse);
+          self.update();
+        }
+
+        if (self._ghost) {
+          self._ghost.move(mouse);
+
+          var found = false;
+          for (var i = -1; i < self._frameList.length; ++i) {
+
+            var anchorDrop;
+            if (i === -1) {
+              anchorDrop = self._draggingFrame.checkAnchorDrop(mouse, true);
+            } else {
+              anchorDrop = self._frameList[i].checkAnchorDrop(mouse, false);
+            }
+
+            if (anchorDrop) {
+              if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
+                self._ghost.anchor(mouse);
+                self._anchorDrop = anchorDrop;
+                if (anchorDrop) {
+                  self._ghost.anchor(mouse, anchorDrop);
+                }
+              }
+              found = true;
+              break;
+            }
+          }
+
+          // Check with the main center window for docking.
+          if (!found) {
+            function _checkAnchorDrop(mouse) {
+              var width = self._center.$table.width();
+              var height = self._center.$table.height();
+              var offset = self._center.$table.offset();
+
+              // Bottom side docking.
+              if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
+                  mouse.x >= offset.left && mouse.x <= offset.left + width) {
+                return {
+                  x: offset.left,
+                  y: offset.top + (height - height*0.4),
+                  w: width,
+                  h: height*0.4,
+                  loc: wcGLOBALS.DOCK_LOC.BOTTOM,
+                };
+              }
+
+              // Left side docking
+              if (mouse.y >= offset.top && mouse.y <= offset.top + height) {
+                if (mouse.x >= offset.left && mouse.x <= offset.left + width*0.25) {
+                  return {
+                    x: offset.left,
+                    y: offset.top,
+                    w: width*0.4,
+                    h: height,
+                    loc: wcGLOBALS.DOCK_LOC.LEFT,
+                  };
+                }
+
+                // Right side docking
+                if (mouse.x >= offset.left + width*0.75 && mouse.x <= offset.left + width) {
+                  return {
+                    x: offset.left + width*0.6,
+                    y: offset.top,
+                    w: width*0.4,
+                    h: height,
+                    loc: wcGLOBALS.DOCK_LOC.RIGHT,
+                  };
+                }
+              }
+            };
+
+            anchorDrop = _checkAnchorDrop(mouse);
+            if (anchorDrop) {
+              if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
+                self._ghost.anchor(mouse);
+                self._anchorDrop = anchorDrop;
+                if (anchorDrop) {
+                  self._ghost.anchor(mouse, anchorDrop);
+                }
+              }
+              found = true;
+            }
+          }
+
+          if (!found && self._anchorDrop) {
+            self._anchorDrop = false;
+            self._ghost.anchor(mouse);
+          }
+        }
       }
     });
 
+    // Mouse released
     $('body').on('mouseup', function(event) {
+      if (self._draggingFrame) {
+        for (var i = 0; i < self._frameList.length; ++i) {
+          self._frameList[i].shadow(false);
+        }
+      }
+
+      if (self._ghost) {
+        if (!self._anchorDrop) {
+          var widget = self.moveDockWidget(self._draggingFrame.widget(), wcGLOBALS.DOCK_LOC.FLOAT, false);
+          var mouse = {
+            x: event.clientX,
+            y: event.clientY,
+          };
+          var frame = widget.parent();
+          if (frame instanceof wcFrameWidget) {
+            frame._pos.x = mouse.x
+            frame._pos.y = mouse.y
+          }
+
+          frame._pos.x -= self._ghost.rect().x
+          frame._pos.y -= self._ghost.rect().y
+          frame._size.x = self._ghost.rect().w;
+          frame._size.y = self._ghost.rect().h;
+
+          self.update();
+        }
+        self._ghost.destroy();
+      }
+
+      if (self._anchorDrop && self._anchorDrop.frame !== self._draggingFrame) {
+        var parentWidget;
+        if (self._anchorDrop.frame) {
+          parentWidget = self._anchorDrop.frame.widget();
+        }
+        self.moveDockWidget(self._draggingFrame.widget(), self._anchorDrop.loc, false, parentWidget);
+      }
+
+      self._anchorDrop = false;
+      self._ghost = false;
       self._draggingSplitter = false;
+      self._draggingFrame = false;
+      self._draggingFrameSizer = false;
     });
   },
 
   // On window resized event.
   _resize: function(event) {
+    this.update();
+  },
+
+  // Brings a floating window to the top.
+  _focusFloatingFrame: function(frame) {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      if (this._frameList[i]._isFloating) {
+        this._frameList[i].$frame.css('z-index', '100');
+        if (this._frameList[i] === frame) {
+          this._frameList[i].$frame.css('z-index', '101');
+        }
+      }
+    }
     this.update();
   },
 
@@ -107,11 +380,11 @@ wcMainWindow.prototype = {
             if (location === wcGLOBALS.DOCK_LOC.LEFT) {
               splitter.pane(0, frame);
               splitter.pane(1, parentFrame);
-              splitter.pos(0.6);
+              splitter.pos(0.4);
             } else {
               splitter.pane(0, parentFrame);
               splitter.pane(1, frame);
-              splitter.pos(0.4);
+              splitter.pos(0.6);
             }
 
             frame.addWidget(widget);
@@ -159,9 +432,11 @@ wcMainWindow.prototype = {
       if (location === wcGLOBALS.DOCK_LOC.LEFT) {
         splitter.pane(0, frame);
         splitter.pane(1, this._center);
+        splitter.findBestPos();
       } else {
         splitter.pane(0, this._center);
         splitter.pane(1, frame);
+        splitter.findBestPos();
       }
 
       frame.addWidget(widget);
@@ -265,8 +540,31 @@ wcMainWindow.prototype = {
     return true;
   },
 
+  // Moves a widget from its current location to another.
+  // Params:
+  //    typeName      The type of widget to create.
+  //    location      The location to 'try' docking at, as defined by
+  //                  wcGLOBALS.DOCK_LOC enum.
+  //    allowGroup    True to allow this widget to be tab groupped with
+  //                  another already existing widget at that location.
+  //                  If, for any reason, the widget can not fit at the
+  //                  desired location, a floating window will be used.
+  //    parentWidget  An optional widget to 'split', if not supplied the
+  //                  new widget will split the center window.
+  // Returns:
+  //    widget        The widget that was created.
+  //    false         The widget type does not exist.
   moveDockWidget: function(widget, location, allowGroup, parentWidget) {
+    this.removeDockWidget(widget);
 
+    if (allowGroup) {
+      this._addDockWidgetGrouped(widget, location, parentWidget);
+    } else {
+      this._addDockWidgetAlone(widget, location, parentWidget);
+    }
+
+    this.update();
+    return widget;
   },
 
   // Add a new dock widget to the window of a given type.
@@ -293,6 +591,7 @@ wcMainWindow.prototype = {
         } else {
           this._addDockWidgetAlone(widget, location, parentWidget);
         }
+        this.update();
         return widget;
       }
     }
@@ -351,6 +650,7 @@ wcMainWindow.prototype = {
           other.parent(this);
           other.container(parentContainer);
         }
+        this.update();
         return true;
       } else if (parentSplitter === this) {
         for (var i = 0; i < this._floatingList.length; ++i) {

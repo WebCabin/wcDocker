@@ -12,6 +12,7 @@
     <script src="Code/framewidget.js"></script>
     <script src="Code/dockwidget.js"></script>
     <script src="Code/layout.js"></script>
+    <script src="Code/ghost.js"></script>
 
     <!-- Initialization -->
     <script>
@@ -54,7 +55,6 @@
           wcWindow.registerDockWidgetType('testA split', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">testA split</div>'), 0, 0);
             widget.size(100, 300);
-            widget.minSize(200, 100);
           });
 
           wcWindow.registerDockWidgetType('center split', function(widget) {
@@ -64,7 +64,7 @@
 
           wcWindow.registerDockWidgetType('floater', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">floater</div>'), 0, 0);
-            widget.size(600, 300);
+            widget.size(300, 300);
           });
 
           testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
@@ -75,7 +75,6 @@
           testB = wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
           thin = wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
           centerSplit = wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
-          wcWindow.update();
 
           var testA, testB, testC, testASplit, testCSplit, floater;
           var testIndex = 0;
@@ -89,42 +88,34 @@
 
                   case 0:
                     testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
-                    wcWindow.update();
                     break;
 
                   case 1:
                     testC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
-                    wcWindow.update();
                     break;
 
                   case 2:
                     testASplit = wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, testA);
-                    wcWindow.update();
                     break;
 
                   case 3:
                     testCSplit = wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, testC);
-                    wcWindow.update();
                     break;
 
                   case 4:
                     floater = wcWindow.addDockWidget('floater', wcGLOBALS.DOCK_LOC.FLOAT, false);
-                    wcWindow.update();
                     break;
 
                   case 5:
                     testB = wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
-                    wcWindow.update();
                     break;
 
                   case 6:
                     thin = wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
-                    wcWindow.update();
                     break;
 
                   case 7:
                     centerSplit = wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
-                    wcWindow.update();
                     break;
                 }
 

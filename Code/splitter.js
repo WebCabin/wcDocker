@@ -9,7 +9,8 @@ function wcSplitter($container, parent, isHorizontal) {
   this._pane = [false, false];
   this.$pane = [];
   this.$bar;
-  this._pos;
+  this._pos = 0.4;
+  this._findBestPos = false;
 
   this._init();
 };
@@ -49,30 +50,10 @@ wcSplitter.prototype = {
     mouse.x -= offset.left;
     mouse.y -= offset.top;
 
-    var size;
-    var pane = -1;
-    if (this._pane[1] && typeof this._pane[1].size === 'function') {
-      size = this._pane[1].size();
-      pane = 1;
-    }
-
-    if (!size && this._pane[0] && typeof this._pane[0].size === 'function') {
-      size = this._pane[0].size();
-      pane = 0;
-    }
-
     if (this._horizontal) {
-      if (pane === 0) {
-        this.pos(mouse.x / width);
-      } else {
-        this.pos(1.0 - mouse.x / width)
-      }
+      this.pos((mouse.x-3) / width);
     } else {
-      if (pane === 0) {
-        this.pos(mouse.y / height);
-      } else {
-        this.pos(1.0 - mouse.y / height);
-      }
+      this.pos((mouse.y-3) / height);
     }
   },
 
@@ -81,164 +62,135 @@ wcSplitter.prototype = {
     var width = this.$container.width();
     var height = this.$container.height();
 
-    var pane = -1;
-    var size;
-    if (this._pane[1] && typeof this._pane[1].size === 'function') {
-      size = this._pane[1].size();
-      pane = 1;
-    }
+    var minSize = this.minPos();
+    var maxSize = this.maxPos();
 
-    if (!size && this._pane[0] && typeof this._pane[0].size === 'function') {
-      size = this._pane[0].size();
-      pane = 0;
-    }
+    if (this._findBestPos) {
+      this._findBestPos = false;
 
-    if (pane > -1 && size) {
-      if (this._horizontal) {
-        if (typeof this._pos !== 'undefined') {
-          size.x = width * this._pos;
-        } else {
-          this.pos(size.x / width);
-        }
+      var size1;
+      var size2;
+      if (this._pane[0] && typeof this._pane[0].size === 'function') {
+        size1 = this._pane[0].size();
+      }
 
-        if (typeof this._pane[0].minSize === 'function') {
-          var minSize = this._pane[0].minSize();
-          if (minSize) {
-            size.x = Math.max(minSize.x, size.x);
-          }
-          var maxSize = this._pane[0].maxSize();
-          if (maxSize) {
-            size.x = Math.min(maxSize.x, size.x);
-          }
-        }
-        if (typeof this._pane[1].minSize === 'function') {
-          var minSize = this._pane[1].minSize();
-          if (minSize) {
-            size.x = Math.max(minSize.x, size.x);
-          }
-          var maxSize = this._pane[1].maxSize();
-          if (maxSize) {
-            size.x = Math.min(maxSize.x, size.x);
-          }
-        }
+      if (this._pane[1] && typeof this._pane[1].size === 'function') {
+        size2 = this._pane[1].size();
 
-
-        this.$pane[pane].css('width', size.x + 'px');
-        if (pane === 0) {
-          this.$bar.css('left', size.x);
-          this.$pane[0].css('left',  '0px');
-          this.$pane[0].css('right', '');
-          this.$pane[1].css('left',  '');
-          this.$pane[1].css('right', '0px');
-          this.$pane[1].css('width', width - size.x - 5 + 'px');
-        } else {
-          this.$bar.css('right', size.x);
-          this.$pane[1].css('left',  '');
-          this.$pane[1].css('right', '0px');
-          this.$pane[0].css('left',  '0px');
-          this.$pane[0].css('right', '');
-          this.$pane[0].css('width', width - size.x - 5 + 'px');
-        }
-      } else {
-        if (typeof this._pos !== 'undefined') {
-          size.y = height * this._pos;
-        } else {
-          this.pos(size.y / height);
-        }
-
-        if (typeof this._pane[0].minSize === 'function') {
-          var minSize = this._pane[0].minSize();
-          if (minSize) {
-            size.y = Math.max(minSize.y, size.y);
-          }
-          var maxSize = this._pane[0].maxSize();
-          if (maxSize) {
-            size.y = Math.min(maxSize.y, size.y);
-          }
-        }
-        if (typeof this._pane[1].minSize === 'function') {
-          var minSize = this._pane[1].minSize();
-          if (minSize) {
-            size.y = Math.max(minSize.y, size.y);
-          }
-          var maxSize = this._pane[1].maxSize();
-          if (maxSize) {
-            size.y = Math.min(maxSize.y, size.y);
-          }
-        }
-
-        this.$pane[pane].css('height', size.y + 'px');
-        if (pane === 0) {
-          this.$bar.css('top', size.y);
-          this.$pane[0].css('top',    '0px');
-          this.$pane[0].css('bottom', '');
-          this.$pane[1].css('top',    '');
-          this.$pane[1].css('bottom', '0px');
-          this.$pane[1].css('height', height - size.y - 5 + 'px');
-        } else {
-          this.$bar.css('bottom', size.y);
-          this.$pane[1].css('top',    '');
-          this.$pane[1].css('bottom', '0px');
-          this.$pane[0].css('top',    '0px');
-          this.$pane[0].css('bottom', '');
-          this.$pane[0].css('height', height - size.y - 5 + 'px');
+        if (size2) {
+          size2.x = width  - size2.x;
+          size2.y = height - size2.y;
         }
       }
+
+      var size;
+      if (size1 && size2) {
+        size = {
+          x: Math.min(size1.x, size2.x),
+          y: Math.min(size1.y, size2.y),
+        };
+      } else if (size1) {
+        size = size1;
+      } else if (size2) {
+        size = size2;
+      }
+
+      if (size) {
+        if (this._horizontal) {
+          this._pos = size.x / width;
+        } else {
+          this._pos = size.y / height;
+        }
+      }
+    }
+
+    if (this._horizontal) {
+      var size = width * this._pos;
+
+      if (minSize) {
+        size = Math.max(minSize.x, size);
+      }
+      if (maxSize) {
+        size = Math.min(maxSize.x, size);
+      }
+
+      this.$bar.css('left', size);
+      this.$pane[0].css('width', size + 'px');
+      this.$pane[0].css('left',  '0px');
+      this.$pane[0].css('right', '');
+      this.$pane[1].css('left',  '');
+      this.$pane[1].css('right', '0px');
+      this.$pane[1].css('width', width - size - 5 + 'px');
+    } else {
+      var size = height * this._pos;
+
+      if (minSize) {
+        size = Math.max(minSize.y, size);
+      }
+      if (maxSize) {
+        size = Math.min(maxSize.y, size);
+      }
+
+      this.$bar.css('top', size);
+      this.$pane[0].css('height', size + 'px');
+      this.$pane[0].css('top',    '0px');
+      this.$pane[0].css('bottom', '');
+      this.$pane[1].css('top',    '');
+      this.$pane[1].css('bottom', '0px');
+      this.$pane[1].css('height', height - size - 5 + 'px');
     }
 
     this._pane[0].update();
     this._pane[1].update();
   },
 
-  // Gets the desired size of the widget.
-  size: function() {
-    // Splitters will only enforce a size if both panes contain a frame
-    if (this._pane[0] && this._pane[0] instanceof wcFrameWidget &&
-        this._pane[1] && this._pane[1] instanceof wcFrameWidget) {
-      var size = this._pane[1].size();
-      if (!size) {
-        size = this._pane[0].size();
-      } else if (this._pane[0].size()) {
-        size.x = Math.max(this._pane[0].size().x, size.x);
-        size.y = Math.max(this._pane[0].size().y, size.y);
-      }
-      return size;
+  // Gets the minimum position of the splitter divider.
+  minPos: function() {
+    var minSize;
+    if (this._pane[0] && typeof this._pane[0].minSize === 'function') {
+      minSize = this._pane[0].minSize();
     }
+    return minSize;
+  },
 
-    return false;
+  // Gets the maximum position of the splitter divider.
+  maxPos: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    var maxSize;
+    if (this._pane[1] && typeof this._pane[1].minSize === 'function') {
+      maxSize = this._pane[1].minSize();
+
+      if (maxSize) {
+        maxSize.x = width  - maxSize.x;
+        maxSize.y = height - maxSize.y;
+      }
+    }
+    return maxSize;
   },
 
   // Gets the minimum size of the widget.
   minSize: function() {
-    // Splitters will only enforce a size if both panes contain a frame
-    if (this._pane[0] && this._pane[0] instanceof wcFrameWidget &&
-        this._pane[1] && this._pane[1] instanceof wcFrameWidget) {
-      var size = this._pane[1].minSize();
-      if (!size) {
-        size = this._pane[0].minSize();
-      } else if (this._pane[0].minSize()) {
-        size.x = Math.max(this._pane[0].minSize().x, size.x);
-        size.y = Math.max(this._pane[0].minSize().y, size.y);
-      }
-      return size;
+    var minSize1;
+    var minSize2;
+    if (this._pane[0] && typeof this._pane[0].minSize === 'function') {
+      minSize1 = this._pane[0].minSize();
     }
 
-    return false;
-  },
+    if (this._pane[1] && typeof this._pane[1].minSize === 'function') {
+      minSize2 = this._pane[1].minSize();
+    }
 
-  // Gets the desired size of the widget.
-  maxSize: function() {
-    // Splitters will only enforce a size if both panes contain a frame
-    if (this._pane[0] && this._pane[0] instanceof wcFrameWidget &&
-        this._pane[1] && this._pane[1] instanceof wcFrameWidget) {
-      var size = this._pane[1].maxSize();
-      if (!size) {
-        size = this._pane[0].maxSize();
-      } else if (this._pane[0].maxSize()) {
-        size.x = Math.max(this._pane[0].maxSize().x, size.x);
-        size.y = Math.max(this._pane[0].maxSize().y, size.y);
-      }
-      return size;
+    if (minSize1 && minSize2) {
+      return {
+        x: Math.min(minSize1.x, minSize2.x),
+        y: Math.min(minSize1.y, minSize2.y),
+      };
+    } else if (minSize1) {
+      return minSize1;
+    } else if (minSize2) {
+      return minSize2;
     }
 
     return false;
@@ -255,6 +207,10 @@ wcSplitter.prototype = {
     }
     this._pos = pos;
     return this._pos;
+  },
+
+  findBestPos: function() {
+    this._findBestPos = true;
   },
 
   // Gets, or Sets a new container for this layout.

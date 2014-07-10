@@ -40,12 +40,11 @@ access the layout and populate it much the same as the central widget.
   widget.layout().addItem($DOM, x, y, width, height);
 ```
 You can also set various properties of the widget here as well, such as
-the current, min, and max window sizes.
+the desired size, or the minimum size.
 ```
 #!javascript
   widget.size(200, 200);
   widget.minSize(100, 100);
-  widget.maxSize(Infinity, Infinity);
 });
 ```
 Once you have registered one or more dock widget types, you can initialize

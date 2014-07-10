@@ -16,13 +16,8 @@ function wcDockWidget(title) {
   };
 
   this._minSize = {
-    x: 0,
-    y: 0,
-  };
-
-  this._maxSize = {
-    x: Infinity,
-    y: Infinity,
+    x: 100,
+    y: 100,
   };
 
   this._init();
@@ -64,15 +59,6 @@ wcDockWidget.prototype = {
     }
     this._minSize.x = x;
     this._minSize.y = y;
-  },
-
-  // Gets, or Sets the desired size of the widget.
-  maxSize: function(x, y) {
-    if (typeof x === 'undefined') {
-      return this._maxSize;
-    }
-    this._maxSize.x = x;
-    this._maxSize.y = y;
   },
 
   // Gets, or Sets a new container for this layout.
