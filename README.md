@@ -26,7 +26,7 @@ For a currently working demo, try it here [http://arpg.webcabin.org/test](http:/
 
 ****
 
-# Usage #
+# Code #
 
 
 Begin by creating an instance of the main window and assigning it a container JQuery DOM element.
@@ -110,3 +110,9 @@ wcWindow.addDockWidget('Some type name', wcGLOBALS.DOCK_LOC.LEFT, false, optiona
 ```
 addDockWidget also returns you the newly created dock widget item, in the
 case that you may want it.
+
+****
+
+# Usage #
+
+For the most part, arranging your windows is as simple as a drag-drop operation.  Click the title-bar of any window and drag it to a new location and it will either be docked or float there.  The exception is for floating windows, if  you drag them they will just move rather than try to dock.  To dock a floating window, toggle the lock button on its upper right corner, or drag using the middle mouse button.  You can also use middle mouse button on a docked window to force it to float.
