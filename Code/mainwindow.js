@@ -86,7 +86,7 @@ wcMainWindow.prototype = {
 
           // If the window is able to be docked, give it a dark shadow tint and
           // begin the movement process
-          if (!self._draggingFrame._isFloating || !self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked')) {
+          if (!self._draggingFrame._isFloating || (event.which !== 1 || self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked'))) {
             self._draggingFrame.shadow(true);
             var rect = self._draggingFrame.rect();
             self._ghost = new wcGhost(rect, mouse);
@@ -188,7 +188,7 @@ wcMainWindow.prototype = {
         };
 
         // Floating widgets without their dock button active just move without docking.
-        if (self._draggingFrame._isFloating && self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked')) {
+        if (self._draggingFrame._isFloating && (event.which === 1 && !self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked'))) {
           self._draggingFrame.move(mouse);
           self.update();
         }
@@ -305,8 +305,8 @@ wcMainWindow.prototype = {
             frame._pos.y = mouse.y
           }
 
-          frame._pos.x -= self._ghost.rect().x
-          frame._pos.y -= self._ghost.rect().y
+          // frame._pos.x -= self._ghost.rect().x
+          // frame._pos.y -= self._ghost.rect().y
           frame._size.x = self._ghost.rect().w;
           frame._size.y = self._ghost.rect().h;
 
