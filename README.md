@@ -1,6 +1,6 @@
 wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking windows.  Windows can float on their own or be docked; docking can be on either side, the bottom, or even nested within each other.  All windows can be moved, resized, removed, and created at will by the user.  This project is currently under development by Jeff Houde (lochemage@gmail.com).  wcDocker requires the JQuery library, currently developed under 2.1.1 although much earlier versions should work fine.
 
-For a currently working demo, try it here [http://webcabin.org/test](http://webcabin.org/test)
+For a currently working demo, try it here [http://arpg.webcabin.org/test](http://arpg.webcabin.org/test)
 
 ### The following features are supported currently: ###
 
