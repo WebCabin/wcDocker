@@ -3,8 +3,8 @@
   There should only be one instance of this used, although it is not required.
   The $parent is a JQuery object of the container element.
 */
-function wcMainWindow($container) {
-  this.$container = $container.addClass('wcMainWindow');
+function wcDocker($container) {
+  this.$container = $container.addClass('wcDocker');
   // $container.css('width', '100%');
   // $container.css('height', '100%');
 
@@ -26,7 +26,12 @@ function wcMainWindow($container) {
   this._init();
 };
 
-wcMainWindow.prototype = {
+wcDocker.DOCK_FLOAT  = 'float';
+wcDocker.DOCK_LEFT   = 'left';
+wcDocker.DOCK_RIGHT  = 'right';
+wcDocker.DOCK_BOTTOM = 'bottom';
+
+wcDocker.prototype = {
   _init: function() {
     this._center = new wcLayout(this.$container, this);
     this._root = this._center;
@@ -244,7 +249,7 @@ wcMainWindow.prototype = {
                   y: offset.top + (height - height*0.4),
                   w: width,
                   h: height*0.4,
-                  loc: wcGLOBALS.DOCK_LOC.BOTTOM,
+                  loc: wcDocker.DOCK_BOTTOM,
                 };
               }
 
@@ -256,7 +261,7 @@ wcMainWindow.prototype = {
                     y: offset.top,
                     w: width*0.4,
                     h: height,
-                    loc: wcGLOBALS.DOCK_LOC.LEFT,
+                    loc: wcDocker.DOCK_LEFT,
                   };
                 }
 
@@ -267,7 +272,7 @@ wcMainWindow.prototype = {
                     y: offset.top,
                     w: width*0.4,
                     h: height,
-                    loc: wcGLOBALS.DOCK_LOC.RIGHT,
+                    loc: wcDocker.DOCK_RIGHT,
                   };
                 }
               }
@@ -304,7 +309,7 @@ wcMainWindow.prototype = {
 
       if (self._ghost) {
         if (!self._anchorDrop) {
-          var widget = self.moveDockWidget(self._draggingFrame.widget(), wcGLOBALS.DOCK_LOC.FLOAT, false);
+          var widget = self.moveDockWidget(self._draggingFrame.widget(), wcDocker.DOCK_FLOAT, false);
           var mouse = {
             x: event.clientX,
             y: event.clientY,
@@ -376,10 +381,10 @@ wcMainWindow.prototype = {
           var left  = parentSplitter.pane(0);
           var right = parentSplitter.pane(1);
           if (left === parentFrame) {
-            splitter = new wcSplitter(null, parentSplitter, location !== wcGLOBALS.DOCK_LOC.BOTTOM);
+            splitter = new wcSplitter(null, parentSplitter, location !== wcDocker.DOCK_BOTTOM);
             parentSplitter.pane(0, splitter);
           } else {
-            splitter = new wcSplitter(null, parentSplitter, location !== wcGLOBALS.DOCK_LOC.BOTTOM);
+            splitter = new wcSplitter(null, parentSplitter, location !== wcDocker.DOCK_BOTTOM);
             parentSplitter.pane(1, splitter);
           }
 
@@ -387,7 +392,7 @@ wcMainWindow.prototype = {
             this._splitterList.push(splitter);
             frame = new wcFrameWidget(null, splitter, false);
             this._frameList.push(frame);
-            if (location === wcGLOBALS.DOCK_LOC.LEFT) {
+            if (location === wcDocker.DOCK_LEFT) {
               splitter.pane(0, frame);
               splitter.pane(1, parentFrame);
               splitter.pos(0.4);
@@ -405,7 +410,7 @@ wcMainWindow.prototype = {
     }
 
     // Floating windows need no placement.
-    if (location === wcGLOBALS.DOCK_LOC.FLOAT) {
+    if (location === wcDocker.DOCK_FLOAT) {
       var frame = new wcFrameWidget(this.$container, this, true);
       this._frameList.push(frame);
       this._floatingList.push(frame);
@@ -416,7 +421,7 @@ wcMainWindow.prototype = {
     var splitter;
     if (this._center === this._root) {
       // The center is the root when no dock widgets have been docked yet.
-      splitter = new wcSplitter(this.$container, this, location !== wcGLOBALS.DOCK_LOC.BOTTOM);
+      splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM);
       this._root = splitter;
     } else {
       // The parent of the center should be a splitter, we need to insert another one in between.
@@ -425,10 +430,10 @@ wcMainWindow.prototype = {
         var left  = parent.pane(0);
         var right = parent.pane(1);
         if (left === this._center) {
-          splitter = new wcSplitter(null, parent, location !== wcGLOBALS.DOCK_LOC.BOTTOM);
+          splitter = new wcSplitter(null, parent, location !== wcDocker.DOCK_BOTTOM);
           parent.pane(0, splitter);
         } else {
-          splitter = new wcSplitter(null, parent, location !== wcGLOBALS.DOCK_LOC.BOTTOM);
+          splitter = new wcSplitter(null, parent, location !== wcDocker.DOCK_BOTTOM);
           parent.pane(1, splitter);
         }
       }
@@ -439,7 +444,7 @@ wcMainWindow.prototype = {
       var frame = new wcFrameWidget(null, splitter, false);
       this._frameList.push(frame);
 
-      if (location === wcGLOBALS.DOCK_LOC.LEFT) {
+      if (location === wcDocker.DOCK_LEFT) {
         splitter.pane(0, frame);
         splitter.pane(1, this._center);
         splitter.findBestPos();
@@ -471,7 +476,7 @@ wcMainWindow.prototype = {
     }
 
     // Floating windows need no placement.
-    if (location === wcGLOBALS.DOCK_LOC.FLOAT) {
+    if (location === wcDocker.DOCK_FLOAT) {
       var frame;
       if (this._floatingList.length) {
         frame = this._floatingList[this._floatingList.length-1];
@@ -484,7 +489,7 @@ wcMainWindow.prototype = {
       return;
     }
 
-    var needsHorizontal = location !== wcGLOBALS.DOCK_LOC.BOTTOM;
+    var needsHorizontal = location !== wcDocker.DOCK_BOTTOM;
 
     function __iterateParents(item) {
       // The last item will always be the center.
@@ -503,10 +508,10 @@ wcMainWindow.prototype = {
         // Check if the orientation of the splitter is one that we want.
         if (item.isHorizontal() === needsHorizontal) {
           // Make sure the dock widget is on the proper side.
-          if (left instanceof wcFrameWidget && location === wcGLOBALS.DOCK_LOC.LEFT) {
+          if (left instanceof wcFrameWidget && location === wcDocker.DOCK_LEFT) {
             left.addWidget(widget);
             return;
-          } else if (right instanceof wcFrameWidget && (location === wcGLOBALS.DOCK_LOC.RIGHT || location === wcGLOBALS.DOCK_LOC.BOTTOM)) {
+          } else if (right instanceof wcFrameWidget && (location === wcDocker.DOCK_RIGHT || location === wcDocker.DOCK_BOTTOM)) {
             right.addWidget(widget);
             return;
           }

@@ -6,7 +6,6 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="Code/style.css"/>
     <script src="Code/ext/jquery-2.1.1.min.js"></script>
-    <script src="Code/global.js"></script>
     <script src="Code/mainwindow.js"></script>
     <script src="Code/splitter.js"></script>
     <script src="Code/framewidget.js"></script>
@@ -17,7 +16,7 @@
     <!-- Initialization -->
     <script>
       $(document).ready(function() {
-        var wcWindow = new wcMainWindow($('#MainWindow'));
+        var wcWindow = new wcDocker($('#MainWindow'));
         if (wcWindow) {
           wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>(Press spacebar)</div>'), 0, 0);
 
@@ -67,14 +66,14 @@
             widget.size(300, 300);
           });
 
-          testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
-          testC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
-          testASplit = wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, testA);
-          testCSplit = wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, testC);
-          floater = wcWindow.addDockWidget('floater', wcGLOBALS.DOCK_LOC.FLOAT, false);
-          testB = wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
-          thin = wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
-          centerSplit = wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
+          testA = wcWindow.addDockWidget('testA', wcDocker.DOCK_LEFT, false);
+          testC = wcWindow.addDockWidget('testC', wcDocker.DOCK_BOTTOM, false);
+          testASplit = wcWindow.addDockWidget('testA split', wcDocker.DOCK_BOTTOM, false, testA);
+          testCSplit = wcWindow.addDockWidget('testC split', wcDocker.DOCK_LEFT, false, testC);
+          floater = wcWindow.addDockWidget('floater', wcDocker.DOCK_FLOAT, false);
+          testB = wcWindow.addDockWidget('testB', wcDocker.DOCK_RIGHT, false);
+          thin = wcWindow.addDockWidget('thin', wcDocker.DOCK_LEFT, false);
+          centerSplit = wcWindow.addDockWidget('center split', wcDocker.DOCK_LEFT, false, wcWindow.center());
 
           var testA, testB, testC, testASplit, testCSplit, floater;
           var testIndex = 0;
@@ -87,35 +86,35 @@
                     testIndex = 0;
 
                   case 0:
-                    testA = wcWindow.addDockWidget('testA', wcGLOBALS.DOCK_LOC.LEFT, false);
+                    testA = wcWindow.addDockWidget('testA', wcDocker.DOCK_LEFT, false);
                     break;
 
                   case 1:
-                    testC = wcWindow.addDockWidget('testC', wcGLOBALS.DOCK_LOC.BOTTOM, false);
+                    testC = wcWindow.addDockWidget('testC', wcDocker.DOCK_BOTTOM, false);
                     break;
 
                   case 2:
-                    testASplit = wcWindow.addDockWidget('testA split', wcGLOBALS.DOCK_LOC.BOTTOM, false, testA);
+                    testASplit = wcWindow.addDockWidget('testA split', wcDocker.DOCK_BOTTOM, false, testA);
                     break;
 
                   case 3:
-                    testCSplit = wcWindow.addDockWidget('testC split', wcGLOBALS.DOCK_LOC.LEFT, false, testC);
+                    testCSplit = wcWindow.addDockWidget('testC split', wcDocker.DOCK_LEFT, false, testC);
                     break;
 
                   case 4:
-                    floater = wcWindow.addDockWidget('floater', wcGLOBALS.DOCK_LOC.FLOAT, false);
+                    floater = wcWindow.addDockWidget('floater', wcDocker.DOCK_FLOAT, false);
                     break;
 
                   case 5:
-                    testB = wcWindow.addDockWidget('testB', wcGLOBALS.DOCK_LOC.RIGHT, false);
+                    testB = wcWindow.addDockWidget('testB', wcDocker.DOCK_RIGHT, false);
                     break;
 
                   case 6:
-                    thin = wcWindow.addDockWidget('thin', wcGLOBALS.DOCK_LOC.LEFT, false);
+                    thin = wcWindow.addDockWidget('thin', wcDocker.DOCK_LEFT, false);
                     break;
 
                   case 7:
-                    centerSplit = wcWindow.addDockWidget('center split', wcGLOBALS.DOCK_LOC.LEFT, false, wcWindow.center());
+                    centerSplit = wcWindow.addDockWidget('center split', wcDocker.DOCK_LEFT, false, wcWindow.center());
                     break;
                 }
 

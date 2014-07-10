@@ -22,6 +22,9 @@ For a currently working demo, try it here [http://arpg.webcabin.org/test](http:/
 * An option to enable/disable closing of all or individual window types.
 * A possible option of restricting the number of total windows created.
 * A possible option of restricting the total copies of the same window type.
+* A possible option of disabling movement and destruction of a window, making it permenantly docked at its location (an example would be for a file menu).
+* A possible option of disabling nesting from a certain window, making other windows unable to dock nested inside it.
+* A possible option of allowing docking on the top (again, an example would be a file menu).
 * Allow styling of window colors and other options.
 
 ****
@@ -36,7 +39,7 @@ cross interaction between them (yet?).  Also note that floating windows are not 
 the given container element, they can float anywhere in the browser window.
 ```
 #!javascript
-var wcWindow = new wcMainWindow($('body'));
+var wcWindow = new wcDocker($('body'));
 ```
 To access the central widget (our main window view that is always present).
 First retrieve the central widget, which is a layout.
@@ -86,13 +89,13 @@ remove, or re-arrange these windows).
 To add a new dock window, give it a valid pre-registered type name and a
 desired destination for placement.  The destination can be one of either:
 
-wcGLOBALS.DOCK_LOC.FLOAT    = Make a floating window that is not docked.
+wcDocker.DOCK_FLOAT    = Make a floating window that is not docked.
 
-wcGLOBALS.DOCK_LOC.LEFT     = Dock it to the left side of the window.
+wcDocker.DOCK_LEFT     = Dock it to the left side of the window.
 
-wcGLOBALS.DOCK_LOC.RIGHT    = Dock it to the right side of the window.
+wcDocker.DOCK_RIGHT    = Dock it to the right side of the window.
 
-wcGLOBALS.DOCK_LOC.BOTTOM   = Dock it on the bottom of the window.
+wcDocker.DOCK_BOTTOM   = Dock it on the bottom of the window.
 
 The third parameter determines whether this window is allowed to group
 up with another already existing window in a tabbed view (currently, tabbed
@@ -106,7 +109,7 @@ specific widget, your new window will dock onto a side of that widget
 instead.
 ```
 #!javascript
-wcWindow.addDockWidget('Some type name', wcGLOBALS.DOCK_LOC.LEFT, false, optionalTargetWidget);
+wcWindow.addDockWidget('Some type name', wcDocker.LEFT, false, optionalTargetWidget);
 ```
 addDockWidget also returns you the newly created dock widget item, in the
 case that you may want it.

@@ -221,7 +221,7 @@ wcFrameWidget.prototype = {
           y: offset.top,
           w: width,
           h: height,
-          loc: wcGLOBALS.DOCK_LOC.FLOAT,
+          loc: wcDocker.DOCK_FLOAT,
           frame: this,
         };
       }
@@ -239,7 +239,7 @@ wcFrameWidget.prototype = {
         y: offset.top + (height - height*0.4),
         w: width,
         h: height*0.4,
-        loc: wcGLOBALS.DOCK_LOC.BOTTOM,
+        loc: wcDocker.DOCK_BOTTOM,
         frame: this,
       };
     }
@@ -252,7 +252,7 @@ wcFrameWidget.prototype = {
           y: offset.top,
           w: width*0.4,
           h: height,
-          loc: wcGLOBALS.DOCK_LOC.LEFT,
+          loc: wcDocker.DOCK_LEFT,
           frame: this,
         };
       }
@@ -264,7 +264,7 @@ wcFrameWidget.prototype = {
           y: offset.top,
           w: width*0.4,
           h: height,
-          loc: wcGLOBALS.DOCK_LOC.RIGHT,
+          loc: wcDocker.DOCK_RIGHT,
           frame: this,
         };
       }

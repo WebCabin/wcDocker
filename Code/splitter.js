@@ -50,6 +50,9 @@ wcSplitter.prototype = {
     mouse.x -= offset.left;
     mouse.y -= offset.top;
 
+    var minSize = this.minPos();
+    var maxSize = this.maxPos();
+
     if (this._horizontal) {
       this.pos((mouse.x) / width);
     } else {
@@ -183,6 +186,14 @@ wcSplitter.prototype = {
     }
 
     if (minSize1 && minSize2) {
+      if (this._horizontal) {
+        minSize1.x += minSize2.x;
+        minSize1.y = Math.max(minSize1.y, minSize2.y);
+      } else {
+        minSize1.y += minSize2.y;
+        minSize1.x = Math.max(minSize1.x, minSize2.x);
+      }
+      return minSize1;
       return {
         x: Math.min(minSize1.x, minSize2.x),
         y: Math.min(minSize1.y, minSize2.y),
