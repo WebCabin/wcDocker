@@ -92,7 +92,14 @@ wcFrameWidget.prototype = {
     }
 
     if (this._curTab > -1 && this._curTab < this._widgetList.length) {
-      this._widgetList[this._curTab].update();
+      var widget = this._widgetList[this._curTab];
+      if (widget) {
+        var scrollable = widget.scrollable();
+        this.$center.toggleClass('wcScrollableX', scrollable.x);
+        this.$center.toggleClass('wcScrollableY', scrollable.y);
+
+        widget.update();
+      }
     }
   },
 

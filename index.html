@@ -18,62 +18,70 @@
       $(document).ready(function() {
         var wcWindow = new wcDocker($('#MainWindow'));
         if (wcWindow) {
-          wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>(Press spacebar)</div>'), 0, 0);
+          wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>This is always present and should contain your main content or view<br>(Press the space key to generate random window panels)</div>'), 0, 0);
 
-          wcWindow.registerDockWidgetType('testA', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">testA</div>'), 0, 0, 1, 2);
-            widget.layout().addItem($('<div style="text-align:center">top right</div>'), 1, 0);
-            widget.layout().addItem($('<div style="text-align:center">bot left</div>'), 1, 1);
-            widget.layout().addItem($('<div style="text-align:center">bottom</div>'), 0, 2, 2, 1);
-            widget.layout().addItem($('<div style="text-align:center;verticle-align:middle;height:1000px"></div>'), 0, 3, 2);
+          wcWindow.registerDockWidgetType('Side Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">This is a side panel window</div>'), 0, 0, 1, 2);
+            widget.layout().addItem($('<div style="text-align:center">All windows contain a gridded layout</div>'), 1, 0);
+            widget.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually</div>'), 1, 1);
+            widget.layout().addItem($('<div style="text-align:center">Or multiple cells can be merged</div>'), 0, 2, 2, 1);
+            widget.layout().addItem($('<div style="text-align:center">Also normally the layout grid is hidden, but there is an option to make it visible as well</div>'), 0, 3, 2, 1);
             widget.layout().grid(true);
           });
 
-          wcWindow.registerDockWidgetType('testB', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">testB</div>'), 0, 0);
-          });
-
-          wcWindow.registerDockWidgetType('testC', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">testC</div>'), 0, 0, 0, 3);
-            widget.layout().addItem($('<div style="text-align:center">top</div>'), 1, 0, 2);
-            widget.layout().addItem($('<div style="text-align:center">x</div>'), 1, 1);
-            widget.layout().addItem($('<div style="text-align:center">right</div>'), 2, 1);
-            widget.layout().addItem($('<div style="text-align:center">bottom</div>'), 1, 2, 2);
-          });
-
-          wcWindow.registerDockWidgetType('thin', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">thin</div>'), 0, 0);
-            widget.size(100, 100);
-          });
-
-          wcWindow.registerDockWidgetType('testC split', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">testC split</div>'), 0, 0);
-            widget.size(400, 100);
-          });
-
-          wcWindow.registerDockWidgetType('testA split', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">testA split</div>'), 0, 0);
-            widget.size(100, 300);
-          });
-
-          wcWindow.registerDockWidgetType('center split', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">center split</div>'), 0, 0);
+          wcWindow.registerDockWidgetType('Larger Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">This panel has a larger initial size, but can still be shrunk</div>'), 0, 0);
             widget.size(300, 300);
           });
 
-          wcWindow.registerDockWidgetType('floater', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">floater</div>'), 0, 0);
-            widget.size(300, 300);
+          wcWindow.registerDockWidgetType('Restricted Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">Sometimes content might be too big to fit.  There are two ways to handle this, either increase the minimum size restriction on the window itself, or enable window scrolling.</div>'), 0, 0);
+            widget.layout().addItem($('<div style="text-align:center">This window has a minimum size</div>'), 0, 1);
+            widget.minSize(300, 300);
           });
 
-          testA = wcWindow.addDockWidget('testA', wcDocker.DOCK_LEFT, false);
-          testC = wcWindow.addDockWidget('testC', wcDocker.DOCK_BOTTOM, false);
-          testASplit = wcWindow.addDockWidget('testA split', wcDocker.DOCK_BOTTOM, false, testA);
-          testCSplit = wcWindow.addDockWidget('testC split', wcDocker.DOCK_LEFT, false, testC);
-          floater = wcWindow.addDockWidget('floater', wcDocker.DOCK_FLOAT, false);
-          testB = wcWindow.addDockWidget('testB', wcDocker.DOCK_RIGHT, false);
-          thin = wcWindow.addDockWidget('thin', wcDocker.DOCK_LEFT, false);
-          centerSplit = wcWindow.addDockWidget('center split', wcDocker.DOCK_LEFT, false, wcWindow.center());
+          wcWindow.registerDockWidgetType('Nested Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">Panels can also be nested within each other like this!</div>'), 0, 0);
+          });
+
+          wcWindow.registerDockWidgetType('Bottom Bar', function(widget) {
+          });
+
+          wcWindow.registerDockWidgetType('Scroll Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">If the contents of a window doesn\'t fit within its view, it will scroll, but you could disable it if you wish.</div>'), 0, 0);
+            widget.layout().addItem($('<div style="text-align:center">This window has vertical scrolling disabled.</div>'), 1, 0);
+            widget.layout().addItem($('<img src="sample.jpg">'), 0, 1, 2, 1);
+            widget.scrollable(true, false);
+            widget.size(500, 100);
+          });
+
+          // wcWindow.registerDockWidgetType('testA split', function(widget) {
+          //   widget.layout().addItem($('<div style="text-align:center">testA split</div>'), 0, 0);
+          //   widget.size(100, 300);
+          // });
+
+          // wcWindow.registerDockWidgetType('center split', function(widget) {
+          //   widget.layout().addItem($('<div style="text-align:center">center split</div>'), 0, 0);
+          //   widget.size(300, 300);
+          // });
+
+          // wcWindow.registerDockWidgetType('floater', function(widget) {
+          //   widget.layout().addItem($('<div style="text-align:center">floater</div>'), 0, 0);
+          //   widget.size(300, 300);
+          // });
+
+          wcWindow.addDockWidget('Side Panel', wcDocker.DOCK_LEFT, false);
+          wcWindow.addDockWidget('Larger Panel', wcDocker.DOCK_RIGHT, false);
+          var bottomPanel = wcWindow.addDockWidget('Bottom Bar', wcDocker.DOCK_BOTTOM, false, testA);
+
+          wcWindow.addDockWidget('Nested Panel', wcDocker.DOCK_RIGHT, false, bottomPanel);
+          wcWindow.addDockWidget('Restricted Panel', wcDocker.DOCK_LEFT, false);
+          wcWindow.addDockWidget('Scroll Panel', wcDocker.DOCK_LEFT, false);
+          // testCSplit = wcWindow.addDockWidget('testC split', wcDocker.DOCK_LEFT, false, testC);
+          // floater = wcWindow.addDockWidget('floater', wcDocker.DOCK_FLOAT, false);
+          // testB = wcWindow.addDockWidget('testB', wcDocker.DOCK_RIGHT, false);
+          // thin = wcWindow.addDockWidget('thin', wcDocker.DOCK_LEFT, false);
+          // centerSplit = wcWindow.addDockWidget('center split', wcDocker.DOCK_LEFT, false, wcWindow.center());
 
           var testA, testB, testC, testASplit, testCSplit, floater;
           var testIndex = 0;

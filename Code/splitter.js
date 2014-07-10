@@ -54,9 +54,9 @@ wcSplitter.prototype = {
     var maxSize = this.maxPos();
 
     if (this._horizontal) {
-      this.pos((mouse.x) / width);
+      this.pos((mouse.x-3) / width);
     } else {
-      this.pos((mouse.y) / height);
+      this.pos((mouse.y-3) / height);
     }
   },
 

@@ -20,6 +20,11 @@ function wcDockWidget(title) {
     y: 100,
   };
 
+  this._scrollable = {
+    x: true,
+    y: true,
+  };
+
   this._init();
 };
 
@@ -59,6 +64,42 @@ wcDockWidget.prototype = {
     }
     this._minSize.x = x;
     this._minSize.y = y;
+  },
+
+  // Gets, or Sets the scroll position of the window (if it is scrollable).
+  // Params:
+  //    x, y      If supplied, sets the scroll position of the window.
+  // Returns:
+  //    object    The scroll position of the window.
+  scroll: function(x, y) {
+    if (!this.$container) {
+      return {x: 0, y: 0};
+    }
+
+    if (typeof x !== 'undefined') {
+      this.$container.scrollLeft(x);
+      this.$container.scrollTop(y);
+    }
+
+    return {
+      x: this.$container.scrollLeft(),
+      y: this.$container.scrollTop(),
+    };
+  },
+
+  // Gets, or Sets whether the window is scrollable.
+  // Params:
+  //    x, y      If supplied, assigns whether the window is scrollable
+  //              for each axis.
+  // Returns:
+  //    object    The current scrollable status.
+  scrollable: function(x, y) {
+    if (typeof x !== 'undefined') {
+      this._scrollable.x = x? true: false;
+      this._scrollable.y = y? true: false;
+    }
+
+    return {x: this._scrollable.x, y: this._scrollable.y};
   },
 
   // Gets, or Sets a new container for this layout.

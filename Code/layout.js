@@ -112,11 +112,11 @@ wcLayout.prototype = {
 
   // Updates the size of the layout.
   update: function() {
-    var width = this.$container.width();
-    var height = this.$container.height();
+    // var width = this.$container.width();
+    // var height = this.$container.height();
 
-    this.$table.css('width', width + 'px');
-    this.$table.css('height', height + 'px');
+    // this.$table.css('width', width + 'px');
+    // this.$table.css('height', height + 'px');
   },
 
   // Adds an item into the layout, expanding the grid

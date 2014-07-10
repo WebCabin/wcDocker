@@ -173,7 +173,7 @@ wcDocker.prototype = {
           y: event.clientY,
         };
         self._draggingSplitter.moveBar(mouse);
-        self.update();
+        self._draggingSplitter.update();
       } else if (self._draggingFrameSizer) {
         var mouse = {
           x: event.clientX,
@@ -185,7 +185,7 @@ wcDocker.prototype = {
         mouse.y += offset.top;
 
         self._draggingFrame.resize(self._draggingFrameSizer, mouse);
-        self.update();
+        self._draggingFrame.update();
       } else if (self._draggingFrame) {
         var mouse = {
           x: event.clientX,
@@ -195,7 +195,7 @@ wcDocker.prototype = {
         // Floating widgets without their dock button active just move without docking.
         if (self._draggingFrame._isFloating && (event.which === 1 && !self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked'))) {
           self._draggingFrame.move(mouse);
-          self.update();
+          self._draggingFrame.update();
         }
 
         if (self._ghost) {
@@ -316,8 +316,8 @@ wcDocker.prototype = {
           };
           var frame = widget.parent();
           if (frame instanceof wcFrameWidget) {
-            frame._pos.x = mouse.x
-            frame._pos.y = mouse.y
+            frame._pos.x = mouse.x;// + self._ghost.rect().x;
+            frame._pos.y = mouse.y;// + self._ghost.rect().y;
           }
 
           // frame._pos.x -= self._ghost.rect().x
@@ -325,7 +325,7 @@ wcDocker.prototype = {
           frame._size.x = self._ghost.rect().w;
           frame._size.y = self._ghost.rect().h;
 
-          self.update();
+          frame.update();
         }
         self._ghost.destroy();
       }
