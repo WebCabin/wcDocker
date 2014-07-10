@@ -51,9 +51,9 @@ wcSplitter.prototype = {
     mouse.y -= offset.top;
 
     if (this._horizontal) {
-      this.pos((mouse.x-3) / width);
+      this.pos((mouse.x) / width);
     } else {
-      this.pos((mouse.y-3) / height);
+      this.pos((mouse.y) / height);
     }
   },
 
@@ -114,7 +114,7 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.x, size);
       }
 
-      this.$bar.css('left', size);
+      this.$bar.css('left', size+2);
       this.$pane[0].css('width', size + 'px');
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');

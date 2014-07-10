@@ -196,31 +196,41 @@ wcMainWindow.prototype = {
         if (self._ghost) {
           self._ghost.move(mouse);
 
+          var forceFloat = !(self._draggingFrame._isFloating || event.which === 1);
           var found = false;
-          for (var i = -1; i < self._frameList.length; ++i) {
 
-            var anchorDrop;
-            if (i === -1) {
-              anchorDrop = self._draggingFrame.checkAnchorDrop(mouse, true);
-            } else {
-              anchorDrop = self._frameList[i].checkAnchorDrop(mouse, false);
-            }
-
-            if (anchorDrop) {
-              if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
-                self._ghost.anchor(mouse);
-                self._anchorDrop = anchorDrop;
-                if (anchorDrop) {
-                  self._ghost.anchor(mouse, anchorDrop);
-                }
+          // Check anchoring with self.
+          var anchorDrop = self._draggingFrame.checkAnchorDrop(mouse, true);
+          if (anchorDrop) {
+            if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
+              self._ghost.anchor(mouse);
+              self._anchorDrop = anchorDrop;
+              if (anchorDrop) {
+                self._ghost.anchor(mouse, anchorDrop);
               }
-              found = true;
-              break;
             }
+            found = true;
           }
 
-          // Check with the main center window for docking.
-          if (!found) {
+          // Bypass anchoring if middle mouse is used on a non-floating window.
+          if (!found && !forceFloat) {
+            // Check anchoring with all other frames.
+            for (var i = 0; i < self._frameList.length; ++i) {
+              anchorDrop = self._frameList[i].checkAnchorDrop(mouse, false);
+              if (anchorDrop) {
+                if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
+                  self._ghost.anchor(mouse);
+                  self._anchorDrop = anchorDrop;
+                  if (anchorDrop) {
+                    self._ghost.anchor(mouse, anchorDrop);
+                  }
+                }
+                found = true;
+                break;
+              }
+            }
+
+            // Check with the main center window for docking.
             function _checkAnchorDrop(mouse) {
               var width = self._center.$table.width();
               var height = self._center.$table.height();
@@ -276,7 +286,7 @@ wcMainWindow.prototype = {
             }
           }
 
-          if (!found && self._anchorDrop) {
+          if (!found) {
             self._anchorDrop = false;
             self._ghost.anchor(mouse);
           }

@@ -51,14 +51,14 @@ wcFrameWidget.prototype = {
 
     if (this._isFloating) {
       this.$dock    = $('<div class="wcFrameDockButton"></div>');
-      this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-3px').css('left', '3px').css('right', '3px');
-      this.$bottom  = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('bottom', '-3px').css('left', '3px').css('right', '3px');
-      this.$left    = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('left', '-3px').css('top', '3px').css('bottom', '3px');
-      this.$right   = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('right', '-3px').css('top', '3px').css('bottom', '3px');
-      this.$corner1 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('top', '-3px').css('left', '-3px');
-      this.$corner2 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('top', '-3px').css('right', '-3px');
-      this.$corner3 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('bottom', '-3px').css('right', '-3px');
-      this.$corner4 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('bottom', '-3px').css('left', '-3px');
+      this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');
+      this.$bottom  = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('bottom', '-6px').css('left', '0px').css('right', '0px');
+      this.$left    = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('left', '-6px').css('top', '0px').css('bottom', '0px');
+      this.$right   = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('right', '-6px').css('top', '0px').css('bottom', '0px');
+      this.$corner1 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('top', '-6px').css('left', '-6px');
+      this.$corner2 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('top', '-6px').css('right', '-6px');
+      this.$corner3 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('bottom', '-6px').css('right', '-6px');
+      this.$corner4 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('bottom', '-6px').css('left', '-6px');
 
       this.$frame.append(this.$dock);
       this.$frame.append(this.$top);
