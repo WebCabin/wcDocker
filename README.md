@@ -22,6 +22,7 @@ For a currently working demo, try it here [http://arpg.webcabin.org/test](http:/
 * An option to enable/disable closing of all or individual window types.
 * A possible option of restricting the number of total windows created.
 * A possible option of restricting the total copies of the same window type.
+* Allow styling of window colors and other options.
 
 ****
 
