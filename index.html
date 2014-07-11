@@ -64,10 +64,13 @@
             widget.layout().addItem($('<div style="width:1000px;height:2000px;"></div>'), 0, 1);
             widget.scrollable(true, false);
             widget.size(100, 100);
+            widget.pos()
           });
 
           wcWindow.registerDockWidgetType('Floating Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel is "floating", that means it is not docked and can be moved freely on top of the screen.  To dock this window, toggle the float button on the upper left or use the middle mouse button and drag it to a location.  To return this window to "float" mode, or any other window, drag it to a location that does not have a valid dock position, or use the middle mouse and drag them.</div>'));
+            widget.layout().addItem($('<div style="text-align:center">This panel is "floating", that means it is not docked and can be moved freely on top of the screen.  To dock this window, toggle the anchor button on the upper left and then drag it to a location, or use the middle mouse button and drag.  To return this window to "floating" mode, as well as any other window, either drag it away from any dock position or use the middle mouse again.</div>'));
+            widget.size(400, 300);
+            widget.pos(0.7, 0.5);
           });
 
           wcWindow.addDockWidget('Top Panel', wcDocker.DOCK_TOP, false);
@@ -78,6 +81,7 @@
           wcWindow.addDockWidget('Max Restricted Panel', wcDocker.DOCK_RIGHT, false, bottomPanel);
           wcWindow.addDockWidget('Min Restricted Panel', wcDocker.DOCK_LEFT, false);
           wcWindow.addDockWidget('Scroll Panel', wcDocker.DOCK_TOP, false);
+          wcWindow.addDockWidget('Floating Panel', wcDocker.DOCK_FLOAT, false);
         }
       });
     </script>

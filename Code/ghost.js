@@ -94,7 +94,7 @@ wcGhost.prototype = {
       this._anchor = null;
       this.$ghost.stop().animate({
         opacity: 0.3,
-        'margin-left': this._rect.x + 'px',
+        'margin-left': this._rect.x - this._rect.w/2 + 'px',
         'margin-top': this._rect.y + 'px',
         width: this._rect.w + 'px',
         height: this._rect.h + 'px',
@@ -105,12 +105,13 @@ wcGhost.prototype = {
     this._anchor = anchor;
     this.$ghost.stop().animate({
       opacity: 0.8,
-      'margin-left': '0px',
-      'margin-top': '0px',
+      'margin-left': '1px',
+      'margin-top': '1px',
+      border: '0px',
       left: anchor.x + 'px',
       top: anchor.y + 'px',
-      width: anchor.w + 'px',
-      height: anchor.h + 'px',
+      width: anchor.w+1 + 'px',
+      height: anchor.h+1 + 'px',
     }, 200);
   },
 

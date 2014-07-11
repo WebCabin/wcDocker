@@ -10,6 +10,11 @@ function wcDockWidget(title) {
 
   this._layout = null;
 
+  this._pos = {
+    x: 0.5,
+    y: 0.5,
+  };
+
   this._size = {
     x: 200,
     y: 200,
@@ -56,10 +61,21 @@ wcDockWidget.prototype = {
     return this._layout;
   },
 
+  // Gets, or Sets the default position of the widget if it is floating.
+  // Params:
+  //    x, y    If supplied, sets the position (percentage value from 0 to 1).
+  pos: function(x, y) {
+    if (typeof x === 'undefined') {
+      return {x: this._pos.x, y: this._pos.y};
+    }
+    this._pos.x = x;
+    this._pos.y = y;
+  },
+
   // Gets, or Sets the desired size of the widget.
   size: function(x, y) {
     if (typeof x === 'undefined') {
-      return this._size;
+      return {x: this._size.x, y: this._size.y};
     }
     this._size.x = x;
     this._size.y = y;

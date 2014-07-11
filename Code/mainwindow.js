@@ -242,8 +242,7 @@ wcDocker.prototype = {
           };
           var frame = widget.parent();
           if (frame instanceof wcFrameWidget) {
-            frame._pos.x = mouse.x;// + self._ghost.rect().x;
-            frame._pos.y = mouse.y;// + self._ghost.rect().y;
+            frame.pos(mouse.x, mouse.y + self._ghost.rect().h/2, true);
           }
 
           // frame._pos.x -= self._ghost.rect().x

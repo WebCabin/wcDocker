@@ -23,8 +23,8 @@ function wcFrameWidget($container, parent, isFloating) {
   this._widgetList = [];
 
   this._pos = {
-    x: 700,
-    y: 400,
+    x: 0.5,
+    y: 0.5,
   };
 
   this._size = {
@@ -83,10 +83,13 @@ wcFrameWidget.prototype = {
 
   // Updates the size of the frame.
   _update: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
     // Floating windows manage their own sizing.
     if (this._isFloating) {
-      this.$frame.css('left', this._pos.x + 'px');
-      this.$frame.css('top', this._pos.y + 'px');
+      this.$frame.css('left', (this._pos.x * width) - this._size.x/2 + 'px');
+      this.$frame.css('top', (this._pos.y * height) - this._size.y/2 + 'px');
       this.$frame.css('width', this._size.x + 'px');
       this.$frame.css('height', this._size.y + 'px');
     }
@@ -112,6 +115,32 @@ wcFrameWidget.prototype = {
       }
 
       widget._update();
+    }
+  },
+
+  // Gets, or Sets the position of the frame.
+  // Params:
+  //    x, y    If supplied, assigns the new position.
+  //    pixels  If true, the coordinates given will be treated as a
+  //            pixel position rather than a percentage.
+  pos: function(x, y, pixels) {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    if (typeof x === 'undefined') {
+      if (pixels) {
+        return {x: this._pos.x*width, y: this._pos.y*height};
+      } else {
+        return {x: this._pos.x, y: this._pos.y};
+      }
+    }
+
+    if (pixels) {
+      this._pos.x = x/width;
+      this._pos.y = y/height;
+    } else {
+      this._pos.x = x;
+      this._pos.y = y;
     }
   },
 
@@ -180,15 +209,16 @@ wcFrameWidget.prototype = {
       }
     }
 
+    this._size = this.size();
+
     if (this._curTab === -1 && this._widgetList.length) {
       this._curTab = 0;
       this._widgetList[this._curTab].layout().container(this.$center);
       this._widgetList[this._curTab].container(this.$center);
       this.$title.text(this._widgetList[this._curTab].title());
+      this._pos = this._widgetList[this._curTab].pos();
     }
-    this._widgetList[this._curTab].parent(this);
-
-    this._size = this.size();
+    widget.parent(this);
   },
 
   // Remvoes a given widget from the tab item.
@@ -229,16 +259,22 @@ wcFrameWidget.prototype = {
   // Params:
   //    mouse     The current mouse position.
   move: function(mouse) {
-    this._pos.x = mouse.x + this._anchorMouse.x;
-    this._pos.y = mouse.y + this._anchorMouse.y;
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    this._pos.x = (mouse.x + this._anchorMouse.x) / width;
+    this._pos.y = (mouse.y + this._anchorMouse.y) / height;
   },
 
   // Sets the anchor position for moving the widget.
   // Params:
   //    mouse     The current mouse position.
   anchorMove: function(mouse) {
-    this._anchorMouse.x = this._pos.x - mouse.x;
-    this._anchorMouse.y = this._pos.y - mouse.y;
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    this._anchorMouse.x = (this._pos.x * width) - mouse.x;
+    this._anchorMouse.y = (this._pos.y * height) - mouse.y;
   },
 
   // Checks if the mouse is in a valid anchor position for docking a widget.
@@ -268,22 +304,27 @@ wcFrameWidget.prototype = {
     var minSize = this.minSize();
     var maxSize = this.maxSize();
 
+    var pos = {
+      x: (this._pos.x * width) - this._size.x/2,
+      y: (this._pos.y * height) - this._size.y/2,
+    };
+
     for (var i = 0; i < edges.length; ++i) {
       switch (edges[i]) {
         case 'top':
-          this._size.y += this._pos.y - mouse.y;
-          this._pos.y = mouse.y;
+          this._size.y += pos.y - mouse.y;
+          pos.y = mouse.y;
           if (this._size.y < minSize.y) {
-            this._pos.y += this._size.y - minSize.y;
+            pos.y += this._size.y - minSize.y;
             this._size.y = minSize.y;
           }
           if (this._size.y > maxSize.y) {
-            this._pos.y += this._size.y - maxSize.y;
+            pos.y += this._size.y - maxSize.y;
             this._size.y = maxSize.y;
           }
           break;
         case 'bottom':
-          this._size.y = mouse.y - this._pos.y;
+          this._size.y = mouse.y - pos.y;
           if (this._size.y < minSize.y) {
             this._size.y = minSize.y;
           }
@@ -292,19 +333,19 @@ wcFrameWidget.prototype = {
           }
           break;
         case 'left':
-          this._size.x += this._pos.x - mouse.x;
-          this._pos.x = mouse.x;
+          this._size.x += pos.x - mouse.x;
+          pos.x = mouse.x;
           if (this._size.x < minSize.x) {
-            this._pos.x += this._size.x - minSize.x;
+            pos.x += this._size.x - minSize.x;
             this._size.x = minSize.x;
           }
           if (this._size.x > maxSize.x) {
-            this._pos.x += this._size.x - maxSize.x;
+            pos.x += this._size.x - maxSize.x;
             this._size.x = maxSize.x;
           }
           break;
         case 'right':
-          this._size.x = mouse.x - this._pos.x;
+          this._size.x = mouse.x - pos.x;
           if (this._size.x < minSize.x) {
             this._size.x = minSize.x;
           }
@@ -313,6 +354,9 @@ wcFrameWidget.prototype = {
           }
           break;
       }
+
+      this._pos.x = (pos.x + this._size.x/2) / width;
+      this._pos.y = (pos.y + this._size.y/2) / height;
     }
   },
 
