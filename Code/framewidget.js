@@ -136,17 +136,27 @@ wcFrameWidget.prototype = {
   // Gets the minimum size of the widget.
   minSize: function() {
     var size = {
-      x: -1,
-      y: -1,
+      x: 0,
+      y: 0,
     };
 
     for (var i = 0; i < this._widgetList.length; ++i) {
-      if (size.x === -1 || size.x > this._widgetList[i].minSize().x) {
-        size.x = this._widgetList[i].minSize().x;
-      }
-      if (size.y === -1 || size.y > this._widgetList[i].minSize().y) {
-        size.y = this._widgetList[i].minSize().y;
-      }
+      size.x = Math.max(size.x, this._widgetList[i].minSize().x);
+      size.y = Math.max(size.y, this._widgetList[i].minSize().y);
+    }
+    return size;
+  },
+
+  // Gets the minimum size of the widget.
+  maxSize: function() {
+    var size = {
+      x: Infinity,
+      y: Infinity,
+    };
+
+    for (var i = 0; i < this._widgetList.length; ++i) {
+      size.x = Math.min(size.x, this._widgetList[i].maxSize().x);
+      size.y = Math.min(size.y, this._widgetList[i].maxSize().y);
     }
     return size;
   },
@@ -256,9 +266,9 @@ wcFrameWidget.prototype = {
     mouse.y -= offset.top;
 
     var minSize = this.minSize();
+    var maxSize = this.maxSize();
 
     for (var i = 0; i < edges.length; ++i) {
-
       switch (edges[i]) {
         case 'top':
           this._size.y += this._pos.y - mouse.y;
@@ -267,11 +277,18 @@ wcFrameWidget.prototype = {
             this._pos.y += this._size.y - minSize.y;
             this._size.y = minSize.y;
           }
+          if (this._size.y > maxSize.y) {
+            this._pos.y += this._size.y - maxSize.y;
+            this._size.y = maxSize.y;
+          }
           break;
         case 'bottom':
           this._size.y = mouse.y - this._pos.y;
           if (this._size.y < minSize.y) {
             this._size.y = minSize.y;
+          }
+          if (this._size.y > maxSize.y) {
+            this._size.y = maxSize.y;
           }
           break;
         case 'left':
@@ -281,11 +298,18 @@ wcFrameWidget.prototype = {
             this._pos.x += this._size.x - minSize.x;
             this._size.x = minSize.x;
           }
+          if (this._size.x > maxSize.x) {
+            this._pos.x += this._size.x - maxSize.x;
+            this._size.x = maxSize.x;
+          }
           break;
         case 'right':
           this._size.x = mouse.x - this._pos.x;
           if (this._size.x < minSize.x) {
             this._size.x = minSize.x;
+          }
+          if (this._size.x > maxSize.x) {
+            this._size.x = maxSize.x;
           }
           break;
       }

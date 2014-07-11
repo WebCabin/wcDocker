@@ -19,10 +19,9 @@ For a currently working demo, try it here [http://arpg.webcabin.org/test](http:/
 * Ability to group multiple windows into the same dock panel via tabbing.
 * Save/Restore support for remembering a user's window setup.
 * Dynamic update support to help optimize refreshing window contents when another window's change affects it.
-* An option to enable/disable closing of all or individual window types.
 * A possible option of restricting the number of total windows created.
 * A possible option of restricting the total copies of the same window type.
-* Allow styling of window colors and other options.
+* Allow styling of window colors and other options either by changing css files or an internal color picker system.
 
 ****
 

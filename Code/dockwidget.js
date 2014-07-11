@@ -20,6 +20,11 @@ function wcDockWidget(title) {
     y: 100,
   };
 
+  this._maxSize = {
+    x: Infinity,
+    y: Infinity,
+  };
+
   this._scrollable = {
     x: true,
     y: true,
@@ -67,6 +72,15 @@ wcDockWidget.prototype = {
     }
     this._minSize.x = x;
     this._minSize.y = y;
+  },
+
+  // Gets, or Sets the maximum size of the widget.
+  maxSize: function(x, y) {
+    if (typeof x === 'undefined') {
+      return this._maxSize;
+    }
+    this._maxSize.x = x;
+    this._maxSize.y = y;
   },
 
   // Gets, or Sets the scroll position of the window (if it is scrollable).

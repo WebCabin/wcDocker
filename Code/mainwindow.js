@@ -5,8 +5,6 @@
 */
 function wcDocker($container) {
   this.$container = $container.addClass('wcDocker');
-  // $container.css('width', '100%');
-  // $container.css('height', '100%');
 
   this._root = null;
   this._center = null;

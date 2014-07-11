@@ -20,12 +20,13 @@
       $(document).ready(function() {
         var wcWindow = new wcDocker($('body'));
         if (wcWindow) {
-          wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>This is always present and should contain your main content or view</div>'), 0, 0);
+          wcWindow.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br><br>Any window, except this one, can be moved by clicking their title bar and dragging them to a new location.</div>'), 0, 0);
 
           wcWindow.registerDockWidgetType('Top Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel can not be moved or removed, and nothing can be docked with it</div>'), 0, 0, 1, 2);
+            widget.layout().addItem($('<div style="text-align:center">This panel can not be moved, removed, resized, and nothing can be docked with it</div>'), 0, 0, 1, 2);
             widget.size(50, 50);
             widget.minSize(50, 50);
+            widget.maxSize(50, 50);
             widget.moveable(false);
             widget.closeable(false);
           }, true);
@@ -38,19 +39,19 @@
             widget.layout().grid(true);
           });
 
-          wcWindow.registerDockWidgetType('Larger Panel', function(widget) {
+          wcWindow.registerDockWidgetType('Initial Size Panel', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">This panel has a larger initial size, but can still be shrunk</div>'), 0, 0);
             widget.size(700, 700);
           });
 
-          wcWindow.registerDockWidgetType('Restricted Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">Sometimes content might be too big to fit.  There are two ways to handle this, either increase the minimum size restriction on the window itself, or enable window scrolling.</div>'), 0, 0);
-            widget.layout().addItem($('<div style="text-align:center">This window has a minimum size</div>'), 0, 1);
+          wcWindow.registerDockWidgetType('Min Restricted Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">This panel has a minimum size, try reducing me!.</div>'), 0, 0);
             widget.minSize(300, 300);
           });
 
-          wcWindow.registerDockWidgetType('Nested Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">Panels can also be nested within each other like this!</div>'), 0, 0);
+          wcWindow.registerDockWidgetType('Max Restricted Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">This panel has a maximum size, try expanding me!</div>'), 0, 0);
+            widget.maxSize(300, 300);
           });
 
           wcWindow.registerDockWidgetType('Bottom Bar', function(widget) {
@@ -60,19 +61,22 @@
 
           wcWindow.registerDockWidgetType('Scroll Panel', function(widget) {
             widget.layout().addItem($('<div>If the contents of a window doesn\'t fit within its view, it will scroll, but you could disable it if you wish.</div>'), 0, 0);
-            widget.layout().addItem($('<div>This window has vertical scrolling disabled.</div>'), 0, 1);
-            widget.layout().addItem($('<div style="width:1000px;height:2000px;"></div>'), 0, 2);
+            widget.layout().addItem($('<div style="width:1000px;height:2000px;"></div>'), 0, 1);
             widget.scrollable(true, false);
             widget.size(100, 100);
           });
 
+          wcWindow.registerDockWidgetType('Floating Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">This panel is "floating", that means it is not docked and can be moved freely on top of the screen.  To dock this window, toggle the float button on the upper left or use the middle mouse button and drag it to a location.  To return this window to "float" mode, or any other window, drag it to a location that does not have a valid dock position, or use the middle mouse and drag them.</div>'));
+          });
+
           wcWindow.addDockWidget('Top Panel', wcDocker.DOCK_TOP, false);
           wcWindow.addDockWidget('Side Panel', wcDocker.DOCK_LEFT, false);
-          wcWindow.addDockWidget('Larger Panel', wcDocker.DOCK_RIGHT, false);
+          wcWindow.addDockWidget('Initial Size Panel', wcDocker.DOCK_RIGHT, false);
           var bottomPanel = wcWindow.addDockWidget('Bottom Bar', wcDocker.DOCK_BOTTOM, false);
 
-          wcWindow.addDockWidget('Nested Panel', wcDocker.DOCK_RIGHT, false, bottomPanel);
-          wcWindow.addDockWidget('Restricted Panel', wcDocker.DOCK_LEFT, false);
+          wcWindow.addDockWidget('Max Restricted Panel', wcDocker.DOCK_RIGHT, false, bottomPanel);
+          wcWindow.addDockWidget('Min Restricted Panel', wcDocker.DOCK_LEFT, false);
           wcWindow.addDockWidget('Scroll Panel', wcDocker.DOCK_TOP, false);
         }
       });

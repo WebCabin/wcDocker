@@ -149,12 +149,28 @@ wcSplitter.prototype = {
 
   // Gets the minimum position of the splitter divider.
   minPos: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
     var minSize;
     if (this._pane[0] && typeof this._pane[0].minSize === 'function') {
       minSize = this._pane[0].minSize();
     } else {
       minSize = {x:50,y:50};
     }
+
+    var maxSize;
+    if (this._pane[1] && typeof this._pane[1].maxSize === 'function') {
+      maxSize = this._pane[1].maxSize();
+    } else {
+      maxSize = {x:width,y:height};
+    }
+
+    maxSize.x = width  - Math.min(maxSize.x, width);
+    maxSize.y = height - Math.min(maxSize.y, height);
+
+    minSize.x = Math.max(minSize.x, maxSize.x);
+    minSize.y = Math.max(minSize.y, maxSize.y);
     return minSize;
   },
 
@@ -164,14 +180,24 @@ wcSplitter.prototype = {
     var height = this.$container.height();
 
     var maxSize;
-    if (this._pane[1] && typeof this._pane[1].minSize === 'function') {
-      maxSize = this._pane[1].minSize();
+    if (this._pane[0] && typeof this._pane[0].maxSize === 'function') {
+      maxSize = this._pane[0].maxSize();
     } else {
-      maxSize = {x:50,y:50};
+      maxSize = {x:width,y:height};
     }
 
-    maxSize.x = width  - maxSize.x;
-    maxSize.y = height - maxSize.y;
+    var minSize;
+    if (this._pane[1] && typeof this._pane[1].minSize === 'function') {
+      minSize = this._pane[1].minSize();
+    } else {
+      minSize = {x:50,y:50};
+    }
+
+    minSize.x = width  - minSize.x;
+    minSize.y = height - minSize.y;
+
+    maxSize.x = Math.min(minSize.x, maxSize.x);
+    maxSize.y = Math.min(minSize.y, maxSize.y);
     return maxSize;
   },
 
@@ -204,6 +230,40 @@ wcSplitter.prototype = {
       return minSize1;
     } else if (minSize2) {
       return minSize2;
+    }
+
+    return false;
+  },
+
+  // Gets the minimum size of the widget.
+  maxSize: function() {
+    var maxSize1;
+    var maxSize2;
+    if (this._pane[0] && typeof this._pane[0].maxSize === 'function') {
+      maxSize1 = this._pane[0].maxSize();
+    }
+
+    if (this._pane[1] && typeof this._pane[1].maxSize === 'function') {
+      maxSize2 = this._pane[1].maxSize();
+    }
+
+    if (maxSize1 && maxSize2) {
+      if (this._horizontal) {
+        maxSize1.x += maxSize2.x;
+        maxSize1.y = Math.min(maxSize1.y, maxSize2.y);
+      } else {
+        maxSize1.y += maxSize2.y;
+        maxSize1.x = Math.min(maxSize1.x, maxSize2.x);
+      }
+      return maxSize1;
+      return {
+        x: Math.min(maxSize1.x, maxSize2.x),
+        y: Math.min(maxSize1.y, maxSize2.y),
+      };
+    } else if (maxSize1) {
+      return maxSize1;
+    } else if (maxSize2) {
+      return maxSize2;
     }
 
     return false;
