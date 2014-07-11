@@ -11,11 +11,11 @@ For a currently working demo, try it here [http://arpg.webcabin.org/test](http:/
 * Windows can be initialized in code for a default layout.
 * Windows can be programmed with a minimum size constraint.
 * Multiple windows with the same contents can be created.
+* Windows can be created via context menu.
 
 
 ### The following features are still under development: ###
 
-* Windows can be created via context menu.
 * Ability to group multiple windows into the same dock panel via tabbing.
 * Save/Restore support for remembering a user's window setup.
 * Dynamic update support to help optimize refreshing window contents when another window's change affects it.
