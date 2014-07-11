@@ -25,6 +25,7 @@ function wcDockWidget(title) {
     y: true,
   };
 
+  this._moveable = true;
   this._closeable = true;
 
   this._init();
@@ -102,6 +103,15 @@ wcDockWidget.prototype = {
     }
 
     return {x: this._scrollable.x, y: this._scrollable.y};
+  },
+
+  // Sets, or Gets the moveable status of the window.
+  moveable: function(enabled) {
+    if (typeof enabled !== 'undefined') {
+      this._moveable = enabled? true: false;
+    }
+
+    return this._moveable;
   },
 
   // Gets, or Sets whether this dock window can be closed.

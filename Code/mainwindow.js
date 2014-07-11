@@ -463,10 +463,12 @@ wcDocker.prototype = {
   //                  a newly created dock widget of this type.
   //                  Params:
   //                    widget      The dock widget to populate.
+  //    isPrivate     If true, this type will not appear to the user
+  //                  as a window type to create.
   // Returns:
   //    true        The new type has been added successfully.
   //    false       Failure, the type name already exists.
-  registerDockWidgetType: function(name, createFunc) {
+  registerDockWidgetType: function(name, createFunc, isPrivate) {
     for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
       if (this._dockWidgetTypeList[i].name === name) {
         return false;
@@ -476,6 +478,7 @@ wcDocker.prototype = {
     this._dockWidgetTypeList.push({
       name: name,
       create: createFunc,
+      isPrivate: isPrivate,
     });
     return true;
   },

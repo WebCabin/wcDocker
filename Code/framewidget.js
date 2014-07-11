@@ -97,7 +97,15 @@ wcFrameWidget.prototype = {
       this.$center.toggleClass('wcScrollableX', scrollable.x);
       this.$center.toggleClass('wcScrollableY', scrollable.y);
 
-      if (widget._closeable) {
+      if (widget.moveable()) {
+        this.$frame.prepend(this.$title);
+        this.$center.css('top', '21px');
+      } else {
+        this.$title.remove();
+        this.$center.css('top', '0px');
+      }
+
+      if (widget.closeable()) {
         this.$frame.append(this.$close);
       } else {
         this.$close.remove();
@@ -207,6 +215,14 @@ wcFrameWidget.prototype = {
     return false;
   },
 
+  // Moves the widget based on mouse dragging.
+  // Params:
+  //    mouse     The current mouse position.
+  move: function(mouse) {
+    this._pos.x = mouse.x + this._anchorMouse.x;
+    this._pos.y = mouse.y + this._anchorMouse.y;
+  },
+
   // Sets the anchor position for moving the widget.
   // Params:
   //    mouse     The current mouse position.
@@ -221,18 +237,10 @@ wcFrameWidget.prototype = {
   //    same      Whether the moving frame and this one are the same.
   checkAnchorDrop: function(mouse, same, ghost) {
     var widget = this.widget();
-    if (widget) {
+    if (widget && widget.moveable()) {
       return widget.layout().checkAnchorDrop(mouse, same, ghost, this._isFloating, this.$frame);
     }
     return false;
-  },
-
-  // Moves the widget based on mouse dragging.
-  // Params:
-  //    mouse     The current mouse position.
-  move: function(mouse) {
-    this._pos.x = mouse.x + this._anchorMouse.x;
-    this._pos.y = mouse.y + this._anchorMouse.y;
   },
 
   // Resizes the widget based on mouse dragging.

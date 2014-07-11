@@ -1,10 +1,10 @@
-wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking windows.  Windows can float on their own or be docked; docking can be on either side, the bottom, or even nested within each other.  All windows can be moved, resized, removed, and created at will by the user.  This project is currently under development by Jeff Houde (lochemage@gmail.com).  wcDocker requires the JQuery library, currently developed under 2.1.1 although much earlier versions should work fine.
+wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking windows.  Windows can float on their own or be docked on any side of any other window.  All windows can be moved, resized, removed, and created at will by the user (unless otherwise restricted).  This project is currently under development by Jeff Houde (lochemage@gmail.com).  wcDocker requires the JQuery library, currently developed using version 2.1.1 although earlier versions should work as well.
 
 For a currently working demo, try it here [http://arpg.webcabin.org/test](http://arpg.webcabin.org/test)
 
 ### The following features are supported currently: ###
 
-* Windows can be docked to either side, the bottom, or nested within each other.
+* Windows can be docked to any side of any other window.
 * Windows can be detached from a dock position and float on their own.
 * Windows can be resized.
 * Windows can be closed via close button.
@@ -22,9 +22,6 @@ For a currently working demo, try it here [http://arpg.webcabin.org/test](http:/
 * An option to enable/disable closing of all or individual window types.
 * A possible option of restricting the number of total windows created.
 * A possible option of restricting the total copies of the same window type.
-* A possible option of disabling movement and destruction of a window, making it permenantly docked at its location (an example would be for a file menu).
-* A possible option of disabling nesting from a certain window, making other windows unable to dock nested inside it.
-* A possible option of allowing docking on the top (again, an example would be a file menu).
 * Allow styling of window colors and other options.
 
 ****

@@ -22,6 +22,14 @@
         if (wcWindow) {
           wcWindow.center().addItem($('<div style="text-align:center">Center Window<br>This is always present and should contain your main content or view</div>'), 0, 0);
 
+          wcWindow.registerDockWidgetType('Top Panel', function(widget) {
+            widget.layout().addItem($('<div style="text-align:center">This panel can not be moved or removed, and nothing can be docked with it</div>'), 0, 0, 1, 2);
+            widget.size(50, 50);
+            widget.minSize(50, 50);
+            widget.moveable(false);
+            widget.closeable(false);
+          }, true);
+
           wcWindow.registerDockWidgetType('Side Panel', function(widget) {
             widget.layout().addItem($('<div style="text-align:center">All windows contain a gridded layout</div>'), 0, 0, 1, 2);
             widget.layout().addItem($('<div style="text-align:center">This is a side panel window</div>'), 1, 0);
@@ -58,6 +66,7 @@
             widget.size(100, 100);
           });
 
+          wcWindow.addDockWidget('Top Panel', wcDocker.DOCK_TOP, false);
           wcWindow.addDockWidget('Side Panel', wcDocker.DOCK_LEFT, false);
           wcWindow.addDockWidget('Larger Panel', wcDocker.DOCK_RIGHT, false);
           var bottomPanel = wcWindow.addDockWidget('Bottom Bar', wcDocker.DOCK_BOTTOM, false);
