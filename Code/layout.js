@@ -5,9 +5,6 @@ function wcLayout($container, parent) {
   this.$container = $container;
   this._parent = parent;
 
-  this._border = '0px';
-  this._padding = '0px';
-
   this._grid = [];
   this.$table = null;
 
@@ -111,12 +108,7 @@ wcLayout.prototype = {
   },
 
   // Updates the size of the layout.
-  update: function() {
-    // var width = this.$container.width();
-    // var height = this.$container.height();
-
-    // this.$table.css('width', width + 'px');
-    // this.$table.css('height', height + 'px');
+  _update: function() {
   },
 
   // Adds an item into the layout, expanding the grid
@@ -130,6 +122,12 @@ wcLayout.prototype = {
   //    <td>        On success, returns the <td> dom element.
   //    false       A failure happened, most likely cells could not be merged.
   addItem: function($item, x, y, w, h) {
+    if (typeof x === 'undefined' || x < 0) {
+      x = 0;
+    }
+    if (typeof y === 'undefined' || y < 0) {
+      y = 0;
+    }
     if (typeof w === 'undefined' || w <= 0) {
       w = 1;
     }
@@ -162,8 +160,105 @@ wcLayout.prototype = {
 
   // Clears the layout.
   clear: function() {
+    var showGrid = this.grid();
     this._init();
+    this.grid(showGrid);
     this._grid = [];
+  },
+
+  // Checks if the mouse is in a valid anchor position for nesting another widget.
+  // Params:
+  //    mouse     The current mouse position.
+  //    same      Whether the moving frame and this one are the same.
+  checkAnchorDrop: function(mouse, same, ghost, floating, $elem) {
+    if (!$elem) {
+      $elem = this.$container;
+    }
+    var width = $elem.width();
+    var height = $elem.height();
+    var offset = $elem.offset();
+
+    if (same) {
+      // Entire layout.
+      if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+          mouse.x >= offset.left && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top,
+          w: width,
+          h: height,
+          loc: wcDocker.DOCK_FLOAT,
+          item: this,
+          self: true,
+        });
+        return true;
+      }
+    }
+
+    if (floating) {
+      return false;
+    }
+
+    // Top docking.
+    if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
+        mouse.x >= offset.left && mouse.x <= offset.left + width) {
+      ghost.anchor(mouse, {
+        x: offset.left,
+        y: offset.top,
+        w: width,
+        h: height*0.4,
+        loc: wcDocker.DOCK_TOP,
+        item: this,
+        self: false,
+      });
+      return true;
+    }
+
+    // Bottom side docking.
+    if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
+        mouse.x >= offset.left && mouse.x <= offset.left + width) {
+      ghost.anchor(mouse, {
+        x: offset.left,
+        y: offset.top + (height - height*0.4),
+        w: width,
+        h: height*0.4,
+        loc: wcDocker.DOCK_BOTTOM,
+        item: this,
+        self: false,
+      });
+      return true;
+    }
+
+    // Left side docking
+    if (mouse.y >= offset.top && mouse.y <= offset.top + height) {
+      if (mouse.x >= offset.left && mouse.x <= offset.left + width*0.25) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top,
+          w: width*0.4,
+          h: height,
+          loc: wcDocker.DOCK_LEFT,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
+
+      // Right side docking
+      if (mouse.x >= offset.left + width*0.75 && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left + width*0.6,
+          y: offset.top,
+          w: width*0.4,
+          h: height,
+          loc: wcDocker.DOCK_RIGHT,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
+    }
+    return false;
   },
 
   // Gets, or Sets a new container for this layout.

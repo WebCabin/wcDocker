@@ -21,12 +21,12 @@ function wcDocker($container) {
   this._draggingFrame = false;
   this._draggingFrameSizer = false;
   this._ghost = false;
-  this._anchorDrop = false;
 
   this._init();
 };
 
 wcDocker.DOCK_FLOAT  = 'float';
+wcDocker.DOCK_TOP    = 'top';
 wcDocker.DOCK_LEFT   = 'left';
 wcDocker.DOCK_RIGHT  = 'right';
 wcDocker.DOCK_BOTTOM = 'bottom';
@@ -95,6 +95,7 @@ wcDocker.prototype = {
             self._draggingFrame.shadow(true);
             var rect = self._draggingFrame.rect();
             self._ghost = new wcGhost(rect, mouse);
+            self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost);
 
             // Also fade out all floating windows as they are not dockable.
             for (var a = 0; a < self._frameList.length; ++a) {
@@ -173,7 +174,7 @@ wcDocker.prototype = {
           y: event.clientY,
         };
         self._draggingSplitter.moveBar(mouse);
-        self._draggingSplitter.update();
+        self._draggingSplitter._update();
       } else if (self._draggingFrameSizer) {
         var mouse = {
           x: event.clientX,
@@ -185,7 +186,7 @@ wcDocker.prototype = {
         mouse.y += offset.top;
 
         self._draggingFrame.resize(self._draggingFrameSizer, mouse);
-        self._draggingFrame.update();
+        self._draggingFrame._update();
       } else if (self._draggingFrame) {
         var mouse = {
           x: event.clientX,
@@ -195,7 +196,7 @@ wcDocker.prototype = {
         // Floating widgets without their dock button active just move without docking.
         if (self._draggingFrame._isFloating && (event.which === 1 && !self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked'))) {
           self._draggingFrame.move(mouse);
-          self._draggingFrame.update();
+          self._draggingFrame._update();
         }
 
         if (self._ghost) {
@@ -205,95 +206,20 @@ wcDocker.prototype = {
           var found = false;
 
           // Check anchoring with self.
-          var anchorDrop = self._draggingFrame.checkAnchorDrop(mouse, true);
-          if (anchorDrop) {
-            if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
-              self._ghost.anchor(mouse);
-              self._anchorDrop = anchorDrop;
-              if (anchorDrop) {
-                self._ghost.anchor(mouse, anchorDrop);
-              }
-            }
-            found = true;
-          }
-
-          // Bypass anchoring if middle mouse is used on a non-floating window.
-          if (!found && !forceFloat) {
-            // Check anchoring with all other frames.
-            for (var i = 0; i < self._frameList.length; ++i) {
-              anchorDrop = self._frameList[i].checkAnchorDrop(mouse, false);
-              if (anchorDrop) {
-                if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
-                  self._ghost.anchor(mouse);
-                  self._anchorDrop = anchorDrop;
-                  if (anchorDrop) {
-                    self._ghost.anchor(mouse, anchorDrop);
-                  }
+          if (!self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost)) {
+            if (!forceFloat) {
+              for (var i = 0; i < self._frameList.length; ++i) {
+                if (self._frameList[i].checkAnchorDrop(mouse, false, self._ghost)) {
+                  return;
                 }
-                found = true;
-                break;
+              }
+
+              if (self._center.checkAnchorDrop(mouse, false, self._ghost)) {
+                return;
               }
             }
 
-            // Check with the main center window for docking.
-            function _checkAnchorDrop(mouse) {
-              var width = self._center.$table.width();
-              var height = self._center.$table.height();
-              var offset = self._center.$table.offset();
-
-              // Bottom side docking.
-              if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
-                  mouse.x >= offset.left && mouse.x <= offset.left + width) {
-                return {
-                  x: offset.left,
-                  y: offset.top + (height - height*0.4),
-                  w: width,
-                  h: height*0.4,
-                  loc: wcDocker.DOCK_BOTTOM,
-                };
-              }
-
-              // Left side docking
-              if (mouse.y >= offset.top && mouse.y <= offset.top + height) {
-                if (mouse.x >= offset.left && mouse.x <= offset.left + width*0.25) {
-                  return {
-                    x: offset.left,
-                    y: offset.top,
-                    w: width*0.4,
-                    h: height,
-                    loc: wcDocker.DOCK_LEFT,
-                  };
-                }
-
-                // Right side docking
-                if (mouse.x >= offset.left + width*0.75 && mouse.x <= offset.left + width) {
-                  return {
-                    x: offset.left + width*0.6,
-                    y: offset.top,
-                    w: width*0.4,
-                    h: height,
-                    loc: wcDocker.DOCK_RIGHT,
-                  };
-                }
-              }
-            };
-
-            anchorDrop = _checkAnchorDrop(mouse);
-            if (anchorDrop) {
-              if (!self._anchorDrop || anchorDrop.loc !== self._anchorDrop.loc || anchorDrop.frame !== self._anchorDrop.frame) {
-                self._ghost.anchor(mouse);
-                self._anchorDrop = anchorDrop;
-                if (anchorDrop) {
-                  self._ghost.anchor(mouse, anchorDrop);
-                }
-              }
-              found = true;
-            }
-          }
-
-          if (!found) {
-            self._anchorDrop = false;
-            self._ghost.anchor(mouse);
+            self._ghost.anchor(mouse, null);
           }
         }
       }
@@ -308,7 +234,9 @@ wcDocker.prototype = {
       }
 
       if (self._ghost) {
-        if (!self._anchorDrop) {
+        var anchor = self._ghost.anchor();
+
+        if (!anchor) {
           var widget = self.moveDockWidget(self._draggingFrame.widget(), wcDocker.DOCK_FLOAT, false);
           var mouse = {
             x: event.clientX,
@@ -325,20 +253,17 @@ wcDocker.prototype = {
           frame._size.x = self._ghost.rect().w;
           frame._size.y = self._ghost.rect().h;
 
-          frame.update();
+          frame._update();
+        } else if (!anchor.self) {
+          var widget;
+          if (anchor.item) {
+            widget = anchor.item.parent();
+          }
+          self.moveDockWidget(self._draggingFrame.widget(), anchor.loc, false, widget);
         }
         self._ghost.destroy();
       }
 
-      if (self._anchorDrop && self._anchorDrop.frame !== self._draggingFrame) {
-        var parentWidget;
-        if (self._anchorDrop.frame) {
-          parentWidget = self._anchorDrop.frame.widget();
-        }
-        self.moveDockWidget(self._draggingFrame.widget(), self._anchorDrop.loc, false, parentWidget);
-      }
-
-      self._anchorDrop = false;
       self._ghost = false;
       self._draggingSplitter = false;
       self._draggingFrame = false;
@@ -348,7 +273,7 @@ wcDocker.prototype = {
 
   // On window resized event.
   _resize: function(event) {
-    this.update();
+    this._update();
   },
 
   // Brings a floating window to the top.
@@ -361,7 +286,7 @@ wcDocker.prototype = {
         }
       }
     }
-    this.update();
+    this._update();
   },
 
   // Creates a new frame for the widget and then attaches it
@@ -381,10 +306,10 @@ wcDocker.prototype = {
           var left  = parentSplitter.pane(0);
           var right = parentSplitter.pane(1);
           if (left === parentFrame) {
-            splitter = new wcSplitter(null, parentSplitter, location !== wcDocker.DOCK_BOTTOM);
+            splitter = new wcSplitter(null, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
             parentSplitter.pane(0, splitter);
           } else {
-            splitter = new wcSplitter(null, parentSplitter, location !== wcDocker.DOCK_BOTTOM);
+            splitter = new wcSplitter(null, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
             parentSplitter.pane(1, splitter);
           }
 
@@ -392,7 +317,7 @@ wcDocker.prototype = {
             this._splitterList.push(splitter);
             frame = new wcFrameWidget(null, splitter, false);
             this._frameList.push(frame);
-            if (location === wcDocker.DOCK_LEFT) {
+            if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
               splitter.pane(0, frame);
               splitter.pane(1, parentFrame);
               splitter.pos(0.4);
@@ -421,7 +346,7 @@ wcDocker.prototype = {
     var splitter;
     if (this._center === this._root) {
       // The center is the root when no dock widgets have been docked yet.
-      splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM);
+      splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
       this._root = splitter;
     } else {
       // The parent of the center should be a splitter, we need to insert another one in between.
@@ -430,10 +355,10 @@ wcDocker.prototype = {
         var left  = parent.pane(0);
         var right = parent.pane(1);
         if (left === this._center) {
-          splitter = new wcSplitter(null, parent, location !== wcDocker.DOCK_BOTTOM);
+          splitter = new wcSplitter(null, parent, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
           parent.pane(0, splitter);
         } else {
-          splitter = new wcSplitter(null, parent, location !== wcDocker.DOCK_BOTTOM);
+          splitter = new wcSplitter(null, parent, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
           parent.pane(1, splitter);
         }
       }
@@ -444,7 +369,7 @@ wcDocker.prototype = {
       var frame = new wcFrameWidget(null, splitter, false);
       this._frameList.push(frame);
 
-      if (location === wcDocker.DOCK_LEFT) {
+      if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
         splitter.pane(0, frame);
         splitter.pane(1, this._center);
         splitter.findBestPos();
@@ -508,7 +433,7 @@ wcDocker.prototype = {
         // Check if the orientation of the splitter is one that we want.
         if (item.isHorizontal() === needsHorizontal) {
           // Make sure the dock widget is on the proper side.
-          if (left instanceof wcFrameWidget && location === wcDocker.DOCK_LEFT) {
+          if (left instanceof wcFrameWidget && (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP)) {
             left.addWidget(widget);
             return;
           } else if (right instanceof wcFrameWidget && (location === wcDocker.DOCK_RIGHT || location === wcDocker.DOCK_BOTTOM)) {
@@ -578,7 +503,7 @@ wcDocker.prototype = {
       this._addDockWidgetAlone(widget, location, parentWidget);
     }
 
-    this.update();
+    this._update();
     return widget;
   },
 
@@ -606,7 +531,7 @@ wcDocker.prototype = {
         } else {
           this._addDockWidgetAlone(widget, location, parentWidget);
         }
-        this.update();
+        this._update();
         return widget;
       }
     }
@@ -665,7 +590,7 @@ wcDocker.prototype = {
           other.parent(this);
           other.container(parentContainer);
         }
-        this.update();
+        this._update();
         return true;
       } else if (parentSplitter === this) {
         for (var i = 0; i < this._floatingList.length; ++i) {
@@ -686,13 +611,13 @@ wcDocker.prototype = {
   },
 
   // Updates the sizing of all widgets inside this window.
-  update: function() {
+  _update: function() {
     if (this._root) {
-      this._root.update();
+      this._root._update();
     }
 
     for (var i = 0; i < this._floatingList.length; ++i) {
-      this._floatingList[i].update();
+      this._floatingList[i]._update();
     }
   },
 

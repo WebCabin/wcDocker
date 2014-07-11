@@ -4,8 +4,8 @@
 function wcGhost(rect, mouse) {
   this.$ghost = null;
   this._rect;
-  this._isAnchored = false;
   this._anchorMouse = false;
+  this._anchor = null;
 
   this._init(rect, mouse);
 };
@@ -43,7 +43,7 @@ wcGhost.prototype = {
 
   // Updates the size of the layout.
   move: function(mouse) {
-    if (this._isAnchored) {
+    if (this._anchor) {
       return;
     }
 
@@ -62,29 +62,36 @@ wcGhost.prototype = {
   //    mouse     The current mouse position.
   //    rect      If supplied, will change to this size,
   //              otherwise will revert to default size.
-  anchor: function(mouse, rect) {
-    if (typeof rect === 'undefined') {
-      if (!this._isAnchored) {
+  anchor: function(mouse, anchor) {
+    if (typeof mouse === 'undefined') {
+      return this._anchor;
+    }
+
+    if (anchor && this._anchor && anchor.loc === this._anchor.loc && anchor.item === this._anchor.item) {
+      return;
+    }
+
+    var rect = {
+      x: parseInt(this.$ghost.css('left')),
+      y: parseInt(this.$ghost.css('top')),
+      w: parseInt(this.$ghost.css('width')),
+      h: parseInt(this.$ghost.css('height')),
+    };
+
+    this._anchorMouse = {
+      x: rect.x - mouse.x,
+      y: rect.y - mouse.y,
+    };
+
+    this._rect.x = -this._anchorMouse.x;
+    this._rect.y = -this._anchorMouse.y;
+
+    if (!anchor) {
+      if (!this._anchor) {
         return;
       }
 
-      this._isAnchored = false;
-
-      rect = {
-        x: parseInt(this.$ghost.css('left')),
-        y: parseInt(this.$ghost.css('top')),
-        w: parseInt(this.$ghost.css('width')),
-        h: parseInt(this.$ghost.css('height')),
-      };
-
-      this._anchorMouse = {
-        x: rect.x - mouse.x,
-        y: rect.y - mouse.y,
-      };
-
-      this._rect.x = -this._anchorMouse.x;
-      this._rect.y = -this._anchorMouse.y;
-
+      this._anchor = null;
       this.$ghost.stop().animate({
         opacity: 0.3,
         'margin-left': this._rect.x + 'px',
@@ -95,19 +102,15 @@ wcGhost.prototype = {
       return;
     }
 
-    if (this._isAnchored) {
-      return;
-    }
-
-    this._isAnchored = true;
+    this._anchor = anchor;
     this.$ghost.stop().animate({
       opacity: 0.8,
       'margin-left': '0px',
       'margin-top': '0px',
-      left: rect.x + 'px',
-      top: rect.y + 'px',
-      width: rect.w + 'px',
-      height: rect.h + 'px',
+      left: anchor.x + 'px',
+      top: anchor.y + 'px',
+      width: anchor.w + 'px',
+      height: anchor.h + 'px',
     }, 200);
   },
 

@@ -34,34 +34,8 @@ wcSplitter.prototype = {
     this.container(this.$container);
   },
 
-  // Whether the splitter splits horizontally.
-  isHorizontal: function() {
-    return this._horizontal;
-  },
-
-  // Moves the slider bar based on a mouse position.
-  // Params:
-  //    mouse       The mouse offset position.
-  moveBar: function(mouse) {
-    var width = this.$container.width();
-    var height = this.$container.height();
-    var offset = this.$container.offset();
-
-    mouse.x -= offset.left;
-    mouse.y -= offset.top;
-
-    var minSize = this.minPos();
-    var maxSize = this.maxPos();
-
-    if (this._horizontal) {
-      this.pos((mouse.x-3) / width);
-    } else {
-      this.pos((mouse.y-3) / height);
-    }
-  },
-
   // Updates the size of the splitter.
-  update: function() {
+  _update: function() {
     var width = this.$container.width();
     var height = this.$container.height();
 
@@ -117,8 +91,8 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.x, size);
       }
 
-      this.$bar.css('left', size+2);
-      this.$pane[0].css('width', size + 'px');
+      this.$bar.css('left', size+1);
+      this.$pane[0].css('width', size-2 + 'px');
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
@@ -135,7 +109,7 @@ wcSplitter.prototype = {
       }
 
       this.$bar.css('top', size);
-      this.$pane[0].css('height', size + 'px');
+      this.$pane[0].css('height', size-2 + 'px');
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
@@ -143,8 +117,34 @@ wcSplitter.prototype = {
       this.$pane[1].css('height', height - size - 5 + 'px');
     }
 
-    this._pane[0].update();
-    this._pane[1].update();
+    this._pane[0]._update();
+    this._pane[1]._update();
+  },
+
+  // Whether the splitter splits horizontally.
+  isHorizontal: function() {
+    return this._horizontal;
+  },
+
+  // Moves the slider bar based on a mouse position.
+  // Params:
+  //    mouse       The mouse offset position.
+  moveBar: function(mouse) {
+    var width = this.$container.width();
+    var height = this.$container.height();
+    var offset = this.$container.offset();
+
+    mouse.x -= offset.left;
+    mouse.y -= offset.top;
+
+    var minSize = this.minPos();
+    var maxSize = this.maxPos();
+
+    if (this._horizontal) {
+      this.pos((mouse.x-3) / width);
+    } else {
+      this.pos((mouse.y-3) / height);
+    }
   },
 
   // Gets the minimum position of the splitter divider.
@@ -152,6 +152,8 @@ wcSplitter.prototype = {
     var minSize;
     if (this._pane[0] && typeof this._pane[0].minSize === 'function') {
       minSize = this._pane[0].minSize();
+    } else {
+      minSize = {x:50,y:50};
     }
     return minSize;
   },
@@ -164,12 +166,12 @@ wcSplitter.prototype = {
     var maxSize;
     if (this._pane[1] && typeof this._pane[1].minSize === 'function') {
       maxSize = this._pane[1].minSize();
-
-      if (maxSize) {
-        maxSize.x = width  - maxSize.x;
-        maxSize.y = height - maxSize.y;
-      }
+    } else {
+      maxSize = {x:50,y:50};
     }
+
+    maxSize.x = width  - maxSize.x;
+    maxSize.y = height - maxSize.y;
     return maxSize;
   },
 

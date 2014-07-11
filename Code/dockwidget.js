@@ -25,6 +25,8 @@ function wcDockWidget(title) {
     y: true,
   };
 
+  this._closeable = true;
+
   this._init();
 };
 
@@ -33,14 +35,14 @@ wcDockWidget.prototype = {
     this._layout = new wcLayout(this.$container, this);
   },
 
+  // Updates the size of the layout.
+  _update: function() {
+    this._layout._update();
+  },
+
   // Gets the title for this dock widget.
   title: function() {
     return this._title;
-  },
-
-  // Updates the size of the layout.
-  update: function() {
-    this._layout.update();
   },
 
   // Retrieves the main widget container for this dock widget.
@@ -100,6 +102,29 @@ wcDockWidget.prototype = {
     }
 
     return {x: this._scrollable.x, y: this._scrollable.y};
+  },
+
+  // Gets, or Sets whether this dock window can be closed.
+  // Params:
+  //    enabled     If supplied, toggles whether it can be closed.
+  // Returns:
+  //    bool        The current closeable status.
+  closeable: function(enabled) {
+    if (typeof enabled !== 'undefined') {
+      this._closeable = enabled? true: false;
+      if (this._parent) {
+        this._parent._update();
+      }
+    }
+
+    return this._closeable;
+  },
+
+  // Forces the window to close.
+  close: function() {
+    if (this._parent) {
+      this._parent.$close.click();
+    }
   },
 
   // Gets, or Sets a new container for this layout.

@@ -82,7 +82,7 @@ wcFrameWidget.prototype = {
   },
 
   // Updates the size of the frame.
-  update: function() {
+  _update: function() {
     // Floating windows manage their own sizing.
     if (this._isFloating) {
       this.$frame.css('left', this._pos.x + 'px');
@@ -91,15 +91,19 @@ wcFrameWidget.prototype = {
       this.$frame.css('height', this._size.y + 'px');
     }
 
-    if (this._curTab > -1 && this._curTab < this._widgetList.length) {
-      var widget = this._widgetList[this._curTab];
-      if (widget) {
-        var scrollable = widget.scrollable();
-        this.$center.toggleClass('wcScrollableX', scrollable.x);
-        this.$center.toggleClass('wcScrollableY', scrollable.y);
+    var widget = this.widget();
+    if (widget) {
+      var scrollable = widget.scrollable();
+      this.$center.toggleClass('wcScrollableX', scrollable.x);
+      this.$center.toggleClass('wcScrollableY', scrollable.y);
 
-        widget.update();
+      if (widget._closeable) {
+        this.$frame.append(this.$close);
+      } else {
+        this.$close.remove();
       }
+
+      widget._update();
     }
   },
 
@@ -175,7 +179,7 @@ wcFrameWidget.prototype = {
   removeWidget: function(widget) {
     for (var i = 0; i < this._widgetList.length; ++i) {
       if (this._widgetList[i] === widget) {
-        if (this._curTab === i) {
+        if (this._curTab >= i) {
           this._curTab--;
         }
 
@@ -195,9 +199,10 @@ wcFrameWidget.prototype = {
     }
   },
 
+  // Retrieves the currently visible widget.
   widget: function() {
-    if (this._widgetList.length) {
-      return this._widgetList[0];
+    if (this._curTab > -1 && this._curTab < this._widgetList.length) {
+      return this._widgetList[this._curTab];
     }
     return false;
   },
@@ -214,68 +219,12 @@ wcFrameWidget.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  checkAnchorDrop: function(mouse, same) {
-    var width = this.$frame.width();
-    var height = this.$frame.height();
-    var offset = this.$frame.offset();
-
-    if (same) {
-      // Entire frame.
-      if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
-          mouse.x >= offset.left && mouse.x <= offset.left + width) {
-        return {
-          x: offset.left,
-          y: offset.top,
-          w: width,
-          h: height,
-          loc: wcDocker.DOCK_FLOAT,
-          frame: this,
-        };
-      }
+  checkAnchorDrop: function(mouse, same, ghost) {
+    var widget = this.widget();
+    if (widget) {
+      return widget.layout().checkAnchorDrop(mouse, same, ghost, this._isFloating, this.$frame);
     }
-
-    if (this._isFloating) {
-      return false;
-    }
-
-    // Bottom side docking.
-    if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
-        mouse.x >= offset.left && mouse.x <= offset.left + width) {
-      return {
-        x: offset.left,
-        y: offset.top + (height - height*0.4),
-        w: width,
-        h: height*0.4,
-        loc: wcDocker.DOCK_BOTTOM,
-        frame: this,
-      };
-    }
-
-    // Left side docking
-    if (mouse.y >= offset.top && mouse.y <= offset.top + height) {
-      if (mouse.x >= offset.left && mouse.x <= offset.left + width*0.25) {
-        return {
-          x: offset.left,
-          y: offset.top,
-          w: width*0.4,
-          h: height,
-          loc: wcDocker.DOCK_LEFT,
-          frame: this,
-        };
-      }
-
-      // Right side docking
-      if (mouse.x >= offset.left + width*0.75 && mouse.x <= offset.left + width) {
-        return {
-          x: offset.left + width*0.6,
-          y: offset.top,
-          w: width*0.4,
-          h: height,
-          loc: wcDocker.DOCK_RIGHT,
-          frame: this,
-        };
-      }
-    }
+    return false;
   },
 
   // Moves the widget based on mouse dragging.

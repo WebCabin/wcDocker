@@ -30,6 +30,8 @@ html, body {
   height: 21px;
   background-color: darkgray;
   cursor: move;
+  text-align: center;
+  overflow: hidden;
 }
 
 .wcFloating .wcFrameTitle {
@@ -51,7 +53,7 @@ html, body {
 }
 
 .wcFrameDockButton {
-  right: 21px;
+  left: 0px;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAWdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjA76PVpAAAAT0lEQVQ4T92M0QoAIAgD/f+fLoQCXbMie6mDI1I3+ZPS3hRagkV9hobgkf0zKexw5QA7UpHZzi2tjHBngygSzV2I2WGzbWz4WskR6YJnEKl90FGvuLJ7ogAAAABJRU5ErkJggg==);
 }
 
@@ -169,7 +171,7 @@ html, body {
 }
 
 .wcSplitterBarV {
-  width: 2px;
+  width: 1px;
   cursor: e-resize;
   z-index: 20;
 }
@@ -210,4 +212,23 @@ html, body {
 
 .wcScrollableY {
   overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: gray;
 }
