@@ -91,8 +91,7 @@ html, body {
 
 .wcFloating {
   position: fixed;
-  z-index: 100;
-  z-index: 20;
+  z-index: 2;
 }
 
 .wcLayout, .wcLayout tr, .wcLayout td {
@@ -117,7 +116,7 @@ html, body {
 .wcFrameEdgeV {
   width: 2px;
   cursor: e-resize;
-  z-index: 20;
+  z-index: 2;
   position: absolute;
   border: 2px outset #444;
   border-top: 0px;
@@ -128,7 +127,7 @@ html, body {
 .wcFrameEdgeH {
   height: 2px;
   cursor: s-resize;
-  z-index: 20;
+  z-index: 2;
   position: absolute;
   border: 2px outset #444;
   border-left: 0px;
@@ -140,7 +139,7 @@ html, body {
   height: 2px;
   width: 2px;
   cursor: nw-resize;
-  z-index: 20;
+  z-index: 2;
   position: absolute;
   border: 2px outset #444;
   background-color: #222;
@@ -150,7 +149,7 @@ html, body {
   height: 2px;
   width: 2px;
   cursor: ne-resize;
-  z-index: 20;
+  z-index: 2;
   position: absolute;
   border: 2px outset #444;
   background-color: #222;
@@ -173,13 +172,13 @@ html, body {
 .wcSplitterBarV {
   width: 1px;
   cursor: e-resize;
-  z-index: 20;
+  z-index: 2;
 }
 
 .wcSplitterBarH {
   height: 2px;
   cursor: s-resize;
-  z-index: 20;
+  z-index: 2;
 }
 
 .wcLayoutPane {
@@ -203,7 +202,7 @@ html, body {
   position: fixed;
   border: 0px;
   border-radius: 10px;
-  z-index: 110;
+  z-index: 100;
 }
 
 .wcScrollableX {

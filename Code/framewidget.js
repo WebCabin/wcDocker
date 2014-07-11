@@ -49,6 +49,8 @@ wcFrameWidget.prototype = {
     this.$frame.append(this.$title);
     this.$frame.append(this.$close);
 
+    this.$title.attr('contextmenu', 'wcDocker_Title_Menu');
+
     if (this._isFloating) {
       this.$dock    = $('<div class="wcFrameDockButton"></div>');
       this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');

@@ -34,8 +34,52 @@ wcDocker.prototype = {
     this._center = new wcLayout(this.$container, this);
     this._root = this._center;
 
-
     var self = this;
+
+    // Setup our context menus.
+    $.contextMenu({
+      selector: '.wcFrameWidget:not(.wcFloating) .wcFrameTitle',
+      build: function($trigger, event) {
+        var dockItems = {};
+        dockItems[wcDocker.DOCK_FLOAT]  = {name: 'Floating'};
+        dockItems[wcDocker.DOCK_LEFT]   = {name: 'Dock Left'};
+        dockItems[wcDocker.DOCK_RIGHT]  = {name: 'Dock Right'};
+        dockItems[wcDocker.DOCK_BOTTOM] = {name: 'Dock Bottom'};
+        dockItems[wcDocker.DOCK_TOP]    = {name: 'Dock Top'};
+        var items = {};
+        for (var i = 0; i < self._dockWidgetTypeList.length; ++i) {
+          var type = self._dockWidgetTypeList[i];
+          if (!type.isPrivate) {
+            items['fold1-'+i] = {
+              name: type.name,
+              items: dockItems,
+            };
+          }
+        }
+
+        return {
+          callback: function(key, options) {
+            var name = options.$selected.parent().prev('span').text();
+            for (var i = 0; i < self._frameList.length; ++i) {
+              if (self._frameList[i].$title[0] == $trigger[0]) {
+                self.addDockWidget(name, key, false, self._frameList[i].widget());
+                return;
+              }
+            }
+            self.addDockWidget(name, key, false);
+          },
+          zIndex: 100,
+          items: {
+            'fold1': {
+              name: 'Create Window&nbsp;&nbsp;&nbsp;',
+              items: items,
+            },
+          },
+        };
+      },
+    })
+
+
     $(window).resize(self._resize.bind(self));
 
     // Close button on frames should destroy those widgets.
@@ -67,6 +111,9 @@ wcDocker.prototype = {
 
     // Mouse down on a splitter bar will allow you to resize them.
     $('body').on('mousedown', '.wcSplitterBar', function(event) {
+      if (event.which === 3) {
+        return;
+      }
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
@@ -77,6 +124,9 @@ wcDocker.prototype = {
 
     // Mouse down on a frame title will allow you to move them.
     $('body').on('mousedown', '.wcFrameTitle', function(event) {
+      if (event.which === 3) {
+        return;
+      }
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$title[0] == this) {
           self._draggingFrame = self._frameList[i];
@@ -112,6 +162,9 @@ wcDocker.prototype = {
 
     // Mouse down on a frame title will allow you to move them.
     $('body').on('mousedown', '.wcFrameCenter', function(event) {
+      if (event.which === 3) {
+        return;
+      }
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$center[0] == this) {
           self._focusFloatingFrame(self._frameList[i]);
@@ -122,6 +175,9 @@ wcDocker.prototype = {
 
     // Floating frames have resizable edges.
     $('body').on('mousedown', '.wcFrameEdge', function(event) {
+      if (event.which === 3) {
+        return;
+      }
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i]._isFloating) {
           if (self._frameList[i].$top[0] == this) {
@@ -166,6 +222,9 @@ wcDocker.prototype = {
 
     // Mouse move will allow you to move an object that is being dragged.
     $('body').on('mousemove', function(event) {
+      if (event.which === 3) {
+        return;
+      }
       if (self._draggingSplitter) {
         var mouse = {
           x: event.clientX,
@@ -225,6 +284,9 @@ wcDocker.prototype = {
 
     // Mouse released
     $('body').on('mouseup', function(event) {
+      if (event.which === 3) {
+        return;
+      }
       if (self._draggingFrame) {
         for (var i = 0; i < self._frameList.length; ++i) {
           self._frameList[i].shadow(false);
@@ -294,6 +356,15 @@ wcDocker.prototype = {
   //    parentWidget  An optional widget to 'split', if not supplied the
   //                  new widget will split the center window.
   _addDockWidgetAlone: function(widget, location, parentWidget) {
+    // Floating windows need no placement.
+    if (location === wcDocker.DOCK_FLOAT) {
+      var frame = new wcFrameWidget(this.$container, this, true);
+      this._frameList.push(frame);
+      this._floatingList.push(frame);
+      frame.addWidget(widget);
+      return;
+    }
+
     if (parentWidget) {
       var parentFrame = parentWidget.parent();
       if (parentFrame instanceof wcFrameWidget) {
@@ -329,15 +400,6 @@ wcDocker.prototype = {
           return;
         }
       }
-    }
-
-    // Floating windows need no placement.
-    if (location === wcDocker.DOCK_FLOAT) {
-      var frame = new wcFrameWidget(this.$container, this, true);
-      this._frameList.push(frame);
-      this._floatingList.push(frame);
-      frame.addWidget(widget);
-      return;
     }
 
     var splitter;
@@ -389,14 +451,6 @@ wcDocker.prototype = {
   //    parentWidget  An optional widget to 'split', if not supplied the
   //                  new widget will split the center window.
   _addDockWidgetGrouped: function(widget, location, parentWidget) {
-    if (parentWidget) {
-      var frame = parentWidget.parent();
-      if (frame instanceof wcFrameWidget) {
-        frame.addWidget(widget);
-        return;
-      }
-    }
-
     // Floating windows need no placement.
     if (location === wcDocker.DOCK_FLOAT) {
       var frame;
@@ -409,6 +463,14 @@ wcDocker.prototype = {
       }
       frame.addWidget(widget);
       return;
+    }
+
+    if (parentWidget) {
+      var frame = parentWidget.parent();
+      if (frame instanceof wcFrameWidget) {
+        frame.addWidget(widget);
+        return;
+      }
     }
 
     var needsHorizontal = location !== wcDocker.DOCK_BOTTOM;
@@ -477,6 +539,9 @@ wcDocker.prototype = {
       create: createFunc,
       isPrivate: isPrivate,
     });
+
+    var $menu = $('menu').find('menu');
+    $menu.append($('<menuitem label="' + name + '">'));
     return true;
   },
 
