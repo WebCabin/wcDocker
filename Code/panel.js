@@ -1,8 +1,7 @@
 /*
-  The dock widget item is the smallest part of the dock window system, it will
-  contain all of the contents for the actual widget.
+  The docking panel item is a container for the panels layout and the public interface the panel.
 */
-function wcDockWidget(title) {
+function wcPanel(title) {
   this.$container = null;
   this._parent = null;
 
@@ -41,7 +40,7 @@ function wcDockWidget(title) {
   this._init();
 };
 
-wcDockWidget.prototype = {
+wcPanel.prototype = {
   _init: function() {
     this._layout = new wcLayout(this.$container, this);
   },
@@ -59,6 +58,15 @@ wcDockWidget.prototype = {
   // Retrieves the main widget container for this dock widget.
   layout: function() {
     return this._layout;
+  },
+
+  // Brings this widget into focus.
+  // Params:
+  //    flash     Optional, if true will flash the window.
+  focus: function(flash) {
+    if (this._parent instanceof wcFrame) {
+      this._parent.focus(flash);
+    }
   },
 
   // Gets, or Sets the default position of the widget if it is floating.
@@ -165,6 +173,20 @@ wcDockWidget.prototype = {
     if (this._parent) {
       this._parent.$close.click();
     }
+  },
+
+  // Retrieves the bounding rect for this widget.
+  rect: function() {
+    var offset = this.$container.offset();
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    return {
+      x: offset.left,
+      y: offset.top,
+      w: width,
+      h: height,
+    };
   },
 
   // Gets, or Sets a new container for this layout.

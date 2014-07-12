@@ -17,12 +17,32 @@ html, body {
   position: absolute;
 }
 
-
-.wcFrameWidget {
+.wcFrame {
   border: 2px inset black;
-  background-color: gray;
-
   position: relative;
+}
+
+.wcFrame .wcLayout {
+  background-color: gray;
+}
+
+.wcFrame .wcCenter {
+  background-color: transparent;
+}
+
+.wcFrameFlasher {
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+
+  opacity: 0;
+  background-color: yellow;
 }
 
 .wcFrameTitle {
@@ -165,17 +185,21 @@ html, body {
 
 .wcSplitterBar {
   position: absolute;
-  border: 2px outset #888888;
+  border: 1px outset darkgray;
   background-color: gray;
 }
 
 .wcSplitterBarV {
-  width: 1px;
+  border-top: 1px solid gray;
+  border-bottom: 2px solid gray;
+  width: 2px;
   cursor: e-resize;
   z-index: 2;
 }
 
 .wcSplitterBarH {
+  border-left: 1px solid gray;
+  border-right: 2px solid gray;
   height: 2px;
   cursor: s-resize;
   z-index: 2;
@@ -216,6 +240,7 @@ html, body {
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
+  background-color: gray;
 }
  
 ::-webkit-scrollbar-track {

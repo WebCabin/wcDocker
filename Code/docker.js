@@ -1,10 +1,10 @@
 /*
-  The main window instance.  This manages all of the dock windows and user input.
-  There should only be one instance of this used, although it is not required.
+  The main window instance.  This manages all of the docking panels and user input.
+  There should only be one instance of this, although it is not required.
   The $parent is a JQuery object of the container element.
 */
-function wcDocker($container) {
-  this.$container = $container.addClass('wcDocker');
+function wcDocker(container) {
+  this.$container = $(container).addClass('wcDocker');
 
   this._root = null;
   this._center = null;
@@ -31,50 +31,108 @@ wcDocker.DOCK_BOTTOM = 'bottom';
 
 wcDocker.prototype = {
   _init: function() {
-    this._center = new wcLayout(this.$container, this);
+    var widget = new wcPanel('');
+    widget.closeable(false);
+    widget.layout().$table.addClass('wcCenter');
+    widget.size(this.$container.width()/2, this.$container.height()/2);
+    this._center = new wcFrame(this.$container, widget, false, true);
+    this._center.addPanel(widget);
     this._root = this._center;
 
     var self = this;
 
     // Setup our context menus.
     $.contextMenu({
-      selector: '.wcFrameWidget:not(.wcFloating) .wcFrameTitle',
+      selector: '.wcFrame, .wcLayout',
       build: function($trigger, event) {
-        var dockItems = {};
-        dockItems[wcDocker.DOCK_FLOAT]  = {name: 'Floating'};
-        dockItems[wcDocker.DOCK_LEFT]   = {name: 'Dock Left'};
-        dockItems[wcDocker.DOCK_RIGHT]  = {name: 'Dock Right'};
-        dockItems[wcDocker.DOCK_BOTTOM] = {name: 'Dock Bottom'};
-        dockItems[wcDocker.DOCK_TOP]    = {name: 'Dock Top'};
-        var items = {};
-        for (var i = 0; i < self._dockWidgetTypeList.length; ++i) {
-          var type = self._dockWidgetTypeList[i];
-          if (!type.isPrivate) {
-            items['fold1-'+i] = {
-              name: type.name,
-              items: dockItems,
-            };
+        var mouse = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+        
+        var ghost;
+        var myFrame;
+        for (var i = 0; i < self._frameList.length; ++i) {
+          if (self._frameList[i].$frame[0] === $trigger[0] ||
+              self._frameList[i].panel().layout().$table[0] === $trigger[0]) {
+            myFrame = self._frameList[i];
+            break;
+          }
+        }
+        if (!myFrame) {
+          if (self._center.$frame[0] === $trigger[0] ||
+              self._center.panel().layout().$table[0] === $trigger[0]) {
+            myFrame = self._center;
           }
         }
 
+        var items = {};
+        if (myFrame) {
+          var spacer = false;
+          if (myFrame.panel().closeable()) {
+            items['Close Window'] = {name: 'Close Window'};
+            spacer = true;
+          }
+          if (!myFrame._isFloating && myFrame.panel().moveable()) {
+            items['Float Window'] = {name: 'Detach Window'};
+            spacer = true;
+          }
+
+          if (spacer && !myFrame._isFloating) {
+            items['sep1'] = "---------";
+          }
+        }
+
+        if (!myFrame._isFloating && myFrame.panel().moveable()) {
+          var windowTypes = {};
+          for (var i = 0; i < self._dockWidgetTypeList.length; ++i) {
+            var type = self._dockWidgetTypeList[i];
+            if (!type.isPrivate) {
+              windowTypes[type.name] = {name: type.name};
+            }
+          }
+
+          items.fold1 = {
+            name: 'Create Window',
+            items: windowTypes,
+          };
+          items['sep2'] = "---------";
+
+          var rect = myFrame.rect();
+          ghost = new wcGhost(rect, mouse);
+          myFrame.checkAnchorDrop(mouse, false, ghost);
+        }
+
+        items['Flash Window'] = {name: 'Flash Window'};
+
         return {
           callback: function(key, options) {
-            var name = options.$selected.parent().prev('span').text();
-            for (var i = 0; i < self._frameList.length; ++i) {
-              if (self._frameList[i].$title[0] == $trigger[0]) {
-                self.addDockWidget(name, key, false, self._frameList[i].widget());
-                return;
+            if (key === 'Close Window') {
+              myFrame.panel().close();
+            } else if (key === 'Float Window') {
+              self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
+            } else if (key === 'Flash Window') {
+              myFrame.focus(true);
+            } else {
+              if (myFrame && ghost) {
+                var anchor = ghost.anchor();
+                self.addPanel(key, anchor.loc, false, myFrame.panel());
               }
             }
-            self.addDockWidget(name, key, false);
           },
-          zIndex: 100,
-          items: {
-            'fold1': {
-              name: 'Create Window&nbsp;&nbsp;&nbsp;',
-              items: items,
+          events: {
+            hide: function(opt) {
+              if (ghost) {
+                ghost.destroy();
+                ghost = null;
+              }
             },
           },
+          animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+          reposition: false,
+          // autoHide: true,
+          zIndex: 200,
+          items: items,
         };
       },
     })
@@ -92,8 +150,8 @@ wcDocker.prototype = {
         }
       }
       if (frame) {
-        self.removeDockWidget(frame.widget());
-        self._focusFloatingFrame(frame);
+        self.removePanel(frame.panel());
+        self._focus(frame);
       }
     });
 
@@ -103,7 +161,7 @@ wcDocker.prototype = {
         if (self._frameList[i]._isFloating && self._frameList[i].$dock[0] == this) {
           self._frameList[i].$dock.toggleClass('wcFrameDockButtonLocked');
 
-          self._focusFloatingFrame(self._frameList[i]);
+          self._focus(self._frameList[i]);
           break;
         }
       }
@@ -156,7 +214,7 @@ wcDocker.prototype = {
         }
       }
       if (self._draggingFrame) {
-        self._focusFloatingFrame(self._draggingFrame);
+        self._focus(self._draggingFrame);
       }
     });
 
@@ -167,7 +225,7 @@ wcDocker.prototype = {
       }
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$center[0] == this) {
-          self._focusFloatingFrame(self._frameList[i]);
+          self._focus(self._frameList[i]);
           break;
         }
       }
@@ -216,7 +274,7 @@ wcDocker.prototype = {
         }
       }
       if (self._draggingFrame) {
-        self._focusFloatingFrame(self._draggingFrame);
+        self._focus(self._draggingFrame);
       }
     });
 
@@ -297,13 +355,13 @@ wcDocker.prototype = {
         var anchor = self._ghost.anchor();
 
         if (!anchor) {
-          var widget = self.moveDockWidget(self._draggingFrame.widget(), wcDocker.DOCK_FLOAT, false);
+          var widget = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_FLOAT, false);
           var mouse = {
             x: event.clientX,
             y: event.clientY,
           };
           var frame = widget.parent();
-          if (frame instanceof wcFrameWidget) {
+          if (frame instanceof wcFrame) {
             frame.pos(mouse.x, mouse.y + self._ghost.rect().h/2, true);
           }
 
@@ -318,7 +376,7 @@ wcDocker.prototype = {
           if (anchor.item) {
             widget = anchor.item.parent();
           }
-          self.moveDockWidget(self._draggingFrame.widget(), anchor.loc, false, widget);
+          self.movePanel(self._draggingFrame.panel(), anchor.loc, false, widget);
         }
         self._ghost.destroy();
       }
@@ -336,7 +394,7 @@ wcDocker.prototype = {
   },
 
   // Brings a floating window to the top.
-  _focusFloatingFrame: function(frame) {
+  _focus: function(frame) {
     for (var i = 0; i < this._frameList.length; ++i) {
       if (this._frameList[i]._isFloating) {
         this._frameList[i].$frame.css('z-index', '100');
@@ -355,19 +413,19 @@ wcDocker.prototype = {
   //    location      The desired location for the widget.
   //    parentWidget  An optional widget to 'split', if not supplied the
   //                  new widget will split the center window.
-  _addDockWidgetAlone: function(widget, location, parentWidget) {
+  _addPanelAlone: function(widget, location, parentWidget) {
     // Floating windows need no placement.
     if (location === wcDocker.DOCK_FLOAT) {
-      var frame = new wcFrameWidget(this.$container, this, true);
+      var frame = new wcFrame(this.$container, this, true);
       this._frameList.push(frame);
       this._floatingList.push(frame);
-      frame.addWidget(widget);
+      frame.addPanel(widget);
       return;
     }
 
     if (parentWidget) {
       var parentFrame = parentWidget.parent();
-      if (parentFrame instanceof wcFrameWidget) {
+      if (parentFrame instanceof wcFrame) {
         var parentSplitter = parentFrame.parent();
         if (parentSplitter instanceof wcSplitter) {
           var splitter;
@@ -383,7 +441,7 @@ wcDocker.prototype = {
 
           if (splitter) {
             this._splitterList.push(splitter);
-            frame = new wcFrameWidget(null, splitter, false);
+            frame = new wcFrame(null, splitter, false);
             this._frameList.push(frame);
             if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
               splitter.pane(0, frame);
@@ -395,7 +453,7 @@ wcDocker.prototype = {
               splitter.pos(0.6);
             }
 
-            frame.addWidget(widget);
+            frame.addPanel(widget);
           }
           return;
         }
@@ -425,7 +483,7 @@ wcDocker.prototype = {
 
     if (splitter) {
       this._splitterList.push(splitter);
-      var frame = new wcFrameWidget(null, splitter, false);
+      var frame = new wcFrame(null, splitter, false);
       this._frameList.push(frame);
 
       if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
@@ -438,7 +496,7 @@ wcDocker.prototype = {
         splitter.findBestPos();
       }
 
-      frame.addWidget(widget);
+      frame.addPanel(widget);
     }
   },
 
@@ -450,7 +508,7 @@ wcDocker.prototype = {
   //    location      The desired location for the widget.
   //    parentWidget  An optional widget to 'split', if not supplied the
   //                  new widget will split the center window.
-  _addDockWidgetGrouped: function(widget, location, parentWidget) {
+  _addPanelGrouped: function(widget, location, parentWidget) {
     // Floating windows need no placement.
     if (location === wcDocker.DOCK_FLOAT) {
       var frame;
@@ -458,17 +516,17 @@ wcDocker.prototype = {
         frame = this._floatingList[this._floatingList.length-1];
       }
       if (!frame) {
-        this._addDockWidgetAlone(widget, location);
+        this._addPanelAlone(widget, location);
         return;
       }
-      frame.addWidget(widget);
+      frame.addPanel(widget);
       return;
     }
 
     if (parentWidget) {
       var frame = parentWidget.parent();
-      if (frame instanceof wcFrameWidget) {
-        frame.addWidget(widget);
+      if (frame instanceof wcFrame) {
+        frame.addPanel(widget);
         return;
       }
     }
@@ -478,7 +536,7 @@ wcDocker.prototype = {
     function __iterateParents(item) {
       // The last item will always be the center.
       if (item === this._center) {
-        this._addDockWidgetAlone(widget, location);
+        this._addPanelAlone(widget, location);
         return;
       }
 
@@ -492,11 +550,11 @@ wcDocker.prototype = {
         // Check if the orientation of the splitter is one that we want.
         if (item.isHorizontal() === needsHorizontal) {
           // Make sure the dock widget is on the proper side.
-          if (left instanceof wcFrameWidget && (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP)) {
-            left.addWidget(widget);
+          if (left instanceof wcFrame && (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP)) {
+            left.addPanel(widget);
             return;
-          } else if (right instanceof wcFrameWidget && (location === wcDocker.DOCK_RIGHT || location === wcDocker.DOCK_BOTTOM)) {
-            right.addWidget(widget);
+          } else if (right instanceof wcFrame && (location === wcDocker.DOCK_RIGHT || location === wcDocker.DOCK_BOTTOM)) {
+            right.addPanel(widget);
             return;
           }
 
@@ -504,7 +562,7 @@ wcDocker.prototype = {
         }
 
         // If it isn't, iterate to which ever pane is not a dock widget.
-        if (!(left instanceof wcFrameWidget)) {
+        if (!(left instanceof wcFrame)) {
           __iterateParents.call(this, left);
         } else {
           __iterateParents.call(this, right);
@@ -515,7 +573,7 @@ wcDocker.prototype = {
     __iterateParents.call(this, this._root);
   },
 
-  // Registers a new dock widget type to be used later.
+  // Registers a new docking panel type to be used later.
   // Params:
   //    name          The name for this new type.
   //    createFunc    The function that populates the contents of
@@ -527,7 +585,7 @@ wcDocker.prototype = {
   // Returns:
   //    true        The new type has been added successfully.
   //    false       Failure, the type name already exists.
-  registerDockWidgetType: function(name, createFunc, isPrivate) {
+  registerPanelType: function(name, createFunc, isPrivate) {
     for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
       if (this._dockWidgetTypeList[i].name === name) {
         return false;
@@ -545,7 +603,7 @@ wcDocker.prototype = {
     return true;
   },
 
-  // Moves a widget from its current location to another.
+  // Moves a docking panel from its current location to another.
   // Params:
   //    typeName      The type of widget to create.
   //    location      The location to 'try' docking at, as defined by
@@ -559,13 +617,27 @@ wcDocker.prototype = {
   // Returns:
   //    widget        The widget that was created.
   //    false         The widget type does not exist.
-  moveDockWidget: function(widget, location, allowGroup, parentWidget) {
-    this.removeDockWidget(widget);
+  movePanel: function(widget, location, allowGroup, parentWidget) {
+    var $elem = widget.$container;
+    if (widget.parent() instanceof wcFrame) {
+      $elem = widget.parent().$frame;
+    }
+    var offset = $elem.offset();
+    var width  = $elem.width();
+    var height = $elem.height();
 
+    this.removePanel(widget);
+
+    widget.size(width, height);
     if (allowGroup) {
-      this._addDockWidgetGrouped(widget, location, parentWidget);
+      this._addPanelGrouped(widget, location, parentWidget);
     } else {
-      this._addDockWidgetAlone(widget, location, parentWidget);
+      this._addPanelAlone(widget, location, parentWidget);
+    }
+
+    var frame = widget.parent();
+    if (frame) {
+      frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
     }
 
     this._update();
@@ -577,7 +649,7 @@ wcDocker.prototype = {
   //    typeName      The type of widget to create.
   //    location      The location to 'try' docking at, as defined by
   //                  wcGLOBALS.DOCK_LOC enum.
-  //    allowGroup    True to allow this widget to be tab groupped with
+  //    allowGroup    True to allow this widget to be tab grouped with
   //                  another already existing widget at that location.
   //                  If, for any reason, the widget can not fit at the
   //                  desired location, a floating window will be used.
@@ -586,15 +658,15 @@ wcDocker.prototype = {
   // Returns:
   //    widget        The widget that was created.
   //    false         The widget type does not exist.
-  addDockWidget: function(typeName, location, allowGroup, parentWidget) {
+  addPanel: function(typeName, location, allowGroup, parentWidget) {
     for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
       if (this._dockWidgetTypeList[i].name === typeName) {
-        var widget = new wcDockWidget(typeName);
+        var widget = new wcPanel(typeName);
         this._dockWidgetTypeList[i].create(widget);
         if (allowGroup) {
-          this._addDockWidgetGrouped(widget, location, parentWidget);
+          this._addPanelGrouped(widget, location, parentWidget);
         } else {
-          this._addDockWidgetAlone(widget, location, parentWidget);
+          this._addPanelAlone(widget, location, parentWidget);
         }
         this._update();
         return widget;
@@ -610,13 +682,13 @@ wcDocker.prototype = {
   // Returns:
   //    true          The widget was removed.
   //    false         There was a problem.
-  removeDockWidget: function(widget) {
+  removePanel: function(widget) {
     if (!widget) {
       return false;
     }
 
     var parentFrame = widget.parent();
-    if (parentFrame instanceof wcFrameWidget) {
+    if (parentFrame instanceof wcFrame) {
       var parentSplitter = parentFrame.parent();
       if (parentSplitter instanceof wcSplitter) {
         var left  = parentSplitter.pane(0);
@@ -688,6 +760,6 @@ wcDocker.prototype = {
 
   // Retreives the center layout for the window.
   center: function() {
-    return this._center;
+    return this._center.panel().layout();
   },
 };

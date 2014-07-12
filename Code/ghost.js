@@ -105,13 +105,13 @@ wcGhost.prototype = {
     this._anchor = anchor;
     this.$ghost.stop().animate({
       opacity: 0.8,
-      'margin-left': '1px',
-      'margin-top': '1px',
+      'margin-left': '2px',
+      'margin-top': '2px',
       border: '0px',
       left: anchor.x + 'px',
       top: anchor.y + 'px',
-      width: anchor.w+1 + 'px',
-      height: anchor.h+1 + 'px',
+      width: anchor.w + 'px',
+      height: anchor.h + 'px',
     }, 200);
   },
 

@@ -108,7 +108,7 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.y, size);
       }
 
-      this.$bar.css('top', size);
+      this.$bar.css('top', size+1);
       this.$pane[0].css('height', size-2 + 'px');
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
@@ -119,6 +119,15 @@ wcSplitter.prototype = {
 
     this._pane[0]._update();
     this._pane[1]._update();
+  },
+
+  // Propagates upwards to the main docker to give focus to a given frame.
+  // Params:
+  //    frame     The frame requesting focus.
+  _focus: function(frame) {
+    if (this._parent) {
+      this._parent._focus(frame);
+    }
   },
 
   // Whether the splitter splits horizontally.

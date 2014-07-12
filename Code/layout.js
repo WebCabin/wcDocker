@@ -171,9 +171,6 @@ wcLayout.prototype = {
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
   checkAnchorDrop: function(mouse, same, ghost, floating, $elem) {
-    if (!$elem) {
-      $elem = this.$container;
-    }
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
@@ -199,34 +196,36 @@ wcLayout.prototype = {
       return false;
     }
 
-    // Top docking.
-    if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
-        mouse.x >= offset.left && mouse.x <= offset.left + width) {
-      ghost.anchor(mouse, {
-        x: offset.left,
-        y: offset.top,
-        w: width,
-        h: height*0.4,
-        loc: wcDocker.DOCK_TOP,
-        item: this,
-        self: false,
-      });
-      return true;
-    }
+    if (width < height) {
+      // Top docking.
+      if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
+          mouse.x >= offset.left && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top,
+          w: width,
+          h: height*0.4,
+          loc: wcDocker.DOCK_TOP,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
 
-    // Bottom side docking.
-    if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
-        mouse.x >= offset.left && mouse.x <= offset.left + width) {
-      ghost.anchor(mouse, {
-        x: offset.left,
-        y: offset.top + (height - height*0.4),
-        w: width,
-        h: height*0.4,
-        loc: wcDocker.DOCK_BOTTOM,
-        item: this,
-        self: false,
-      });
-      return true;
+      // Bottom side docking.
+      if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
+          mouse.x >= offset.left && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top + (height - height*0.4),
+          w: width,
+          h: height*0.4,
+          loc: wcDocker.DOCK_BOTTOM,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
     }
 
     // Left side docking
@@ -252,6 +251,38 @@ wcLayout.prototype = {
           w: width*0.4,
           h: height,
           loc: wcDocker.DOCK_RIGHT,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
+    }
+
+    if (width >= height) {
+      // Top docking.
+      if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
+          mouse.x >= offset.left && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top,
+          w: width,
+          h: height*0.4,
+          loc: wcDocker.DOCK_TOP,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
+
+      // Bottom side docking.
+      if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
+          mouse.x >= offset.left && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top + (height - height*0.4),
+          w: width,
+          h: height*0.4,
+          loc: wcDocker.DOCK_BOTTOM,
           item: this,
           self: false,
         });

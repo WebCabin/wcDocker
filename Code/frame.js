@@ -1,4 +1,9 @@
-function wcFrameWidget($container, parent, isFloating) {
+/*
+  The frame is a container for a panel, and can contain multiple panels inside it, each appearing
+  as a tabbed item.  All docking panels have a frame, but the frame can change any time the panel
+  is moved.
+*/
+function wcFrame($container, parent, isFloating) {
   this.$container = $container;
   this._parent = parent;
   this._isFloating = isFloating;
@@ -20,7 +25,7 @@ function wcFrameWidget($container, parent, isFloating) {
   this.$tabList = [];
 
   this._curTab = -1;
-  this._widgetList = [];
+  this._panelList = [];
 
   this._pos = {
     x: 0.5,
@@ -40,9 +45,9 @@ function wcFrameWidget($container, parent, isFloating) {
   this._init();
 };
 
-wcFrameWidget.prototype = {
+wcFrame.prototype = {
   _init: function() {
-    this.$frame   = $('<div class="wcFrameWidget wcWide wcTall">');
+    this.$frame   = $('<div class="wcFrame wcWide wcTall">');
     this.$title   = $('<div class="wcFrameTitle">');
     this.$center  = $('<div class="wcFrameCenter wcWide">');
     this.$close   = $('<div class="wcFrameCloseButton">X</div>');
@@ -96,13 +101,13 @@ wcFrameWidget.prototype = {
       this.$frame.css('height', this._size.y + 'px');
     }
 
-    var widget = this.widget();
-    if (widget) {
-      var scrollable = widget.scrollable();
+    var panel = this.panel();
+    if (panel) {
+      var scrollable = panel.scrollable();
       this.$center.toggleClass('wcScrollableX', scrollable.x);
       this.$center.toggleClass('wcScrollableY', scrollable.y);
 
-      if (widget.moveable()) {
+      if (panel.moveable() && panel.title()) {
         this.$frame.prepend(this.$title);
         this.$center.css('top', '21px');
       } else {
@@ -110,13 +115,13 @@ wcFrameWidget.prototype = {
         this.$center.css('top', '0px');
       }
 
-      if (widget.closeable()) {
+      if (panel.closeable()) {
         this.$frame.append(this.$close);
       } else {
         this.$close.remove();
       }
 
-      widget._update();
+      panel._update();
     }
   },
 
@@ -146,66 +151,66 @@ wcFrameWidget.prototype = {
     }
   },
 
-  // Gets the desired size of the widget.
+  // Gets the desired size of the panel.
   size: function() {
     var size = {
       x: -1,
       y: -1,
     };
 
-    for (var i = 0; i < this._widgetList.length; ++i) {
-      if (size.x < this._widgetList[i].size().x) {
-        size.x = this._widgetList[i].size().x;
+    for (var i = 0; i < this._panelList.length; ++i) {
+      if (size.x < this._panelList[i].size().x) {
+        size.x = this._panelList[i].size().x;
       }
-      if (size.y < this._widgetList[i].size().y) {
-        size.y = this._widgetList[i].size().y;
+      if (size.y < this._panelList[i].size().y) {
+        size.y = this._panelList[i].size().y;
       }
     }
     return size;
   },
 
-  // Gets the minimum size of the widget.
+  // Gets the minimum size of the panel.
   minSize: function() {
     var size = {
       x: 0,
       y: 0,
     };
 
-    for (var i = 0; i < this._widgetList.length; ++i) {
-      size.x = Math.max(size.x, this._widgetList[i].minSize().x);
-      size.y = Math.max(size.y, this._widgetList[i].minSize().y);
+    for (var i = 0; i < this._panelList.length; ++i) {
+      size.x = Math.max(size.x, this._panelList[i].minSize().x);
+      size.y = Math.max(size.y, this._panelList[i].minSize().y);
     }
     return size;
   },
 
-  // Gets the minimum size of the widget.
+  // Gets the minimum size of the panel.
   maxSize: function() {
     var size = {
       x: Infinity,
       y: Infinity,
     };
 
-    for (var i = 0; i < this._widgetList.length; ++i) {
-      size.x = Math.min(size.x, this._widgetList[i].maxSize().x);
-      size.y = Math.min(size.y, this._widgetList[i].maxSize().y);
+    for (var i = 0; i < this._panelList.length; ++i) {
+      size.x = Math.min(size.x, this._panelList[i].maxSize().x);
+      size.y = Math.min(size.y, this._panelList[i].maxSize().y);
     }
     return size;
   },
 
-  // Adds a given widget as a new tab item.
+  // Adds a given panel as a new tab item.
   // Params:
-  //    widget    The widget to add.
+  //    panel    The panel to add.
   //    index     An optional index to insert the tab at.
-  addWidget: function(widget, index) {
-    var found = this._widgetList.indexOf(widget);
+  addPanel: function(panel, index) {
+    var found = this._panelList.indexOf(panel);
     if (found !== -1) {
-      this._widgetList.splice(found, 1);
+      this._panelList.splice(found, 1);
     }
 
     if (typeof index === 'undefined') {
-      this._widgetList.push(widget);
+      this._panelList.push(panel);
     } else {
-      this._widgetList.splice(index, 0, widget);
+      this._panelList.splice(index, 0, panel);
       if (this._curTab >= index) {
         this._curTab++;
       }
@@ -213,51 +218,81 @@ wcFrameWidget.prototype = {
 
     this._size = this.size();
 
-    if (this._curTab === -1 && this._widgetList.length) {
+    if (this._curTab === -1 && this._panelList.length) {
       this._curTab = 0;
-      this._widgetList[this._curTab].layout().container(this.$center);
-      this._widgetList[this._curTab].container(this.$center);
-      this.$title.text(this._widgetList[this._curTab].title());
-      this._pos = this._widgetList[this._curTab].pos();
+      this._panelList[this._curTab].layout().container(this.$center);
+      this._panelList[this._curTab].container(this.$center);
+      this.$title.text(this._panelList[this._curTab].title());
+      this._pos = this._panelList[this._curTab].pos();
     }
-    widget.parent(this);
+    panel.parent(this);
   },
 
-  // Remvoes a given widget from the tab item.
+  // Removes a given panel from the tab item.
   // Params:
-  //    widget      The widget to remove.
-  removeWidget: function(widget) {
-    for (var i = 0; i < this._widgetList.length; ++i) {
-      if (this._widgetList[i] === widget) {
+  //    panel      The panel to remove.
+  removePanel: function(panel) {
+    for (var i = 0; i < this._panelList.length; ++i) {
+      if (this._panelList[i] === panel) {
         if (this._curTab >= i) {
           this._curTab--;
         }
 
-        this._widgetList[i].layout().container(null);
-        this._widgetList[i].container(null);
-        this._widgetList[i].parent(null);
+        this._panelList[i].layout().container(null);
+        this._panelList[i].container(null);
+        this._panelList[i].parent(null);
 
-        this._widgetList.splice(i, 1);
+        this._panelList.splice(i, 1);
         break;
       }
     }
 
-    if (this._curTab === -1 && this._widgetList.length) {
+    if (this._curTab === -1 && this._panelList.length) {
       this._curTab = 0;
-      this._widgetList[this._curTab].layout().container(this.$center);
-      this._widgetList[this._curTab].container(this.$center);
+      this._panelList[this._curTab].layout().container(this.$center);
+      this._panelList[this._curTab].container(this.$center);
     }
   },
 
-  // Retrieves the currently visible widget.
-  widget: function() {
-    if (this._curTab > -1 && this._curTab < this._widgetList.length) {
-      return this._widgetList[this._curTab];
+  // Retrieves the currently visible panel.
+  panel: function() {
+    if (this._curTab > -1 && this._curTab < this._panelList.length) {
+      return this._panelList[this._curTab];
     }
     return false;
   },
 
-  // Moves the widget based on mouse dragging.
+  // Brings the frame into focus.
+  // Params:
+  //    flash     Optional, if true will flash the window.
+  focus: function(flash) {
+    if (flash) {
+      var $flasher = $('<div class="wcFrameFlasher">');
+      this.$frame.append($flasher);
+      $flasher.animate({
+        opacity: 0.25,
+      },100)
+      .animate({
+        opacity: 0.0,
+      },100)
+      .animate({
+        opacity: 0.1,
+      },50)
+      .animate({
+        opacity: 0.0,
+      },50)
+      .queue(function(next) {
+        $flasher.remove();
+        next();
+      });
+    }
+
+    if (this._parent) {
+      this._parent._focus(this, flash);
+    }
+  },
+
+  // Moves the panel based on mouse dragging.
   // Params:
   //    mouse     The current mouse position.
   move: function(mouse) {
@@ -268,7 +303,7 @@ wcFrameWidget.prototype = {
     this._pos.y = (mouse.y + this._anchorMouse.y) / height;
   },
 
-  // Sets the anchor position for moving the widget.
+  // Sets the anchor position for moving the panel.
   // Params:
   //    mouse     The current mouse position.
   anchorMove: function(mouse) {
@@ -279,19 +314,19 @@ wcFrameWidget.prototype = {
     this._anchorMouse.y = (this._pos.y * height) - mouse.y;
   },
 
-  // Checks if the mouse is in a valid anchor position for docking a widget.
+  // Checks if the mouse is in a valid anchor position for docking a panel.
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
   checkAnchorDrop: function(mouse, same, ghost) {
-    var widget = this.widget();
-    if (widget && widget.moveable()) {
-      return widget.layout().checkAnchorDrop(mouse, same, ghost, this._isFloating, this.$frame);
+    var panel = this.panel();
+    if (panel && panel.moveable()) {
+      return panel.layout().checkAnchorDrop(mouse, same, ghost, this._isFloating, this.$frame);
     }
     return false;
   },
 
-  // Resizes the widget based on mouse dragging.
+  // Resizes the panel based on mouse dragging.
   // Params:
   //    edges     A list of edges being moved.
   //    mouse     The current mouse position.
@@ -427,13 +462,13 @@ wcFrameWidget.prototype = {
   // Disconnects and prepares this widget for destruction.
   destroy: function() {
     this._curTab = -1;
-    for (var i = 0; i < this._widgetList.length; ++i) {
-      this._widgetList[i].layout().container(null);
-      this._widgetList[i].container(null);
-      this._widgetList[i].parent(null);
+    for (var i = 0; i < this._panelList.length; ++i) {
+      this._panelList[i].layout().container(null);
+      this._panelList[i].container(null);
+      this._panelList[i].parent(null);
     }
 
-    this._widgetList = [];
+    this._panelList = [];
     this.container(null);
     this.parent(null);
   },

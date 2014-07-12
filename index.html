@@ -11,86 +11,52 @@
     <script src="Code/ext/jquery.ui.position.js"></script>
 
     <!-- Core Modules -->
-    <script src="Code/mainwindow.js"></script>
+    <script src="Code/docker.js"></script>
     <script src="Code/splitter.js"></script>
-    <script src="Code/framewidget.js"></script>
-    <script src="Code/dockwidget.js"></script>
+    <script src="Code/frame.js"></script>
+    <script src="Code/panel.js"></script>
     <script src="Code/layout.js"></script>
     <script src="Code/ghost.js"></script>
 
     <!-- Initialization -->
     <script>
       $(document).ready(function() {
-        var wcWindow = new wcDocker($('body'));
-        if (wcWindow) {
-          wcWindow.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br><br>Any window, except this one, can be moved by clicking their title bar and dragging them to a new location.</div>'), 0, 0);
+        var docker = new wcDocker(document.body);
+        if (docker) {
+          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br><br>Any panel, except this one, can be moved by clicking and dragging their title bar to a new location.<br><br>Create a new panel by right clicking and selecting the panel type in the popup menu.  The location that you click will determine where the new panel is docked.</div>'), 0, 0);
 
-          wcWindow.registerDockWidgetType('Top Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel can not be moved, removed, resized, and nothing can be docked with it</div>'), 0, 0, 1, 2);
-            widget.size(50, 50);
-            widget.minSize(50, 50);
-            widget.maxSize(50, 50);
-            widget.moveable(false);
-            widget.closeable(false);
+          docker.registerPanelType('Top Panel', function(panel) {
+            panel.layout().addItem($('<div style="text-align:center">This panel can not be moved, removed, resized, and nothing can be docked with it.  An excellent file menu or something similar.</div>'), 0, 0, 1, 2);
+            panel.size(50, 50);
+            panel.minSize(50, 50);
+            panel.maxSize(50, 50);
+            panel.moveable(false);
+            panel.closeable(false);
           }, true);
 
-          wcWindow.registerDockWidgetType('Side Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">All windows contain a gridded layout</div>'), 0, 0, 1, 2);
-            widget.layout().addItem($('<div style="text-align:center">This is a side panel window</div>'), 1, 0);
-            widget.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually</div>'), 1, 1);
-            widget.layout().addItem($('<div style="text-align:center">Or multiple cells can be merged</div>'), 0, 2, 2, 1);
-            widget.layout().grid(true);
+          docker.registerPanelType('Panel 1', function(panel) {
+            panel.layout().addItem($('<div style="text-align:center">All windows contain a gridded layout</div>'), 0, 0, 1, 2);
+            panel.layout().addItem($('<div style="text-align:center">This is a panel window</div>'), 1, 0);
+            panel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually</div>'), 1, 1);
+            panel.layout().addItem($('<div style="text-align:center">Or multiple cells can be merged</div>'), 0, 2, 2, 1);
+            panel.layout().grid(true);
+            panel.size(200, 200);
           });
 
-          wcWindow.registerDockWidgetType('Initial Size Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel has a larger initial size, but can still be shrunk</div>'), 0, 0);
-            widget.size(700, 700);
+          docker.registerPanelType('Panel 2', function(panel) {
+            panel.layout().addItem($('<div style="text-align:center">Floating windows can move freely.</div>'));
+            panel.layout().addItem($('<div style="text-align:center"><em>To dock - Toggle the anchor button in upper left before draging the title bar to a new location or use the middle mouse button while dragging.</em></div>'), 0, 1);
+            panel.size(400, 300);
+            panel.pos(0.75, 0.3);
           });
 
-          wcWindow.registerDockWidgetType('Min Restricted Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel has a minimum size, try reducing me!.</div>'), 0, 0);
-            widget.minSize(300, 300);
-          });
-
-          wcWindow.registerDockWidgetType('Max Restricted Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel has a maximum size, try expanding me!</div>'), 0, 0);
-            widget.maxSize(300, 300);
-          });
-
-          wcWindow.registerDockWidgetType('Bottom Bar', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel is not closeable</div>'), 0, 0);
-            widget.closeable(false);
-          });
-
-          wcWindow.registerDockWidgetType('Scroll Panel', function(widget) {
-            widget.layout().addItem($('<div>If the contents of a window doesn\'t fit within its view, it will scroll, but you could disable it if you wish.</div>'), 0, 0);
-            widget.layout().addItem($('<div style="width:1000px;height:2000px;"></div>'), 0, 1);
-            widget.scrollable(true, false);
-            widget.size(100, 100);
-            widget.pos()
-          });
-
-          wcWindow.registerDockWidgetType('Floating Panel', function(widget) {
-            widget.layout().addItem($('<div style="text-align:center">This panel is "floating", that means it is not docked and can be moved freely on top of the screen.  To dock this window, toggle the anchor button on the upper left and then drag it to a location, or use the middle mouse button and drag.  To return this window to "floating" mode, as well as any other window, either drag it away from any dock position or use the middle mouse again.</div>'));
-            widget.size(400, 300);
-            widget.pos(0.7, 0.5);
-          });
-
-          wcWindow.addDockWidget('Top Panel', wcDocker.DOCK_TOP, false);
-          wcWindow.addDockWidget('Side Panel', wcDocker.DOCK_LEFT, false);
-          wcWindow.addDockWidget('Initial Size Panel', wcDocker.DOCK_RIGHT, false);
-          var bottomPanel = wcWindow.addDockWidget('Bottom Bar', wcDocker.DOCK_BOTTOM, false);
-
-          wcWindow.addDockWidget('Max Restricted Panel', wcDocker.DOCK_RIGHT, false, bottomPanel);
-          wcWindow.addDockWidget('Min Restricted Panel', wcDocker.DOCK_LEFT, false);
-          wcWindow.addDockWidget('Scroll Panel', wcDocker.DOCK_TOP, false);
-          wcWindow.addDockWidget('Floating Panel', wcDocker.DOCK_FLOAT, false);
+          docker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
+          docker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
+          docker.addPanel('Panel 2', wcDocker.DOCK_FLOAT, false);
         }
       });
     </script>
   </head>
   <body style="background-color: lightgrey;">
-    <!-- <div style="position:absolute;top:0px;left:0px;width:100%;height:40px;">Toolbar</div> -->
-    <!-- <div id="MainWindow" style="position:absolute;top:40px;left:0px;right:0px;bottom:0px;"></div> -->
   </body>
 </html>
