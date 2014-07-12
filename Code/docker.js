@@ -20,6 +20,8 @@ function wcDocker(container) {
   this._draggingFrameSizer = false;
   this._ghost = false;
 
+  this._allowDefaultContext = false;
+
   this._init();
 };
 
@@ -40,17 +42,16 @@ wcDocker.prototype = {
     this._root = this._center;
 
     var self = this;
-
+    $(window).resize(self._resize.bind(self));
+    
     // Setup our context menus.
+    window.oncontextmenu = function() {
+      return self._allowDefaultContext;
+    };
+
     $.contextMenu({
       selector: '.wcFrame, .wcLayout',
       build: function($trigger, event) {
-        var mouse = {
-          x: event.clientX,
-          y: event.clientY,
-        };
-        
-        var ghost;
         var myFrame;
         for (var i = 0; i < self._frameList.length; ++i) {
           if (self._frameList[i].$frame[0] === $trigger[0] ||
@@ -67,64 +68,72 @@ wcDocker.prototype = {
         }
 
         var items = {};
-        if (myFrame) {
-          var spacer = false;
-          if (myFrame.panel().closeable()) {
-            items['Close Window'] = {name: 'Close Window'};
-            spacer = true;
-          }
-          if (!myFrame._isFloating && myFrame.panel().moveable()) {
-            items['Float Window'] = {name: 'Detach Window'};
-            spacer = true;
-          }
-
-          if (spacer && !myFrame._isFloating) {
-            items['sep1'] = "---------";
-          }
-        }
-
-        if (!myFrame._isFloating && myFrame.panel().moveable()) {
-          var windowTypes = {};
-          for (var i = 0; i < self._dockWidgetTypeList.length; ++i) {
-            var type = self._dockWidgetTypeList[i];
-            if (!type.isPrivate) {
-              windowTypes[type.name] = {name: type.name};
-            }
-          }
-
-          items.fold1 = {
-            name: 'Create Window',
-            items: windowTypes,
+        items['Close Window'] = {
+          name: 'Close Window',
+          disabled: !myFrame.panel().closeable(),
+        };
+        if (!myFrame._isFloating) {
+          items['Detach Window'] = {
+            name: 'Detach Window',
+            disabled: !myFrame.panel().moveable(),
           };
-          items['sep2'] = "---------";
-
-          var rect = myFrame.rect();
-          ghost = new wcGhost(rect, mouse);
-          myFrame.checkAnchorDrop(mouse, false, ghost);
         }
+
+        items['sep1'] = "---------";
+
+        var windowTypes = {};
+        for (var i = 0; i < self._dockWidgetTypeList.length; ++i) {
+          var type = self._dockWidgetTypeList[i];
+          if (!type.isPrivate) {
+            windowTypes[type.name] = {
+              name: type.name,
+              className: 'wcMenuCreatePanel',
+            };
+          }
+        }
+
+        items.fold1 = {
+          name: 'Create Window',
+          items: windowTypes,
+          disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+          className: 'wcMenuCreatePanel',
+        };
+        items['sep2'] = "---------";
 
         items['Flash Window'] = {name: 'Flash Window'};
+
+        if (!myFrame._isFloating && myFrame.panel().moveable()) {
+          var mouse = {
+            x: event.clientX,
+            y: event.clientY,
+          };
+
+          var rect = myFrame.rect();
+          self._ghost = new wcGhost(rect, mouse);
+          myFrame.checkAnchorDrop(mouse, false, self._ghost);
+          self._ghost.$ghost.hide();
+        }
 
         return {
           callback: function(key, options) {
             if (key === 'Close Window') {
               myFrame.panel().close();
-            } else if (key === 'Float Window') {
+            } else if (key === 'Detach Window') {
               self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
             } else if (key === 'Flash Window') {
               myFrame.focus(true);
             } else {
-              if (myFrame && ghost) {
-                var anchor = ghost.anchor();
+              if (myFrame && self._ghost) {
+                var anchor = self._ghost.anchor();
                 self.addPanel(key, anchor.loc, false, myFrame.panel());
               }
             }
           },
           events: {
             hide: function(opt) {
-              if (ghost) {
-                ghost.destroy();
-                ghost = null;
+              if (self._ghost) {
+                self._ghost.destroy();
+                self._ghost = false;
               }
             },
           },
@@ -137,8 +146,19 @@ wcDocker.prototype = {
       },
     })
 
+    
+    // Hovering over a panel creation context menu.
+    $('body').on('mouseenter', '.wcMenuCreatePanel', function() {
+      if (self._ghost) {
+        self._ghost.$ghost.stop().fadeIn(200);
+      }
+    });
 
-    $(window).resize(self._resize.bind(self));
+    $('body').on('mouseleave', '.wcMenuCreatePanel', function() {
+      if (self._ghost) {
+        self._ghost.$ghost.stop().fadeOut(200);
+      }
+    });
 
     // Close button on frames should destroy those widgets.
     $('body').on('click', '.wcFrameCloseButton', function() {
@@ -351,7 +371,7 @@ wcDocker.prototype = {
         }
       }
 
-      if (self._ghost) {
+      if (self._ghost && self._draggingFrame) {
         var anchor = self._ghost.anchor();
 
         if (!anchor) {
@@ -379,13 +399,24 @@ wcDocker.prototype = {
           self.movePanel(self._draggingFrame.panel(), anchor.loc, false, widget);
         }
         self._ghost.destroy();
+        self._ghost = false;
       }
 
-      self._ghost = false;
       self._draggingSplitter = false;
       self._draggingFrame = false;
       self._draggingFrameSizer = false;
     });
+  },
+
+  // Updates the sizing of all widgets inside this window.
+  _update: function() {
+    if (this._root) {
+      this._root._update();
+    }
+
+    for (var i = 0; i < this._floatingList.length; ++i) {
+      this._floatingList[i]._update();
+    }
   },
 
   // On window resized event.
@@ -747,15 +778,12 @@ wcDocker.prototype = {
     return false;
   },
 
-  // Updates the sizing of all widgets inside this window.
-  _update: function() {
-    if (this._root) {
-      this._root._update();
+  allowDefaultContext: function(enabled) {
+    if (typeof enabled !== 'undefined') {
+      this._allowDefaultContext = enabled;
     }
 
-    for (var i = 0; i < this._floatingList.length; ++i) {
-      this._floatingList[i]._update();
-    }
+    return this._allowDefaultContext;
   },
 
   // Retreives the center layout for the window.

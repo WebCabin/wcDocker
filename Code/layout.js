@@ -114,14 +114,14 @@ wcLayout.prototype = {
   // Adds an item into the layout, expanding the grid
   // size if necessary.
   // Params:
-  //    $item       The JQuery item to add.
+  //    item        The DOM element to add.
   //    x, y        The grid coordinates to place the item.
   //    w, h        If supplied, will stretch the item among
   //                multiple grid elements.
   // Returns:
   //    <td>        On success, returns the <td> dom element.
   //    false       A failure happened, most likely cells could not be merged.
-  addItem: function($item, x, y, w, h) {
+  addItem: function(item, x, y, w, h) {
     if (typeof x === 'undefined' || x < 0) {
       x = 0;
     }
@@ -140,7 +140,7 @@ wcLayout.prototype = {
       return false;
     }
 
-    this._grid[y][x].$el.append($item);
+    this._grid[y][x].$el.append($(item));
     return this._grid[y][x].$el;
   },
 

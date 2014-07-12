@@ -23,10 +23,10 @@
       $(document).ready(function() {
         var docker = new wcDocker(document.body);
         if (docker) {
-          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br><br>Any panel, except this one, can be moved by clicking and dragging their title bar to a new location.<br><br>Create a new panel by right clicking and selecting the panel type in the popup menu.  The location that you click will determine where the new panel is docked.</div>'), 0, 0);
+          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br><br><em>Moving Panels - Click and drag a panel by its title bar to a new location.<br><br>New Panel - Right click somewhere on a panel and select a new panel to create there.</em></div>'), 0, 0);
 
           docker.registerPanelType('Top Panel', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">This panel can not be moved, removed, resized, and nothing can be docked with it.  An excellent file menu or something similar.</div>'), 0, 0, 1, 2);
+            panel.layout().addItem($('<div style="text-align:center">This panel can not be moved, removed, resized, and nothing can be docked with it.  You also can not create new instances of this panel.</div>'), 0, 0, 1, 2);
             panel.size(50, 50);
             panel.minSize(50, 50);
             panel.maxSize(50, 50);
@@ -35,19 +35,31 @@
           }, true);
 
           docker.registerPanelType('Panel 1', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">All windows contain a gridded layout</div>'), 0, 0, 1, 2);
-            panel.layout().addItem($('<div style="text-align:center">This is a panel window</div>'), 1, 0);
-            panel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually</div>'), 1, 1);
-            panel.layout().addItem($('<div style="text-align:center">Or multiple cells can be merged</div>'), 0, 2, 2, 1);
+            panel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
+            panel.layout().addItem($('<div style="text-align:center">This is a panel.</div>'), 1, 0);
+            panel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
+            panel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged</div>'), 0, 2, 2, 1);
             panel.layout().grid(true);
             panel.size(200, 200);
           });
 
           docker.registerPanelType('Panel 2', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">Floating windows can move freely.</div>'));
+            panel.layout().addItem($('<div style="text-align:center">Floating panels can move freely.</div>'));
             panel.layout().addItem($('<div style="text-align:center"><em>To dock - Toggle the anchor button in upper left before draging the title bar to a new location or use the middle mouse button while dragging.</em></div>'), 0, 1);
             panel.size(400, 300);
             panel.pos(0.75, 0.3);
+          });
+
+          docker.registerPanelType('Panel 3', function(panel) {
+            panel.layout().addItem($('<div style="text-align:center">Third panel!</div>'));
+          });
+
+          docker.registerPanelType('Panel 4', function(panel) {
+            panel.layout().addItem($('<div style="text-align:center">Fourth panel!</div>'));
+          });
+
+          docker.registerPanelType('Panel 5', function(panel) {
+            panel.layout().addItem($('<div style="text-align:center">Fifth panel!</div>'));
           });
 
           docker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);

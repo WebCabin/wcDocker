@@ -65,7 +65,7 @@
 }
 
 .context-menu-item.disabled {
-    color: #666;
+    color: #444;
 }
 
 .context-menu-input.hover,
@@ -76,11 +76,14 @@
 
 .context-menu-submenu:after {
     content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAN1gAADdYBkG95nAAAAAd0SU1FB9gEGw0eCwtqN7gAAAAWdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjA76PVpAAAAJ0lEQVQ4T2MYBdQF/5EwWWBgDUDWTLIB6JpJMoBsjSAwhDQSAAwMAAC6HuLAItWPAAAAAElFTkSuQmCC);
-    color: #666;
     position: absolute;
     top: 0;
     right: 0px;
     z-index: 1;
+}
+
+.context-menu-submenu.disabled:after {
+    opacity: 0.25;
 }
 
 /* icons
