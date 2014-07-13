@@ -4,7 +4,9 @@ html, body {
   overflow: hidden;
   position: relative;
   margin: 0px;
+}
 
+.wcDisableSelection {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -42,7 +44,7 @@ html, body {
   bottom: 0px;
 
   opacity: 0;
-  background-color: yellow;
+  background-color: white;
 }
 
 .wcFrameTitle {

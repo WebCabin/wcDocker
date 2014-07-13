@@ -9,6 +9,16 @@ function wcPanel(title) {
 
   this._layout = null;
 
+  this._actualPos = {
+    x: 0.5,
+    y: 0.5,
+  };
+
+  this._actualSize = {
+    x: 0,
+    y: 0,
+  };
+
   this._pos = {
     x: 0.5,
     y: 0.5,
@@ -37,6 +47,8 @@ function wcPanel(title) {
   this._moveable = true;
   this._closeable = true;
 
+  this._eventList = [];
+
   this._init();
 };
 
@@ -48,6 +60,24 @@ wcPanel.prototype = {
   // Updates the size of the layout.
   _update: function() {
     this._layout._update();
+    if (!this.$container) {
+      return;
+    }
+
+    var width   = this.$container.width();
+    var height  = this.$container.height();
+    if (this._actualSize.x !== width || this._actualSize.y !== height) {
+      this._actualSize.x = width;
+      this._actualSize.y = height;
+      this.trigger(wcDocker.EVENT_RESIZED);
+    }
+
+    var offset  = this.$container.offset();
+    if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
+      this._actualPos.x = offset.left;
+      this._actualPos.y = offset.top;
+      this.trigger(wcDocker.EVENT_MOVED);
+    }
   },
 
   // Gets the title for this dock widget.
@@ -175,6 +205,51 @@ wcPanel.prototype = {
     }
   },
 
+  // Registers an event.
+  // Params:
+  //    eventType     The event type, as defined by wcDocker.EVENT_...
+  //    handler       A handler function to be called for the event.
+  //                  Params:
+  //                    panel   The panel invoking the event.
+  on: function(eventType, handler) {
+    this._eventList.push({
+      name: eventType,
+      handler: handler,
+    });
+  },
+
+  // Unregisters an event.
+  // Params:
+  //    eventType     The event type to remove, if omitted, all events are removed.
+  //    handler       The handler function to remove, if omitted, all events of
+  //                  the above type are removed.
+  off: function(eventType, handler) {
+    if (typeof eventType === 'undefined') {
+      while (this._eventList.length) this._eventList.pop();
+      return;
+    } else {
+      for (var i = 0; i < this._eventList.length; ++i) {
+        if (this._eventList[i].name === eventType) {
+          if (typeof handler === 'undefined' || this._eventList[i].handler === handler) {
+            this._eventList.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    }
+  },
+
+  // Triggers an event of a given type.
+  // Params:
+  //    eventType     The event to trigger.
+  trigger: function(eventType) {
+    for (var i = 0; i < this._eventList.length; ++i) {
+      if (this._eventList[i].name === eventType) {
+        this._eventList[i].handler(this);
+      }
+    }
+  },
+
   // Retrieves the bounding rect for this widget.
   rect: function() {
     var offset = this.$container.offset();
@@ -221,5 +296,16 @@ wcPanel.prototype = {
 
     this._parent = parent;
     return this._parent;
+  },
+
+  // Destroys this panel.
+  destroy: function() {
+    this.trigger(wcDocker.EVENT_CLOSED);
+
+    this._layout.destroy();
+    this._layout = null;
+    this.container(null);
+    this.parent(null);
+    this.off();
   },
 };

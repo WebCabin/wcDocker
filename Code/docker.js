@@ -31,12 +31,18 @@ wcDocker.DOCK_LEFT   = 'left';
 wcDocker.DOCK_RIGHT  = 'right';
 wcDocker.DOCK_BOTTOM = 'bottom';
 
+wcDocker.EVENT_CLOSED   = 'closed';
+wcDocker.EVENT_ATTACHED = 'attached';
+wcDocker.EVENT_DETACHED = 'detached';
+wcDocker.EVENT_MOVED    = 'moved';
+wcDocker.EVENT_RESIZED  = 'resized';
+
 wcDocker.prototype = {
   _init: function() {
     var widget = new wcPanel('');
     widget.closeable(false);
     widget.layout().$table.addClass('wcCenter');
-    widget.size(this.$container.width()/2, this.$container.height()/2);
+    widget.size(-1, -1);
     this._center = new wcFrame(this.$container, widget, false, true);
     this._center.addPanel(widget);
     this._root = this._center;
@@ -75,7 +81,7 @@ wcDocker.prototype = {
         if (!myFrame._isFloating) {
           items['Detach Window'] = {
             name: 'Detach Window',
-            disabled: !myFrame.panel().moveable(),
+            disabled: (!myFrame.panel().moveable() || myFrame === self._center),
           };
         }
 
@@ -170,8 +176,10 @@ wcDocker.prototype = {
         }
       }
       if (frame) {
-        self.removePanel(frame.panel());
-        self._focus(frame);
+        var panel = frame.panel();
+        self.removePanel(panel);
+        panel.destroy();
+        self._update();
       }
     });
 
@@ -192,6 +200,8 @@ wcDocker.prototype = {
       if (event.which === 3) {
         return;
       }
+
+      self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
@@ -205,6 +215,7 @@ wcDocker.prototype = {
       if (event.which === 3) {
         return;
       }
+      self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$title[0] == this) {
           self._draggingFrame = self._frameList[i];
@@ -256,6 +267,7 @@ wcDocker.prototype = {
       if (event.which === 3) {
         return;
       }
+      self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i]._isFloating) {
           if (self._frameList[i].$top[0] == this) {
@@ -365,6 +377,7 @@ wcDocker.prototype = {
       if (event.which === 3) {
         return;
       }
+      self.$container.removeClass('wcDisableSelection');
       if (self._draggingFrame) {
         for (var i = 0; i < self._frameList.length; ++i) {
           self._frameList[i].shadow(false);
@@ -636,43 +649,58 @@ wcDocker.prototype = {
 
   // Moves a docking panel from its current location to another.
   // Params:
-  //    typeName      The type of widget to create.
+  //    panel         The panel to move.
   //    location      The location to 'try' docking at, as defined by
   //                  wcGLOBALS.DOCK_LOC enum.
   //    allowGroup    True to allow this widget to be tab groupped with
   //                  another already existing widget at that location.
   //                  If, for any reason, the widget can not fit at the
   //                  desired location, a floating window will be used.
-  //    parentWidget  An optional widget to 'split', if not supplied the
+  //    parentPanel  An optional widget to 'split', if not supplied the
   //                  new widget will split the center window.
   // Returns:
   //    widget        The widget that was created.
   //    false         The widget type does not exist.
-  movePanel: function(widget, location, allowGroup, parentWidget) {
-    var $elem = widget.$container;
-    if (widget.parent() instanceof wcFrame) {
-      $elem = widget.parent().$frame;
+  movePanel: function(panel, location, allowGroup, parentPanel) {
+    var $elem = panel.$container;
+    if (panel.parent() instanceof wcFrame) {
+      $elem = panel.parent().$frame;
     }
     var offset = $elem.offset();
     var width  = $elem.width();
     var height = $elem.height();
 
-    this.removePanel(widget);
+    var floating = false;
+    if (panel.parent() instanceof wcFrame) {
+      floating = panel.parent()._isFloating;
+    }
 
-    widget.size(width, height);
+    this.removePanel(panel);
+
+    panel.size(width, height);
     if (allowGroup) {
-      this._addPanelGrouped(widget, location, parentWidget);
+      this._addPanelGrouped(panel, location, parentPanel);
     } else {
-      this._addPanelAlone(widget, location, parentWidget);
+      this._addPanelAlone(panel, location, parentPanel);
     }
 
-    var frame = widget.parent();
-    if (frame) {
+    var frame = panel.parent();
+    if (frame instanceof wcFrame) {
       frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
+
+      if (floating !== frame._isFloating) {
+        if (frame._isFloating) {
+          panel.trigger(wcDocker.EVENT_DETACHED);
+        } else {
+          panel.trigger(wcDocker.EVENT_ATTACHED);
+        }
+      }
     }
+
+    panel.trigger(wcDocker.EVENT_MOVED);
 
     this._update();
-    return widget;
+    return panel;
   },
 
   // Add a new dock widget to the window of a given type.

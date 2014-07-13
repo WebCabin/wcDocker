@@ -166,6 +166,10 @@ wcFrame.prototype = {
         size.y = this._panelList[i].size().y;
       }
     }
+
+    if (size.x < 0 || size.y < 0) {
+      return false;
+    }
     return size;
   },
 
@@ -468,7 +472,7 @@ wcFrame.prototype = {
       this._panelList[i].parent(null);
     }
 
-    this._panelList = [];
+    while (this._panelList.length) this._panelList.pop();
     this.container(null);
     this.parent(null);
   },

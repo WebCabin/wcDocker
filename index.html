@@ -18,18 +18,22 @@
     <script src="Code/layout.js"></script>
     <script src="Code/ghost.js"></script>
 
+    <style>
+    </style>
+
     <!-- Initialization -->
     <script>
       $(document).ready(function() {
         var docker = new wcDocker(document.body);
         if (docker) {
-          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br><br><em>Moving Panels - Click and drag a panel by its title bar to a new location.<br><br>New Panel - Right click somewhere on a panel and select a new panel to create there.</em></div>'), 0, 0);
+          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'), 0, 0);
 
           docker.registerPanelType('Top Panel', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">This panel can not be moved, removed, resized, and nothing can be docked with it.  You also can not create new instances of this panel.</div>'), 0, 0, 1, 2);
-            panel.size(50, 50);
-            panel.minSize(50, 50);
-            panel.maxSize(50, 50);
+            panel.layout().addItem($('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong><br>Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 0);
+            panel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://bitbucket.org/WebCabin/wcdocker">https://bitbucket.org/WebCabin/wcdocker</a></div>'), 0, 1);
+            panel.size(100, 100);
+            panel.minSize(100, 100);
+            panel.maxSize(100, 100);
             panel.moveable(false);
             panel.closeable(false);
           }, true);
@@ -38,33 +42,128 @@
             panel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
             panel.layout().addItem($('<div style="text-align:center">This is a panel.</div>'), 1, 0);
             panel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
-            panel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged</div>'), 0, 2, 2, 1);
-            panel.layout().grid(true);
+            panel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged.</div>'), 0, 2, 2, 1);
+            panel.layout().showGrid(true);
             panel.size(200, 200);
           });
 
           docker.registerPanelType('Panel 2', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">Floating panels can move freely.</div>'));
-            panel.layout().addItem($('<div style="text-align:center"><em>To dock - Toggle the anchor button in upper left before draging the title bar to a new location or use the middle mouse button while dragging.</em></div>'), 0, 1);
-            panel.size(400, 300);
-            panel.pos(0.75, 0.3);
+            panel.layout().addItem($('<div style="text-align:center">Each panel can be docked anywhere.<br>Just drag me by my title bar to a new dock position.</div>'));
+            panel.size(400, 400);
           });
 
           docker.registerPanelType('Panel 3', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">Third panel!</div>'));
+            panel.layout().addItem($('<div style="text-align:center">New (and even duplicate) panels can be created by right clicking at the location you wish the new panel to go and using the context menu.</div>'));
           });
 
           docker.registerPanelType('Panel 4', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">Fourth panel!</div>'));
+            panel.layout().addItem($('<div style="text-align:center">Floating panels can move freely.<br>Drag me by my title bar.</div>'));
+
+            var $dockMe = $('<div style="text-align:center"><b>To dock me</b>, use the middle mouse button and drag me by my title bar or you can toggle the anchor button in the upper left corner first before dragging me.</div>');
+            var $floatMe = $('<div style="text-align:center"><b>To make me float again</b>, use the middle mouse button and drag me by my title bar or you can use the left mouse and drag me to a location that does not anchor to a location.</div>');
+            panel.layout().addItem($dockMe, 0, 1);
+            panel.size(400, 300);
+            panel.pos(0.35, 0.8);
+
+            // Now register some events.
+            panel.on(wcDocker.EVENT_ATTACHED, function(panel) {
+              $dockMe.remove();
+              panel.layout().addItem($floatMe, 0, 1);
+            });
+            panel.on(wcDocker.EVENT_DETACHED, function(panel) {
+              $floatMe.remove();
+              panel.layout().addItem($dockMe, 0, 1);
+            });
           });
 
           docker.registerPanelType('Panel 5', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">Fifth panel!</div>'));
+            panel.layout().addItem($('<div style="text-align:center"></div>'));
+
+            var $attachInfo = $('<div style="text-align:center">I react when docked</div>');
+            var $attached   = $('<div style="text-align:center"><b>I was just docked!</b></div>');
+            var $detachInfo = $('<div style="text-align:center">I react when detached</div>');
+            var $detached   = $('<div style="text-align:center"><b>I was just detached!</b></div>');
+            var attachTimer;
+
+            var $moveInfo = $('<div style="text-align:center">I react on move</div>');
+            var $moved    = $('<div style="text-align:center"><b>I was just moved!</b></div>');
+            var moveTimer;
+
+            var $resizeInfo = $('<div style="text-align:center">I react on resize</div>');
+            var $resized    = $('<div style="text-align:center"><b>I was just resized!</b></div>');
+            var resizeTimer;
+
+            panel.layout().addItem($detachInfo, 0, 0);
+            panel.layout().addItem($moveInfo, 0, 1);
+            panel.layout().addItem($resizeInfo, 0, 2);
+
+            // Now register some events.
+            panel.on(wcDocker.EVENT_ATTACHED, function(panel) {
+              if (attachTimer) {
+                clearTimeout(attachTimer);
+              }
+
+              $attachInfo.remove();
+              $detachInfo.remove();
+              $detached.remove();
+              panel.layout().addItem($attached, 0, 0);
+
+              attachTimer = setTimeout(function() {
+                $attached.remove();
+                panel.layout().addItem($detachInfo, 0, 0);
+              }, 1000);
+            });
+            panel.on(wcDocker.EVENT_DETACHED, function(panel) {
+              if (attachTimer) {
+                clearTimeout(attachTimer);
+              }
+
+              $attachInfo.remove();
+              $detachInfo.remove();
+              $detached.remove();
+              panel.layout().addItem($detached, 0, 0);
+
+              attachTimer = setTimeout(function() {
+                $detached.remove();
+                panel.layout().addItem($attachInfo, 0, 0);
+              }, 1000);
+            });
+            panel.on(wcDocker.EVENT_MOVED, function(panel) {
+              if (moveTimer) {
+                clearTimeout(moveTimer);
+              }
+
+              $moveInfo.remove();
+              panel.layout().addItem($moved, 0, 1);
+
+              moveTimer = setTimeout(function() {
+                $moved.remove();
+                panel.layout().addItem($moveInfo, 0, 1);
+                moveTimer = null;
+              }, 500);
+            });
+            panel.on(wcDocker.EVENT_RESIZED, function(panel) {
+              if (resizeTimer) {
+                clearTimeout(resizeTimer);
+              }
+
+              $resizeInfo.remove();
+              panel.layout().addItem($resized, 0, 2);
+
+              resizeTimer = setTimeout(function() {
+                $resized.remove();
+                panel.layout().addItem($resizeInfo, 0, 2);
+                resizeTimer = null;
+              }, 500);
+            });
           });
 
           docker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
           docker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
-          docker.addPanel('Panel 2', wcDocker.DOCK_FLOAT, false);
+          var panel2 = docker.addPanel('Panel 2', wcDocker.DOCK_RIGHT, false);
+          docker.addPanel('Panel 3', wcDocker.DOCK_BOTTOM, false, panel2);
+          docker.addPanel('Panel 4', wcDocker.DOCK_FLOAT, false);
+          docker.addPanel('Panel 5', wcDocker.DOCK_BOTTOM, false, panel2);
         }
       });
     </script>
