@@ -26,6 +26,7 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 
 # Code #
 
+For more detailed information on the API, check out the [wiki](https://bitbucket.org/WebCabin/wcdocker/wiki/Home).
 
 Begin by creating an instance of the main docker window and assigning it a container DOM element.
 Typically this would be the document body, but there is no restriction if you want to use a
@@ -66,14 +67,34 @@ access its layout and populate it, much the same as done with the central panel.
 #!javascript
   panel.layout().addItem(element, x, y, width, height);
 ```
-You can also set various properties of the panel here as well, such as
-the desired size, or the minimum size.
+From here you can set various starting properties of the panel, such as
+the desired size, or the minimum size:
 ```
 #!javascript
   panel.size(200, 200);
   panel.minSize(100, 100);
 });
 ```
+And can also register some events if you feel you need them:
+
+```
+#!javascript
+
+  panel.on(wcDocker.EVENT_RESIZE, function(panel){});
+```
+The following event types are supported:
+
+wcDocker.EVENT_CLOSED   = When the panel has been closed and is about to be destroyed.
+
+wcDocker.EVENT_ATTACHED = When the panel has changed from a floating panel to a docked panel.
+
+wcDocker.EVENT_DETACHED = When the panel has changed from a docked panel to a floating panel.
+
+wcDocker.EVENT_MOVED    = Whenever the position of the panel has changed.
+
+wcDocker.EVENT_RESIZED  = Whenever the size of the panel has changed.
+
+
 Registering a panel type does not actually create an instance of it into your window.  To create an instance,
 use the addPanel() function in the docker.
 ```
