@@ -212,10 +212,6 @@ var // currently active contextMenu trigger
         contextmenu: function(e) {
             var $this = $(this);
             
-            // disable actual context-menu
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
             // abort native-triggered events unless we're triggering on right click
             if (e.data.trigger != 'right' && e.originalEvent) {
                 return;
@@ -227,6 +223,10 @@ var // currently active contextMenu trigger
             }
             
             if (!$this.hasClass('context-menu-disabled')) {
+                // disable actual context-menu
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                
                 // theoretically need to fire a show event at <menu>
                 // http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#context-menus
                 // var evt = jQuery.Event("show", { data: data, pageX: e.pageX, pageY: e.pageY, relatedTarget: this });

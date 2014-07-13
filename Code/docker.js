@@ -13,14 +13,12 @@ function wcDocker(container) {
   this._frameList = [];
   this._splitterList = [];
 
-  this._dockWidgetTypeList = [];
+  this._dockPanelTypeList = [];
 
   this._draggingSplitter = false;
   this._draggingFrame = false;
   this._draggingFrameSizer = false;
   this._ghost = false;
-
-  this._allowDefaultContext = false;
 
   this._init();
 };
@@ -39,36 +37,30 @@ wcDocker.EVENT_RESIZED  = 'resized';
 
 wcDocker.prototype = {
   _init: function() {
-    var widget = new wcPanel('');
-    widget.closeable(false);
-    widget.layout().$table.addClass('wcCenter');
-    widget.size(-1, -1);
-    this._center = new wcFrame(this.$container, widget, false, true);
-    this._center.addPanel(widget);
+    var panel = new wcPanel('');
+    panel.closeable(false);
+    panel.layout().$table.addClass('wcCenter');
+    panel.size(-1, -1);
+    this._center = new wcFrame(this.$container, panel, false, true);
+    this._center.addPanel(panel);
     this._root = this._center;
 
     var self = this;
     $(window).resize(self._resize.bind(self));
     
     // Setup our context menus.
-    window.oncontextmenu = function() {
-      return self._allowDefaultContext;
-    };
-
     $.contextMenu({
-      selector: '.wcFrame, .wcLayout',
+      selector: '.wcFrame',
       build: function($trigger, event) {
         var myFrame;
         for (var i = 0; i < self._frameList.length; ++i) {
-          if (self._frameList[i].$frame[0] === $trigger[0] ||
-              self._frameList[i].panel().layout().$table[0] === $trigger[0]) {
+          if (self._frameList[i].$frame[0] === $trigger[0]) {
             myFrame = self._frameList[i];
             break;
           }
         }
         if (!myFrame) {
-          if (self._center.$frame[0] === $trigger[0] ||
-              self._center.panel().layout().$table[0] === $trigger[0]) {
+          if (self._center.$frame[0] === $trigger[0]) {
             myFrame = self._center;
           }
         }
@@ -88,8 +80,8 @@ wcDocker.prototype = {
         items['sep1'] = "---------";
 
         var windowTypes = {};
-        for (var i = 0; i < self._dockWidgetTypeList.length; ++i) {
-          var type = self._dockWidgetTypeList[i];
+        for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
+          var type = self._dockPanelTypeList[i];
           if (!type.isPrivate) {
             windowTypes[type.name] = {
               name: type.name,
@@ -136,6 +128,8 @@ wcDocker.prototype = {
             }
           },
           events: {
+            show: function(opt) {
+            },
             hide: function(opt) {
               if (self._ghost) {
                 self._ghost.destroy();
@@ -150,8 +144,25 @@ wcDocker.prototype = {
           items: items,
         };
       },
-    })
+    });
 
+    var contextTimer;
+    $('body').on('contextmenu', 'a, img', function() {
+      if (contextTimer) {
+        clearTimeout(contextTimer);
+      }
+
+      $(".wcFrame").contextMenu(false);
+      contextTimer = setTimeout(function() {
+        $(".wcFrame").contextMenu(true);
+        contextTimer = null;
+      }, 100);
+      return true;
+    });
+
+    $('body').on('contextmenu', '.wcSplitterBar', function() {
+      return false;
+    });
     
     // Hovering over a panel creation context menu.
     $('body').on('mouseenter', '.wcMenuCreatePanel', function() {
@@ -630,13 +641,13 @@ wcDocker.prototype = {
   //    true        The new type has been added successfully.
   //    false       Failure, the type name already exists.
   registerPanelType: function(name, createFunc, isPrivate) {
-    for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
-      if (this._dockWidgetTypeList[i].name === name) {
+    for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
+      if (this._dockPanelTypeList[i].name === name) {
         return false;
       }
     }
 
-    this._dockWidgetTypeList.push({
+    this._dockPanelTypeList.push({
       name: name,
       create: createFunc,
       isPrivate: isPrivate,
@@ -703,50 +714,50 @@ wcDocker.prototype = {
     return panel;
   },
 
-  // Add a new dock widget to the window of a given type.
+  // Add a new dock panel to the window of a given type.
   // Params:
-  //    typeName      The type of widget to create.
+  //    typeName      The type of panel to create.
   //    location      The location to 'try' docking at, as defined by
   //                  wcGLOBALS.DOCK_LOC enum.
-  //    allowGroup    True to allow this widget to be tab grouped with
-  //                  another already existing widget at that location.
-  //                  If, for any reason, the widget can not fit at the
+  //    allowGroup    True to allow this panel to be tab grouped with
+  //                  another already existing panel at that location.
+  //                  If, for any reason, the panel can not fit at the
   //                  desired location, a floating window will be used.
-  //    parentWidget  An optional widget to 'split', if not supplied the
-  //                  new widget will split the center window.
+  //    parentPanel   An optional panel to 'split', if not supplied the
+  //                  new panel will split the central panel.
   // Returns:
-  //    widget        The widget that was created.
-  //    false         The widget type does not exist.
-  addPanel: function(typeName, location, allowGroup, parentWidget) {
-    for (var i = 0; i < this._dockWidgetTypeList.length; ++i) {
-      if (this._dockWidgetTypeList[i].name === typeName) {
-        var widget = new wcPanel(typeName);
-        this._dockWidgetTypeList[i].create(widget);
+  //    panel        The panel that was created.
+  //    false         The panel type does not exist.
+  addPanel: function(typeName, location, allowGroup, parentPanel) {
+    for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
+      if (this._dockPanelTypeList[i].name === typeName) {
+        var panel = new wcPanel(typeName);
+        this._dockPanelTypeList[i].create(panel);
         if (allowGroup) {
-          this._addPanelGrouped(widget, location, parentWidget);
+          this._addPanelGrouped(panel, location, parentPanel);
         } else {
-          this._addPanelAlone(widget, location, parentWidget);
+          this._addPanelAlone(panel, location, parentPanel);
         }
         this._update();
-        return widget;
+        return panel;
       }
     }
 
     return false;
   },
 
-  // Removes a dock widget from the window.
+  // Removes a dock panel from the window.
   // Params:
-  //    widget        The widget to remove.
+  //    panel        The panel to remove.
   // Returns:
-  //    true          The widget was removed.
+  //    true          The panel was removed.
   //    false         There was a problem.
-  removePanel: function(widget) {
-    if (!widget) {
+  removePanel: function(panel) {
+    if (!panel) {
       return false;
     }
 
-    var parentFrame = widget.parent();
+    var parentFrame = panel.parent();
     if (parentFrame instanceof wcFrame) {
       var parentSplitter = parentFrame.parent();
       if (parentSplitter instanceof wcSplitter) {
@@ -804,14 +815,6 @@ wcDocker.prototype = {
       }
     }
     return false;
-  },
-
-  allowDefaultContext: function(enabled) {
-    if (typeof enabled !== 'undefined') {
-      this._allowDefaultContext = enabled;
-    }
-
-    return this._allowDefaultContext;
   },
 
   // Retreives the center layout for the window.
