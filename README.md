@@ -4,21 +4,20 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 
 ### The following features are supported currently: ###
 
-* Windows can be docked to any side of any other window.
-* Windows can be detached from a dock position and float on their own.
-* Windows can be resized.
-* Windows can be closed via close button.
-* Windows can be initialized in code for a default layout.
-* Windows can be programmed with a minimum size constraint.
-* Multiple windows with the same contents can be created.
-* Windows can be created via context menu.
-
+* Panels can be docked to any side of any other window.
+* Panels can be detached from a dock position and float on their own.
+* Panels can be resized.
+* Panels can be closed via close button.
+* Panels can be initialized in code for a default layout.
+* Panels can be programmed with a minimum size constraint.
+* Multiple panels of the same type can be created.
+* Panels can be created via context menu.
+* Event system to react on panel changes.
 
 ### The following features are still under development: ###
 
 * Ability to group multiple windows into the same dock panel via tabbing.
-* Save/Restore support for remembering a user's window setup.
-* Dynamic update support to help optimize refreshing window contents when another window's change affects it.
+* Save/Restore support for remembering a user's panel setup.
 * A possible option of restricting the number of total windows created.
 * A possible option of restricting the total copies of the same window type.
 * Allow styling of window colors and other options either by changing css files or an internal color picker system.
