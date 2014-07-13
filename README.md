@@ -102,6 +102,8 @@ The final parameter is optional, normally docked windows will dock in relation o
 panel. However, by supplying a specific one instead, your new panel will be docked in relation to the target.
 The return value is the newly created docking panel, in the case that you may want it.
 
+For more detailed information on the API, check out the [wiki](https://bitbucket.org/WebCabin/wcdocker/wiki/Home).
+
 ****
 
 # Usage #
