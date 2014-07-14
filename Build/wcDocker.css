@@ -10,7 +10,7 @@ html, body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
-  -moz-user-select: none;
+  -moz-user-select: -moz-none;
   -ms-user-select: none;
   user-select: none;
 }
@@ -56,9 +56,9 @@ html, body {
   overflow: hidden;
 }
 
-.wcFloating .wcFrameTitle {
+/*.wcFloating .wcFrameTitle {
   background-color: #555;
-}
+}*/
 
 .wcFrameCloseButton, .wcFrameDockButton {
   width: 17px;
@@ -102,7 +102,6 @@ html, body {
 }
 
 .wcFrameCenter {
-  border-top: 1px solid black;
   overflow: hidden;
   position: absolute;
   top: 21px;
@@ -216,10 +215,50 @@ html, body {
   position: absolute;
 }
 
-.wcTabButton {
-  border: 1px black;
-  border-radius: 5px 5px 0px 0px;
-  background-color: gray;
+ul.wcPanelTab {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+  border-bottom: 1px solid black;
+}
+
+ul.wcPanelTab li {
+  display: inline;
+}
+
+ul.wcPanelTab li a {
+  color: #42454a;
+  background-color: #AAA;
+  border: 2px solid #555;
+  border-radius: 10px 10px 0px 0px;
+  border-bottom: none;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  -ms-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  -o-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  padding-bottom: 0px;
+  text-decoration: none;
+}
+
+ul.wcPanelTab li a:hover {
+  background-color: #f1f0ee;
+}
+
+ul.wcPanelTab li a.wcPanelTabActive {
+  color: #000;
+  background-color: #888;
+  font-weight: bold;
+  padding-bottom: 5px;
+  /*padding: 0.7em 0.3em 0.38em 0.3em;*/
+}
+
+div.wcPanelTabContent {
+}
+
+div.wcPanelTabContent.wcPanelTabContentHidden {
+  display: none;
 }
 
 .wcGhost {
@@ -244,12 +283,12 @@ html, body {
   height: 12px;
   background-color: gray;
 }
- 
+
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   border-radius: 10px;
 }
- 
+
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
