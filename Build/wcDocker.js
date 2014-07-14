@@ -121,7 +121,7 @@ wcDocker.prototype = {
             } else if (key === 'Detach Window') {
               self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
             } else if (key === 'Flash Window') {
-              myFrame.focus(true);
+              self._focus(myFrame, true);
             } else {
               if (myFrame && self._ghost) {
                 var anchor = self._ghost.anchor();
@@ -451,12 +451,16 @@ wcDocker.prototype = {
   },
 
   // Brings a floating window to the top.
-  _focus: function(frame) {
+  // Params:
+  //    frame     The frame to focus.
+  //    flash     Whether to flash the frame.
+  _focus: function(frame, flash) {
     if (frame._isFloating) {
       frame.$frame.remove();
       $('body').append(frame.$frame);
     }
-    // this._update();
+
+    frame._focus(flash)
   },
 
   // Creates a new frame for the widget and then attaches it
@@ -827,6 +831,20 @@ wcDocker.prototype = {
     }
 
     return result;
+  },
+
+  // Trigger an event on all panels.
+  // Params:
+  //    eventName   The name of the event.
+  //    data        A custom data parameter to pass to all handlers.
+  trigger: function(eventName, data) {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        panel._trigger(eventName, data);
+      }
+    }
   },
 
   // Retreives the center layout for the window.
@@ -1375,15 +1393,36 @@ wcPanel.prototype = {
     if (this._actualSize.x !== width || this._actualSize.y !== height) {
       this._actualSize.x = width;
       this._actualSize.y = height;
-      this.trigger(wcDocker.EVENT_RESIZED);
+      this._trigger(wcDocker.EVENT_RESIZED);
     }
 
     var offset  = this.$container.offset();
     if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
       this._actualPos.x = offset.left;
       this._actualPos.y = offset.top;
-      this.trigger(wcDocker.EVENT_MOVED);
+      this._trigger(wcDocker.EVENT_MOVED);
     }
+  },
+
+  // Triggers an event of a given type onto this current panel.
+  // Params:
+  //    eventType     The event to trigger.
+  //    data          A custom data object to pass into all handlers.
+  _trigger: function(eventType, data) {
+    for (var i = 0; i < this._eventList.length; ++i) {
+      if (this._eventList[i].name === eventType) {
+        this._eventList[i].handler(this, data);
+      }
+    }
+  },
+
+  // Finds the main Docker window.
+  _docker: function() {
+    var parent = this._parent;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
   },
 
   // Gets the title for this dock widget.
@@ -1400,8 +1439,9 @@ wcPanel.prototype = {
   // Params:
   //    flash     Optional, if true will flash the window.
   focus: function(flash) {
-    if (this._parent instanceof wcFrame) {
-      this._parent.focus(flash);
+    var docker = this._docker();
+    if (docker) {
+      docker._focus(this._parent, flash);
     }
   },
 
@@ -1545,14 +1585,14 @@ wcPanel.prototype = {
     }
   },
 
-  // Triggers an event of a given type.
+  // Triggers an event of a given type to all panels.
   // Params:
   //    eventType     The event to trigger.
-  trigger: function(eventType) {
-    for (var i = 0; i < this._eventList.length; ++i) {
-      if (this._eventList[i].name === eventType) {
-        this._eventList[i].handler(this);
-      }
+  //    data          A custom data object to pass into all handlers.
+  trigger: function(eventType, data) {
+    var docker = this._docker();
+    if (docker) {
+      docker.trigger(eventType, data);
     }
   },
 
@@ -1606,7 +1646,7 @@ wcPanel.prototype = {
 
   // Destroys this panel.
   destroy: function() {
-    this.trigger(wcDocker.EVENT_CLOSED);
+    this._trigger(wcDocker.EVENT_CLOSED);
 
     this._layout.destroy();
     this._layout = null;
@@ -1888,10 +1928,7 @@ wcFrame.prototype = {
   // Brings the frame into focus.
   // Params:
   //    flash     Optional, if true will flash the window.
-  focus: function(flash) {
-    if (this._parent) {
-      this._parent._focus(this, flash);
-    }
+  _focus: function(flash) {
     if (flash) {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);
@@ -2216,15 +2253,6 @@ wcSplitter.prototype = {
 
     this._pane[0]._update();
     this._pane[1]._update();
-  },
-
-  // Propagates upwards to the main docker to give focus to a given frame.
-  // Params:
-  //    frame     The frame requesting focus.
-  _focus: function(frame) {
-    if (this._parent) {
-      this._parent._focus(frame);
-    }
   },
 
   // Whether the splitter splits horizontally.
