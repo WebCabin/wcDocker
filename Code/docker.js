@@ -179,6 +179,11 @@ wcDocker.prototype = {
       }
     });
 
+    $('body').on('mousedown', '.wcPanelTab li a', function(event) {
+      event.preventDefault();
+      event.returnValue = false;
+    });
+
     // Close button on frames should destroy those widgets.
     $('body').on('click', '.wcFrameCloseButton', function() {
       var frame;
@@ -193,18 +198,6 @@ wcDocker.prototype = {
         self.removePanel(panel);
         panel.destroy();
         self._update();
-      }
-    });
-
-    // Dock button on floating frames should allow them to dock.
-    $('body').on('click', '.wcFrameDockButton', function() {
-      for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i]._isFloating && self._frameList[i].$dock[0] == this) {
-          self._frameList[i].$dock.toggleClass('wcFrameDockButtonLocked');
-
-          self._focus(self._frameList[i]);
-          break;
-        }
       }
     });
 
@@ -241,7 +234,7 @@ wcDocker.prototype = {
 
           // If the window is able to be docked, give it a dark shadow tint and
           // begin the movement process
-          if (!self._draggingFrame._isFloating || (event.which !== 1 || self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked'))) {
+          if (!self._draggingFrame._isFloating || event.which !== 1) {
             self._draggingFrame.shadow(true);
             var rect = self._draggingFrame.rect();
             self._ghost = new wcGhost(rect, mouse);
@@ -419,7 +412,7 @@ wcDocker.prototype = {
           if (anchor.item) {
             widget = anchor.item.parent();
           }
-          self.movePanel(self._draggingFrame.panel(), anchor.loc, false, widget);
+          self.movePanel(self._draggingFrame.panel(), anchor.loc, anchor.merge, widget);
         }
         self._ghost.destroy();
         self._ghost = false;

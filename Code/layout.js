@@ -196,6 +196,22 @@ wcLayout.prototype = {
       }
     }
 
+    // Tab ordering or adding.
+    if (mouse.y >= offset.top && mouse.y <= offset.top + 20 &&
+        mouse.x >= offset.left && mouse.x <= offset.left + width) {
+      ghost.anchor(mouse, {
+        x: offset.left,
+        y: offset.top,
+        w: width,
+        h: 20,
+        merge: true,
+        loc: wcDocker.DOCK_BOTTOM,
+        item: this,
+        self: false,
+      });
+      return true;
+    }
+
     if (floating) {
       return false;
     }
