@@ -324,10 +324,10 @@ wcPanel.prototype = {
   destroy: function() {
     this._trigger(wcDocker.EVENT_CLOSED);
 
-    this._layout.destroy();
-    this._layout = null;
     this.container(null);
     this.parent(null);
+    this._layout.destroy();
+    this._layout = null;
     this.off();
   },
 };

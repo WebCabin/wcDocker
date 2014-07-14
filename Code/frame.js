@@ -220,13 +220,33 @@ wcFrame.prototype = {
 
     this._size = this.size();
 
+    this.$title.empty();
+    this.$center.empty();
+
+    var $tabList = $('<ul class="wcPanelTab">');
+    this.$title.append($tabList);
+
     if (this._curTab === -1 && this._panelList.length) {
       this._curTab = 0;
-      this._panelList[this._curTab].layout().container(this.$center);
-      this._panelList[this._curTab].container(this.$center);
-      this.$title.text(this._panelList[this._curTab].title());
-      this._pos = this._panelList[this._curTab].pos();
+      // this._panelList[this._curTab].layout().container(this.$center);
+      // this._panelList[this._curTab].container(this.$center);
+      // this.$title.text(this._panelList[this._curTab].title());
+      // this._pos = this._panelList[this._curTab].pos();
     }
+
+    for (var i = 0; i < this._panelList.length; ++i) {
+      var $tab = $('<li><a href="#' + i + '">' + this._panelList[i].title() + '</a></li>');
+      $tabList.append($tab);
+
+      var $tabContent = $('<div class="wcPanelTabContent" id="' + i + '">');
+      this.$center.append($tabContent);
+      this._panelList[i].container($tabContent);
+
+      if (this._curTab !== i) {
+        $tabContent.addClass('wcPanelTabContentHidden');
+      }
+    }
+
     panel.parent(this);
   },
 
