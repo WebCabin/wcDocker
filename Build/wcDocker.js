@@ -115,7 +115,9 @@ wcDocker.prototype = {
         return {
           callback: function(key, options) {
             if (key === 'Close Window') {
-              myFrame.panel().close();
+              setTimeout(function() {
+                myFrame.panel().close();
+              }, 10);
             } else if (key === 'Detach Window') {
               self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
             } else if (key === 'Flash Window') {
@@ -139,7 +141,7 @@ wcDocker.prototype = {
           },
           animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
           reposition: false,
-          // autoHide: true,
+          autoHide: true,
           zIndex: 200,
           items: items,
         };
@@ -450,15 +452,11 @@ wcDocker.prototype = {
 
   // Brings a floating window to the top.
   _focus: function(frame) {
-    for (var i = 0; i < this._frameList.length; ++i) {
-      if (this._frameList[i]._isFloating) {
-        this._frameList[i].$frame.css('z-index', '100');
-        if (this._frameList[i] === frame) {
-          this._frameList[i].$frame.css('z-index', '101');
-        }
-      }
+    if (frame._isFloating) {
+      frame.$frame.remove();
+      $('body').append(frame.$frame);
     }
-    this._update();
+    // this._update();
   },
 
   // Creates a new frame for the widget and then attaches it
@@ -759,62 +757,76 @@ wcDocker.prototype = {
 
     var parentFrame = panel.parent();
     if (parentFrame instanceof wcFrame) {
-      var parentSplitter = parentFrame.parent();
-      if (parentSplitter instanceof wcSplitter) {
-        var left  = parentSplitter.pane(0);
-        var right = parentSplitter.pane(1);
-        var other;
-        if (left === parentFrame) {
-          other = right;
-        } else {
-          other = left;
+      // If no more panels remain in this frame, remove the frame.
+      if (!parentFrame.removePanel(panel)) {
+        var index = this._floatingList.indexOf(parentFrame);
+        if (index !== -1) {
+          this._floatingList.splice(index, 1);
         }
-
-        var index = this._frameList.indexOf(parentFrame);
+        index = this._frameList.indexOf(parentFrame);
         if (index !== -1) {
           this._frameList.splice(index, 1);
         }
 
-        index = this._splitterList.indexOf(parentSplitter);
-        if (index !== -1) {
-          this._splitterList.splice(index, 1);
-        }
+        var parentSplitter = parentFrame.parent();
+        if (parentSplitter instanceof wcSplitter) {
+          parentSplitter.removeChild(parentFrame);
 
-        parent = parentSplitter.parent();
-        parentContainer = parentSplitter.container();
-        parentSplitter.destroy();
-        parentFrame.destroy();
-
-        if (parent instanceof wcSplitter) {
-          parent.removeChild(parentSplitter);
-          if (!parent.pane(0)) {
-            parent.pane(0, other);
-          } else if (!parent.pane(1)) {
-            parent.pane(1, other);
+          var other;
+          if (parentSplitter.pane(0)) {
+            other = parentSplitter.pane(0);
+          } else {
+            other = parentSplitter.pane(1);
           }
-        } else if (parent === this) {
-          this._root = other;
-          other.parent(this);
-          other.container(parentContainer);
-        }
-        this._update();
-        return true;
-      } else if (parentSplitter === this) {
-        for (var i = 0; i < this._floatingList.length; ++i) {
-          if (this._floatingList[i] === parentFrame) {
-            this._floatingList.splice(i, 1);
+
+          index = this._splitterList.indexOf(parentSplitter);
+          if (index !== -1) {
+            this._splitterList.splice(index, 1);
           }
-        }
 
-        var index = this._frameList.indexOf(parentFrame);
-        if (index !== -1) {
-          this._frameList.splice(index, 1);
-        }
+          parent = parentSplitter.parent();
+          parentContainer = parentSplitter.container();
+          parentSplitter.destroy();
 
+          if (parent instanceof wcSplitter) {
+            parent.removeChild(parentSplitter);
+            if (!parent.pane(0)) {
+              parent.pane(0, other);
+            } else {
+              parent.pane(1, other);
+            }
+          } else if (parent === this) {
+            this._root = other;
+            other.parent(this);
+            other.container(parentContainer);
+          }
+          this._update();
+        }
         parentFrame.destroy();
       }
+      return true;
     }
     return false;
+  },
+
+  // Finds all instances of a given panel type.
+  // Params:
+  //    typeName    The type of panel.
+  // Returns:
+  //    [wcPanel]   A list of all panels of the given type.
+  findPanels: function(typeName) {
+    var result = [];
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        if (panel._title === typeName) {
+          result.push(panel);
+        }
+      }
+    }
+
+    return result;
   },
 
   // Retreives the center layout for the window.
@@ -1659,8 +1671,6 @@ wcFrame.prototype = {
     this.$frame.append(this.$title);
     this.$frame.append(this.$close);
 
-    this.$title.attr('contextmenu', 'wcDocker_Title_Menu');
-
     if (this._isFloating) {
       this.$dock    = $('<div class="wcFrameDockButton"></div>');
       this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');
@@ -1839,7 +1849,9 @@ wcFrame.prototype = {
 
   // Removes a given panel from the tab item.
   // Params:
-  //    panel      The panel to remove.
+  //    panel       The panel to remove.
+  // Returns:
+  //    bool        Returns whether or not any panels still remain.
   removePanel: function(panel) {
     for (var i = 0; i < this._panelList.length; ++i) {
       if (this._panelList[i] === panel) {
@@ -1861,6 +1873,8 @@ wcFrame.prototype = {
       this._panelList[this._curTab].layout().container(this.$center);
       this._panelList[this._curTab].container(this.$center);
     }
+
+    return this._panelList.length > 0;
   },
 
   // Retrieves the currently visible panel.
@@ -1875,6 +1889,9 @@ wcFrame.prototype = {
   // Params:
   //    flash     Optional, if true will flash the window.
   focus: function(flash) {
+    if (this._parent) {
+      this._parent._focus(this, flash);
+    }
     if (flash) {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);
@@ -1894,10 +1911,6 @@ wcFrame.prototype = {
         $flasher.remove();
         next();
       });
-    }
-
-    if (this._parent) {
-      this._parent._focus(this, flash);
     }
   },
 
@@ -1958,8 +1971,8 @@ wcFrame.prototype = {
     for (var i = 0; i < edges.length; ++i) {
       switch (edges[i]) {
         case 'top':
-          this._size.y += pos.y - mouse.y;
-          pos.y = mouse.y;
+          this._size.y += pos.y - mouse.y-2;
+          pos.y = mouse.y+2;
           if (this._size.y < minSize.y) {
             pos.y += this._size.y - minSize.y;
             this._size.y = minSize.y;
@@ -1970,7 +1983,7 @@ wcFrame.prototype = {
           }
           break;
         case 'bottom':
-          this._size.y = mouse.y - pos.y;
+          this._size.y = mouse.y-4 - pos.y;
           if (this._size.y < minSize.y) {
             this._size.y = minSize.y;
           }
@@ -1979,8 +1992,8 @@ wcFrame.prototype = {
           }
           break;
         case 'left':
-          this._size.x += pos.x - mouse.x;
-          pos.x = mouse.x;
+          this._size.x += pos.x - mouse.x-2;
+          pos.x = mouse.x+2;
           if (this._size.x < minSize.x) {
             pos.x += this._size.x - minSize.x;
             this._size.x = minSize.x;
@@ -1991,7 +2004,7 @@ wcFrame.prototype = {
           }
           break;
         case 'right':
-          this._size.x = mouse.x - pos.x;
+          this._size.x = mouse.x-4 - pos.x;
           if (this._size.x < minSize.x) {
             this._size.x = minSize.x;
           }
