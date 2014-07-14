@@ -244,6 +244,8 @@ wcFrame.prototype = {
 
       if (this._curTab !== i) {
         $tabContent.addClass('wcPanelTabContentHidden');
+      } else {
+        $tab.find('a').addClass('wcPanelTabActive');
       }
     }
 
