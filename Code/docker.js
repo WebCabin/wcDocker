@@ -263,7 +263,7 @@ wcDocker.prototype = {
     });
 
     // Mouse down on a frame title will allow you to move them.
-    $('body').on('mousedown', '.wcFrameCenter', function(event) {
+    $('body').on('mousedown', '.wcLayout', function(event) {
       if (event.which === 3) {
         return;
       }
@@ -456,8 +456,15 @@ wcDocker.prototype = {
   //    flash     Whether to flash the frame.
   _focus: function(frame, flash) {
     if (frame._isFloating) {
-      frame.$frame.remove();
+      // frame.$frame.remove();
+      var posList = [];
+      for (var i = 0; i < frame._panelList.length; ++i) {
+        posList.push(frame._panelList[i].scroll());
+      }
       $('body').append(frame.$frame);
+      for (var i = 0; i < posList.length; ++i) {
+        frame._panelList[i].scroll(posList[i].x, posList[i].y);
+      }
     }
 
     frame._focus(flash)

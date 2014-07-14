@@ -170,13 +170,13 @@ wcPanel.prototype = {
     }
 
     if (typeof x !== 'undefined') {
-      this.$container.scrollLeft(x);
-      this.$container.scrollTop(y);
+      this.$container.parent().scrollLeft(x);
+      this.$container.parent().scrollTop(y);
     }
 
     return {
-      x: this.$container.scrollLeft(),
-      y: this.$container.scrollTop(),
+      x: this.$container.parent().scrollLeft(),
+      y: this.$container.parent().scrollTop(),
     };
   },
 
