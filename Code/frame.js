@@ -54,8 +54,6 @@ wcFrame.prototype = {
     this.$frame.append(this.$title);
     this.$frame.append(this.$close);
 
-    this.$title.attr('contextmenu', 'wcDocker_Title_Menu');
-
     if (this._isFloating) {
       this.$dock    = $('<div class="wcFrameDockButton"></div>');
       this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');
@@ -234,7 +232,9 @@ wcFrame.prototype = {
 
   // Removes a given panel from the tab item.
   // Params:
-  //    panel      The panel to remove.
+  //    panel       The panel to remove.
+  // Returns:
+  //    bool        Returns whether or not any panels still remain.
   removePanel: function(panel) {
     for (var i = 0; i < this._panelList.length; ++i) {
       if (this._panelList[i] === panel) {
@@ -256,6 +256,8 @@ wcFrame.prototype = {
       this._panelList[this._curTab].layout().container(this.$center);
       this._panelList[this._curTab].container(this.$center);
     }
+
+    return this._panelList.length > 0;
   },
 
   // Retrieves the currently visible panel.
@@ -270,6 +272,9 @@ wcFrame.prototype = {
   // Params:
   //    flash     Optional, if true will flash the window.
   focus: function(flash) {
+    if (this._parent) {
+      this._parent._focus(this, flash);
+    }
     if (flash) {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);
@@ -289,10 +294,6 @@ wcFrame.prototype = {
         $flasher.remove();
         next();
       });
-    }
-
-    if (this._parent) {
-      this._parent._focus(this, flash);
     }
   },
 
@@ -353,8 +354,8 @@ wcFrame.prototype = {
     for (var i = 0; i < edges.length; ++i) {
       switch (edges[i]) {
         case 'top':
-          this._size.y += pos.y - mouse.y;
-          pos.y = mouse.y;
+          this._size.y += pos.y - mouse.y-2;
+          pos.y = mouse.y+2;
           if (this._size.y < minSize.y) {
             pos.y += this._size.y - minSize.y;
             this._size.y = minSize.y;
@@ -365,7 +366,7 @@ wcFrame.prototype = {
           }
           break;
         case 'bottom':
-          this._size.y = mouse.y - pos.y;
+          this._size.y = mouse.y-4 - pos.y;
           if (this._size.y < minSize.y) {
             this._size.y = minSize.y;
           }
@@ -374,8 +375,8 @@ wcFrame.prototype = {
           }
           break;
         case 'left':
-          this._size.x += pos.x - mouse.x;
-          pos.x = mouse.x;
+          this._size.x += pos.x - mouse.x-2;
+          pos.x = mouse.x+2;
           if (this._size.x < minSize.x) {
             pos.x += this._size.x - minSize.x;
             this._size.x = minSize.x;
@@ -386,7 +387,7 @@ wcFrame.prototype = {
           }
           break;
         case 'right':
-          this._size.x = mouse.x - pos.x;
+          this._size.x = mouse.x-4 - pos.x;
           if (this._size.x < minSize.x) {
             this._size.x = minSize.x;
           }

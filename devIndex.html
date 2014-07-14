@@ -160,10 +160,11 @@
 
           docker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
           docker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
-          var panel2 = docker.addPanel('Panel 2', wcDocker.DOCK_RIGHT, false);
-          docker.addPanel('Panel 3', wcDocker.DOCK_BOTTOM, false, panel2);
+          docker.addPanel('Panel 2', wcDocker.DOCK_RIGHT, false);
+          var panel2 = docker.findPanels('Panel 2');
+          docker.addPanel('Panel 3', wcDocker.DOCK_BOTTOM, false, panel2[0]);
           docker.addPanel('Panel 4', wcDocker.DOCK_FLOAT, false);
-          docker.addPanel('Panel 5', wcDocker.DOCK_BOTTOM, false, panel2);
+          docker.addPanel('Panel 5', wcDocker.DOCK_BOTTOM, false, panel2[0]);
         }
       });
     </script>
