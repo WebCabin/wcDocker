@@ -353,12 +353,6 @@ wcDocker.prototype = {
           y: event.clientY,
         };
 
-        // Floating widgets without their dock button active just move without docking.
-        if (self._draggingFrame._isFloating && (event.which === 1 && !self._draggingFrame.$dock.hasClass('wcFrameDockButtonLocked'))) {
-          self._draggingFrame.move(mouse);
-          self._draggingFrame._update();
-        }
-
         if (self._ghost) {
           self._ghost.move(mouse);
 
@@ -381,6 +375,9 @@ wcDocker.prototype = {
 
             self._ghost.anchor(mouse, null);
           }
+        } else {
+          self._draggingFrame.move(mouse);
+          self._draggingFrame._update();
         }
       }
     });

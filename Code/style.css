@@ -56,9 +56,9 @@ html, body {
   overflow: hidden;
 }
 
-.wcFloating .wcFrameTitle {
+/*.wcFloating .wcFrameTitle {
   background-color: #555;
-}
+}*/
 
 .wcFrameCloseButton, .wcFrameDockButton {
   width: 17px;
