@@ -69,15 +69,36 @@ wcPanel.prototype = {
     if (this._actualSize.x !== width || this._actualSize.y !== height) {
       this._actualSize.x = width;
       this._actualSize.y = height;
-      this.trigger(wcDocker.EVENT_RESIZED);
+      this._trigger(wcDocker.EVENT_RESIZED);
     }
 
     var offset  = this.$container.offset();
     if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
       this._actualPos.x = offset.left;
       this._actualPos.y = offset.top;
-      this.trigger(wcDocker.EVENT_MOVED);
+      this._trigger(wcDocker.EVENT_MOVED);
     }
+  },
+
+  // Triggers an event of a given type onto this current panel.
+  // Params:
+  //    eventType     The event to trigger.
+  //    data          A custom data object to pass into all handlers.
+  _trigger: function(eventType, data) {
+    for (var i = 0; i < this._eventList.length; ++i) {
+      if (this._eventList[i].name === eventType) {
+        this._eventList[i].handler(this, data);
+      }
+    }
+  },
+
+  // Finds the main Docker window.
+  _docker: function() {
+    var parent = this._parent;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
   },
 
   // Gets the title for this dock widget.
@@ -94,8 +115,9 @@ wcPanel.prototype = {
   // Params:
   //    flash     Optional, if true will flash the window.
   focus: function(flash) {
-    if (this._parent instanceof wcFrame) {
-      this._parent.focus(flash);
+    var docker = this._docker();
+    if (docker) {
+      docker._focus(this._parent, flash);
     }
   },
 
@@ -239,14 +261,14 @@ wcPanel.prototype = {
     }
   },
 
-  // Triggers an event of a given type.
+  // Triggers an event of a given type to all panels.
   // Params:
   //    eventType     The event to trigger.
-  trigger: function(eventType) {
-    for (var i = 0; i < this._eventList.length; ++i) {
-      if (this._eventList[i].name === eventType) {
-        this._eventList[i].handler(this);
-      }
+  //    data          A custom data object to pass into all handlers.
+  trigger: function(eventType, data) {
+    var docker = this._docker();
+    if (docker) {
+      docker.trigger(eventType, data);
     }
   },
 
@@ -300,7 +322,7 @@ wcPanel.prototype = {
 
   // Destroys this panel.
   destroy: function() {
-    this.trigger(wcDocker.EVENT_CLOSED);
+    this._trigger(wcDocker.EVENT_CLOSED);
 
     this._layout.destroy();
     this._layout = null;

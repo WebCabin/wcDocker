@@ -271,10 +271,7 @@ wcFrame.prototype = {
   // Brings the frame into focus.
   // Params:
   //    flash     Optional, if true will flash the window.
-  focus: function(flash) {
-    if (this._parent) {
-      this._parent._focus(this, flash);
-    }
+  _focus: function(flash) {
     if (flash) {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);

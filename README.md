@@ -82,7 +82,7 @@ And can also register some events if you feel you need them:
 
   panel.on(wcDocker.EVENT_RESIZE, function(panel){});
 ```
-The following event types are supported:
+The following event types are internal to the Docker:
 
 wcDocker.EVENT_CLOSED   = When the panel has been closed and is about to be destroyed.
 
@@ -94,6 +94,17 @@ wcDocker.EVENT_MOVED    = Whenever the position of the panel has changed.
 
 wcDocker.EVENT_RESIZED  = Whenever the size of the panel has changed.
 
+You can also create your own custom events by supplying your own event names, and then later triggering
+them on your own either from the main Docker instance or from your own panel.  The second parameter is
+any data object that you wish to pass into all handler functions:
+```
+#!javascript
+docker.trigger('your event', customDataObj);
+
+// or
+
+panel.trigger('your event', customDataObj);
+```
 
 Registering a panel type does not actually create an instance of it into your window.  To create an instance,
 use the addPanel() function in the docker.

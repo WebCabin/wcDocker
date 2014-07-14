@@ -121,7 +121,7 @@ wcDocker.prototype = {
             } else if (key === 'Detach Window') {
               self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
             } else if (key === 'Flash Window') {
-              myFrame.focus(true);
+              self._focus(myFrame, true);
             } else {
               if (myFrame && self._ghost) {
                 var anchor = self._ghost.anchor();
@@ -451,12 +451,16 @@ wcDocker.prototype = {
   },
 
   // Brings a floating window to the top.
-  _focus: function(frame) {
+  // Params:
+  //    frame     The frame to focus.
+  //    flash     Whether to flash the frame.
+  _focus: function(frame, flash) {
     if (frame._isFloating) {
       frame.$frame.remove();
       $('body').append(frame.$frame);
     }
-    // this._update();
+
+    frame._focus(flash)
   },
 
   // Creates a new frame for the widget and then attaches it
@@ -827,6 +831,20 @@ wcDocker.prototype = {
     }
 
     return result;
+  },
+
+  // Trigger an event on all panels.
+  // Params:
+  //    eventName   The name of the event.
+  //    data        A custom data parameter to pass to all handlers.
+  trigger: function(eventName, data) {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        panel._trigger(eventName, data);
+      }
+    }
   },
 
   // Retreives the center layout for the window.

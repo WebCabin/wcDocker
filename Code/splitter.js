@@ -121,15 +121,6 @@ wcSplitter.prototype = {
     this._pane[1]._update();
   },
 
-  // Propagates upwards to the main docker to give focus to a given frame.
-  // Params:
-  //    frame     The frame requesting focus.
-  _focus: function(frame) {
-    if (this._parent) {
-      this._parent._focus(frame);
-    }
-  },
-
   // Whether the splitter splits horizontally.
   isHorizontal: function() {
     return this._horizontal;
