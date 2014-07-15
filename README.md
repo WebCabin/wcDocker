@@ -103,15 +103,16 @@ myDocker.trigger('your event', customDataObj);
 
 myPanel.trigger('your event', customDataObj);
 ```
-Registering a panel type does not actually create an instance of it into your window.  To create an instance,
-use the addPanel() function in the docker.
+Now, once you have registered your panel type, if it is not private, the user will be able to create that panel
+whenever they wish.  However, if you also wish to programmatically create an instance of that panel, you can
+use the addPanel() function in the docker (private panels can be made this way).
 ```
 #!javascript
 myDocker.addPanel('Registered type name', wcDocker.LEFT, false, optionalTargetPanel);
 ```
 The first parameter is the name of the panel type you have previously registered.
-The second parameter is an enumerated value that determines the location where this window will be docked;
-It can be one of the following:
+The second parameter is an enumerated value that determines the location where this window will be docked
+(or try to dock), it can be one of the following:
 
 wcDocker.DOCK_FLOAT    = Make a floating window that is not docked.
 
@@ -123,8 +124,8 @@ wcDocker.DOCK_TOP      = Dock it to the top of the central or target panel.
 
 wcDocker.DOCK_BOTTOM   = Dock it on the bottom of the central or target panel.
 
-The third parameter determines whether this window is allowed to group up (via tabs) with another, already existing,
-panel or if a new panel should appear next to it.
+The third parameter determines whether this panel is allowed to group up (via tabs) with another, already existing,
+panel or if a new panel frame should appear next to it.
 
 The final parameter is optional, normally docked windows will dock in relation of the main docker's central
 panel. However, by supplying a specific panel instead, your new panel will be docked in relation to the target.
