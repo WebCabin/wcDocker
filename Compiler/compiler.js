@@ -20,8 +20,26 @@ function uglifyJS(srcPath, distPath) {
  
     ast = pro.ast_mangle(ast);
     ast = pro.ast_squeeze(ast);
- 
-    _fs.writeFileSync(distPath, pro.gen_code(ast));
+
+var header = '\
+/*!\n\
+ * Web Cabin Docker - Docking Layout Interface.\n\
+ *\n\
+ * Dependancies:\n\
+ *  JQuery 2.1.1\n\
+ *\n\
+ * Version: git-master\n\
+ *\n\
+ * Author: Jeff Houde (Lochemage@gmail.com)\n\
+ * Web: http://docker.webcabin.org/\n\
+ *\n\
+ * Licensed under\n\
+ *   MIT License http://www.opensource.org/licenses/mit-license\n\
+ *   GPL v3 http://opensource.org/licenses/GPL-3.0\n\
+ *\n\
+ */\n';
+
+     _fs.writeFileSync(distPath, header + pro.gen_code(ast));
     console.log(' '+ distPath +' built.');
 }
 
@@ -30,7 +48,7 @@ function uglifyCSS(srcPath, distPath) {
       pro = _uglifyCSS.processString,
       ast = _fs.readFileSync(srcPath).toString();
  
-    _fs.writeFileSync(distPath, pro(ast, {uglyComments:true}));
+    _fs.writeFileSync(distPath, pro(ast, {uglyComments:false}));
     console.log(' '+ distPath +' built.');
 }
 

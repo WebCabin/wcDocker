@@ -1,3 +1,21 @@
+/*!
+ * Web Cabin Docker - Docking Layout Interface.
+ *
+ * Dependancies:
+ *  JQuery 2.1.1
+ *
+ * Version: git-master
+ *
+ * Author: Jeff Houde (Lochemage@gmail.com)
+ * Web: http://docker.webcabin.org/
+ *
+ * Licensed under
+ *   MIT License http://www.opensource.org/licenses/mit-license
+ *   GPL v3 http://opensource.org/licenses/GPL-3.0
+ *
+ */
+
+
 /*
   The main window instance.  This manages all of the docking panels and user input.
   There should only be one instance of this, although it is not required.

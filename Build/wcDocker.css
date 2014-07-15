@@ -1,3 +1,20 @@
+/*!
+ * Web Cabin Docker - Docking Layout Interface.
+ *
+ * Dependancies:
+ *  JQuery 2.1.1
+ *
+ * Version: git-master
+ *
+ * Author: Jeff Houde (Lochemage@gmail.com)
+ * Web: http://docker.webcabin.org/
+ *
+ * Licensed under
+ *   MIT License http://www.opensource.org/licenses/mit-license
+ *   GPL v3 http://opensource.org/licenses/GPL-3.0
+ *
+ */
+
 html, body {
   width: 100%;
   height: 100%;
@@ -223,8 +240,14 @@ ul.wcPanelTabBar {
   list-style-type: none;
   margin: 0px;
   padding: 0px;
+  border: 0px;
   text-align: left;
-  border-bottom: 1px solid black;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 ul.wcPanelTabBar li {
@@ -236,13 +259,13 @@ ul.wcPanelTabBar li span.wcPanelTab {
   background-color: #AAA;
   border: 2px solid #555;
   border-radius: 10px 10px 0px 0px;
-  border-bottom: none;
+  border-bottom: 0px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   -ms-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   -o-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  padding-bottom: 0px;
+  padding-bottom: 3px;
   text-decoration: none;
 }
 
@@ -254,7 +277,6 @@ ul.wcPanelTabBar li span.wcPanelTabActive {
   color: #000;
   background-color: #888;
   font-weight: bold;
-  padding-bottom: 5px;
   /*padding: 0.7em 0.3em 0.38em 0.3em;*/
 }
 
@@ -302,7 +324,7 @@ div.wcPanelTabContent.wcPanelTabContentHidden {
 ::-webkit-scrollbar-corner {
   background-color: gray;
 }
-/*!
+/*
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *
  * Version: git-master
