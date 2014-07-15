@@ -23,7 +23,6 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * Allow styling of window colors and other options either by changing css files or an internal color picker system.
 
 ****
-
 # Basic Implementation #
 
 For more detailed information on the API, check out the [wiki](https://bitbucket.org/WebCabin/wcdocker/wiki/Home).
@@ -134,9 +133,10 @@ The return value is the newly created docking panel, in the case that you may wa
 For more detailed information on the API, check out the [wiki](https://bitbucket.org/WebCabin/wcdocker/wiki/Home).
 
 ****
-
-# End User Usage #
+# User Interaction #
 
 For the most part, arranging your windows is as simple as a drag-drop operation.  Click the title-bar of any panel frame and drag to begin moving an entire panel frame, or just click and drag one of the tabs to move a single panel.  You can drag the panel(s) into the title bar of another frame to merge yours into it, you can drag them to the edge of another frame and split that frame into two, or you can drag it anywhere that does not anchor to make it into its own floating window.
 
 To create new panels, right click on the position where you want the new panel to be inserted and choose the the panel to create within the menu.
+
+****
