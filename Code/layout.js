@@ -174,20 +174,25 @@ wcLayout.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  checkAnchorDrop: function(mouse, same, ghost, floating, $elem) {
+  checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
+    var top = 21;
+    if (!title) {
+      top = 0;
+    }
 
     if (same) {
       // Entire layout.
-      if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+      if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: height,
+          h: top,
+          merge: true,
           loc: wcDocker.DOCK_FLOAT,
           item: this,
           self: true,
@@ -197,22 +202,24 @@ wcLayout.prototype = {
     }
 
     // Tab ordering or adding.
-    if (mouse.y >= offset.top && mouse.y <= offset.top + 20 &&
-        mouse.x >= offset.left && mouse.x <= offset.left + width) {
-      ghost.anchor(mouse, {
-        x: offset.left,
-        y: offset.top,
-        w: width,
-        h: 20,
-        merge: true,
-        loc: wcDocker.DOCK_BOTTOM,
-        item: this,
-        self: false,
-      });
-      return true;
+    if (title) {
+      if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
+          mouse.x >= offset.left && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top,
+          w: width,
+          h: top,
+          merge: true,
+          loc: wcDocker.DOCK_BOTTOM,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
     }
 
-    if (floating) {
+    if (!canSplit) {
       return false;
     }
 

@@ -103,8 +103,12 @@ wcGhost.prototype = {
     }
 
     this._anchor = anchor;
+    var opacity = 0.8;
+    if (anchor.self && anchor.merge) {
+      opacity = 0;
+    }
     this.$ghost.stop().animate({
-      opacity: 0.8,
+      opacity: opacity,
       'margin-left': '2px',
       'margin-top': '2px',
       border: '0px',
