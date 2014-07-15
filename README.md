@@ -17,9 +17,9 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 
 ### The following features are still under development: ###
 
-* Save/Restore support for remembering a user's panel setup.
-* A possible option of restricting the number of total windows created.
-* A possible option of restricting the total copies of the same window type.
+* Save/Restore support for remembering a user's window setup.
+* A possible option of restricting the number of total panels created.
+* A possible option of restricting the total copies of the same panel type.
 * Allow styling of window colors and other options either by changing css files or an internal color picker system.
 
 ****
