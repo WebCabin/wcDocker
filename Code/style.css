@@ -140,7 +140,7 @@ html, body {
 
 .wcFrameEdgeV {
   width: 2px;
-  cursor: e-resize;
+  cursor: ew-resize;
   z-index: 2;
   position: absolute;
   border: 2px outset #444;
@@ -151,7 +151,7 @@ html, body {
 
 .wcFrameEdgeH {
   height: 2px;
-  cursor: s-resize;
+  cursor: ns-resize;
   z-index: 2;
   position: absolute;
   border: 2px outset #444;
@@ -163,7 +163,7 @@ html, body {
 .wcFrameCornerNW {
   height: 2px;
   width: 2px;
-  cursor: nw-resize;
+  cursor: nwse-resize;
   z-index: 2;
   position: absolute;
   border: 2px outset #444;
@@ -173,7 +173,7 @@ html, body {
 .wcFrameCornerNE {
   height: 2px;
   width: 2px;
-  cursor: ne-resize;
+  cursor: nesw-resize;
   z-index: 2;
   position: absolute;
   border: 2px outset #444;
@@ -198,7 +198,7 @@ html, body {
   border-top: 1px solid gray;
   border-bottom: 2px solid gray;
   width: 2px;
-  cursor: e-resize;
+  cursor: ew-resize;
   z-index: 2;
 }
 
@@ -206,7 +206,7 @@ html, body {
   border-left: 1px solid gray;
   border-right: 2px solid gray;
   height: 2px;
-  cursor: s-resize;
+  cursor: ns-resize;
   z-index: 2;
 }
 
