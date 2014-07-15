@@ -78,8 +78,7 @@ You can also register some events if you feel you need them:
 
 ```
 #!javascript
-
-  myPanel.on(wcDocker.EVENT_RESIZE, function(myPanel){});
+myPanel.on(wcDocker.EVENT_RESIZE, function(myPanel){});
 ```
 The following event types are supported by the Docker:
 
