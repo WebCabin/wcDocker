@@ -65,15 +65,14 @@ Inside the callback function you are given the panel that was just created, from
 access its layout and populate it, much the same as done with the central panel.
 ```
 #!javascript
-  myPanel.layout().addItem(myElement, x, y, width, height);
+myPanel.layout().addItem(myElement, x, y, width, height);
 ```
 From here you can set various starting properties of the panel, such as
 the desired or the minimum size:
 ```
 #!javascript
-  myPanel.size(200, 200);
-  myPanel.minSize(100, 100);
-});
+myPanel.size(200, 200);
+myPanel.minSize(100, 100);
 ```
 You can also register some events if you feel you need them:
 
