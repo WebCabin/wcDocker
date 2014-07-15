@@ -127,8 +127,8 @@ wcDocker.DOCK_BOTTOM   = Dock it on the bottom of the central or target panel.
 The third parameter determines whether this panel is allowed to group up (via tabs) with another, already existing,
 panel or if a new panel frame should appear next to it.
 
-The final parameter is optional, normally docked windows will dock in relation of the main docker's central
-panel. However, by supplying a specific panel instead, your new panel will be docked in relation to the target.
+The final parameter is optional, normally panels will dock in relation to the main docker's central
+panel. However, by supplying a specific panel instead, your new panel will be docked in relation to that target.
 The return value is the newly created docking panel, in the case that you may want it.
 
 For more detailed information on the API, check out the [wiki](https://bitbucket.org/WebCabin/wcdocker/wiki/Home).
