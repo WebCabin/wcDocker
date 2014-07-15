@@ -32,7 +32,7 @@ html, body {
   background-color: transparent;
 }
 
-.wcFrameFlasher {
+.wcFrameFlasher, .wcFrameShadower {
   border: 0px;
   margin: 0px;
   padding: 0px;
@@ -44,6 +44,10 @@ html, body {
   bottom: 0px;
 
   opacity: 0;
+  background-color: white;
+}
+
+.wcFrameShadower {
   background-color: white;
 }
 
@@ -215,7 +219,7 @@ html, body {
   position: absolute;
 }
 
-ul.wcPanelTab {
+ul.wcPanelTabBar {
   list-style-type: none;
   margin: 0px;
   padding: 0px;
@@ -223,11 +227,11 @@ ul.wcPanelTab {
   border-bottom: 1px solid black;
 }
 
-ul.wcPanelTab li {
+ul.wcPanelTabBar li {
   display: inline;
 }
 
-ul.wcPanelTab li a {
+ul.wcPanelTabBar li span.wcPanelTab {
   color: #42454a;
   background-color: #AAA;
   border: 2px solid #555;
@@ -242,11 +246,11 @@ ul.wcPanelTab li a {
   text-decoration: none;
 }
 
-ul.wcPanelTab li a:hover {
+ul.wcPanelTabBar li span.wcPanelTab:hover {
   background-color: #f1f0ee;
 }
 
-ul.wcPanelTab li a.wcPanelTabActive {
+ul.wcPanelTabBar li span.wcPanelTabActive {
   color: #000;
   background-color: #888;
   font-weight: bold;
@@ -268,6 +272,7 @@ div.wcPanelTabContent.wcPanelTabContentHidden {
   border: 0px;
   border-radius: 10px;
   z-index: 100;
+  cursor: move;
 }
 
 .wcScrollableX {

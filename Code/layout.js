@@ -184,7 +184,7 @@ wcLayout.prototype = {
     }
 
     if (same) {
-      // Entire layout.
+      // Same tabs
       if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {

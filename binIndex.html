@@ -4,20 +4,9 @@
     <title>Web Cabin Docker Demo</title>
     <!-- External modules -->
     <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" type="text/css" href="Code/style.css"/>
-    <link rel="stylesheet" type="text/css" href="Code/ext/jquery.contextMenu.css"/>
-    <script src="Code/ext/jquery-2.1.1.min.js"></script>
-    <script src="Code/ext/jquery.contextMenu.js"></script>
-    <script src="Code/ext/jquery.ui.position.js"></script>
-
-    <!-- Core Modules -->
-    <script src="Code/docker.js"></script>
-    <script src="Code/splitter.js"></script>
-    <script src="Code/frame.js"></script>
-    <script src="Code/panel.js"></script>
-    <script src="Code/layout.js"></script>
-    <script src="Code/ghost.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="Build/wcDocker.min.css"/>
+    <script src="Build/jquery-2.1.1.min.js"></script>
+    <script src="Build/wcDocker.min.js"></script>
     <style>
     </style>
 
@@ -159,8 +148,7 @@
           });
 
           docker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
-          var panel1 = docker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
-          docker.addPanel('Panel 2', wcDocker.DOCK_BOTTOM, true, panel1);
+          docker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
           var panel2 = docker.addPanel('Panel 2', wcDocker.DOCK_RIGHT, false);
           docker.addPanel('Panel 3', wcDocker.DOCK_BOTTOM, false, panel2);
           docker.addPanel('Panel 4', wcDocker.DOCK_FLOAT, false);

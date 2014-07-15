@@ -92,10 +92,11 @@ wcGhost.prototype = {
       }
 
       this._anchor = null;
+      this.$ghost.show();
       this.$ghost.stop().animate({
         opacity: 0.3,
         'margin-left': this._rect.x - this._rect.w/2 + 'px',
-        'margin-top': this._rect.y + 'px',
+        'margin-top': this._rect.y - 10 + 'px',
         width: this._rect.w + 'px',
         height: this._rect.h + 'px',
       }, 200);
@@ -106,6 +107,9 @@ wcGhost.prototype = {
     var opacity = 0.8;
     if (anchor.self && anchor.merge) {
       opacity = 0;
+      this.$ghost.hide();
+    } else {
+      this.$ghost.show();
     }
     this.$ghost.stop().animate({
       opacity: opacity,

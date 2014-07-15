@@ -372,6 +372,31 @@ wcFrame.prototype = {
     this._anchorMouse.y = (this._pos.y * height) - mouse.y;
   },
 
+  // Moves a tab from a given index to another index.
+  // Params:
+  //    fromIndex     The current tab index to move.
+  //    toIndex       The new index to move to.
+  // Returns:
+  //    element       The new element of the moved tab.
+  //    false         If an error occurred.
+  tabMove: function(fromIndex, toIndex) {
+    if (fromIndex >= 0 && fromIndex < this._panelList.length &&
+        toIndex >= 0 && toIndex < this._panelList.length) {
+      var panel = this._panelList.splice(fromIndex, 1);
+      this._panelList.splice(toIndex, 0, panel[0]);
+
+      // Preserve the currently active tab.
+      if (this._curTab === fromIndex) {
+        this._curTab = toIndex;
+      }
+
+      this._updateTabs();
+
+      return this.$title.find('span[id="' + toIndex + '"]')[0];
+    }
+    return false;
+  },
+
   // Checks if the mouse is in a valid anchor position for docking a panel.
   // Params:
   //    mouse     The current mouse position.

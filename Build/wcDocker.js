@@ -18,6 +18,7 @@ function wcDocker(container) {
   this._draggingSplitter = false;
   this._draggingFrame = false;
   this._draggingFrameSizer = false;
+  this._draggingFrameTab = false;
   this._ghost = false;
 
   this._init();
@@ -65,19 +66,14 @@ wcDocker.prototype = {
           }
         }
 
-        var items = {};
-        items['Close Window'] = {
-          name: 'Close Window',
-          disabled: !myFrame.panel().closeable(),
+        var mouse = {
+          x: event.clientX,
+          y: event.clientY,
         };
-        if (!myFrame._isFloating) {
-          items['Detach Window'] = {
-            name: 'Detach Window',
-            disabled: (!myFrame.panel().moveable() || myFrame === self._center),
-          };
+        var isTitle = false;
+        if (mouse.y - myFrame.$frame.offset().top <= 20) {
+          isTitle = true;
         }
-
-        items['sep1'] = "---------";
 
         var windowTypes = {};
         for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
@@ -90,42 +86,76 @@ wcDocker.prototype = {
           }
         }
 
-        items.fold1 = {
-          name: 'Create Window',
-          items: windowTypes,
-          disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
-          className: 'wcMenuCreatePanel',
-        };
-        items['sep2'] = "---------";
+        var items = {};
+        if (isTitle) {
+          items['Close Panel'] = {
+            name: 'Close Tab',
+            disabled: !myFrame.panel().closeable(),
+          };
+          if (!myFrame._isFloating) {
+            items['Detach Panel'] = {
+              name: 'Detach Tab',
+              disabled: (!myFrame.panel().moveable() || myFrame === self._center),
+            };
+          }
 
-        items['Flash Window'] = {name: 'Flash Window'};
+          items['sep1'] = "---------";
+  
+          items.fold1 = {
+            name: 'Add Tab',
+            items: windowTypes,
+            disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+            className: 'wcMenuCreatePanel',
+          };
+          items['sep2'] = "---------";
+
+          items['Flash Panel'] = {name: 'Flash Tab'};
+        } else {
+          items['Close Panel'] = {
+            name: 'Close Panel',
+            disabled: !myFrame.panel().closeable(),
+          };
+          if (!myFrame._isFloating) {
+            items['Detach Panel'] = {
+              name: 'Detach Panel',
+              disabled: (!myFrame.panel().moveable() || myFrame === self._center),
+            };
+          }
+
+          items['sep1'] = "---------";
+
+          items.fold1 = {
+            name: 'Insert Panel',
+            items: windowTypes,
+            disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+            className: 'wcMenuCreatePanel',
+          };
+          items['sep2'] = "---------";
+
+          items['Flash Panel'] = {name: 'Flash Panel'};
+        }
 
         if (!myFrame._isFloating && myFrame.panel().moveable()) {
-          var mouse = {
-            x: event.clientX,
-            y: event.clientY,
-          };
-
           var rect = myFrame.rect();
           self._ghost = new wcGhost(rect, mouse);
-          myFrame.checkAnchorDrop(mouse, false, self._ghost);
           self._ghost.$ghost.hide();
+          myFrame.checkAnchorDrop(mouse, false, self._ghost, true);
         }
 
         return {
           callback: function(key, options) {
-            if (key === 'Close Window') {
+            if (key === 'Close Panel') {
               setTimeout(function() {
                 myFrame.panel().close();
               }, 10);
-            } else if (key === 'Detach Window') {
+            } else if (key === 'Detach Panel') {
               self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
-            } else if (key === 'Flash Window') {
+            } else if (key === 'Flash Panel') {
               self._focus(myFrame, true);
             } else {
               if (myFrame && self._ghost) {
                 var anchor = self._ghost.anchor();
-                self.addPanel(key, anchor.loc, false, myFrame.panel());
+                self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
               }
             }
           },
@@ -179,12 +209,14 @@ wcDocker.prototype = {
       }
     });
 
+    // On some browsers, clicking and dragging a tab will drag it's graphic around.
+    // Here I am disabling this as it interferes with my own drag-drop.
     $('body').on('mousedown', '.wcPanelTab li a', function(event) {
       event.preventDefault();
       event.returnValue = false;
     });
 
-    // Close button on frames should destroy those widgets.
+    // Close button on frames should destroy those panels.
     $('body').on('click', '.wcFrameCloseButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
@@ -232,20 +264,24 @@ wcDocker.prototype = {
           };
           self._draggingFrame.anchorMove(mouse);
 
+          if ($(event.target).hasClass('wcPanelTab')) {
+            self._draggingFrameTab = true;
+          }
+
           // If the window is able to be docked, give it a dark shadow tint and
           // begin the movement process
-          if (!self._draggingFrame._isFloating || event.which !== 1) {
-            self._draggingFrame.shadow(true);
+          if (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab) {
             var rect = self._draggingFrame.rect();
             self._ghost = new wcGhost(rect, mouse);
-            self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost);
+            self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost, true);
+            // self._draggingFrame.shadow(true);
 
             // Also fade out all floating windows as they are not dockable.
-            for (var a = 0; a < self._frameList.length; ++a) {
-              if (self._frameList[a]._isFloating) {
-                self._frameList[a].shadow(true);
-              }
-            }
+            // for (var a = 0; a < self._frameList.length; ++a) {
+            //   if (self._frameList[a]._isFloating) {
+            //     self._frameList[a].shadow(true);
+            //   }
+            // }
           }
           break;
         }
@@ -255,7 +291,7 @@ wcDocker.prototype = {
       }
     });
 
-    // Mouse down on a frame title will allow you to move them.
+    // Mouse down on a panel will put it into focus.
     $('body').on('mousedown', '.wcLayout', function(event) {
       if (event.which === 3) {
         return;
@@ -353,22 +389,29 @@ wcDocker.prototype = {
           var found = false;
 
           // Check anchoring with self.
-          if (!self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost)) {
+          if (!self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1)) {
+            self._draggingFrame.shadow(true);
             if (!forceFloat) {
               for (var i = 0; i < self._frameList.length; ++i) {
-                if (self._frameList[i].checkAnchorDrop(mouse, false, self._ghost)) {
-                  return;
+                if (self._frameList[i] !== self._draggingFrame) {
+                  if (self._frameList[i].checkAnchorDrop(mouse, false, self._ghost, true)) {
+                    // self._draggingFrame.shadow(true);
+                    return;
+                  }
                 }
               }
 
-              if (self._center.checkAnchorDrop(mouse, false, self._ghost)) {
+              if (self._center.checkAnchorDrop(mouse, false, self._ghost, true)) {
+                // self._draggingFrame.shadow(true);
                 return;
               }
             }
 
             self._ghost.anchor(mouse, null);
+          } else {
+            self._draggingFrame.shadow(false);
           }
-        } else {
+        } else if (!self._draggingFrameTab) {
           self._draggingFrame.move(mouse);
           self._draggingFrame._update();
         }
@@ -391,12 +434,12 @@ wcDocker.prototype = {
         var anchor = self._ghost.anchor();
 
         if (!anchor) {
-          var widget = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_FLOAT, false);
+          var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_FLOAT, false);
           var mouse = {
             x: event.clientX,
             y: event.clientY,
           };
-          var frame = widget.parent();
+          var frame = panel.parent();
           if (frame instanceof wcFrame) {
             frame.pos(mouse.x, mouse.y + self._ghost.rect().h/2, true);
           }
@@ -407,12 +450,32 @@ wcDocker.prototype = {
           frame._size.y = self._ghost.rect().h;
 
           frame._update();
-        } else if (!anchor.self) {
-          var widget;
-          if (anchor.item) {
-            widget = anchor.item.parent();
+
+          // Dragging the entire frame.
+          if (!self._draggingFrameTab) {
+            while (self._draggingFrame.panel())
+            self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_BOTTOM, true, panel);
           }
-          self.movePanel(self._draggingFrame.panel(), anchor.loc, anchor.merge, widget);
+        } else if (!anchor.self) {
+          var panel;
+          if (anchor.item) {
+            panel = anchor.item.parent();
+          }
+          if (panel === self._draggingFrame.panel()) {
+            for (var i = 0; i < self._draggingFrame._panelList.length; ++i) {
+              if (panel !== self._draggingFrame._panelList[i]) {
+                panel = self._draggingFrame._panelList[i];
+                break;
+              }
+            }
+          }
+          panel = self.movePanel(self._draggingFrame.panel(), anchor.loc, anchor.merge, panel);
+
+          // Dragging the entire frame.
+          if (!self._draggingFrameTab) {
+            while (self._draggingFrame.panel())
+            self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_BOTTOM, true, panel);
+          }
         }
         self._ghost.destroy();
         self._ghost = false;
@@ -421,6 +484,7 @@ wcDocker.prototype = {
       self._draggingSplitter = false;
       self._draggingFrame = false;
       self._draggingFrameSizer = false;
+      self._draggingFrameTab = false;
     });
   },
 
@@ -695,7 +759,7 @@ wcDocker.prototype = {
     }
 
     var frame = panel.parent();
-    if (frame instanceof wcFrame) {
+    if (frame instanceof wcFrame && frame.panel() === panel) {
       frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
 
       if (floating !== frame._isFloating) {
@@ -955,8 +1019,12 @@ wcGhost.prototype = {
     }
 
     this._anchor = anchor;
+    var opacity = 0.8;
+    if (anchor.self && anchor.merge) {
+      opacity = 0;
+    }
     this.$ghost.stop().animate({
-      opacity: 0.8,
+      opacity: opacity,
       'margin-left': '2px',
       'margin-top': '2px',
       border: '0px',
@@ -1154,20 +1222,25 @@ wcLayout.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  checkAnchorDrop: function(mouse, same, ghost, floating, $elem) {
+  checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
+    var top = 21;
+    if (!title) {
+      top = 0;
+    }
 
     if (same) {
       // Entire layout.
-      if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+      if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: height,
+          h: top,
+          merge: true,
           loc: wcDocker.DOCK_FLOAT,
           item: this,
           self: true,
@@ -1177,22 +1250,24 @@ wcLayout.prototype = {
     }
 
     // Tab ordering or adding.
-    if (mouse.y >= offset.top && mouse.y <= offset.top + 20 &&
-        mouse.x >= offset.left && mouse.x <= offset.left + width) {
-      ghost.anchor(mouse, {
-        x: offset.left,
-        y: offset.top,
-        w: width,
-        h: 20,
-        merge: true,
-        loc: wcDocker.DOCK_BOTTOM,
-        item: this,
-        self: false,
-      });
-      return true;
+    if (title) {
+      if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
+          mouse.x >= offset.left && mouse.x <= offset.left + width) {
+        ghost.anchor(mouse, {
+          x: offset.left,
+          y: offset.top,
+          w: width,
+          h: top,
+          merge: true,
+          loc: wcDocker.DOCK_BOTTOM,
+          item: this,
+          self: false,
+        });
+        return true;
+      }
     }
 
-    if (floating) {
+    if (!canSplit) {
       return false;
     }
 
@@ -1691,6 +1766,8 @@ function wcFrame($container, parent, isFloating) {
   this.$corner3 = null;
   this.$corner4 = null;
 
+  this.$shadower = null;
+
   this.$tabList = [];
 
   this._curTab = -1;
@@ -1760,8 +1837,27 @@ wcFrame.prototype = {
 
     // Floating windows manage their own sizing.
     if (this._isFloating) {
-      this.$frame.css('left', (this._pos.x * width) - this._size.x/2 + 'px');
-      this.$frame.css('top', (this._pos.y * height) - this._size.y/2 + 'px');
+      var left = (this._pos.x * width) - this._size.x/2;
+      var top = (this._pos.y * height) - this._size.y/2;
+
+      if (top < 0) {
+        top = 0;
+      }
+
+      if (left + this._size.x/2 < 0) {
+        left = -this._size.x/2;
+      }
+
+      if (left + this._size.x/2 > width) {
+        left = width - this._size.x/2;
+      }
+
+      if (top + 21 > height) {
+        top = height - 21;
+      }
+
+      this.$frame.css('left', left + 'px');
+      this.$frame.css('top', top + 'px');
       this.$frame.css('width', this._size.x + 'px');
       this.$frame.css('height', this._size.y + 'px');
     }
@@ -1793,12 +1889,12 @@ wcFrame.prototype = {
   _updateTabs: function() {
     this.$title.empty();
     this.$center.empty();
-    var $tabList = $('<ul class="wcPanelTab">');
+    var $tabList = $('<ul class="wcPanelTabBar">');
     this.$title.append($tabList);
 
     var self = this;
     for (var i = 0; i < this._panelList.length; ++i) {
-      var $tab = $('<li><a href="' + i + '">' + this._panelList[i].title() + '</a></li>');
+      var $tab = $('<li><span id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</span></li>');
       $tabList.append($tab);
 
       var $tabContent = $('<div class="wcPanelTabContent" id="' + i + '">');
@@ -1809,11 +1905,11 @@ wcFrame.prototype = {
       if (this._curTab !== i) {
         $tabContent.addClass('wcPanelTabContentHidden');
       } else {
-        $tab.find('a').addClass('wcPanelTabActive');
+        $tab.find('span').addClass('wcPanelTabActive');
       }
 
-      $tab.find('a').on('mousedown', function(event) {
-        var index = parseInt($(this).attr('href'));
+      $tab.find('span').on('mousedown', function(event) {
+        var index = parseInt($(this).attr('id'));
         self.panel(index);
       });
     }
@@ -1985,10 +2081,10 @@ wcFrame.prototype = {
   panel: function(tabIndex) {
     if (tabIndex !== 'undefined') {
       if (tabIndex > -1 && tabIndex < this._panelList.length) {
-        this.$title.find('a[href="' + this._curTab + '"]').removeClass('wcPanelTabActive');
+        this.$title.find('span[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
         this._curTab = tabIndex;
-        this.$title.find('a[href="' + tabIndex + '"]').addClass('wcPanelTabActive');
+        this.$title.find('span[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
       }
     }
@@ -2025,10 +2121,10 @@ wcFrame.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  checkAnchorDrop: function(mouse, same, ghost) {
+  checkAnchorDrop: function(mouse, same, ghost, canSplit) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().checkAnchorDrop(mouse, same, ghost, this._isFloating, this.$frame);
+      return panel.layout().checkAnchorDrop(mouse, same, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title());
     }
     return false;
   },
@@ -2109,13 +2205,25 @@ wcFrame.prototype = {
   //    enabled       Whether to enable shadow mode.
   shadow: function(enabled) {
     if (enabled) {
-      this.$frame.stop().animate({
-        opacity: 0.3,
-      }, 300);
+      if (!this.$shadower) {
+        this.$shadower = $('<div class="wcFrameShadower">');
+        this.$frame.append(this.$shadower);
+        this.$shadower.animate({
+          opacity: 0.5,
+        }, 300);
+      }
     } else {
-      this.$frame.stop().animate({
-        opacity: 1.0,
-      }, 300);
+      if (this.$shadower) {
+        var self = this;
+        this.$shadower.animate({
+          opacity: 0.0,
+        }, 300)
+        .queue(function(next) {
+          self.$shadower.remove();
+          self.$shadower = null;
+          next();
+        });
+      }
     }
   },
 
