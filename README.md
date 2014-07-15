@@ -5,11 +5,11 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 ### The following features are supported currently: ###
 
 * Panels can be docked to any side of any other window.
-* Panels can be detached from a dock position and float on their own.
+* Panels can be detached from a dock position to float on their own, and then dock again.
 * Panels can be resized.
 * Panels can be closed via close button.
 * Panels can be initialized in code for a default layout.
-* Panels can be programmed with a minimum size constraint.
+* Panels can be programmed with a minimum and maximum size constraint.
 * Multiple panels of the same type can be created.
 * Panels can be created via context menu.
 * Event system to react on panel changes.
