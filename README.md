@@ -94,7 +94,7 @@ wcDocker.EVENT_RESIZED  = 'resized' = Whenever the size of the panel has changed
 
 You can also create your own custom events by supplying your own event names, and then later triggering
 them on your own either from the main Docker instance or from your own panel.  The second parameter you give
-is can be any data object that you wish to pass into all receiving handler functions:
+can be any data object that you wish to pass into all receiving handler functions:
 ```
 #!javascript
 myDocker.trigger('your event', customDataObj);
