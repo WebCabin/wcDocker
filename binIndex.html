@@ -13,16 +13,16 @@
     <!-- Initialization -->
     <script>
       $(document).ready(function() {
-        var docker = new wcDocker(document.body);
-        if (docker) {
+        var myDocker = new wcDocker(document.body);
+        if (myDocker) {
 
-          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
+          myDocker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
           
           var layoutConfiguration;
           var $saveButton = $('<button style="position:absolute;left:10px;top:10px;">Remember Layout</button>');
           var $restoreButton = $('<button style="position:absolute;right:10px;top:10px;">Restore Layout</button>');
-          docker.center().addItem($saveButton);
-          docker.center().addItem($restoreButton);
+          myDocker.center().addItem($saveButton);
+          myDocker.center().addItem($restoreButton);
 
           var saveTimer;
           $restoreButton.attr('disabled', layoutConfiguration? false: true);
@@ -32,7 +32,7 @@
               saveTimer = 0;
             }
 
-            layoutConfiguration = docker.save();
+            layoutConfiguration = myDocker.save();
 
             $saveButton.html('<b>Remembered!</b>');
             $restoreButton.attr('disabled', false);
@@ -44,61 +44,61 @@
 
           $restoreButton.click(function() {
             if (layoutConfiguration) {
-              docker.restore(layoutConfiguration);
+              myDocker.restore(layoutConfiguration);
             }
           });
 
 
-          docker.registerPanelType('Top Panel', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong><br>Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 0);
-            panel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://bitbucket.org/WebCabin/wcdocker">https://bitbucket.org/WebCabin/wcdocker</a></div>'), 0, 1);
-            panel.size(100, 100);
-            panel.minSize(100, 100);
-            panel.maxSize(100, 100);
-            panel.moveable(false);
-            panel.closeable(false);
+          myDocker.registerPanelType('Top Panel', function(myPanel) {
+            myPanel.layout().addItem($('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong><br>Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 0);
+            myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://bitbucket.org/WebCabin/wcdocker">https://bitbucket.org/WebCabin/wcdocker</a></div>'), 0, 1);
+            myPanel.size(100, 100);
+            myPanel.minSize(100, 100);
+            myPanel.maxSize(100, 100);
+            myPanel.moveable(false);
+            myPanel.closeable(false);
           }, true);
 
-          docker.registerPanelType('Panel 1', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
-            panel.layout().addItem($('<div style="text-align:center">This is a panel.</div>'), 1, 0);
-            panel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
-            panel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged.</div>'), 0, 2, 2, 1);
-            panel.layout().showGrid(true);
-            panel.size(200, 200);
+          myDocker.registerPanelType('Panel 1', function(myPanel) {
+            myPanel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
+            myPanel.layout().addItem($('<div style="text-align:center">This is a panel.</div>'), 1, 0);
+            myPanel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
+            myPanel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged.</div>'), 0, 2, 2, 1);
+            myPanel.layout().showGrid(true);
+            myPanel.size(200, 200);
           });
 
-          docker.registerPanelType('Panel 2', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">Each panel can be docked anywhere.<br>Just drag me by my title bar to a new dock position.</div>'));
-            panel.size(400, 400);
+          myDocker.registerPanelType('Panel 2', function(myPanel) {
+            myPanel.layout().addItem($('<div style="text-align:center">Each panel can be docked anywhere.<br>Just drag me by my title bar to a new dock position.</div>'));
+            myPanel.size(400, 400);
           });
 
-          docker.registerPanelType('Panel 3', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">New (and even duplicate) panels can be created by right clicking at the location you wish the new panel to go and using the context menu.</div>'));
+          myDocker.registerPanelType('Panel 3', function(myPanel) {
+            myPanel.layout().addItem($('<div style="text-align:center">New (and even duplicate) panels can be created by right clicking at the location you wish the new panel to go and using the context menu.</div>'));
           });
 
-          docker.registerPanelType('Panel 4', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">Floating panels can move freely.<br>Drag me by my title bar.</div>'));
+          myDocker.registerPanelType('Panel 4', function(myPanel) {
+            myPanel.layout().addItem($('<div style="text-align:center">Floating panels can move freely.<br>Drag me by my title bar.</div>'));
 
             var $dockMe = $('<div style="text-align:center"><b>To dock me</b>, drag me by the tab you wish to dock, or dock the entire frame by dragging the title bar with the middle mouse.</div>');
             var $floatMe = $('<div style="text-align:center"><b>To make me float again</b>, drag a tab to a location that does not anchor to a docking position, or drag the entire frame by using the middle mouse on the title bar.</div>');
-            panel.layout().addItem($dockMe, 0, 1);
-            panel.size(400, 300);
-            panel.pos(0.35, 0.8);
+            myPanel.layout().addItem($dockMe, 0, 1);
+            myPanel.size(400, 300);
+            myPanel.pos(0.35, 0.8);
 
             // Now register some events.
-            panel.on(wcDocker.EVENT_ATTACHED, function(panel) {
+            myPanel.on(wcDocker.EVENT_ATTACHED, function(myPanel) {
               $dockMe.remove();
-              panel.layout().addItem($floatMe, 0, 1);
+              myPanel.layout().addItem($floatMe, 0, 1);
             });
-            panel.on(wcDocker.EVENT_DETACHED, function(panel) {
+            myPanel.on(wcDocker.EVENT_DETACHED, function(myPanel) {
               $floatMe.remove();
-              panel.layout().addItem($dockMe, 0, 1);
+              myPanel.layout().addItem($dockMe, 0, 1);
             });
           });
 
-          docker.registerPanelType('Panel 5', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center"></div>'));
+          myDocker.registerPanelType('Panel 5', function(myPanel) {
+            myPanel.layout().addItem($('<div style="text-align:center"></div>'));
 
             var $attachInfo = $('<div style="text-align:center">I react when docked</div>');
             var $attached   = $('<div style="text-align:center"><b>I was just docked!</b></div>');
@@ -114,12 +114,12 @@
             var $resized    = $('<div style="text-align:center"><b>I was just resized!</b></div>');
             var resizeTimer;
 
-            panel.layout().addItem($detachInfo, 0, 0);
-            panel.layout().addItem($moveInfo, 0, 1);
-            panel.layout().addItem($resizeInfo, 0, 2);
+            myPanel.layout().addItem($detachInfo, 0, 0);
+            myPanel.layout().addItem($moveInfo, 0, 1);
+            myPanel.layout().addItem($resizeInfo, 0, 2);
 
             // Now register some events.
-            panel.on(wcDocker.EVENT_ATTACHED, function(panel) {
+            myPanel.on(wcDocker.EVENT_ATTACHED, function(myPanel) {
               if (attachTimer) {
                 clearTimeout(attachTimer);
               }
@@ -127,14 +127,14 @@
               $attachInfo.remove();
               $detachInfo.remove();
               $detached.remove();
-              panel.layout().addItem($attached, 0, 0);
+              myPanel.layout().addItem($attached, 0, 0);
 
               attachTimer = setTimeout(function() {
                 $attached.remove();
-                panel.layout().addItem($detachInfo, 0, 0);
+                myPanel.layout().addItem($detachInfo, 0, 0);
               }, 1000);
             });
-            panel.on(wcDocker.EVENT_DETACHED, function(panel) {
+            myPanel.on(wcDocker.EVENT_DETACHED, function(myPanel) {
               if (attachTimer) {
                 clearTimeout(attachTimer);
               }
@@ -142,54 +142,54 @@
               $attachInfo.remove();
               $detachInfo.remove();
               $detached.remove();
-              panel.layout().addItem($detached, 0, 0);
+              myPanel.layout().addItem($detached, 0, 0);
 
               attachTimer = setTimeout(function() {
                 $detached.remove();
-                panel.layout().addItem($attachInfo, 0, 0);
+                myPanel.layout().addItem($attachInfo, 0, 0);
               }, 1000);
             });
-            panel.on(wcDocker.EVENT_MOVED, function(panel) {
+            myPanel.on(wcDocker.EVENT_MOVED, function(myPanel) {
               if (moveTimer) {
                 clearTimeout(moveTimer);
               }
 
               $moveInfo.remove();
-              panel.layout().addItem($moved, 0, 1);
+              myPanel.layout().addItem($moved, 0, 1);
 
               moveTimer = setTimeout(function() {
                 $moved.remove();
-                panel.layout().addItem($moveInfo, 0, 1);
+                myPanel.layout().addItem($moveInfo, 0, 1);
                 moveTimer = null;
               }, 500);
             });
-            panel.on(wcDocker.EVENT_RESIZED, function(panel) {
+            myPanel.on(wcDocker.EVENT_RESIZED, function(myPanel) {
               if (resizeTimer) {
                 clearTimeout(resizeTimer);
               }
 
               $resizeInfo.remove();
-              panel.layout().addItem($resized, 0, 2);
+              myPanel.layout().addItem($resized, 0, 2);
 
               resizeTimer = setTimeout(function() {
                 $resized.remove();
-                panel.layout().addItem($resizeInfo, 0, 2);
+                myPanel.layout().addItem($resizeInfo, 0, 2);
                 resizeTimer = null;
               }, 500);
             });
           });
 
-          docker.registerPanelType('Panel 6', function(panel) {
-            panel.layout().addItem($('<div style="text-align:center">I should start out as a second tab to a panel frame, but can be moved elsewhere like the others.</div>'));
+          myDocker.registerPanelType('Panel 6', function(myPanel) {
+            myPanel.layout().addItem($('<div style="text-align:center">I should start out as a second tab to a panel frame, but can be moved elsewhere like the others.</div>'));
           });
 
-          docker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
-          var panel1 = docker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
-          var panel2 = docker.addPanel('Panel 2', wcDocker.DOCK_RIGHT, false);
-          docker.addPanel('Panel 3', wcDocker.DOCK_BOTTOM, false, panel2);
-          docker.addPanel('Panel 4', wcDocker.DOCK_FLOAT, false);
-          docker.addPanel('Panel 5', wcDocker.DOCK_BOTTOM, false, panel2);
-          docker.addPanel('Panel 6', wcDocker.DOCK_BOTTOM, true, panel1);
+          myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
+          var panel1 = myDocker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
+          var panel2 = myDocker.addPanel('Panel 2', wcDocker.DOCK_RIGHT, false);
+          myDocker.addPanel('Panel 3', wcDocker.DOCK_BOTTOM, false, panel2);
+          myDocker.addPanel('Panel 4', wcDocker.DOCK_FLOAT, false);
+          myDocker.addPanel('Panel 5', wcDocker.DOCK_BOTTOM, false, panel2);
+          myDocker.addPanel('Panel 6', wcDocker.DOCK_BOTTOM, true, panel1);
         }
       });
     </script>
