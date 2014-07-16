@@ -297,11 +297,12 @@ wcPanel.prototype = {
       return this.$container;
     }
 
-    this._layout.container(null);
     this.$container = $container;
     
     if (this.$container) {
       this._layout.container(this.$container);
+    } else {
+      this._layout.container(null);
     }
     return this.$container;
   },

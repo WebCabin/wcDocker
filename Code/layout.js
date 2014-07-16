@@ -330,10 +330,11 @@ wcLayout.prototype = {
       return this.$container;
     }
 
-    this.$table.remove();
     this.$container = $container;
     if (this.$container) {
       this.$container.append(this.$table);
+    } else {
+      this.$table.remove();
     }
     return this.$container;
   },

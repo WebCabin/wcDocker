@@ -143,7 +143,12 @@ wcFrame.prototype = {
 
   _updateTabs: function() {
     this.$title.empty();
-    this.$center.empty();
+
+    // Move all tabbed panels to a temporary element to preserve event handlers on them.
+    var $tempCenter = $('<div>');
+    this.$frame.append($tempCenter);
+    this.$center.children().appendTo($tempCenter);
+
     var $tabList = $('<ul class="wcPanelTabBar">');
     this.$title.append($tabList);
 
@@ -168,6 +173,8 @@ wcFrame.prototype = {
         self.panel(index);
       });
     }
+
+    $tempCenter.remove();
   },
 
   // Brings the frame into focus.
@@ -311,7 +318,6 @@ wcFrame.prototype = {
           this._curTab--;
         }
 
-        this._panelList[i].layout().container(null);
         this._panelList[i].container(null);
         this._panelList[i].parent(null);
 
@@ -532,10 +538,11 @@ wcFrame.prototype = {
       return this.$container;
     }
 
-    this.$frame.remove();
     this.$container = $container;
     if (this.$container) {
       this.$container.append(this.$frame);
+    } else {
+      this.$frame.remove();
     }
     return this.$container;
   },

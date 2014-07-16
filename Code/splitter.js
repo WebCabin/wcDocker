@@ -297,15 +297,16 @@ wcSplitter.prototype = {
       return this.$container;
     }
 
-    this.$pane[0].remove();
-    this.$pane[1].remove();
-    this.$bar.remove();
     this.$container = $container;
 
     if (this.$container) {
       this.$container.append(this.$pane[0]);
       this.$container.append(this.$pane[1]);
       this.$container.append(this.$bar);
+    } else {
+      this.$pane[0].remove();
+      this.$pane[1].remove();
+      this.$bar.remove();
     }
     return this.$container;
   },
@@ -354,15 +355,13 @@ wcSplitter.prototype = {
       if (typeof item === 'undefined') {
         return this._pane[index];
       } else {
-        if (this._pane[index]) {
-          this._pane[index].container(null);
-          this._pane[index] = false;
-        }
-
         if (item) {
           this._pane[index] = item;
           item.parent(this);
           item.container(this.$pane[index]);
+        } else if (this._pane[index]) {
+          this._pane[index].container(null);
+          this._pane[index] = false;
         }
       }
     }
