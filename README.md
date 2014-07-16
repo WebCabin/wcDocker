@@ -14,10 +14,10 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * Panels can be created via context menu.
 * Event system to react on panel changes.
 * Ability to group multiple windows into the same dock panel via tabbing.
+* Saving and Restoring of full window panel configurations.
 
 ### The following features are still under development: ###
 
-* Save/Restore support for remembering a user's window setup.
 * A possible option of restricting the number of total panels created.
 * A possible option of restricting the total copies of the same panel type.
 * Allow styling of window colors and other options either by changing css files or an internal color picker system.
