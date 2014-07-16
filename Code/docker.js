@@ -23,7 +23,7 @@
 */
 function wcDocker(container) {
   this.$container = $(container).addClass('wcDocker');
-  this.$transition = $('<div style="opacity:0;"></div>');
+  this.$transition = $('<div class="wcDockerTransition"></div>');
   this.$container.append(this.$transition);
 
   this._root = null;
@@ -60,9 +60,10 @@ wcDocker.prototype = {
   _init: function() {
     var panel = new wcPanel('');
     panel.closeable(false);
-    panel.layout().$table.addClass('wcCenter');
+    panel.layout().$elem.addClass('wcCenter');
     panel.size(-1, -1);
     this._center = new wcFrame(this.$container, panel, false, true);
+    this._center.$frame.addClass('wcCenter');
     this._center.addPanel(panel);
     this._root = this._center;
 
@@ -248,7 +249,6 @@ wcDocker.prototype = {
       if (frame) {
         var panel = frame.panel();
         self.removePanel(panel);
-        panel.destroy();
         self._update();
       }
     });
@@ -574,6 +574,45 @@ wcDocker.prototype = {
     frame._focus(flash)
   },
 
+  // For restore, creates the appropriate object type.
+  _create: function(data, parent, $container) {
+    switch (data.type) {
+      case 'wcSplitter':
+        var splitter = new wcSplitter($container, parent, data.horizontal);
+        this._splitterList.push(splitter);
+        return splitter;
+
+      case 'wcFrame':
+        var frame;
+        if (!data.center) {
+          frame = new wcFrame($container, parent, data.floating);
+          this._frameList.push(frame);
+          if (data.floating) {
+            this._floatingList.push(frame);
+          }
+        } else {
+          frame = this._center;
+          frame.container($container);
+          frame.parent(parent);
+        }
+        return frame;
+
+      case 'wcPanel':
+        var panel = new wcPanel(data.panelType);
+        panel.container($container);
+        panel.parent(parent);
+        for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
+          if (this._dockPanelTypeList[i].name === data.panelType) {
+            this._dockPanelTypeList[i].create(panel);
+            break;
+          }
+        }
+        return panel;
+    }
+
+    return null;
+  },
+
   // Creates a new frame for the panel and then attaches it
   // to the window.
   // Params:
@@ -772,6 +811,113 @@ wcDocker.prototype = {
     return true;
   },
 
+  // Add a new dock panel to the window of a given type.
+  // Params:
+  //    typeName      The type of panel to create.
+  //    location      The location to 'try' docking at, as defined by
+  //                  wcGLOBALS.DOCK_LOC enum.
+  //    allowGroup    True to allow this panel to be tab grouped with
+  //                  another already existing panel at that location.
+  //                  If, for any reason, the panel can not fit at the
+  //                  desired location, a floating window will be used.
+  //    parentPanel   An optional panel to 'split', if not supplied the
+  //                  new panel will split the central panel.
+  // Returns:
+  //    panel        The panel that was created.
+  //    false         The panel type does not exist.
+  addPanel: function(typeName, location, allowGroup, parentPanel) {
+    var panel = new wcPanel(typeName);
+    panel.container(this.$transition);
+
+    for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
+      if (this._dockPanelTypeList[i].name === typeName) {
+        this._dockPanelTypeList[i].create(panel);
+        break;
+      }
+    }
+
+    if (allowGroup) {
+      this._addPanelGrouped(panel, location, parentPanel);
+    } else {
+      this._addPanelAlone(panel, location, parentPanel);
+    }
+    this._update();
+    return panel;
+  },
+
+  // Removes a dock panel from the window.
+  // Params:
+  //    panel        The panel to remove.
+  // Returns:
+  //    true          The panel was removed.
+  //    false         There was a problem.
+  removePanel: function(panel) {
+    if (!panel) {
+      return false;
+    }
+
+    var parentFrame = panel.parent();
+    if (parentFrame instanceof wcFrame) {
+      // If no more panels remain in this frame, remove the frame.
+      if (!parentFrame.removePanel(panel)) {
+        var index = this._floatingList.indexOf(parentFrame);
+        if (index !== -1) {
+          this._floatingList.splice(index, 1);
+        }
+        index = this._frameList.indexOf(parentFrame);
+        if (index !== -1) {
+          this._frameList.splice(index, 1);
+        }
+
+        var parentSplitter = parentFrame.parent();
+        if (parentSplitter instanceof wcSplitter) {
+          parentSplitter.removeChild(parentFrame);
+
+          var other;
+          if (parentSplitter.pane(0)) {
+            other = parentSplitter.pane(0);
+            parentSplitter._pane[0] = null;
+          } else {
+            other = parentSplitter.pane(1);
+            parentSplitter._pane[1] = null;
+          }
+
+          // Keep the panel in a hidden transition container so as to not
+          // destroy any event handlers that may be on it.
+          other.container(this.$transition);
+          other.parent(null);
+
+          index = this._splitterList.indexOf(parentSplitter);
+          if (index !== -1) {
+            this._splitterList.splice(index, 1);
+          }
+
+          parent = parentSplitter.parent();
+          parentContainer = parentSplitter.container();
+          parentSplitter.destroy();
+
+          if (parent instanceof wcSplitter) {
+            parent.removeChild(parentSplitter);
+            if (!parent.pane(0)) {
+              parent.pane(0, other);
+            } else {
+              parent.pane(1, other);
+            }
+          } else if (parent === this) {
+            this._root = other;
+            other.parent(this);
+            other.container(parentContainer);
+          }
+          this._update();
+        }
+        parentFrame.destroy();
+      }
+      panel.destroy();
+      return true;
+    }
+    return false;
+  },
+
   // Moves a docking panel from its current location to another.
   // Params:
   //    panel         The panel to move.
@@ -908,104 +1054,6 @@ wcDocker.prototype = {
     return panel;
   },
 
-  // Add a new dock panel to the window of a given type.
-  // Params:
-  //    typeName      The type of panel to create.
-  //    location      The location to 'try' docking at, as defined by
-  //                  wcGLOBALS.DOCK_LOC enum.
-  //    allowGroup    True to allow this panel to be tab grouped with
-  //                  another already existing panel at that location.
-  //                  If, for any reason, the panel can not fit at the
-  //                  desired location, a floating window will be used.
-  //    parentPanel   An optional panel to 'split', if not supplied the
-  //                  new panel will split the central panel.
-  // Returns:
-  //    panel        The panel that was created.
-  //    false         The panel type does not exist.
-  addPanel: function(typeName, location, allowGroup, parentPanel) {
-    for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
-      if (this._dockPanelTypeList[i].name === typeName) {
-        var panel = new wcPanel(typeName);
-        panel.container(this.$transition);
-        this._dockPanelTypeList[i].create(panel);
-        if (allowGroup) {
-          this._addPanelGrouped(panel, location, parentPanel);
-        } else {
-          this._addPanelAlone(panel, location, parentPanel);
-        }
-        this._update();
-        return panel;
-      }
-    }
-
-    return false;
-  },
-
-  // Removes a dock panel from the window.
-  // Params:
-  //    panel        The panel to remove.
-  // Returns:
-  //    true          The panel was removed.
-  //    false         There was a problem.
-  removePanel: function(panel) {
-    if (!panel) {
-      return false;
-    }
-
-    var parentFrame = panel.parent();
-    if (parentFrame instanceof wcFrame) {
-      // If no more panels remain in this frame, remove the frame.
-      if (!parentFrame.removePanel(panel)) {
-        var index = this._floatingList.indexOf(parentFrame);
-        if (index !== -1) {
-          this._floatingList.splice(index, 1);
-        }
-        index = this._frameList.indexOf(parentFrame);
-        if (index !== -1) {
-          this._frameList.splice(index, 1);
-        }
-
-        var parentSplitter = parentFrame.parent();
-        if (parentSplitter instanceof wcSplitter) {
-          parentSplitter.removeChild(parentFrame);
-
-          var other;
-          if (parentSplitter.pane(0)) {
-            other = parentSplitter.pane(0);
-          } else {
-            other = parentSplitter.pane(1);
-          }
-
-          index = this._splitterList.indexOf(parentSplitter);
-          if (index !== -1) {
-            this._splitterList.splice(index, 1);
-          }
-
-          parent = parentSplitter.parent();
-          parentContainer = parentSplitter.container();
-          parentSplitter.destroy();
-
-          if (parent instanceof wcSplitter) {
-            parent.removeChild(parentSplitter);
-            if (!parent.pane(0)) {
-              parent.pane(0, other);
-            } else {
-              parent.pane(1, other);
-            }
-          } else if (parent === this) {
-            this._root = other;
-            other.parent(this);
-            other.container(parentContainer);
-          }
-          this._update();
-        }
-        parentFrame.destroy();
-      }
-      return true;
-    }
-    return false;
-  },
-
   // Finds all instances of a given panel type.
   // Params:
   //    typeName    The type of panel.
@@ -1043,5 +1091,64 @@ wcDocker.prototype = {
   // Retreives the center layout for the window.
   center: function() {
     return this._center.panel().layout();
+  },
+
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  save: function() {
+    var data = {};
+
+    data.floating = [];
+    for (var i = 0; i < this._floatingList.length; ++i) {
+      data.floating.push(this._floatingList[i]._save());
+    }
+
+    data.root = this._root._save();
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  restore: function(data) {
+    this.clear();
+
+    this._root = this._create(data.root, this, this.$container);
+    this._root._restore(data.root, this);
+
+    for (var i = 0; i < data.floating.length; ++i) {
+      var panel = this._create(data.floating[i], this, this.$container);
+      panel._restore(data.floating[i], this);
+    }
+
+    this._update();
+  },
+
+  // Clears out all panels.
+  clear: function() {
+    this._root = this._center;
+
+    var parent = this._center.parent();
+    if (parent instanceof wcSplitter) {
+
+      if (parent.pane(0) === this._center) {
+        parent._pane[0] = null;
+      } else {
+        parent._pane[1] = null;
+      }
+    }
+
+    this._center.container(this.$transition);
+    this._center.parent(this);
+
+    for (var i = 0; i < this._splitterList.length; ++i) {
+      this._splitterList[i].destroy();
+    }
+
+    for (var i = 0; i < this._frameList.length; ++i) {
+      this._frameList[i].destroy();
+    }
+
+    while (this._frameList.length) this._frameList.pop();
+    while (this._floatingList.length) this._floatingList.pop();
+    while (this._splitterList.length) this._splitterList.pop();
   },
 };

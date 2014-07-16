@@ -57,6 +57,41 @@ wcPanel.prototype = {
     this._layout = new wcLayout(this.$container, this);
   },
 
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  _save: function() {
+    var data = {};
+    data.type = 'wcPanel';
+    data.panelType = this._title;
+    data.minSize = {
+      x: this._minSize.x,
+      y: this._minSize.y,
+    };
+    data.maxSize = {
+      x: this._maxSize.x,
+      y: this._maxSize.y,
+    };
+    data.scrollable = {
+      x: this._scrollable.x,
+      y: this._scrollable.y,
+    };
+    data.moveable = this._moveable;
+    data.closeable = this._closeable;
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  _restore: function(data, docker) {
+    this._minSize.x = data.minSize.x;
+    this._minSize.y = data.minSize.y;
+    this._maxSize.x = data.maxSize.x;
+    this._maxSize.y = data.maxSize.y;
+    this._scrollable.x = data.scrollable.x;
+    this._scrollable.y = data.scrollable.y;
+    this._moveable = data.moveable;
+    this._closeable = data.closeable;
+  },
+
   // Updates the size of the layout.
   _update: function() {
     this._layout._update();
@@ -93,7 +128,7 @@ wcPanel.prototype = {
   },
 
   // Finds the main Docker window.
-  _docker: function() {
+  docker: function() {
     var parent = this._parent;
     while (parent && !(parent instanceof wcDocker)) {
       parent = parent._parent;
@@ -115,7 +150,7 @@ wcPanel.prototype = {
   // Params:
   //    flash     Optional, if true will flash the window.
   focus: function(flash) {
-    var docker = this._docker();
+    var docker = this.docker();
     if (docker) {
       docker._focus(this._parent, flash);
     }
@@ -266,7 +301,7 @@ wcPanel.prototype = {
   //    eventType     The event to trigger.
   //    data          A custom data object to pass into all handlers.
   trigger: function(eventType, data) {
-    var docker = this._docker();
+    var docker = this.docker();
     if (docker) {
       docker.trigger(eventType, data);
     }

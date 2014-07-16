@@ -85,6 +85,49 @@ wcFrame.prototype = {
     }
   },
 
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  _save: function() {
+    var data = {};
+    data.type = 'wcFrame';
+    data.floating = this._isFloating;
+    data.center = this.$frame.hasClass('wcCenter');
+    data.pos = {
+      x: this._pos.x,
+      y: this._pos.y,
+    };
+    data.size = {
+      x: this._size.x,
+      y: this._size.y,
+    };
+    data.tab = this._curTab;
+    data.panels = [];
+    if (!data.center) {
+      for (var i = 0; i < this._panelList.length; ++i) {
+        data.panels.push(this._panelList[i]._save());
+      }
+    }
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  _restore: function(data, docker) {
+    this._isFloating = data.floating;
+    this._pos.x = data.pos.x;
+    this._pos.y = data.pos.y;
+    this._size.x = data.size.x;
+    this._size.y = data.size.y;
+    this._curTab = data.tab;
+    for (var i = 0; i < data.panels.length; ++i) {
+      var panel = docker._create(data.panels[i], this, this.$center);
+      panel._restore(data.panels[i], docker);
+      this._panelList.push(panel);
+    }
+
+    this._updateTabs();
+    this._update();
+  },
+
   // Updates the size of the frame.
   _update: function() {
     var width = this.$container.width();
@@ -565,9 +608,7 @@ wcFrame.prototype = {
   destroy: function() {
     this._curTab = -1;
     for (var i = 0; i < this._panelList.length; ++i) {
-      this._panelList[i].layout().container(null);
-      this._panelList[i].container(null);
-      this._panelList[i].parent(null);
+      this._panelList[i].destroy();
     }
 
     while (this._panelList.length) this._panelList.pop();

@@ -23,7 +23,39 @@
       $(document).ready(function() {
         var docker = new wcDocker(document.body);
         if (docker) {
-          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'), 0, 0);
+
+          docker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
+          
+          var layoutConfiguration;
+          var $saveButton = $('<button style="position:absolute;left:10px;top:10px;">Remember Layout</button>');
+          var $restoreButton = $('<button style="position:absolute;right:10px;top:10px;">Restore Layout</button>');
+          docker.center().addItem($saveButton);
+          docker.center().addItem($restoreButton);
+
+          var saveTimer;
+          $restoreButton.attr('disabled', layoutConfiguration? false: true);
+          $saveButton.click(function() {
+            if (saveTimer) {
+              clearTimeout(saveTimer);
+              saveTimer = 0;
+            }
+
+            layoutConfiguration = docker.save();
+
+            $saveButton.html('<b>Remembered!</b>');
+            $restoreButton.attr('disabled', false);
+            saveTimer = setTimeout(function() {
+              $saveButton.text('Remember Layout');
+              saveTimer = 0;
+            }, 500);
+          });
+
+          $restoreButton.click(function() {
+            if (layoutConfiguration) {
+              docker.restore(layoutConfiguration);
+            }
+          });
+
 
           docker.registerPanelType('Top Panel', function(panel) {
             panel.layout().addItem($('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong><br>Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 0);

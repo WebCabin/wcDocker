@@ -34,6 +34,31 @@ wcSplitter.prototype = {
     this.container(this.$container);
   },
 
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  _save: function() {
+    var data = {};
+    data.type       = 'wcSplitter';
+    data.horizontal = this._horizontal;
+    data.pane0      = this._pane[0]? this._pane[0]._save(): null;
+    data.pane1      = this._pane[1]? this._pane[1]._save(): null;
+    data.pos        = this._pos;
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  _restore: function(data, docker) {
+    this._pos  = data.pos;
+    if (data.pane0) {
+      this._pane[0] = docker._create(data.pane0, this, this.$pane[0]);
+      this._pane[0]._restore(data.pane0, docker);
+    }
+    if (data.pane1) {
+      this._pane[1] = docker._create(data.pane1, this, this.$pane[1]);
+      this._pane[1]._restore(data.pane1, docker);
+    }
+  },
+
   // Updates the size of the splitter.
   _update: function() {
     var width = this.$container.width();
@@ -325,7 +350,7 @@ wcSplitter.prototype = {
     return this._parent;
   },
 
-  // Removes a child from this widget.
+  // Removes a child from this splitter.
   // Params:
   //    child         The child to remove.
   removeChild: function(child) {
@@ -348,7 +373,7 @@ wcSplitter.prototype = {
   //    index     The pane index, only 0 or 1 are valid.
   //    item      If supplied, assigns the item to the pane.
   // Returns:
-  //    widget    The widget that exists in the pane.
+  //    panel     The panel that exists in the pane.
   //    false     If no pane exists.
   pane: function(index, item) {
     if (index >= 0 && index < 2) {
@@ -359,6 +384,7 @@ wcSplitter.prototype = {
           this._pane[index] = item;
           item.parent(this);
           item.container(this.$pane[index]);
+          return item;
         } else if (this._pane[index]) {
           this._pane[index].container(null);
           this._pane[index] = false;
@@ -371,10 +397,10 @@ wcSplitter.prototype = {
   // Disconnects and prepares this widget for destruction.
   destroy: function() {
     if (this._pane[0]) {
-      this._pane[0].container(null);
+      this._pane[0].destroy();
     }
     if (this._pane[1]) {
-      this._pane[1].container(null);
+      this._pane[1].destroy();
     }
 
     this.container(null);

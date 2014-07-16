@@ -6,15 +6,15 @@ function wcLayout($container, parent) {
   this._parent = parent;
 
   this._grid = [];
-  this.$table = null;
+  this.$elem = null;
 
   this._init();
 };
 
 wcLayout.prototype = {
   _init: function() {
-    this.$table = $('<table class="wcLayout wcWide wcTall"></table>');
-    this.$table.append($('<tbody></tbody>'));
+    this.$elem = $('<table class="wcLayout wcWide wcTall"></table>');
+    this.$elem.append($('<tbody></tbody>'));
     this.container(this.$container);
   },
 
@@ -23,7 +23,7 @@ wcLayout.prototype = {
   //    width     The width to expand to.
   //    height    The height to expand to.
   _resizeGrid: function(width, height) {
-    this.$table.find('tbody').children().remove();
+    this.$elem.find('tbody').children().remove();
 
     for (var y = 0; y <= height; ++y) {
       if (this._grid.length <= y) {
@@ -41,7 +41,7 @@ wcLayout.prototype = {
       }
     }
 
-    var $table = this.$table.find('tbody');
+    var $elem = this.$elem.find('tbody');
     for (var y = 0; y < this._grid.length; ++y) {
       var $row = null;
 
@@ -50,7 +50,7 @@ wcLayout.prototype = {
         if (item.$el) {
           if (!$row) {
             $row = $('<tr>');
-            this.$table.append($row);
+            this.$elem.append($row);
           }
 
           $row.append(item.$el);
@@ -155,11 +155,11 @@ wcLayout.prototype = {
   //    bool        The current visibility of the grid.
   showGrid: function(enabled) {
     if (typeof enabled === 'undefined') {
-      return this.$table.hasClass('wcLayoutGrid');
+      return this.$elem.hasClass('wcLayoutGrid');
     }
 
-    this.$table.toggleClass('wcLayoutGrid', enabled);
-    return this.$table.hasClass('wcLayoutGrid');
+    this.$elem.toggleClass('wcLayoutGrid', enabled);
+    return this.$elem.hasClass('wcLayoutGrid');
   },
 
   // Clears the layout.
@@ -332,9 +332,9 @@ wcLayout.prototype = {
 
     this.$container = $container;
     if (this.$container) {
-      this.$container.append(this.$table);
+      this.$container.append(this.$elem);
     } else {
-      this.$table.remove();
+      this.$elem.remove();
     }
     return this.$container;
   },
@@ -359,7 +359,7 @@ wcLayout.prototype = {
     this.parent(null);
     this.clear();
 
-    this.$table.remove();
-    this.$table = null;
+    this.$elem.remove();
+    this.$elem = null;
   },
 };
