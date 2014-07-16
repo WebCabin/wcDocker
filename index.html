@@ -27,35 +27,6 @@
           myDocker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
           
           var layoutConfiguration;
-          var $saveButton = $('<button style="position:absolute;left:10px;top:10px;">Remember Layout</button>');
-          var $restoreButton = $('<button style="position:absolute;right:10px;top:10px;">Restore Layout</button>');
-          myDocker.center().addItem($saveButton);
-          myDocker.center().addItem($restoreButton);
-
-          var saveTimer;
-          $restoreButton.attr('disabled', layoutConfiguration? false: true);
-          $saveButton.click(function() {
-            if (saveTimer) {
-              clearTimeout(saveTimer);
-              saveTimer = 0;
-            }
-
-            layoutConfiguration = myDocker.save();
-
-            $saveButton.html('<b>Remembered!</b>');
-            $restoreButton.attr('disabled', false);
-            saveTimer = setTimeout(function() {
-              $saveButton.text('Remember Layout');
-              saveTimer = 0;
-            }, 500);
-          });
-
-          $restoreButton.click(function() {
-            if (layoutConfiguration) {
-              myDocker.restore(layoutConfiguration);
-            }
-          });
-
 
           myDocker.registerPanelType('Top Panel', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong><br>Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 0);
@@ -65,6 +36,36 @@
             myPanel.maxSize(100, 100);
             myPanel.moveable(false);
             myPanel.closeable(false);
+
+            var $saveButton = $('<button style="position:absolute;right:10px;top:10px;">Remember Layout</button>');
+            var $restoreButton = $('<button style="position:absolute;right:10px;top:50px;">Restore Layout</button>');
+            myPanel.layout().addItem($saveButton);
+            myPanel.layout().addItem($restoreButton);
+            myPanel.layout().addItem($('<div style="position:absolute;width:200px;height:20px;left:10px;top:10px;background-color:darkgray;text-align:center;" class="testMenu">Custom Context Menu here</div>'));
+
+            var saveTimer;
+            $restoreButton.attr('disabled', layoutConfiguration? false: true);
+            $saveButton.click(function() {
+              if (saveTimer) {
+                clearTimeout(saveTimer);
+                saveTimer = 0;
+              }
+
+              layoutConfiguration = myDocker.save();
+
+              $saveButton.html('<b>Remembered!</b>');
+              $restoreButton.attr('disabled', false);
+              saveTimer = setTimeout(function() {
+                $saveButton.text('Remember Layout');
+                saveTimer = 0;
+              }, 500);
+            });
+
+            $restoreButton.click(function() {
+              if (layoutConfiguration) {
+                myDocker.restore(layoutConfiguration);
+              }
+            });
           }, true);
 
           myDocker.registerPanelType('Panel 1', function(myPanel) {
@@ -198,6 +199,13 @@
           myDocker.addPanel('Panel 4', wcDocker.DOCK_FLOAT, false);
           myDocker.addPanel('Panel 5', wcDocker.DOCK_BOTTOM, false, panel2);
           myDocker.addPanel('Panel 6', wcDocker.DOCK_BOTTOM, true, panel1);
+
+          // Setup our context menus.
+          myDocker.basicMenu('.testMenu', [
+            {name: 'option1', callback: function(key, opts){alert(key);}},
+            {name: 'option2', callback: function(key, opts){alert(key);}},
+            {name: 'option3', callback: function(key, opts){alert(key);}},
+          ]);
         }
       });
     </script>

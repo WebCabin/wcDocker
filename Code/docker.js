@@ -1092,6 +1092,34 @@ wcDocker.prototype = {
     return this._center.panel().layout();
   },
 
+  // Assigns a basic context menu to a selector element.  The context
+  // Menu is a simple list of options, no nesting or special options.
+  //
+  // If you wish to use a more complex context menu, you can use
+  // $.contextMenu directly, see
+  // http://medialize.github.io/jQuery-contextMenu/docs.html
+  // for more information.
+  // Params:
+  //    selector      A JQuery selector string that designates the
+  //                  elements who use this menu.
+  //    itemList      An array with each context menu item in it, each item
+  //                  is an object {name:string, callback:function(key, opts)}.
+  basicMenu: function(selector, itemList) {
+    var items = {};
+    for (var i = 0; i < itemList.length; ++i) {
+      items[itemList[i].name] = itemList[i];
+    }
+
+    $.contextMenu({
+      selector: selector,
+      animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+      reposition: false,
+      autoHide: true,
+      zIndex: 200,
+      items: items,
+    });
+  },
+
   // Saves the current panel configuration into a meta
   // object that can be used later to restore it.
   save: function() {
