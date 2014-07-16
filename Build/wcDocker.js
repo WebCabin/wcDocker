@@ -18,8 +18,7 @@
 
 /*
   The main window instance.  This manages all of the docking panels and user input.
-  There should only be one instance of this, although it is not required.
-  The $parent is a JQuery object of the container element.
+  There should only be one instance of this, although it is not enforced.
 */
 function wcDocker(container) {
   this.$container = $(container).addClass('wcDocker');
@@ -1317,7 +1316,7 @@ wcGhost.prototype = {
   },
 };
 /*
-  A layout item that organizes the contents of a dock widget.
+  Handles the contents of a panel.
 */
 function wcLayout($container, parent) {
   this.$container = $container;
@@ -1466,6 +1465,14 @@ wcLayout.prototype = {
   removeItem: function(item, x, y) {
   },
 
+  // Clears the layout.
+  clear: function() {
+    var showGrid = this.showGrid();
+    this._init();
+    this.showGrid(showGrid);
+    this._grid = [];
+  },
+
   // Gets, or Sets the visible status of the layout grid.
   // Params:
   //    enabled     If supplied, will set the grid shown or hidden.
@@ -1478,14 +1485,6 @@ wcLayout.prototype = {
 
     this.$elem.toggleClass('wcLayoutGrid', enabled);
     return this.$elem.hasClass('wcLayoutGrid');
-  },
-
-  // Clears the layout.
-  clear: function() {
-    var showGrid = this.showGrid();
-    this._init();
-    this.showGrid(showGrid);
-    this._grid = [];
   },
 
   // Checks if the mouse is in a valid anchor position for nesting another widget.
@@ -1682,13 +1681,15 @@ wcLayout.prototype = {
   },
 };
 /*
-  The docking panel item is a container for the panels layout and the public interface the panel.
+  The public interface for the docking panel, it contains a layout that can be filled with custom
+  elements and a number of convenience functions for use.
 */
-function wcPanel(title) {
+function wcPanel(type) {
   this.$container = null;
   this._parent = null;
 
-  this._title = title;
+  this._type = type;
+  this._title = type;
 
   this._layout = null;
 
@@ -1745,7 +1746,8 @@ wcPanel.prototype = {
   _save: function() {
     var data = {};
     data.type = 'wcPanel';
-    data.panelType = this._title;
+    data.panelType = this._type;
+    data.title = this._title;
     data.minSize = {
       x: this._minSize.x,
       y: this._minSize.y,
@@ -1765,6 +1767,7 @@ wcPanel.prototype = {
 
   // Restores a previously saved configuration.
   _restore: function(data, docker) {
+    this._title = data.title;
     this._minSize.x = data.minSize.x;
     this._minSize.y = data.minSize.y;
     this._maxSize.x = data.maxSize.x;
@@ -1810,6 +1813,67 @@ wcPanel.prototype = {
     }
   },
 
+
+  // Retrieves the bounding rect for this widget.
+  rect: function() {
+    var offset = this.$container.offset();
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    return {
+      x: offset.left,
+      y: offset.top,
+      w: width,
+      h: height,
+    };
+  },
+
+  // Gets, or Sets a new container for this layout.
+  // Params:
+  //    $container          If supplied, sets a new container for this layout.
+  //    parent              If supplied, sets a new parent for this layout.
+  // Returns:
+  //    JQuery collection   The current container.
+  container: function($container) {
+    if (typeof $container === 'undefined') {
+      return this.$container;
+    }
+
+    this.$container = $container;
+    
+    if (this.$container) {
+      this._layout.container(this.$container);
+    } else {
+      this._layout.container(null);
+    }
+    return this.$container;
+  },
+
+  // Gets, or Sets the parent item for this layout.
+  // Params:
+  //    parent        If supplied, sets a new parent for this layout.
+  // Returns:
+  //    object        The current parent.
+  parent: function(parent) {
+    if (typeof parent === 'undefined') {
+      return this._parent;
+    }
+
+    this._parent = parent;
+    return this._parent;
+  },
+
+  // Destroys this panel.
+  destroy: function() {
+    this._trigger(wcDocker.EVENT_CLOSED);
+
+    this.container(null);
+    this.parent(null);
+    this._layout.destroy();
+    this._layout = null;
+    this.off();
+  },
+
   // Finds the main Docker window.
   docker: function() {
     var parent = this._parent;
@@ -1819,8 +1883,11 @@ wcPanel.prototype = {
     return parent;
   },
 
-  // Gets the title for this dock widget.
-  title: function() {
+  // Gets, or Sets the title for this dock widget.
+  title: function(title) {
+    if (typeof title !== 'undefined') {
+      this._title = title;
+    }
     return this._title;
   },
 
@@ -1988,66 +2055,6 @@ wcPanel.prototype = {
     if (docker) {
       docker.trigger(eventType, data);
     }
-  },
-
-  // Retrieves the bounding rect for this widget.
-  rect: function() {
-    var offset = this.$container.offset();
-    var width = this.$container.width();
-    var height = this.$container.height();
-
-    return {
-      x: offset.left,
-      y: offset.top,
-      w: width,
-      h: height,
-    };
-  },
-
-  // Gets, or Sets a new container for this layout.
-  // Params:
-  //    $container          If supplied, sets a new container for this layout.
-  //    parent              If supplied, sets a new parent for this layout.
-  // Returns:
-  //    JQuery collection   The current container.
-  container: function($container) {
-    if (typeof $container === 'undefined') {
-      return this.$container;
-    }
-
-    this.$container = $container;
-    
-    if (this.$container) {
-      this._layout.container(this.$container);
-    } else {
-      this._layout.container(null);
-    }
-    return this.$container;
-  },
-
-  // Gets, or Sets the parent item for this layout.
-  // Params:
-  //    parent        If supplied, sets a new parent for this layout.
-  // Returns:
-  //    object        The current parent.
-  parent: function(parent) {
-    if (typeof parent === 'undefined') {
-      return this._parent;
-    }
-
-    this._parent = parent;
-    return this._parent;
-  },
-
-  // Destroys this panel.
-  destroy: function() {
-    this._trigger(wcDocker.EVENT_CLOSED);
-
-    this.container(null);
-    this.parent(null);
-    this._layout.destroy();
-    this._layout = null;
-    this.off();
   },
 };
 /*
