@@ -23,6 +23,14 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * Allow styling of window colors and other options either by changing css files or an internal color picker system.
 
 ****
+# Dependancies #
+
+* JQuery Library version 2.1.1 [http://jquery.com/](http://jquery.com/)
+* Custom version of JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
+
+If you use the pre-built packages wcDocker.js or wcDocker.min.js then the contextMenu library is embedded into it already.
+
+****
 # Basic Implementation #
 
 For more detailed information on the API, check out the [wiki](https://bitbucket.org/WebCabin/wcdocker/wiki/Home).
