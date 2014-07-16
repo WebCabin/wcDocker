@@ -1,5 +1,5 @@
 /*
-  A layout item that organizes the contents of a dock widget.
+  Handles the contents of a panel.
 */
 function wcLayout($container, parent) {
   this.$container = $container;
@@ -148,6 +148,14 @@ wcLayout.prototype = {
   removeItem: function(item, x, y) {
   },
 
+  // Clears the layout.
+  clear: function() {
+    var showGrid = this.showGrid();
+    this._init();
+    this.showGrid(showGrid);
+    this._grid = [];
+  },
+
   // Gets, or Sets the visible status of the layout grid.
   // Params:
   //    enabled     If supplied, will set the grid shown or hidden.
@@ -160,14 +168,6 @@ wcLayout.prototype = {
 
     this.$elem.toggleClass('wcLayoutGrid', enabled);
     return this.$elem.hasClass('wcLayoutGrid');
-  },
-
-  // Clears the layout.
-  clear: function() {
-    var showGrid = this.showGrid();
-    this._init();
-    this.showGrid(showGrid);
-    this._grid = [];
   },
 
   // Checks if the mouse is in a valid anchor position for nesting another widget.

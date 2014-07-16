@@ -18,8 +18,7 @@
 
 /*
   The main window instance.  This manages all of the docking panels and user input.
-  There should only be one instance of this, although it is not required.
-  The $parent is a JQuery object of the container element.
+  There should only be one instance of this, although it is not enforced.
 */
 function wcDocker(container) {
   this.$container = $(container).addClass('wcDocker');

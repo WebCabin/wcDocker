@@ -87,17 +87,13 @@ You can also register some events if you feel you need them:
 #!javascript
 myPanel.on(wcDocker.EVENT_RESIZE, function(myPanel){});
 ```
-The following event types are supported by the Docker:
+The following event types are supported by the Docker:  
 
-wcDocker.EVENT_CLOSED   = 'closed' = When the panel has been closed and is about to be destroyed.
-
-wcDocker.EVENT_ATTACHED = 'attached' = When the panel has changed from a floating panel to a docked panel.
-
-wcDocker.EVENT_DETACHED = 'detached' = When the panel has changed from a docked panel to a floating panel.
-
-wcDocker.EVENT_MOVED    = 'moved' = Whenever the position of the panel has changed.
-
-wcDocker.EVENT_RESIZED  = 'resized' = Whenever the size of the panel has changed.
+wcDocker.EVENT_CLOSED   = 'closed' = When the panel has been closed and is about to be destroyed.  
+wcDocker.EVENT_ATTACHED = 'attached' = When the panel has changed from a floating panel to a docked panel.  
+wcDocker.EVENT_DETACHED = 'detached' = When the panel has changed from a docked panel to a floating panel.  
+wcDocker.EVENT_MOVED    = 'moved' = Whenever the position of the panel has changed.  
+wcDocker.EVENT_RESIZED  = 'resized' = Whenever the size of the panel has changed.  
 
 You can also create your own custom events by supplying your own event names, and then later triggering
 them on your own either from the main Docker instance or from your own panel.  The second parameter you give
@@ -119,17 +115,13 @@ myDocker.addPanel('Registered type name', wcDocker.LEFT, false, optionalTargetPa
 ```
 The first parameter is the name of the panel type you have previously registered.
 The second parameter is an enumerated value that determines the location where this window will be docked
-(or try to dock), it can be one of the following:
+(or try to dock), it can be one of the following:  
 
-wcDocker.DOCK_FLOAT    = Make a floating window that is not docked.
-
-wcDocker.DOCK_LEFT     = Dock it to the left side of the central or target panel.
-
-wcDocker.DOCK_RIGHT    = Dock it to the right side of the central or target panel.
-
-wcDocker.DOCK_TOP      = Dock it to the top of the central or target panel.
-
-wcDocker.DOCK_BOTTOM   = Dock it on the bottom of the central or target panel.
+wcDocker.DOCK_FLOAT    = Make a floating window that is not docked.  
+wcDocker.DOCK_LEFT     = Dock it to the left side of the central or target panel.  
+wcDocker.DOCK_RIGHT    = Dock it to the right side of the central or target panel.  
+wcDocker.DOCK_TOP      = Dock it to the top of the central or target panel.  
+wcDocker.DOCK_BOTTOM   = Dock it on the bottom of the central or target panel.  
 
 The third parameter determines whether this panel is allowed to group up (via tabs) with another, already existing,
 panel or if a new panel frame should appear next to it.
