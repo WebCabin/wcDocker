@@ -823,26 +823,25 @@ wcDocker.prototype = {
   //    parentPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the central panel.
   // Returns:
-  //    panel        The panel that was created.
+  //    wcPanel       The panel that was created.
   //    false         The panel type does not exist.
   addPanel: function(typeName, location, allowGroup, parentPanel) {
-    var panel = new wcPanel(typeName);
-    panel.container(this.$transition);
-
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
+        var panel = new wcPanel(typeName);
+        panel.container(this.$transition);
         this._dockPanelTypeList[i].create(panel);
-        break;
+
+        if (allowGroup) {
+          this._addPanelGrouped(panel, location, parentPanel);
+        } else {
+          this._addPanelAlone(panel, location, parentPanel);
+        }
+        this._update();
+        return panel;
       }
     }
-
-    if (allowGroup) {
-      this._addPanelGrouped(panel, location, parentPanel);
-    } else {
-      this._addPanelAlone(panel, location, parentPanel);
-    }
-    this._update();
-    return panel;
+    return false;
   },
 
   // Removes a dock panel from the window.

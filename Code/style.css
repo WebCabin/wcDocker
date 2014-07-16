@@ -285,6 +285,8 @@ ul.wcPanelTabBar li span.wcPanelTabActive {
 }
 
 div.wcPanelTabContent {
+  width: 100%;
+  height: 100%;
 }
 
 div.wcPanelTabContent.wcPanelTabContentHidden {
