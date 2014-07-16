@@ -36,6 +36,10 @@ html, body {
   position: absolute;
 }
 
+.wcDockerTransition {
+  opacity: 0;
+}
+
 .wcFrame {
   border: 2px inset black;
   position: relative;
