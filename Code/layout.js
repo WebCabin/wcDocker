@@ -78,7 +78,7 @@ wcLayout.prototype = {
 
   // Initialize
   __init: function() {
-    this.$elem = $('<table class="wcLayout wcWide wcTall"></table>');
+    this.$elem = $('<table class="wcLayout wcWide wcTall wcPanelBackground"></table>');
     this.$elem.append($('<tbody></tbody>'));
     this.__container(this.$container);
   },

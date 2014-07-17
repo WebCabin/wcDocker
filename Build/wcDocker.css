@@ -32,6 +32,14 @@ html, body {
   user-select: none;
 }
 
+.wcWide {
+  width: 100%;
+}
+
+.wcTall {
+  height: 100%;
+}
+
 .wcDocker {
   position: absolute;
 }
@@ -43,14 +51,6 @@ html, body {
 .wcFrame {
   border: 2px inset black;
   position: relative;
-}
-
-.wcFrame .wcLayout {
-  background-color: gray;
-}
-
-.wcFrame .wcCenter {
-  background-color: darkgray;
 }
 
 .wcFrameFlasher, .wcFrameShadower {
@@ -65,20 +65,15 @@ html, body {
   bottom: 0px;
 
   opacity: 0;
-  background-color: white;
 }
 
 .wcFrameTitle {
-  padding-left: 3px;
-  height: 15px;
   width: 100%;
-  background-color: darkgray;
   cursor: move;
-  text-align: center;
   overflow: hidden;
   position: absolute;
-
   text-align: left;
+
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -86,10 +81,6 @@ html, body {
   -ms-user-select: none;
   user-select: none;
 }
-
-/*.wcFloating .wcFrameTitle {
-  background-color: #555;
-}*/
 
 .wcFrameCloseButton {
   width: 11px;
@@ -144,80 +135,54 @@ html, body {
   position: absolute;
 }
 
-.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
-  border: 1px dashed #555555;
+.wcFrameEdge {
+  position: absolute;
+  z-index: 2;
+  border: 2px outset #444;
+  background-color: #222;
 }
 
 .wcFrameEdgeV {
   width: 2px;
   cursor: ew-resize;
-  z-index: 2;
-  position: absolute;
-  border: 2px outset #444;
   border-top: 0px;
   border-bottom: 0px;
-  background-color: #222;
 }
 
 .wcFrameEdgeH {
   height: 2px;
   cursor: ns-resize;
-  z-index: 2;
-  position: absolute;
-  border: 2px outset #444;
   border-left: 0px;
   border-right: 0px;
-  background-color: #222;
 }
 
 .wcFrameCornerNW {
   height: 2px;
   width: 2px;
   cursor: nwse-resize;
-  z-index: 2;
-  position: absolute;
-  border: 2px outset #444;
-  background-color: #222;
 }
 
 .wcFrameCornerNE {
   height: 2px;
   width: 2px;
   cursor: nesw-resize;
-  z-index: 2;
-  position: absolute;
-  border: 2px outset #444;
-  background-color: #222;
-}
-
-.wcWide {
-  width: 100%;
-}
-
-.wcTall {
-  height: 100%;
 }
 
 .wcSplitterBar {
+  z-index: 2;
   position: absolute;
-  border: 1px outset darkgray;
-  background-color: gray;
 }
 
 .wcSplitterBarV {
-  border-top: 1px solid gray;
-  border-bottom: 2px solid gray;
   width: 2px;
+  height: 100%;
   cursor: ew-resize;
-  z-index: 2;
 }
 
 .wcSplitterBarH {
-  border-left: 1px solid gray;
-  border-right: 2px solid gray;
   height: 2px;
+  width: 100%;
   cursor: ns-resize;
-  z-index: 2;
 }
 
 .wcLayoutPane {
@@ -260,7 +225,6 @@ html, body {
   color: #000;
   background-color: #888;
   font-weight: bold;
-  /*padding: 0.7em 0.3em 0.38em 0.3em;*/
 }
 
 .wcPanelTabActive:hover {
@@ -270,7 +234,6 @@ html, body {
 .wcPanelTabContent {
   width: 100%;
   height: 100%;
-  background-color: gray;
 }
 
 .wcPanelTabContent.wcPanelTabContentHidden {
@@ -295,10 +258,73 @@ html, body {
   overflow-y: auto;
 }
 
+
+
+
+
+
+
+
+
+
+
+/* Default Theme */
+.wcPanelBackground {
+  background-color: gray;
+}
+
+.wcPanelBackground .wcCenter {
+  background-color: darkgray;
+}
+
+.wcFrameFlasher {
+  background-color: white;
+}
+
+.wcFrameShadower {
+  background-color: white;
+}
+
+.wcFrameTitle {
+  padding-left: 3px;
+  height: 15px;
+  background-color: darkgray;
+}
+
+.wcFrameCenter {
+  top: 15px;
+}
+
+.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
+  border: 1px dashed #555555;
+}
+
+.wcFrameEdge {
+  position: absolute;
+  z-index: 2;
+  border: 2px outset #444;
+  background-color: #222;
+}
+
+.wcSplitterBar {
+  border: 1px outset darkgray;
+  background-color: gray;
+}
+
+.wcGhost {
+  background-color: #444444;
+  border: 0px;
+  border-radius: 6px;
+}
+
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
-  background-color: gray;
+  background-color: #A55;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #A55;
 }
 
 ::-webkit-scrollbar-track {
@@ -311,9 +337,6 @@ html, body {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
 }
 
-::-webkit-scrollbar-corner {
-  background-color: gray;
-}
 /*
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *

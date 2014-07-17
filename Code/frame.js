@@ -209,7 +209,7 @@ wcFrame.prototype = {
 
   // Initialize
   __init: function() {
-    this.$frame   = $('<div class="wcFrame wcWide wcTall">');
+    this.$frame   = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
     this.$title   = $('<div class="wcFrameTitle">');
     this.$center  = $('<div class="wcFrameCenter wcWide">');
     this.$close   = $('<div class="wcFrameCloseButton">X</div>');
@@ -358,7 +358,7 @@ wcFrame.prototype = {
       var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
       this.$title.append($tab);
 
-      var $tabContent = $('<div class="wcPanelTabContent" id="' + i + '">');
+      var $tabContent = $('<div class="wcPanelTabContent wcPanelBackground" id="' + i + '">');
       this.$center.append($tabContent);
       this._panelList[i].__container($tabContent);
       this._panelList[i]._parent = this;

@@ -214,7 +214,7 @@ wcSplitter.prototype = {
       }
 
       this.$bar.css('left', size+1);
-      this.$pane[0].css('width', size-2 + 'px');
+      this.$pane[0].css('width', size-1 + 'px');
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
@@ -231,7 +231,7 @@ wcSplitter.prototype = {
       }
 
       this.$bar.css('top', size+1);
-      this.$pane[0].css('height', size-2 + 'px');
+      this.$pane[0].css('height', size-1 + 'px');
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
