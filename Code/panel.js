@@ -313,6 +313,8 @@ wcPanel.prototype = {
     };
     data.moveable = this._moveable;
     data.closeable = this._closeable;
+    data.customData = {};
+    this.__trigger(wcDocker.EVENT_SAVE_LAYOUT, data.customData);
     return data;
   },
 
@@ -327,6 +329,7 @@ wcPanel.prototype = {
     this._scrollable.y = data.scrollable.y;
     this._moveable = data.moveable;
     this._closeable = data.closeable;
+    this.__trigger(wcDocker.EVENT_RESTORE_LAYOUT, data.customData);
   },
 
   // Triggers an event of a given type onto this current panel.

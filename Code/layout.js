@@ -70,7 +70,7 @@ wcLayout.prototype = {
     this.$elem.toggleClass('wcLayoutGrid', enabled);
     return this.$elem.hasClass('wcLayoutGrid');
   },
-  
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
@@ -184,7 +184,7 @@ wcLayout.prototype = {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
-    var top = 21;
+    var top = this.$elem.offset().top - offset.top;
     if (!title) {
       top = 0;
     }
@@ -197,7 +197,7 @@ wcLayout.prototype = {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: top,
+          h: top-2,
           merge: true,
           loc: wcDocker.DOCK_FLOAT,
           item: this,
@@ -215,7 +215,7 @@ wcLayout.prototype = {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: top,
+          h: top-2,
           merge: true,
           loc: wcDocker.DOCK_BOTTOM,
           item: this,

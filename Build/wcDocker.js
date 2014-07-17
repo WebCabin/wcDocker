@@ -49,11 +49,13 @@ wcDocker.DOCK_LEFT   = 'left';
 wcDocker.DOCK_RIGHT  = 'right';
 wcDocker.DOCK_BOTTOM = 'bottom';
 
-wcDocker.EVENT_CLOSED   = 'closed';
-wcDocker.EVENT_ATTACHED = 'attached';
-wcDocker.EVENT_DETACHED = 'detached';
-wcDocker.EVENT_MOVED    = 'moved';
-wcDocker.EVENT_RESIZED  = 'resized';
+wcDocker.EVENT_CLOSED           = 'closed';
+wcDocker.EVENT_ATTACHED         = 'attached';
+wcDocker.EVENT_DETACHED         = 'detached';
+wcDocker.EVENT_MOVED            = 'moved';
+wcDocker.EVENT_RESIZED          = 'resized';
+wcDocker.EVENT_SAVE_LAYOUT      = 'save_layout';
+wcDocker.EVENT_RESTORE_LAYOUT   = 'restore_layout';
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,8 +168,8 @@ wcDocker.prototype = {
         if (!myFrame._isFloating && myFrame.panel().moveable()) {
           var rect = myFrame.__rect();
           self._ghost = new wcGhost(rect, mouse);
-          self._ghost.$ghost.hide();
           myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
+          self._ghost.$ghost.hide();
         }
 
         return {
@@ -1293,9 +1295,9 @@ wcGhost.prototype = {
       h: rect.h,
     };
 
-    this.anchor(mouse, rect);
-
     $('body').append(this.$ghost);
+
+    this.anchor(mouse, rect);
   },
 
   // Gets the original size of the moving widget.
@@ -1403,7 +1405,7 @@ wcLayout.prototype = {
     this.$elem.toggleClass('wcLayoutGrid', enabled);
     return this.$elem.hasClass('wcLayoutGrid');
   },
-  
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
@@ -1517,7 +1519,7 @@ wcLayout.prototype = {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
-    var top = 21;
+    var top = this.$elem.offset().top - offset.top;
     if (!title) {
       top = 0;
     }
@@ -1530,7 +1532,7 @@ wcLayout.prototype = {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: top,
+          h: top-2,
           merge: true,
           loc: wcDocker.DOCK_FLOAT,
           item: this,
@@ -1548,7 +1550,7 @@ wcLayout.prototype = {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: top,
+          h: top-2,
           merge: true,
           loc: wcDocker.DOCK_BOTTOM,
           item: this,
@@ -2003,6 +2005,8 @@ wcPanel.prototype = {
     };
     data.moveable = this._moveable;
     data.closeable = this._closeable;
+    data.customData = {};
+    this.__trigger(wcDocker.EVENT_SAVE_LAYOUT, data.customData);
     return data;
   },
 
@@ -2017,6 +2021,7 @@ wcPanel.prototype = {
     this._scrollable.y = data.scrollable.y;
     this._moveable = data.moveable;
     this._closeable = data.closeable;
+    this.__trigger(wcDocker.EVENT_RESTORE_LAYOUT, data.customData);
   },
 
   // Triggers an event of a given type onto this current panel.
@@ -2104,8 +2109,6 @@ function wcFrame(container, parent, isFloating) {
   this.$corner4 = null;
 
   this.$shadower = null;
-
-  this.$tabList = [];
 
   this._curTab = -1;
   this._panelList = [];
@@ -2272,10 +2275,10 @@ wcFrame.prototype = {
   panel: function(tabIndex) {
     if (tabIndex !== 'undefined') {
       if (tabIndex > -1 && tabIndex < this._panelList.length) {
-        this.$title.find('span[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
+        this.$title.find('div[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
         this._curTab = tabIndex;
-        this.$title.find('span[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
+        this.$title.find('div[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
       }
     }
@@ -2352,8 +2355,8 @@ wcFrame.prototype = {
         left = width - this._size.x/2;
       }
 
-      if (top + 21 > height) {
-        top = height - 21;
+      if (top + parseInt(this.$center.css('top')) > height) {
+        top = height - parseInt(this.$center.css('top'));
       }
 
       this.$frame.css('left', left + 'px');
@@ -2370,7 +2373,7 @@ wcFrame.prototype = {
 
       if (panel.moveable() && panel.title()) {
         this.$frame.prepend(this.$title);
-        this.$center.css('top', '21px');
+        this.$center.css('top', '');
       } else {
         this.$title.remove();
         this.$center.css('top', '0px');
@@ -2437,13 +2440,10 @@ wcFrame.prototype = {
     this.$frame.append($tempCenter);
     this.$center.children().appendTo($tempCenter);
 
-    var $tabList = $('<ul class="wcPanelTabBar">');
-    this.$title.append($tabList);
-
     var self = this;
     for (var i = 0; i < this._panelList.length; ++i) {
-      var $tab = $('<li><span id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</span></li>');
-      $tabList.append($tab);
+      var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
+      this.$title.append($tab);
 
       var $tabContent = $('<div class="wcPanelTabContent" id="' + i + '">');
       this.$center.append($tabContent);
@@ -2453,10 +2453,10 @@ wcFrame.prototype = {
       if (this._curTab !== i) {
         $tabContent.addClass('wcPanelTabContentHidden');
       } else {
-        $tab.find('span').addClass('wcPanelTabActive');
+        $tab.addClass('wcPanelTabActive');
       }
 
-      $tab.find('span').on('mousedown', function(event) {
+      $tab.on('mousedown', function(event) {
         var index = parseInt($(this).attr('id'));
         self.panel(index);
       });

@@ -49,11 +49,13 @@ wcDocker.DOCK_LEFT   = 'left';
 wcDocker.DOCK_RIGHT  = 'right';
 wcDocker.DOCK_BOTTOM = 'bottom';
 
-wcDocker.EVENT_CLOSED   = 'closed';
-wcDocker.EVENT_ATTACHED = 'attached';
-wcDocker.EVENT_DETACHED = 'detached';
-wcDocker.EVENT_MOVED    = 'moved';
-wcDocker.EVENT_RESIZED  = 'resized';
+wcDocker.EVENT_CLOSED           = 'closed';
+wcDocker.EVENT_ATTACHED         = 'attached';
+wcDocker.EVENT_DETACHED         = 'detached';
+wcDocker.EVENT_MOVED            = 'moved';
+wcDocker.EVENT_RESIZED          = 'resized';
+wcDocker.EVENT_SAVE_LAYOUT      = 'save_layout';
+wcDocker.EVENT_RESTORE_LAYOUT   = 'restore_layout';
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,8 +168,8 @@ wcDocker.prototype = {
         if (!myFrame._isFloating && myFrame.panel().moveable()) {
           var rect = myFrame.__rect();
           self._ghost = new wcGhost(rect, mouse);
-          self._ghost.$ghost.hide();
           myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
+          self._ghost.$ghost.hide();
         }
 
         return {

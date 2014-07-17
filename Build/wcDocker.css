@@ -50,7 +50,7 @@ html, body {
 }
 
 .wcFrame .wcCenter {
-  background-color: transparent;
+  background-color: darkgray;
 }
 
 .wcFrameFlasher, .wcFrameShadower {
@@ -74,54 +74,47 @@ html, body {
 
 .wcFrameTitle {
   padding-left: 3px;
-  height: 21px;
+  height: 15px;
+  width: 100%;
   background-color: darkgray;
   cursor: move;
   text-align: center;
   overflow: hidden;
+  position: absolute;
+
+  text-align: left;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /*.wcFloating .wcFrameTitle {
   background-color: #555;
 }*/
 
-.wcFrameCloseButton, .wcFrameDockButton {
-  width: 17px;
-  height: 17px;
+.wcFrameCloseButton {
+  width: 11px;
+  height: 11px;
   top: 0px;
   right: 0px;
   position: absolute;
   border: 2px outset #444444;
-  font-size: 16px;
+  font-size: 8px;
   cursor: pointer;
   text-align: center;
 
   background-color: #555555;
 }
 
-.wcFrameDockButton {
-  left: 0px;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAWdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjA76PVpAAAAT0lEQVQ4T92M0QoAIAgD/f+fLoQCXbMie6mDI1I3+ZPS3hRagkV9hobgkf0zKexw5QA7UpHZzi2tjHBngygSzV2I2WGzbWz4WskR6YJnEKl90FGvuLJ7ogAAAABJRU5ErkJggg==);
-}
-
-.wcFrameCloseButton:hover, .wcFrameDockButton:hover {
+.wcFrameCloseButton:hover {
   border: 2px outset #666666;
   background-color: #686868;
 }
 
-.wcFrameCloseButton:active,
-.wcFrameDockButton:active,
-.wcFrameDockButtonLocked {
-  border: 2px inset #AAAAAA;
-  background-color: #888888;
-}
-
-.wcFrameDockButtonLocked:hover {
-  border: 2px inset #AAAAAA;
-  background-color: #707070;
-}
-
-.wcFrameDockButtonLocked:active {
+.wcFrameCloseButton:active {
   border: 2px inset #AAAAAA;
   background-color: #888888;
 }
@@ -129,7 +122,7 @@ html, body {
 .wcFrameCenter {
   overflow: hidden;
   position: absolute;
-  top: 21px;
+  top: 15px;
   left: 0px;
   right: 0px;
   bottom: 0px;
@@ -240,56 +233,51 @@ html, body {
   position: absolute;
 }
 
-ul.wcPanelTabBar {
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-  border: 0px;
-  text-align: left;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: -moz-none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-ul.wcPanelTabBar li {
-  display: inline;
-}
-
-ul.wcPanelTabBar li span.wcPanelTab {
+.wcPanelTab {
   color: #42454a;
   background-color: #AAA;
-  border: 2px solid #555;
-  border-radius: 10px 10px 0px 0px;
+  border: 1px solid #555;
+  border-radius: 5px 5px 0px 0px;
   border-bottom: 0px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  -ms-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  -o-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  padding-bottom: 3px;
+  margin-right: 2px;
+  margin-top: 2px;
+  font-size: 10px;
+  vertical-align: top;
+  position: relative;
+  display: inline-block;
+  -webkit-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
+  -moz-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
+  -ms-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
+  -o-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
+  box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-bottom: 0px;
   text-decoration: none;
 }
 
-ul.wcPanelTabBar li span.wcPanelTab:hover {
-  background-color: #f1f0ee;
+.wcPanelTab:hover {
+  background-color: #CCC;
 }
 
-ul.wcPanelTabBar li span.wcPanelTabActive {
+.wcPanelTabActive {
   color: #000;
   background-color: #888;
   font-weight: bold;
   /*padding: 0.7em 0.3em 0.38em 0.3em;*/
 }
 
-div.wcPanelTabContent {
-  width: 100%;
-  height: 100%;
+.wcPanelTabActive:hover {
+  background-color: #AAA;
 }
 
-div.wcPanelTabContent.wcPanelTabContentHidden {
+.wcPanelTabContent {
+  width: 100%;
+  height: 100%;
+  background-color: gray;
+}
+
+.wcPanelTabContent.wcPanelTabContentHidden {
   display: none;
 }
 
@@ -298,7 +286,7 @@ div.wcPanelTabContent.wcPanelTabContentHidden {
   background-color: #444444;
   position: fixed;
   border: 0px;
-  border-radius: 10px;
+  border-radius: 6px;
   z-index: 100;
   cursor: move;
 }

@@ -89,11 +89,13 @@ myPanel.on(wcDocker.EVENT_RESIZE, function(myPanel){});
 ```
 The following event types are supported by the Docker:  
 
-wcDocker.EVENT_CLOSED   = 'closed' = When the panel has been closed and is about to be destroyed.  
-wcDocker.EVENT_ATTACHED = 'attached' = When the panel has changed from a floating panel to a docked panel.  
-wcDocker.EVENT_DETACHED = 'detached' = When the panel has changed from a docked panel to a floating panel.  
-wcDocker.EVENT_MOVED    = 'moved' = Whenever the position of the panel has changed.  
-wcDocker.EVENT_RESIZED  = 'resized' = Whenever the size of the panel has changed.  
+wcDocker.EVENT_CLOSED         = 'closed' = When the panel has been closed and is about to be destroyed.  
+wcDocker.EVENT_ATTACHED       = 'attached' = When the panel has changed from a floating panel to a docked panel.  
+wcDocker.EVENT_DETACHED       = 'detached' = When the panel has changed from a docked panel to a floating panel.  
+wcDocker.EVENT_MOVED          = 'moved' = Whenever the position of the panel has changed.  
+wcDocker.EVENT_RESIZED        = 'resized' = Whenever the size of the panel has changed.  
+wcDocker.EVENT_SAVE_LAYOUT    = 'save_layout' = Whenever the layout is being saved on this panel.
+wcDocker.EVENT_RESTORE_LAYOUT = 'restore_layout' = Whenever the layout is being restored on this panel.
 
 You can also create your own custom events by supplying your own event names, and then later triggering
 them on your own either from the main Docker instance or from your own panel.  The second parameter you give

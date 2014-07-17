@@ -106,9 +106,9 @@ wcGhost.prototype = {
       h: rect.h,
     };
 
-    this.anchor(mouse, rect);
-
     $('body').append(this.$ghost);
+
+    this.anchor(mouse, rect);
   },
 
   // Gets the original size of the moving widget.

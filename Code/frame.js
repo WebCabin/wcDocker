@@ -23,8 +23,6 @@ function wcFrame(container, parent, isFloating) {
 
   this.$shadower = null;
 
-  this.$tabList = [];
-
   this._curTab = -1;
   this._panelList = [];
 
@@ -190,10 +188,10 @@ wcFrame.prototype = {
   panel: function(tabIndex) {
     if (tabIndex !== 'undefined') {
       if (tabIndex > -1 && tabIndex < this._panelList.length) {
-        this.$title.find('span[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
+        this.$title.find('div[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
         this._curTab = tabIndex;
-        this.$title.find('span[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
+        this.$title.find('div[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
       }
     }
@@ -270,8 +268,8 @@ wcFrame.prototype = {
         left = width - this._size.x/2;
       }
 
-      if (top + 21 > height) {
-        top = height - 21;
+      if (top + parseInt(this.$center.css('top')) > height) {
+        top = height - parseInt(this.$center.css('top'));
       }
 
       this.$frame.css('left', left + 'px');
@@ -288,7 +286,7 @@ wcFrame.prototype = {
 
       if (panel.moveable() && panel.title()) {
         this.$frame.prepend(this.$title);
-        this.$center.css('top', '21px');
+        this.$center.css('top', '');
       } else {
         this.$title.remove();
         this.$center.css('top', '0px');
@@ -355,13 +353,10 @@ wcFrame.prototype = {
     this.$frame.append($tempCenter);
     this.$center.children().appendTo($tempCenter);
 
-    var $tabList = $('<ul class="wcPanelTabBar">');
-    this.$title.append($tabList);
-
     var self = this;
     for (var i = 0; i < this._panelList.length; ++i) {
-      var $tab = $('<li><span id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</span></li>');
-      $tabList.append($tab);
+      var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
+      this.$title.append($tab);
 
       var $tabContent = $('<div class="wcPanelTabContent" id="' + i + '">');
       this.$center.append($tabContent);
@@ -371,10 +366,10 @@ wcFrame.prototype = {
       if (this._curTab !== i) {
         $tabContent.addClass('wcPanelTabContentHidden');
       } else {
-        $tab.find('span').addClass('wcPanelTabActive');
+        $tab.addClass('wcPanelTabActive');
       }
 
-      $tab.find('span').on('mousedown', function(event) {
+      $tab.on('mousedown', function(event) {
         var index = parseInt($(this).attr('id'));
         self.panel(index);
       });

@@ -41,7 +41,7 @@
             var $restoreButton = $('<button style="position:absolute;right:10px;top:50px;">Restore Layout</button>');
             myPanel.layout().addItem($saveButton);
             myPanel.layout().addItem($restoreButton);
-            myPanel.layout().addItem($('<div style="position:absolute;width:200px;height:20px;left:10px;top:10px;background-color:darkgray;text-align:center;" class="testMenu">Custom Context Menu here</div>'));
+            myPanel.layout().addItem($('<div style="position:absolute;width:300px;height:20px;left:10px;top:10px;background-color:darkgray;text-align:center;" class="testMenu">Custom Context Menu here</div>'));
 
             var saveTimer;
             $restoreButton.attr('disabled', layoutConfiguration? false: true);
@@ -68,7 +68,7 @@
             });
           }, true);
 
-          myDocker.registerPanelType('Panel 1', function(myPanel) {
+          myDocker.registerPanelType('Panel Cells', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
             myPanel.layout().addItem($('<div style="text-align:center">This is a panel.</div>'), 1, 0);
             myPanel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
@@ -77,16 +77,16 @@
             myPanel.size(200, 200);
           });
 
-          myDocker.registerPanelType('Panel 2', function(myPanel) {
+          myDocker.registerPanelType('Dock Me', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">Each panel can be docked anywhere.<br>Just drag me by my title bar to a new dock position.</div>'));
             myPanel.size(400, 400);
           });
 
-          myDocker.registerPanelType('Panel 3', function(myPanel) {
+          myDocker.registerPanelType('Creation Panel', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">New (and even duplicate) panels can be created by right clicking at the location you wish the new panel to go and using the context menu.</div>'));
           });
 
-          myDocker.registerPanelType('Panel 4', function(myPanel) {
+          myDocker.registerPanelType('Floating Panels', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">Floating panels can move freely.<br>Drag me by my title bar.</div>'));
 
             var $dockMe = $('<div style="text-align:center"><b>To dock me</b>, drag me by the tab you wish to dock, or dock the entire frame by dragging the title bar with the middle mouse.</div>');
@@ -106,7 +106,7 @@
             });
           });
 
-          myDocker.registerPanelType('Panel 5', function(myPanel) {
+          myDocker.registerPanelType('Reaction Panel', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center"></div>'));
 
             var $attachInfo = $('<div style="text-align:center">I react when docked</div>');
@@ -188,23 +188,40 @@
             });
           });
 
-          myDocker.registerPanelType('Panel 6', function(myPanel) {
+          myDocker.registerPanelType('Tabbed Panel', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">I should start out as a second tab to a panel frame, but can be moved elsewhere like the others.</div>'));
           });
 
+          myDocker.registerPanelType('Memory Panel', function(myPanel) {
+            var $spinner = $('<input type="number" value="0"/>');
+            var $info = $('<div style="text-align:center">I will remember this number when the layout is remembered:</div>');
+            $info.append($spinner);
+
+            myPanel.layout().addItem($info);
+
+            myPanel.on(wcDocker.EVENT_SAVE_LAYOUT, function(myPanel, data) {
+              data.value = $spinner.val();
+            });
+
+            myPanel.on(wcDocker.EVENT_RESTORE_LAYOUT, function(myPanel, data) {
+              $spinner.val(data.value);
+            });
+          });
+
           myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
-          var panel1 = myDocker.addPanel('Panel 1', wcDocker.DOCK_LEFT, false);
-          var panel2 = myDocker.addPanel('Panel 2', wcDocker.DOCK_RIGHT, false);
-          myDocker.addPanel('Panel 3', wcDocker.DOCK_BOTTOM, false, panel2);
-          myDocker.addPanel('Panel 4', wcDocker.DOCK_FLOAT, false);
-          myDocker.addPanel('Panel 5', wcDocker.DOCK_BOTTOM, false, panel2);
-          myDocker.addPanel('Panel 6', wcDocker.DOCK_BOTTOM, true, panel1);
+          var panel1 = myDocker.addPanel('Panel Cells', wcDocker.DOCK_LEFT, false);
+          var panel2 = myDocker.addPanel('Dock Me', wcDocker.DOCK_RIGHT, false);
+          myDocker.addPanel('Creation Panel', wcDocker.DOCK_BOTTOM, false, panel2);
+          myDocker.addPanel('Floating Panels', wcDocker.DOCK_FLOAT, false);
+          myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, false, panel2);
+          myDocker.addPanel('Tabbed Panel', wcDocker.DOCK_BOTTOM, true, panel1);
+          myDocker.addPanel('Memory Panel', wcDocker.DOCK_BOTTOM, false, panel1);
 
           // Setup our context menus.
           myDocker.basicMenu('.testMenu', [
-            {name: 'option1', callback: function(key, opts){alert(key);}},
-            {name: 'option2', callback: function(key, opts){alert(key);}},
-            {name: 'option3', callback: function(key, opts){alert(key);}},
+            {name: 'customMenu1', callback: function(key, opts){alert(key);}},
+            {name: 'customMenu2', callback: function(key, opts){alert(key);}},
+            {name: 'customMenu3', callback: function(key, opts){alert(key);}},
           ]);
         }
       });
