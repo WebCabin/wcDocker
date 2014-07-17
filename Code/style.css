@@ -196,9 +196,9 @@ html, body {
 
 .wcPanelTab {
   color: #42454a;
-  background-color: #AAA;
+  background-color: #CCC;
   border: 1px solid #555;
-  border-radius: 5px 5px 0px 0px;
+  border-radius: 2px 2px 0px 0px;
   border-bottom: 0px;
   margin-right: 2px;
   margin-top: 2px;
@@ -206,11 +206,11 @@ html, body {
   vertical-align: top;
   position: relative;
   display: inline-block;
-  -webkit-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
-  -moz-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
-  -ms-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
-  -o-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
-  box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
+  /*-webkit-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);*/
+  /*-moz-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);*/
+  /*-ms-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);*/
+  /*-o-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);*/
+  /*box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);*/
   padding-left: 2px;
   padding-right: 2px;
   padding-bottom: 0px;
@@ -218,17 +218,17 @@ html, body {
 }
 
 .wcPanelTab:hover {
-  background-color: #CCC;
+  background-color: #DDD;
 }
 
 .wcPanelTabActive {
   color: #000;
-  background-color: #888;
+  background-color: #999;
   font-weight: bold;
 }
 
 .wcPanelTabActive:hover {
-  background-color: #AAA;
+  background-color: #AFAFAF;
 }
 
 .wcPanelTabContent {
