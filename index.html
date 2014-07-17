@@ -24,6 +24,8 @@
         var myDocker = new wcDocker(document.body);
         if (myDocker) {
 
+          var $themeSelector = $('<div style="position:absolute;left:0px;top:50px;">Theme: <select><option value="Default">Default</option><option value="bigRed">Big Red</option></select></div>');
+
           myDocker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
           
           var layoutConfiguration;
@@ -42,6 +44,15 @@
             myPanel.layout().addItem($saveButton);
             myPanel.layout().addItem($restoreButton);
             myPanel.layout().addItem($('<div style="position:absolute;width:300px;height:20px;left:10px;top:10px;background-color:darkgray;text-align:center;" class="testMenu">Custom Context Menu here</div>'));
+            myPanel.layout().addItem($themeSelector);
+
+            $themeSelector.change(function() {
+              var cur = $themeSelector.find('option:selected').val();
+              $('#theme').remove();
+              if (cur !== 'Default') {
+                $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/bigRed.css"/>'));
+              }
+            });
 
             var saveTimer;
             $restoreButton.attr('disabled', layoutConfiguration? false: true);
