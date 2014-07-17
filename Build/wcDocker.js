@@ -40,7 +40,7 @@ function wcDocker(container) {
   this._draggingFrameTab = false;
   this._ghost = false;
 
-  this._init();
+  this.__init();
 };
 
 wcDocker.DOCK_FLOAT  = 'float';
@@ -56,7 +56,15 @@ wcDocker.EVENT_MOVED    = 'moved';
 wcDocker.EVENT_RESIZED  = 'resized';
 
 wcDocker.prototype = {
-  _init: function() {
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  __init: function() {
     var panel = new wcPanel('');
     panel.closeable(false);
     panel.layout().$elem.addClass('wcCenter');
@@ -67,7 +75,7 @@ wcDocker.prototype = {
     this._root = this._center;
 
     var self = this;
-    $(window).resize(self._resize.bind(self));
+    $(window).resize(self.__resize.bind(self));
     
     // Setup our context menus.
     $.contextMenu({
@@ -156,10 +164,10 @@ wcDocker.prototype = {
         }
 
         if (!myFrame._isFloating && myFrame.panel().moveable()) {
-          var rect = myFrame.rect();
+          var rect = myFrame.__rect();
           self._ghost = new wcGhost(rect, mouse);
           self._ghost.$ghost.hide();
-          myFrame.checkAnchorDrop(mouse, false, self._ghost, true);
+          myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
         }
 
         return {
@@ -171,7 +179,7 @@ wcDocker.prototype = {
             } else if (key === 'Detach Panel') {
               self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
             } else if (key === 'Flash Panel') {
-              self._focus(myFrame, true);
+              self.__focus(myFrame, true);
             } else {
               if (myFrame && self._ghost) {
                 var anchor = self._ghost.anchor();
@@ -184,7 +192,7 @@ wcDocker.prototype = {
             },
             hide: function(opt) {
               if (self._ghost) {
-                self._ghost.destroy();
+                self._ghost.__destroy();
                 self._ghost = false;
               }
             },
@@ -236,7 +244,7 @@ wcDocker.prototype = {
       event.returnValue = false;
     });
 
-    // Close button on frames should destroy those panels.
+    // Close button on frames should __destroy those panels.
     $('body').on('click', '.wcFrameCloseButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
@@ -248,7 +256,7 @@ wcDocker.prototype = {
       if (frame) {
         var panel = frame.panel();
         self.removePanel(panel);
-        self._update();
+        self.__update();
       }
     });
 
@@ -282,24 +290,24 @@ wcDocker.prototype = {
             x: event.clientX,
             y: event.clientY,
           };
-          self._draggingFrame.anchorMove(mouse);
+          self._draggingFrame.__anchorMove(mouse);
 
           if ($(event.target).hasClass('wcPanelTab')) {
             self._draggingFrameTab = event.target;
           }
 
-          // If the window is able to be docked, give it a dark shadow tint and
+          // If the window is able to be docked, give it a dark __shadow tint and
           // begin the movement process
           if (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab) {
-            var rect = self._draggingFrame.rect();
+            var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse);
-            self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost, true);
-            // self._draggingFrame.shadow(true);
+            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
+            // self._draggingFrame.__shadow(true);
 
             // Also fade out all floating windows as they are not dockable.
             // for (var a = 0; a < self._frameList.length; ++a) {
             //   if (self._frameList[a]._isFloating) {
-            //     self._frameList[a].shadow(true);
+            //     self._frameList[a].__shadow(true);
             //   }
             // }
           }
@@ -307,7 +315,7 @@ wcDocker.prototype = {
         }
       }
       if (self._draggingFrame) {
-        self._focus(self._draggingFrame);
+        self.__focus(self._draggingFrame);
       }
       return true;
     });
@@ -319,7 +327,7 @@ wcDocker.prototype = {
       }
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$center[0] == this) {
-          self._focus(self._frameList[i]);
+          self.__focus(self._frameList[i]);
           break;
         }
       }
@@ -370,7 +378,7 @@ wcDocker.prototype = {
         }
       }
       if (self._draggingFrame) {
-        self._focus(self._draggingFrame);
+        self.__focus(self._draggingFrame);
       }
       return true;
     });
@@ -385,8 +393,8 @@ wcDocker.prototype = {
           x: event.clientX,
           y: event.clientY,
         };
-        self._draggingSplitter.moveBar(mouse);
-        self._draggingSplitter._update();
+        self._draggingSplitter.__moveBar(mouse);
+        self._draggingSplitter.__update();
       } else if (self._draggingFrameSizer) {
         var mouse = {
           x: event.clientX,
@@ -397,8 +405,8 @@ wcDocker.prototype = {
         mouse.x += offset.left;
         mouse.y += offset.top;
 
-        self._draggingFrame.resize(self._draggingFrameSizer, mouse);
-        self._draggingFrame._update();
+        self._draggingFrame.__resize(self._draggingFrameSizer, mouse);
+        self._draggingFrame.__update();
       } else if (self._draggingFrame) {
         var mouse = {
           x: event.clientX,
@@ -406,41 +414,41 @@ wcDocker.prototype = {
         };
 
         if (self._ghost) {
-          self._ghost.move(mouse);
+          self._ghost.__move(mouse);
 
           var forceFloat = !(self._draggingFrame._isFloating || event.which === 1);
           var found = false;
 
           // Check anchoring with self.
-          if (!self._draggingFrame.checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab)) {
-            self._draggingFrame.shadow(true);
+          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab)) {
+            self._draggingFrame.__shadow(true);
             if (!forceFloat) {
               for (var i = 0; i < self._frameList.length; ++i) {
                 if (self._frameList[i] !== self._draggingFrame) {
-                  if (self._frameList[i].checkAnchorDrop(mouse, false, self._ghost, true)) {
-                    // self._draggingFrame.shadow(true);
+                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true)) {
+                    // self._draggingFrame.__shadow(true);
                     return;
                   }
                 }
               }
 
-              if (self._center.checkAnchorDrop(mouse, false, self._ghost, true)) {
-                // self._draggingFrame.shadow(true);
+              if (self._center.__checkAnchorDrop(mouse, false, self._ghost, true)) {
+                // self._draggingFrame.__shadow(true);
                 return;
               }
             }
 
             self._ghost.anchor(mouse, null);
           } else {
-            self._draggingFrame.shadow(false);
+            self._draggingFrame.__shadow(false);
             if (self._draggingFrameTab && $(event.target).hasClass('wcPanelTab') &&
                 self._draggingFrameTab !== event.target) {
-              self._draggingFrameTab = self._draggingFrame.tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($(event.target).attr('id')));
+              self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($(event.target).attr('id')));
             }
           }
         } else if (!self._draggingFrameTab) {
-          self._draggingFrame.move(mouse);
-          self._draggingFrame._update();
+          self._draggingFrame.__move(mouse);
+          self._draggingFrame.__update();
         }
       }
       return true;
@@ -454,7 +462,7 @@ wcDocker.prototype = {
       self.$container.removeClass('wcDisableSelection');
       if (self._draggingFrame) {
         for (var i = 0; i < self._frameList.length; ++i) {
-          self._frameList[i].shadow(false);
+          self._frameList[i].__shadow(false);
         }
       }
 
@@ -477,18 +485,16 @@ wcDocker.prototype = {
             self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_BOTTOM, true, panel);
           }
 
-          var frame = panel.parent();
+          var frame = panel._parent;
           if (frame instanceof wcFrame) {
-            frame.pos(mouse.x, mouse.y + self._ghost.rect().h/2 - 10, true);
+            frame.pos(mouse.x, mouse.y + self._ghost.__rect().h/2 - 10, true);
             frame.panel(index);
           }
 
-          // frame._pos.x -= self._ghost.rect().x
-          // frame._pos.y -= self._ghost.rect().y
-          frame._size.x = self._ghost.rect().w;
-          frame._size.y = self._ghost.rect().h;
+          frame._size.x = self._ghost.__rect().w;
+          frame._size.y = self._ghost.__rect().h;
 
-          frame._update();
+          frame.__update();
         } else if (!anchor.self) {
           var index = self._draggingFrame._curTab;
           if (!self._draggingFrameTab) {
@@ -496,7 +502,7 @@ wcDocker.prototype = {
           }
           var panel;
           if (anchor.item) {
-            panel = anchor.item.parent();
+            panel = anchor.item._parent;
           }
           // If we are dragging a tab to split its own container, find another
           // tab item within the same frame and split from there.
@@ -509,7 +515,7 @@ wcDocker.prototype = {
               }
             }
           }
-          var frame = panel.parent();
+          var frame = panel._parent;
           if (frame instanceof wcFrame) {
             index = index + frame._panelList.length;
           }
@@ -520,12 +526,12 @@ wcDocker.prototype = {
             self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_BOTTOM, true, panel);
           }
 
-          var frame = panel.parent();
+          var frame = panel._parent;
           if (frame instanceof wcFrame) {
             frame.panel(index);
           }
         }
-        self._ghost.destroy();
+        self._ghost.__destroy();
         self._ghost = false;
       }
 
@@ -538,26 +544,26 @@ wcDocker.prototype = {
   },
 
   // Updates the sizing of all panels inside this window.
-  _update: function() {
+  __update: function() {
     if (this._root) {
-      this._root._update();
+      this._root.__update();
     }
 
     for (var i = 0; i < this._floatingList.length; ++i) {
-      this._floatingList[i]._update();
+      this._floatingList[i].__update();
     }
   },
 
   // On window resized event.
-  _resize: function(event) {
-    this._update();
+  __resize: function(event) {
+    this.__update();
   },
 
   // Brings a floating window to the top.
   // Params:
   //    frame     The frame to focus.
   //    flash     Whether to flash the frame.
-  _focus: function(frame, flash) {
+  __focus: function(frame, flash) {
     if (frame._isFloating) {
       // frame.$frame.remove();
       var posList = [];
@@ -570,11 +576,11 @@ wcDocker.prototype = {
       }
     }
 
-    frame._focus(flash)
+    frame.__focus(flash)
   },
 
   // For restore, creates the appropriate object type.
-  _create: function(data, parent, $container) {
+  __create: function(data, parent, $container) {
     switch (data.type) {
       case 'wcSplitter':
         var splitter = new wcSplitter($container, parent, data.horizontal);
@@ -591,15 +597,15 @@ wcDocker.prototype = {
           }
         } else {
           frame = this._center;
-          frame.container($container);
-          frame.parent(parent);
+          frame.__container($container);
+          frame._parent = parent;
         }
         return frame;
 
       case 'wcPanel':
         var panel = new wcPanel(data.panelType);
-        panel.container($container);
-        panel.parent(parent);
+        panel.__container($container);
+        panel._parent = parent;
         for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
           if (this._dockPanelTypeList[i].name === data.panelType) {
             this._dockPanelTypeList[i].create(panel);
@@ -619,7 +625,7 @@ wcDocker.prototype = {
   //    location      The desired location for the panel.
   //    parentPanel  An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
-  _addPanelAlone: function(panel, location, parentPanel) {
+  __addPanelAlone: function(panel, location, parentPanel) {
     // Floating windows need no placement.
     if (location === wcDocker.DOCK_FLOAT) {
       var frame = new wcFrame(this.$container, this, true);
@@ -631,9 +637,9 @@ wcDocker.prototype = {
     }
 
     if (parentPanel) {
-      var parentFrame = parentPanel.parent();
+      var parentFrame = parentPanel._parent;
       if (parentFrame instanceof wcFrame) {
-        var parentSplitter = parentFrame.parent();
+        var parentSplitter = parentFrame._parent;
         if (parentSplitter instanceof wcSplitter) {
           var splitter;
           var left  = parentSplitter.pane(0);
@@ -674,7 +680,7 @@ wcDocker.prototype = {
       this._root = splitter;
     } else {
       // The parent of the center should be a splitter, we need to insert another one in between.
-      var parent = this._center.parent();
+      var parent = this._center._parent;
       if (parent instanceof wcSplitter) {
         var left  = parent.pane(0);
         var right = parent.pane(1);
@@ -696,11 +702,11 @@ wcDocker.prototype = {
       if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
         splitter.pane(0, frame);
         splitter.pane(1, this._center);
-        splitter.findBestPos();
+        splitter.__findBestPos();
       } else {
         splitter.pane(0, this._center);
         splitter.pane(1, frame);
-        splitter.findBestPos();
+        splitter.__findBestPos();
       }
 
       frame.addPanel(panel);
@@ -715,9 +721,9 @@ wcDocker.prototype = {
   //    location      The desired location for the panel.
   //    parentPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
-  _addPanelGrouped: function(panel, location, parentPanel) {
+  __addPanelGrouped: function(panel, location, parentPanel) {
     if (parentPanel) {
-      var frame = parentPanel.parent();
+      var frame = parentPanel._parent;
       if (frame instanceof wcFrame) {
         frame.addPanel(panel);
         return;
@@ -731,7 +737,7 @@ wcDocker.prototype = {
         frame = this._floatingList[this._floatingList.length-1];
       }
       if (!frame) {
-        this._addPanelAlone(panel, location);
+        this.__addPanelAlone(panel, location);
         return;
       }
       frame.addPanel(panel);
@@ -740,10 +746,10 @@ wcDocker.prototype = {
 
     var needsHorizontal = location !== wcDocker.DOCK_BOTTOM;
 
-    function __iterateParents(item) {
+    function ___iterateParents(item) {
       // The last item will always be the center.
       if (item === this._center) {
-        this._addPanelAlone(panel, location);
+        this.__addPanelAlone(panel, location);
         return;
       }
 
@@ -770,14 +776,14 @@ wcDocker.prototype = {
 
         // If it isn't, iterate to which ever pane is not a dock panel.
         if (!(left instanceof wcFrame)) {
-          __iterateParents.call(this, left);
+          ___iterateParents.call(this, left);
         } else {
-          __iterateParents.call(this, right);
+          ___iterateParents.call(this, right);
         }
       }
     };
 
-    __iterateParents.call(this, this._root);
+    ___iterateParents.call(this, this._root);
   },
 
   // Registers a new docking panel type to be used later.
@@ -828,15 +834,15 @@ wcDocker.prototype = {
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
         var panel = new wcPanel(typeName);
-        panel.container(this.$transition);
+        panel.__container(this.$transition);
         this._dockPanelTypeList[i].create(panel);
 
         if (allowGroup) {
-          this._addPanelGrouped(panel, location, parentPanel);
+          this.__addPanelGrouped(panel, location, parentPanel);
         } else {
-          this._addPanelAlone(panel, location, parentPanel);
+          this.__addPanelAlone(panel, location, parentPanel);
         }
-        this._update();
+        this.__update();
         return panel;
       }
     }
@@ -854,7 +860,7 @@ wcDocker.prototype = {
       return false;
     }
 
-    var parentFrame = panel.parent();
+    var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.removePanel(panel)) {
@@ -867,9 +873,9 @@ wcDocker.prototype = {
           this._frameList.splice(index, 1);
         }
 
-        var parentSplitter = parentFrame.parent();
+        var parentSplitter = parentFrame._parent;
         if (parentSplitter instanceof wcSplitter) {
-          parentSplitter.removeChild(parentFrame);
+          parentSplitter.__removeChild(parentFrame);
 
           var other;
           if (parentSplitter.pane(0)) {
@@ -881,21 +887,21 @@ wcDocker.prototype = {
           }
 
           // Keep the panel in a hidden transition container so as to not
-          // destroy any event handlers that may be on it.
-          other.container(this.$transition);
-          other.parent(null);
+          // __destroy any event handlers that may be on it.
+          other.__container(this.$transition);
+          other._parent = null;
 
           index = this._splitterList.indexOf(parentSplitter);
           if (index !== -1) {
             this._splitterList.splice(index, 1);
           }
 
-          parent = parentSplitter.parent();
-          parentContainer = parentSplitter.container();
-          parentSplitter.destroy();
+          parent = parentSplitter._parent;
+          parentContainer = parentSplitter.__container();
+          parentSplitter.__destroy();
 
           if (parent instanceof wcSplitter) {
-            parent.removeChild(parentSplitter);
+            parent.__removeChild(parentSplitter);
             if (!parent.pane(0)) {
               parent.pane(0, other);
             } else {
@@ -903,14 +909,14 @@ wcDocker.prototype = {
             }
           } else if (parent === this) {
             this._root = other;
-            other.parent(this);
-            other.container(parentContainer);
+            other._parent = this;
+            other.__container(parentContainer);
           }
-          this._update();
+          this.__update();
         }
-        parentFrame.destroy();
+        parentFrame.__destroy();
       }
-      panel.destroy();
+      panel.__destroy();
       return true;
     }
     return false;
@@ -932,19 +938,19 @@ wcDocker.prototype = {
   //    false         The panel type does not exist.
   movePanel: function(panel, location, allowGroup, parentPanel) {
     var $elem = panel.$container;
-    if (panel.parent() instanceof wcFrame) {
-      $elem = panel.parent().$frame;
+    if (panel._parent instanceof wcFrame) {
+      $elem = panel._parent.$frame;
     }
     var offset = $elem.offset();
     var width  = $elem.width();
     var height = $elem.height();
 
     var floating = false;
-    if (panel.parent() instanceof wcFrame) {
-      floating = panel.parent()._isFloating;
+    if (panel._parent instanceof wcFrame) {
+      floating = panel._parent._isFloating;
     }
 
-    var parentFrame = panel.parent();
+    var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
 
       // Remove the panel from the frame.
@@ -955,9 +961,9 @@ wcDocker.prototype = {
           }
 
           // Keep the panel in a hidden transition container so as to not
-          // destroy any event handlers that may be on it.
-          panel.container(this.$transition);
-          panel.parent(null);
+          // __destroy any event handlers that may be on it.
+          panel.__container(this.$transition);
+          panel._parent = null;
 
           parentFrame._panelList.splice(i, 1);
           break;
@@ -968,7 +974,7 @@ wcDocker.prototype = {
         parentFrame._curTab = 0;
       }
 
-      parentFrame._updateTabs();
+      parentFrame.__updateTabs();
       
       // If no more panels remain in this frame, remove the frame.
       if (parentFrame._panelList.length === 0) {
@@ -981,9 +987,9 @@ wcDocker.prototype = {
           this._frameList.splice(index, 1);
         }
 
-        var parentSplitter = parentFrame.parent();
+        var parentSplitter = parentFrame._parent;
         if (parentSplitter instanceof wcSplitter) {
-          parentSplitter.removeChild(parentFrame);
+          parentSplitter.__removeChild(parentFrame);
 
           var other;
           if (parentSplitter.pane(0)) {
@@ -995,21 +1001,21 @@ wcDocker.prototype = {
           }
 
           // Keep the item in a hidden transition container so as to not
-          // destroy any event handlers that may be on it.
-          other.container(this.$transition);
-          other.parent(null);
+          // __destroy any event handlers that may be on it.
+          other.__container(this.$transition);
+          other._parent = null;
 
           index = this._splitterList.indexOf(parentSplitter);
           if (index !== -1) {
             this._splitterList.splice(index, 1);
           }
 
-          parent = parentSplitter.parent();
-          parentContainer = parentSplitter.container();
-          parentSplitter.destroy();
+          parent = parentSplitter._parent;
+          parentContainer = parentSplitter.__container();
+          parentSplitter.__destroy();
 
           if (parent instanceof wcSplitter) {
-            parent.removeChild(parentSplitter);
+            parent.__removeChild(parentSplitter);
             if (!parent.pane(0)) {
               parent.pane(0, other);
             } else {
@@ -1017,23 +1023,23 @@ wcDocker.prototype = {
             }
           } else if (parent === this) {
             this._root = other;
-            other.parent(this);
-            other.container(parentContainer);
+            other._parent = this;
+            other.__container(parentContainer);
           }
-          this._update();
+          this.__update();
         }
-        parentFrame.destroy();
+        parentFrame.__destroy();
       }
     }
 
     panel.size(width, height);
     if (allowGroup) {
-      this._addPanelGrouped(panel, location, parentPanel);
+      this.__addPanelGrouped(panel, location, parentPanel);
     } else {
-      this._addPanelAlone(panel, location, parentPanel);
+      this.__addPanelAlone(panel, location, parentPanel);
     }
 
-    var frame = panel.parent();
+    var frame = panel._parent;
     if (frame instanceof wcFrame && frame.panel() === panel) {
       frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
 
@@ -1048,7 +1054,7 @@ wcDocker.prototype = {
 
     panel.trigger(wcDocker.EVENT_MOVED);
 
-    this._update();
+    this.__update();
     return panel;
   },
 
@@ -1081,7 +1087,7 @@ wcDocker.prototype = {
       var frame = this._frameList[i];
       for (var a = 0; a < frame._panelList.length; ++a) {
         var panel = frame._panelList[a];
-        panel._trigger(eventName, data);
+        panel.__trigger(eventName, data);
       }
     }
   },
@@ -1126,10 +1132,10 @@ wcDocker.prototype = {
 
     data.floating = [];
     for (var i = 0; i < this._floatingList.length; ++i) {
-      data.floating.push(this._floatingList[i]._save());
+      data.floating.push(this._floatingList[i].__save());
     }
 
-    data.root = this._root._save();
+    data.root = this._root.__save();
     return data;
   },
 
@@ -1137,22 +1143,22 @@ wcDocker.prototype = {
   restore: function(data) {
     this.clear();
 
-    this._root = this._create(data.root, this, this.$container);
-    this._root._restore(data.root, this);
+    this._root = this.__create(data.root, this, this.$container);
+    this._root.__restore(data.root, this);
 
     for (var i = 0; i < data.floating.length; ++i) {
-      var panel = this._create(data.floating[i], this, this.$container);
-      panel._restore(data.floating[i], this);
+      var panel = this.__create(data.floating[i], this, this.$container);
+      panel.__restore(data.floating[i], this);
     }
 
-    this._update();
+    this.__update();
   },
 
   // Clears out all panels.
   clear: function() {
     this._root = this._center;
 
-    var parent = this._center.parent();
+    var parent = this._center._parent;
     if (parent instanceof wcSplitter) {
 
       if (parent.pane(0) === this._center) {
@@ -1162,15 +1168,15 @@ wcDocker.prototype = {
       }
     }
 
-    this._center.container(this.$transition);
-    this._center.parent(this);
+    this._center.__container(this.$transition);
+    this._center._parent = this;
 
     for (var i = 0; i < this._splitterList.length; ++i) {
-      this._splitterList[i].destroy();
+      this._splitterList[i].__destroy();
     }
 
     for (var i = 0; i < this._frameList.length; ++i) {
-      this._frameList[i].destroy();
+      this._frameList[i].__destroy();
     }
 
     while (this._frameList.length) this._frameList.pop();
@@ -1188,55 +1194,13 @@ function wcGhost(rect, mouse) {
   this._anchorMouse = false;
   this._anchor = null;
 
-  this._init(rect, mouse);
+  this.__init(rect, mouse);
 };
 
 wcGhost.prototype = {
-  _init: function(rect, mouse) {
-    this.$ghost = $('<div class="wcGhost">')
-      .css('opacity', 0)
-      .css('top', rect.y + 'px')
-      .css('left', rect.x + 'px')
-      .css('width', rect.w + 'px')
-      .css('height', rect.h + 'px');
-
-    this._anchorMouse = {
-      x: rect.x - mouse.x,
-      y: rect.y - mouse.y,
-    };
-
-    this._rect = {
-      x: -this._anchorMouse.x,
-      y: -this._anchorMouse.y,
-      w: rect.w,
-      h: rect.h,
-    };
-
-    this.anchor(mouse, rect);
-
-    $('body').append(this.$ghost);
-  },
-
-  // Gets the original size of the moving widget.
-  rect: function() {
-    return this._rect;
-  },
-
-  // Updates the size of the layout.
-  move: function(mouse) {
-    if (this._anchor) {
-      return;
-    }
-
-    var x = parseInt(this.$ghost.css('left'));
-    var y = parseInt(this.$ghost.css('top'));
-
-    x = mouse.x + this._anchorMouse.x;
-    y = mouse.y + this._anchorMouse.y;
-
-    this.$ghost.css('left', x + 'px');
-    this.$ghost.css('top',  y + 'px');
-  },
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Change the ghost's anchor.
   // Params:
@@ -1304,7 +1268,59 @@ wcGhost.prototype = {
     }, 200);
   },
 
-  destroy: function() {
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function(rect, mouse) {
+    this.$ghost = $('<div class="wcGhost">')
+      .css('opacity', 0)
+      .css('top', rect.y + 'px')
+      .css('left', rect.x + 'px')
+      .css('width', rect.w + 'px')
+      .css('height', rect.h + 'px');
+
+    this._anchorMouse = {
+      x: rect.x - mouse.x,
+      y: rect.y - mouse.y,
+    };
+
+    this._rect = {
+      x: -this._anchorMouse.x,
+      y: -this._anchorMouse.y,
+      w: rect.w,
+      h: rect.h,
+    };
+
+    this.anchor(mouse, rect);
+
+    $('body').append(this.$ghost);
+  },
+
+  // Gets the original size of the moving widget.
+  __rect: function() {
+    return this._rect;
+  },
+
+  // Updates the size of the layout.
+  __move: function(mouse) {
+    if (this._anchor) {
+      return;
+    }
+
+    var x = parseInt(this.$ghost.css('left'));
+    var y = parseInt(this.$ghost.css('top'));
+
+    x = mouse.x + this._anchorMouse.x;
+    y = mouse.y + this._anchorMouse.y;
+
+    this.$ghost.css('left', x + 'px');
+    this.$ghost.css('top',  y + 'px');
+  },
+
+  // Exorcise the ghost.
+  __destroy: function() {
     this.$ghost.stop().animate({
       opacity: 0.0,
     }, {
@@ -1318,28 +1334,97 @@ wcGhost.prototype = {
 /*
   Handles the contents of a panel.
 */
-function wcLayout($container, parent) {
-  this.$container = $container;
+function wcLayout(container, parent) {
+  this.$container = $(container);
   this._parent = parent;
 
   this._grid = [];
   this.$elem = null;
 
-  this._init();
+  this.__init();
 };
 
 wcLayout.prototype = {
-  _init: function() {
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Adds an item into the layout, expanding the grid
+  // size if necessary.
+  // Params:
+  //    item        The DOM element to add.
+  //    x, y        The grid coordinates to place the item.
+  //    w, h        If supplied, will stretch the item among
+  //                multiple grid elements.
+  // Returns:
+  //    <td>        On success, returns the <td> dom element.
+  //    false       A failure happened, most likely cells could not be merged.
+  addItem: function(item, x, y, w, h) {
+    if (typeof x === 'undefined' || x < 0) {
+      x = 0;
+    }
+    if (typeof y === 'undefined' || y < 0) {
+      y = 0;
+    }
+    if (typeof w === 'undefined' || w <= 0) {
+      w = 1;
+    }
+    if (typeof h === 'undefined' || h <= 0) {
+      h = 1;
+    }
+
+    this.__resizeGrid(x + w - 1, y + h - 1);
+    if (!this.__mergeGrid(x, y, w, h)) {
+      return false;
+    }
+
+    this._grid[y][x].$el.append($(item));
+    return this._grid[y][x].$el;
+  },
+
+  // Clears the layout.
+  clear: function() {
+    var showGrid = this.showGrid();
+    this.__init();
+    this.showGrid(showGrid);
+    this._grid = [];
+  },
+
+  // Gets, or Sets the visible status of the layout grid.
+  // Params:
+  //    enabled     If supplied, will set the grid shown or hidden.
+  // Returns:
+  //    bool        The current visibility of the grid.
+  showGrid: function(enabled) {
+    if (typeof enabled === 'undefined') {
+      return this.$elem.hasClass('wcLayoutGrid');
+    }
+
+    this.$elem.toggleClass('wcLayoutGrid', enabled);
+    return this.$elem.hasClass('wcLayoutGrid');
+  },
+  
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function() {
     this.$elem = $('<table class="wcLayout wcWide wcTall"></table>');
     this.$elem.append($('<tbody></tbody>'));
-    this.container(this.$container);
+    this.__container(this.$container);
+  },
+
+  // Updates the size of the layout.
+  __update: function() {
   },
 
   // Resizes the grid to fit a given position.
   // Params:
   //    width     The width to expand to.
   //    height    The height to expand to.
-  _resizeGrid: function(width, height) {
+  __resizeGrid: function(width, height) {
     this.$elem.find('tbody').children().remove();
 
     for (var y = 0; y <= height; ++y) {
@@ -1384,7 +1469,7 @@ wcLayout.prototype = {
   //    true      Cells were merged succesfully.
   //    false     Merge failed, either because the grid position was out of bounds
   //              or some of the cells were already merged.
-  _mergeGrid: function(x, y, w, h) {
+  __mergeGrid: function(x, y, w, h) {
     if (this._grid.length <= y || this._grid[y].length <= x) {
       return false;
     }
@@ -1424,74 +1509,11 @@ wcLayout.prototype = {
     return true;
   },
 
-  // Updates the size of the layout.
-  _update: function() {
-  },
-
-  // Adds an item into the layout, expanding the grid
-  // size if necessary.
-  // Params:
-  //    item        The DOM element to add.
-  //    x, y        The grid coordinates to place the item.
-  //    w, h        If supplied, will stretch the item among
-  //                multiple grid elements.
-  // Returns:
-  //    <td>        On success, returns the <td> dom element.
-  //    false       A failure happened, most likely cells could not be merged.
-  addItem: function(item, x, y, w, h) {
-    if (typeof x === 'undefined' || x < 0) {
-      x = 0;
-    }
-    if (typeof y === 'undefined' || y < 0) {
-      y = 0;
-    }
-    if (typeof w === 'undefined' || w <= 0) {
-      w = 1;
-    }
-    if (typeof h === 'undefined' || h <= 0) {
-      h = 1;
-    }
-
-    this._resizeGrid(x + w - 1, y + h - 1);
-    if (!this._mergeGrid(x, y, w, h)) {
-      return false;
-    }
-
-    this._grid[y][x].$el.append($(item));
-    return this._grid[y][x].$el;
-  },
-
-  // Removes an item from the layout
-  removeItem: function(item, x, y) {
-  },
-
-  // Clears the layout.
-  clear: function() {
-    var showGrid = this.showGrid();
-    this._init();
-    this.showGrid(showGrid);
-    this._grid = [];
-  },
-
-  // Gets, or Sets the visible status of the layout grid.
-  // Params:
-  //    enabled     If supplied, will set the grid shown or hidden.
-  // Returns:
-  //    bool        The current visibility of the grid.
-  showGrid: function(enabled) {
-    if (typeof enabled === 'undefined') {
-      return this.$elem.hasClass('wcLayoutGrid');
-    }
-
-    this.$elem.toggleClass('wcLayoutGrid', enabled);
-    return this.$elem.hasClass('wcLayoutGrid');
-  },
-
   // Checks if the mouse is in a valid anchor position for nesting another widget.
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
@@ -1642,7 +1664,7 @@ wcLayout.prototype = {
   //    parent              If supplied, sets a new parent for this layout.
   // Returns:
   //    JQuery collection   The current container.
-  container: function($container) {
+  __container: function($container) {
     if (typeof $container === 'undefined') {
       return this.$container;
     }
@@ -1656,24 +1678,10 @@ wcLayout.prototype = {
     return this.$container;
   },
 
-  // Gets, or Sets the parent item for this layout.
-  // Params:
-  //    parent        If supplied, sets a new parent for this layout.
-  // Returns:
-  //    object        The current parent.
-  parent: function(parent) {
-    if (typeof parent === 'undefined') {
-      return this._parent;
-    }
-
-    this._parent = parent;
-    return this._parent;
-  },
-
   // Destroys the layout.
-  destroy: function() {
-    this.container(null);
-    this.parent(null);
+  __destroy: function() {
+    this.__container(null);
+    this._parent = null;
     this.clear();
 
     this.$elem.remove();
@@ -1731,148 +1739,15 @@ function wcPanel(type) {
   this._moveable = true;
   this._closeable = true;
 
-  this._eventList = [];
+  this._events = {};
 
-  this._init();
+  this.__init();
 };
 
 wcPanel.prototype = {
-  _init: function() {
-    this._layout = new wcLayout(this.$container, this);
-  },
-
-  // Saves the current panel configuration into a meta
-  // object that can be used later to restore it.
-  _save: function() {
-    var data = {};
-    data.type = 'wcPanel';
-    data.panelType = this._type;
-    data.title = this._title;
-    data.minSize = {
-      x: this._minSize.x,
-      y: this._minSize.y,
-    };
-    data.maxSize = {
-      x: this._maxSize.x,
-      y: this._maxSize.y,
-    };
-    data.scrollable = {
-      x: this._scrollable.x,
-      y: this._scrollable.y,
-    };
-    data.moveable = this._moveable;
-    data.closeable = this._closeable;
-    return data;
-  },
-
-  // Restores a previously saved configuration.
-  _restore: function(data, docker) {
-    this._title = data.title;
-    this._minSize.x = data.minSize.x;
-    this._minSize.y = data.minSize.y;
-    this._maxSize.x = data.maxSize.x;
-    this._maxSize.y = data.maxSize.y;
-    this._scrollable.x = data.scrollable.x;
-    this._scrollable.y = data.scrollable.y;
-    this._moveable = data.moveable;
-    this._closeable = data.closeable;
-  },
-
-  // Updates the size of the layout.
-  _update: function() {
-    this._layout._update();
-    if (!this.$container) {
-      return;
-    }
-
-    var width   = this.$container.width();
-    var height  = this.$container.height();
-    if (this._actualSize.x !== width || this._actualSize.y !== height) {
-      this._actualSize.x = width;
-      this._actualSize.y = height;
-      this._trigger(wcDocker.EVENT_RESIZED);
-    }
-
-    var offset  = this.$container.offset();
-    if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
-      this._actualPos.x = offset.left;
-      this._actualPos.y = offset.top;
-      this._trigger(wcDocker.EVENT_MOVED);
-    }
-  },
-
-  // Triggers an event of a given type onto this current panel.
-  // Params:
-  //    eventType     The event to trigger.
-  //    data          A custom data object to pass into all handlers.
-  _trigger: function(eventType, data) {
-    for (var i = 0; i < this._eventList.length; ++i) {
-      if (this._eventList[i].name === eventType) {
-        this._eventList[i].handler(this, data);
-      }
-    }
-  },
-
-
-  // Retrieves the bounding rect for this widget.
-  rect: function() {
-    var offset = this.$container.offset();
-    var width = this.$container.width();
-    var height = this.$container.height();
-
-    return {
-      x: offset.left,
-      y: offset.top,
-      w: width,
-      h: height,
-    };
-  },
-
-  // Gets, or Sets a new container for this layout.
-  // Params:
-  //    $container          If supplied, sets a new container for this layout.
-  //    parent              If supplied, sets a new parent for this layout.
-  // Returns:
-  //    JQuery collection   The current container.
-  container: function($container) {
-    if (typeof $container === 'undefined') {
-      return this.$container;
-    }
-
-    this.$container = $container;
-    
-    if (this.$container) {
-      this._layout.container(this.$container);
-    } else {
-      this._layout.container(null);
-    }
-    return this.$container;
-  },
-
-  // Gets, or Sets the parent item for this layout.
-  // Params:
-  //    parent        If supplied, sets a new parent for this layout.
-  // Returns:
-  //    object        The current parent.
-  parent: function(parent) {
-    if (typeof parent === 'undefined') {
-      return this._parent;
-    }
-
-    this._parent = parent;
-    return this._parent;
-  },
-
-  // Destroys this panel.
-  destroy: function() {
-    this._trigger(wcDocker.EVENT_CLOSED);
-
-    this.container(null);
-    this.parent(null);
-    this._layout.destroy();
-    this._layout = null;
-    this.off();
-  },
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Finds the main Docker window.
   docker: function() {
@@ -1902,7 +1777,7 @@ wcPanel.prototype = {
   focus: function(flash) {
     var docker = this.docker();
     if (docker) {
-      docker._focus(this._parent, flash);
+      docker.__focus(this._parent, flash);
     }
   },
 
@@ -1998,7 +1873,7 @@ wcPanel.prototype = {
     if (typeof enabled !== 'undefined') {
       this._closeable = enabled? true: false;
       if (this._parent) {
-        this._parent._update();
+        this._parent.__update();
       }
     }
 
@@ -2018,11 +1893,24 @@ wcPanel.prototype = {
   //    handler       A handler function to be called for the event.
   //                  Params:
   //                    panel   The panel invoking the event.
+  // Returns:
+  //    true          The event was added.
+  //    false         The event failed to add.
   on: function(eventType, handler) {
-    this._eventList.push({
-      name: eventType,
-      handler: handler,
-    });
+    if (!eventType) {
+      return false;
+    }
+
+    if (!this._events[eventType]) {
+      this._events[eventType] = [];
+    }
+
+    if (this._events[eventType].indexOf(handler) !== -1) {
+      return false;
+    }
+
+    this._events[eventType].push(handler);
+    return true;
   },
 
   // Unregisters an event.
@@ -2032,14 +1920,18 @@ wcPanel.prototype = {
   //                  the above type are removed.
   off: function(eventType, handler) {
     if (typeof eventType === 'undefined') {
-      while (this._eventList.length) this._eventList.pop();
+      this._events = {};
       return;
     } else {
-      for (var i = 0; i < this._eventList.length; ++i) {
-        if (this._eventList[i].name === eventType) {
-          if (typeof handler === 'undefined' || this._eventList[i].handler === handler) {
-            this._eventList.splice(i, 1);
-            i--;
+      if (this._events[eventType]) {
+        if (typeof handler === 'undefined') {
+          this._events[eventType] = [];
+        } else {
+          for (var i = 0; i < this._events[eventType].length; ++i) {
+            if (this._events[eventType][i] === handler) {
+              this._events[eventType].splice(i, 1);
+              break;
+            }
           }
         }
       }
@@ -2056,14 +1948,145 @@ wcPanel.prototype = {
       docker.trigger(eventType, data);
     }
   },
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function() {
+    this._layout = new wcLayout(this.$container, this);
+  },
+
+  // Updates the size of the layout.
+  __update: function() {
+    this._layout.__update();
+    if (!this.$container) {
+      return;
+    }
+
+    var width   = this.$container.width();
+    var height  = this.$container.height();
+    if (this._actualSize.x !== width || this._actualSize.y !== height) {
+      this._actualSize.x = width;
+      this._actualSize.y = height;
+      this.__trigger(wcDocker.EVENT_RESIZED);
+    }
+
+    var offset  = this.$container.offset();
+    if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
+      this._actualPos.x = offset.left;
+      this._actualPos.y = offset.top;
+      this.__trigger(wcDocker.EVENT_MOVED);
+    }
+  },
+
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  __save: function() {
+    var data = {};
+    data.type = 'wcPanel';
+    data.panelType = this._type;
+    data.title = this._title;
+    data.minSize = {
+      x: this._minSize.x,
+      y: this._minSize.y,
+    };
+    data.maxSize = {
+      x: this._maxSize.x,
+      y: this._maxSize.y,
+    };
+    data.scrollable = {
+      x: this._scrollable.x,
+      y: this._scrollable.y,
+    };
+    data.moveable = this._moveable;
+    data.closeable = this._closeable;
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  __restore: function(data, docker) {
+    this._title = data.title;
+    this._minSize.x = data.minSize.x;
+    this._minSize.y = data.minSize.y;
+    this._maxSize.x = data.maxSize.x;
+    this._maxSize.y = data.maxSize.y;
+    this._scrollable.x = data.scrollable.x;
+    this._scrollable.y = data.scrollable.y;
+    this._moveable = data.moveable;
+    this._closeable = data.closeable;
+  },
+
+  // Triggers an event of a given type onto this current panel.
+  // Params:
+  //    eventType     The event to trigger.
+  //    data          A custom data object to pass into all handlers.
+  __trigger: function(eventType, data) {
+    if (!eventType) {
+      return false;
+    }
+
+    if (this._events[eventType]) {
+      for (var i = 0; i < this._events[eventType].length; ++i) {
+        this._events[eventType][i](this, data);
+      }
+    }
+  },
+
+
+  // Retrieves the bounding rect for this widget.
+  __rect: function() {
+    var offset = this.$container.offset();
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    return {
+      x: offset.left,
+      y: offset.top,
+      w: width,
+      h: height,
+    };
+  },
+
+  // Gets, or Sets a new container for this layout.
+  // Params:
+  //    $container          If supplied, sets a new container for this layout.
+  //    parent              If supplied, sets a new parent for this layout.
+  // Returns:
+  //    JQuery collection   The current container.
+  __container: function($container) {
+    if (typeof $container === 'undefined') {
+      return this.$container;
+    }
+
+    this.$container = $container;
+    
+    if (this.$container) {
+      this._layout.__container(this.$container);
+    } else {
+      this._layout.__container(null);
+    }
+    return this.$container;
+  },
+
+  // Destroys this panel.
+  __destroy: function() {
+    this.__trigger(wcDocker.EVENT_CLOSED);
+    this.off();
+
+    this.__container(null);
+    this._parent = null;
+  },
 };
 /*
   The frame is a container for a panel, and can contain multiple panels inside it, each appearing
   as a tabbed item.  All docking panels have a frame, but the frame can change any time the panel
   is moved.
 */
-function wcFrame($container, parent, isFloating) {
-  this.$container = $container;
+function wcFrame(container, parent, isFloating) {
+  this.$container = $(container);
   this._parent = parent;
   this._isFloating = isFloating;
 
@@ -2102,208 +2125,13 @@ function wcFrame($container, parent, isFloating) {
     y: 0,
   };
 
-  this._init();
+  this.__init();
 };
 
 wcFrame.prototype = {
-  _init: function() {
-    this.$frame   = $('<div class="wcFrame wcWide wcTall">');
-    this.$title   = $('<div class="wcFrameTitle">');
-    this.$center  = $('<div class="wcFrameCenter wcWide">');
-    this.$close   = $('<div class="wcFrameCloseButton">X</div>');
-    this.$frame.append(this.$title);
-    this.$frame.append(this.$close);
-
-    if (this._isFloating) {
-      this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');
-      this.$bottom  = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('bottom', '-6px').css('left', '0px').css('right', '0px');
-      this.$left    = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('left', '-6px').css('top', '0px').css('bottom', '0px');
-      this.$right   = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('right', '-6px').css('top', '0px').css('bottom', '0px');
-      this.$corner1 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('top', '-6px').css('left', '-6px');
-      this.$corner2 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('top', '-6px').css('right', '-6px');
-      this.$corner3 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('bottom', '-6px').css('right', '-6px');
-      this.$corner4 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('bottom', '-6px').css('left', '-6px');
-
-      this.$frame.append(this.$top);
-      this.$frame.append(this.$bottom);
-      this.$frame.append(this.$left);
-      this.$frame.append(this.$right);
-      this.$frame.append(this.$corner1);
-      this.$frame.append(this.$corner2);
-      this.$frame.append(this.$corner3);
-      this.$frame.append(this.$corner4);
-    }
-
-    this.$frame.append(this.$center);
-
-    // Floating windows have no container.
-    this.container(this.$container);
-
-    if (this._isFloating) {
-      this.$frame.addClass('wcFloating');
-    }
-  },
-
-  // Saves the current panel configuration into a meta
-  // object that can be used later to restore it.
-  _save: function() {
-    var data = {};
-    data.type = 'wcFrame';
-    data.floating = this._isFloating;
-    data.center = this.$frame.hasClass('wcCenter');
-    data.pos = {
-      x: this._pos.x,
-      y: this._pos.y,
-    };
-    data.size = {
-      x: this._size.x,
-      y: this._size.y,
-    };
-    data.tab = this._curTab;
-    data.panels = [];
-    if (!data.center) {
-      for (var i = 0; i < this._panelList.length; ++i) {
-        data.panels.push(this._panelList[i]._save());
-      }
-    }
-    return data;
-  },
-
-  // Restores a previously saved configuration.
-  _restore: function(data, docker) {
-    this._isFloating = data.floating;
-    this._pos.x = data.pos.x;
-    this._pos.y = data.pos.y;
-    this._size.x = data.size.x;
-    this._size.y = data.size.y;
-    this._curTab = data.tab;
-    for (var i = 0; i < data.panels.length; ++i) {
-      var panel = docker._create(data.panels[i], this, this.$center);
-      panel._restore(data.panels[i], docker);
-      this._panelList.push(panel);
-    }
-
-    this._updateTabs();
-    this._update();
-  },
-
-  // Updates the size of the frame.
-  _update: function() {
-    var width = this.$container.width();
-    var height = this.$container.height();
-
-    // Floating windows manage their own sizing.
-    if (this._isFloating) {
-      var left = (this._pos.x * width) - this._size.x/2;
-      var top = (this._pos.y * height) - this._size.y/2;
-
-      if (top < 0) {
-        top = 0;
-      }
-
-      if (left + this._size.x/2 < 0) {
-        left = -this._size.x/2;
-      }
-
-      if (left + this._size.x/2 > width) {
-        left = width - this._size.x/2;
-      }
-
-      if (top + 21 > height) {
-        top = height - 21;
-      }
-
-      this.$frame.css('left', left + 'px');
-      this.$frame.css('top', top + 'px');
-      this.$frame.css('width', this._size.x + 'px');
-      this.$frame.css('height', this._size.y + 'px');
-    }
-
-    var panel = this.panel();
-    if (panel) {
-      var scrollable = panel.scrollable();
-      this.$center.toggleClass('wcScrollableX', scrollable.x);
-      this.$center.toggleClass('wcScrollableY', scrollable.y);
-
-      if (panel.moveable() && panel.title()) {
-        this.$frame.prepend(this.$title);
-        this.$center.css('top', '21px');
-      } else {
-        this.$title.remove();
-        this.$center.css('top', '0px');
-      }
-
-      if (panel.closeable()) {
-        this.$frame.append(this.$close);
-      } else {
-        this.$close.remove();
-      }
-
-      panel._update();
-    }
-  },
-
-  _updateTabs: function() {
-    this.$title.empty();
-
-    // Move all tabbed panels to a temporary element to preserve event handlers on them.
-    var $tempCenter = $('<div>');
-    this.$frame.append($tempCenter);
-    this.$center.children().appendTo($tempCenter);
-
-    var $tabList = $('<ul class="wcPanelTabBar">');
-    this.$title.append($tabList);
-
-    var self = this;
-    for (var i = 0; i < this._panelList.length; ++i) {
-      var $tab = $('<li><span id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</span></li>');
-      $tabList.append($tab);
-
-      var $tabContent = $('<div class="wcPanelTabContent" id="' + i + '">');
-      this.$center.append($tabContent);
-      this._panelList[i].container($tabContent);
-      this._panelList[i].parent(this);
-
-      if (this._curTab !== i) {
-        $tabContent.addClass('wcPanelTabContentHidden');
-      } else {
-        $tab.find('span').addClass('wcPanelTabActive');
-      }
-
-      $tab.find('span').on('mousedown', function(event) {
-        var index = parseInt($(this).attr('id'));
-        self.panel(index);
-      });
-    }
-
-    $tempCenter.remove();
-  },
-
-  // Brings the frame into focus.
-  // Params:
-  //    flash     Optional, if true will flash the window.
-  _focus: function(flash) {
-    if (flash) {
-      var $flasher = $('<div class="wcFrameFlasher">');
-      this.$frame.append($flasher);
-      $flasher.animate({
-        opacity: 0.25,
-      },100)
-      .animate({
-        opacity: 0.0,
-      },100)
-      .animate({
-        opacity: 0.1,
-      },50)
-      .animate({
-        opacity: 0.0,
-      },50)
-      .queue(function(next) {
-        $flasher.remove();
-        next();
-      });
-    }
-  },
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Gets, or Sets the position of the frame.
   // Params:
@@ -2405,7 +2233,7 @@ wcFrame.prototype = {
     }
 
     this._size = this.size();
-    this._updateTabs();
+    this.__updateTabs();
   },
 
   // Removes a given panel from the tab item.
@@ -2420,8 +2248,8 @@ wcFrame.prototype = {
           this._curTab--;
         }
 
-        this._panelList[i].container(null);
-        this._panelList[i].parent(null);
+        this._panelList[i].__container(null);
+        this._panelList[i]._parent = null;
 
         this._panelList.splice(i, 1);
         break;
@@ -2432,7 +2260,7 @@ wcFrame.prototype = {
       this._curTab = 0;
     }
 
-    this._updateTabs();
+    this.__updateTabs();
     return this._panelList.length > 0;
   },
 
@@ -2458,10 +2286,215 @@ wcFrame.prototype = {
     return false;
   },
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function() {
+    this.$frame   = $('<div class="wcFrame wcWide wcTall">');
+    this.$title   = $('<div class="wcFrameTitle">');
+    this.$center  = $('<div class="wcFrameCenter wcWide">');
+    this.$close   = $('<div class="wcFrameCloseButton">X</div>');
+    this.$frame.append(this.$title);
+    this.$frame.append(this.$close);
+
+    if (this._isFloating) {
+      this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');
+      this.$bottom  = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('bottom', '-6px').css('left', '0px').css('right', '0px');
+      this.$left    = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('left', '-6px').css('top', '0px').css('bottom', '0px');
+      this.$right   = $('<div class="wcFrameEdgeV wcFrameEdge"></div>').css('right', '-6px').css('top', '0px').css('bottom', '0px');
+      this.$corner1 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('top', '-6px').css('left', '-6px');
+      this.$corner2 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('top', '-6px').css('right', '-6px');
+      this.$corner3 = $('<div class="wcFrameCornerNW wcFrameEdge"></div>').css('bottom', '-6px').css('right', '-6px');
+      this.$corner4 = $('<div class="wcFrameCornerNE wcFrameEdge"></div>').css('bottom', '-6px').css('left', '-6px');
+
+      this.$frame.append(this.$top);
+      this.$frame.append(this.$bottom);
+      this.$frame.append(this.$left);
+      this.$frame.append(this.$right);
+      this.$frame.append(this.$corner1);
+      this.$frame.append(this.$corner2);
+      this.$frame.append(this.$corner3);
+      this.$frame.append(this.$corner4);
+    }
+
+    this.$frame.append(this.$center);
+
+    // Floating windows have no container.
+    this.__container(this.$container);
+
+    if (this._isFloating) {
+      this.$frame.addClass('wcFloating');
+    }
+  },
+
+  // Updates the size of the frame.
+  __update: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    // Floating windows manage their own sizing.
+    if (this._isFloating) {
+      var left = (this._pos.x * width) - this._size.x/2;
+      var top = (this._pos.y * height) - this._size.y/2;
+
+      if (top < 0) {
+        top = 0;
+      }
+
+      if (left + this._size.x/2 < 0) {
+        left = -this._size.x/2;
+      }
+
+      if (left + this._size.x/2 > width) {
+        left = width - this._size.x/2;
+      }
+
+      if (top + 21 > height) {
+        top = height - 21;
+      }
+
+      this.$frame.css('left', left + 'px');
+      this.$frame.css('top', top + 'px');
+      this.$frame.css('width', this._size.x + 'px');
+      this.$frame.css('height', this._size.y + 'px');
+    }
+
+    var panel = this.panel();
+    if (panel) {
+      var scrollable = panel.scrollable();
+      this.$center.toggleClass('wcScrollableX', scrollable.x);
+      this.$center.toggleClass('wcScrollableY', scrollable.y);
+
+      if (panel.moveable() && panel.title()) {
+        this.$frame.prepend(this.$title);
+        this.$center.css('top', '21px');
+      } else {
+        this.$title.remove();
+        this.$center.css('top', '0px');
+      }
+
+      if (panel.closeable()) {
+        this.$frame.append(this.$close);
+      } else {
+        this.$close.remove();
+      }
+
+      panel.__update();
+    }
+  },
+
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  __save: function() {
+    var data = {};
+    data.type = 'wcFrame';
+    data.floating = this._isFloating;
+    data.center = this.$frame.hasClass('wcCenter');
+    data.pos = {
+      x: this._pos.x,
+      y: this._pos.y,
+    };
+    data.size = {
+      x: this._size.x,
+      y: this._size.y,
+    };
+    data.tab = this._curTab;
+    data.panels = [];
+    if (!data.center) {
+      for (var i = 0; i < this._panelList.length; ++i) {
+        data.panels.push(this._panelList[i].__save());
+      }
+    }
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  __restore: function(data, docker) {
+    this._isFloating = data.floating;
+    this._pos.x = data.pos.x;
+    this._pos.y = data.pos.y;
+    this._size.x = data.size.x;
+    this._size.y = data.size.y;
+    this._curTab = data.tab;
+    for (var i = 0; i < data.panels.length; ++i) {
+      var panel = docker.__create(data.panels[i], this, this.$center);
+      panel.__restore(data.panels[i], docker);
+      this._panelList.push(panel);
+    }
+
+    this.__updateTabs();
+    this.__update();
+  },
+
+  __updateTabs: function() {
+    this.$title.empty();
+
+    // Move all tabbed panels to a temporary element to preserve event handlers on them.
+    var $tempCenter = $('<div>');
+    this.$frame.append($tempCenter);
+    this.$center.children().appendTo($tempCenter);
+
+    var $tabList = $('<ul class="wcPanelTabBar">');
+    this.$title.append($tabList);
+
+    var self = this;
+    for (var i = 0; i < this._panelList.length; ++i) {
+      var $tab = $('<li><span id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</span></li>');
+      $tabList.append($tab);
+
+      var $tabContent = $('<div class="wcPanelTabContent" id="' + i + '">');
+      this.$center.append($tabContent);
+      this._panelList[i].__container($tabContent);
+      this._panelList[i]._parent = this;
+
+      if (this._curTab !== i) {
+        $tabContent.addClass('wcPanelTabContentHidden');
+      } else {
+        $tab.find('span').addClass('wcPanelTabActive');
+      }
+
+      $tab.find('span').on('mousedown', function(event) {
+        var index = parseInt($(this).attr('id'));
+        self.panel(index);
+      });
+    }
+
+    $tempCenter.remove();
+  },
+
+  // Brings the frame into focus.
+  // Params:
+  //    flash     Optional, if true will flash the window.
+  __focus: function(flash) {
+    if (flash) {
+      var $flasher = $('<div class="wcFrameFlasher">');
+      this.$frame.append($flasher);
+      $flasher.animate({
+        opacity: 0.25,
+      },100)
+      .animate({
+        opacity: 0.0,
+      },100)
+      .animate({
+        opacity: 0.1,
+      },50)
+      .animate({
+        opacity: 0.0,
+      },50)
+      .queue(function(next) {
+        $flasher.remove();
+        next();
+      });
+    }
+  },
+
   // Moves the panel based on mouse dragging.
   // Params:
   //    mouse     The current mouse position.
-  move: function(mouse) {
+  __move: function(mouse) {
     var width = this.$container.width();
     var height = this.$container.height();
 
@@ -2472,7 +2505,7 @@ wcFrame.prototype = {
   // Sets the anchor position for moving the panel.
   // Params:
   //    mouse     The current mouse position.
-  anchorMove: function(mouse) {
+  __anchorMove: function(mouse) {
     var width = this.$container.width();
     var height = this.$container.height();
 
@@ -2487,7 +2520,7 @@ wcFrame.prototype = {
   // Returns:
   //    element       The new element of the moved tab.
   //    false         If an error occurred.
-  tabMove: function(fromIndex, toIndex) {
+  __tabMove: function(fromIndex, toIndex) {
     if (fromIndex >= 0 && fromIndex < this._panelList.length &&
         toIndex >= 0 && toIndex < this._panelList.length) {
       var panel = this._panelList.splice(fromIndex, 1);
@@ -2498,7 +2531,7 @@ wcFrame.prototype = {
         this._curTab = toIndex;
       }
 
-      this._updateTabs();
+      this.__updateTabs();
 
       return this.$title.find('span[id="' + toIndex + '"]')[0];
     }
@@ -2509,10 +2542,10 @@ wcFrame.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  checkAnchorDrop: function(mouse, same, ghost, canSplit) {
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().checkAnchorDrop(mouse, same, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title());
+      return panel.layout().__checkAnchorDrop(mouse, same, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title());
     }
     return false;
   },
@@ -2521,7 +2554,7 @@ wcFrame.prototype = {
   // Params:
   //    edges     A list of edges being moved.
   //    mouse     The current mouse position.
-  resize: function(edges, mouse) {
+  __resize: function(edges, mouse) {
     var width = this.$container.width();
     var height = this.$container.height();
     var offset = this.$container.offset();
@@ -2590,8 +2623,8 @@ wcFrame.prototype = {
 
   // Turn off or on a shadowing effect to signify this widget is being moved.
   // Params:
-  //    enabled       Whether to enable shadow mode.
-  shadow: function(enabled) {
+  //    enabled       Whether to enable __shadow mode.
+  __shadow: function(enabled) {
     if (enabled) {
       if (!this.$shadower) {
         this.$shadower = $('<div class="wcFrameShadower">');
@@ -2616,7 +2649,7 @@ wcFrame.prototype = {
   },
 
   // Retrieves the bounding rect for this frame.
-  rect: function() {
+  __rect: function() {
     var offset = this.$frame.offset();
     var width = this.$frame.width();
     var height = this.$frame.height();
@@ -2635,7 +2668,7 @@ wcFrame.prototype = {
   //    parent              If supplied, sets a new parent for this layout.
   // Returns:
   //    JQuery collection   The current container.
-  container: function($container) {
+  __container: function($container) {
     if (typeof $container === 'undefined') {
       return this.$container;
     }
@@ -2649,30 +2682,16 @@ wcFrame.prototype = {
     return this.$container;
   },
 
-  // Gets, or Sets the parent item for this layout.
-  // Params:
-  //    parent        If supplied, sets a new parent for this layout.
-  // Returns:
-  //    object        The current parent.
-  parent: function(parent) {
-    if (typeof parent === 'undefined') {
-      return this._parent;
-    }
-
-    this._parent = parent;
-    return this._parent;
-  },
-
   // Disconnects and prepares this widget for destruction.
-  destroy: function() {
+  __destroy: function() {
     this._curTab = -1;
     for (var i = 0; i < this._panelList.length; ++i) {
-      this._panelList[i].destroy();
+      this._panelList[i].__destroy();
     }
 
     while (this._panelList.length) this._panelList.pop();
-    this.container(null);
-    this.parent(null);
+    this.__container(null);
+    this._parent = null;
   },
 };
 /*
@@ -2689,218 +2708,17 @@ function wcSplitter($container, parent, isHorizontal) {
   this._pos = 0.4;
   this._findBestPos = false;
 
-  this._init();
+  this.__init();
 };
 
 wcSplitter.prototype = {
-  _init: function() {
-    this.$pane.push($('<div class="wcLayoutPane">'));
-    this.$pane.push($('<div class="wcLayoutPane">'));
-    this.$bar = $('<div class="wcSplitterBar">');
-
-    if (this._horizontal) {
-      this.$pane[0].addClass('wcTall');
-      this.$pane[1].addClass('wcTall');
-      this.$bar.addClass('wcTall').addClass('wcSplitterBarV');
-    } else {
-      this.$pane[0].addClass('wcWide');
-      this.$pane[1].addClass('wcWide');
-      this.$bar.addClass('wcWide').addClass('wcSplitterBarH');
-    }
-
-    this.container(this.$container);
-  },
-
-  // Saves the current panel configuration into a meta
-  // object that can be used later to restore it.
-  _save: function() {
-    var data = {};
-    data.type       = 'wcSplitter';
-    data.horizontal = this._horizontal;
-    data.pane0      = this._pane[0]? this._pane[0]._save(): null;
-    data.pane1      = this._pane[1]? this._pane[1]._save(): null;
-    data.pos        = this._pos;
-    return data;
-  },
-
-  // Restores a previously saved configuration.
-  _restore: function(data, docker) {
-    this._pos  = data.pos;
-    if (data.pane0) {
-      this._pane[0] = docker._create(data.pane0, this, this.$pane[0]);
-      this._pane[0]._restore(data.pane0, docker);
-    }
-    if (data.pane1) {
-      this._pane[1] = docker._create(data.pane1, this, this.$pane[1]);
-      this._pane[1]._restore(data.pane1, docker);
-    }
-  },
-
-  // Updates the size of the splitter.
-  _update: function() {
-    var width = this.$container.width();
-    var height = this.$container.height();
-
-    var minSize = this.minPos();
-    var maxSize = this.maxPos();
-
-    if (this._findBestPos) {
-      this._findBestPos = false;
-
-      var size1;
-      var size2;
-      if (this._pane[0] && typeof this._pane[0].size === 'function') {
-        size1 = this._pane[0].size();
-      }
-
-      if (this._pane[1] && typeof this._pane[1].size === 'function') {
-        size2 = this._pane[1].size();
-
-        if (size2) {
-          size2.x = width  - size2.x;
-          size2.y = height - size2.y;
-        }
-      }
-
-      var size;
-      if (size1 && size2) {
-        size = {
-          x: Math.min(size1.x, size2.x),
-          y: Math.min(size1.y, size2.y),
-        };
-      } else if (size1) {
-        size = size1;
-      } else if (size2) {
-        size = size2;
-      }
-
-      if (size) {
-        if (this._horizontal) {
-          this._pos = size.x / width;
-        } else {
-          this._pos = size.y / height;
-        }
-      }
-    }
-
-    if (this._horizontal) {
-      var size = width * this._pos;
-
-      if (minSize) {
-        size = Math.max(minSize.x, size);
-      }
-      if (maxSize) {
-        size = Math.min(maxSize.x, size);
-      }
-
-      this.$bar.css('left', size+1);
-      this.$pane[0].css('width', size-2 + 'px');
-      this.$pane[0].css('left',  '0px');
-      this.$pane[0].css('right', '');
-      this.$pane[1].css('left',  '');
-      this.$pane[1].css('right', '0px');
-      this.$pane[1].css('width', width - size - 5 + 'px');
-    } else {
-      var size = height * this._pos;
-
-      if (minSize) {
-        size = Math.max(minSize.y, size);
-      }
-      if (maxSize) {
-        size = Math.min(maxSize.y, size);
-      }
-
-      this.$bar.css('top', size+1);
-      this.$pane[0].css('height', size-2 + 'px');
-      this.$pane[0].css('top',    '0px');
-      this.$pane[0].css('bottom', '');
-      this.$pane[1].css('top',    '');
-      this.$pane[1].css('bottom', '0px');
-      this.$pane[1].css('height', height - size - 5 + 'px');
-    }
-
-    this._pane[0]._update();
-    this._pane[1]._update();
-  },
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Whether the splitter splits horizontally.
   isHorizontal: function() {
     return this._horizontal;
-  },
-
-  // Moves the slider bar based on a mouse position.
-  // Params:
-  //    mouse       The mouse offset position.
-  moveBar: function(mouse) {
-    var width = this.$container.width();
-    var height = this.$container.height();
-    var offset = this.$container.offset();
-
-    mouse.x -= offset.left;
-    mouse.y -= offset.top;
-
-    var minSize = this.minPos();
-    var maxSize = this.maxPos();
-
-    if (this._horizontal) {
-      this.pos((mouse.x-3) / width);
-    } else {
-      this.pos((mouse.y-3) / height);
-    }
-  },
-
-  // Gets the minimum position of the splitter divider.
-  minPos: function() {
-    var width = this.$container.width();
-    var height = this.$container.height();
-
-    var minSize;
-    if (this._pane[0] && typeof this._pane[0].minSize === 'function') {
-      minSize = this._pane[0].minSize();
-    } else {
-      minSize = {x:50,y:50};
-    }
-
-    var maxSize;
-    if (this._pane[1] && typeof this._pane[1].maxSize === 'function') {
-      maxSize = this._pane[1].maxSize();
-    } else {
-      maxSize = {x:width,y:height};
-    }
-
-    maxSize.x = width  - Math.min(maxSize.x, width);
-    maxSize.y = height - Math.min(maxSize.y, height);
-
-    minSize.x = Math.max(minSize.x, maxSize.x);
-    minSize.y = Math.max(minSize.y, maxSize.y);
-    return minSize;
-  },
-
-  // Gets the maximum position of the splitter divider.
-  maxPos: function() {
-    var width = this.$container.width();
-    var height = this.$container.height();
-
-    var maxSize;
-    if (this._pane[0] && typeof this._pane[0].maxSize === 'function') {
-      maxSize = this._pane[0].maxSize();
-    } else {
-      maxSize = {x:width,y:height};
-    }
-
-    var minSize;
-    if (this._pane[1] && typeof this._pane[1].minSize === 'function') {
-      minSize = this._pane[1].minSize();
-    } else {
-      minSize = {x:50,y:50};
-    }
-
-    minSize.x = width  - minSize.x;
-    minSize.y = height - minSize.y;
-
-    maxSize.x = Math.min(minSize.x, maxSize.x);
-    maxSize.y = Math.min(minSize.y, maxSize.y);
-    return maxSize;
   },
 
   // Gets the minimum size of the widget.
@@ -2984,8 +2802,247 @@ wcSplitter.prototype = {
     return this._pos;
   },
 
-  findBestPos: function() {
+  // Sets, or Gets the widget at a given pane
+  // Params:
+  //    index     The pane index, only 0 or 1 are valid.
+  //    item      If supplied, assigns the item to the pane.
+  // Returns:
+  //    panel     The panel that exists in the pane.
+  //    false     If no pane exists.
+  pane: function(index, item) {
+    if (index >= 0 && index < 2) {
+      if (typeof item === 'undefined') {
+        return this._pane[index];
+      } else {
+        if (item) {
+          this._pane[index] = item;
+          item._parent = this;
+          item.__container(this.$pane[index]);
+          return item;
+        } else if (this._pane[index]) {
+          this._pane[index].__container(null);
+          this._pane[index] = false;
+        }
+      }
+    }
+    return false;
+  },
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function() {
+    this.$pane.push($('<div class="wcLayoutPane">'));
+    this.$pane.push($('<div class="wcLayoutPane">'));
+    this.$bar = $('<div class="wcSplitterBar">');
+
+    if (this._horizontal) {
+      this.$pane[0].addClass('wcTall');
+      this.$pane[1].addClass('wcTall');
+      this.$bar.addClass('wcTall').addClass('wcSplitterBarV');
+    } else {
+      this.$pane[0].addClass('wcWide');
+      this.$pane[1].addClass('wcWide');
+      this.$bar.addClass('wcWide').addClass('wcSplitterBarH');
+    }
+
+    this.__container(this.$container);
+  },
+
+  // Updates the size of the splitter.
+  __update: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    var minSize = this.__minPos();
+    var maxSize = this.__maxPos();
+
+    if (this._findBestPos) {
+      this._findBestPos = false;
+
+      var size1;
+      var size2;
+      if (this._pane[0] && typeof this._pane[0].size === 'function') {
+        size1 = this._pane[0].size();
+      }
+
+      if (this._pane[1] && typeof this._pane[1].size === 'function') {
+        size2 = this._pane[1].size();
+
+        if (size2) {
+          size2.x = width  - size2.x;
+          size2.y = height - size2.y;
+        }
+      }
+
+      var size;
+      if (size1 && size2) {
+        size = {
+          x: Math.min(size1.x, size2.x),
+          y: Math.min(size1.y, size2.y),
+        };
+      } else if (size1) {
+        size = size1;
+      } else if (size2) {
+        size = size2;
+      }
+
+      if (size) {
+        if (this._horizontal) {
+          this._pos = size.x / width;
+        } else {
+          this._pos = size.y / height;
+        }
+      }
+    }
+
+    if (this._horizontal) {
+      var size = width * this._pos;
+
+      if (minSize) {
+        size = Math.max(minSize.x, size);
+      }
+      if (maxSize) {
+        size = Math.min(maxSize.x, size);
+      }
+
+      this.$bar.css('left', size+1);
+      this.$pane[0].css('width', size-2 + 'px');
+      this.$pane[0].css('left',  '0px');
+      this.$pane[0].css('right', '');
+      this.$pane[1].css('left',  '');
+      this.$pane[1].css('right', '0px');
+      this.$pane[1].css('width', width - size - 5 + 'px');
+    } else {
+      var size = height * this._pos;
+
+      if (minSize) {
+        size = Math.max(minSize.y, size);
+      }
+      if (maxSize) {
+        size = Math.min(maxSize.y, size);
+      }
+
+      this.$bar.css('top', size+1);
+      this.$pane[0].css('height', size-2 + 'px');
+      this.$pane[0].css('top',    '0px');
+      this.$pane[0].css('bottom', '');
+      this.$pane[1].css('top',    '');
+      this.$pane[1].css('bottom', '0px');
+      this.$pane[1].css('height', height - size - 5 + 'px');
+    }
+
+    this._pane[0].__update();
+    this._pane[1].__update();
+  },
+
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  __save: function() {
+    var data = {};
+    data.type       = 'wcSplitter';
+    data.horizontal = this._horizontal;
+    data.pane0      = this._pane[0]? this._pane[0].__save(): null;
+    data.pane1      = this._pane[1]? this._pane[1].__save(): null;
+    data.pos        = this._pos;
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  __restore: function(data, docker) {
+    this._pos  = data.pos;
+    if (data.pane0) {
+      this._pane[0] = docker.__create(data.pane0, this, this.$pane[0]);
+      this._pane[0].__restore(data.pane0, docker);
+    }
+    if (data.pane1) {
+      this._pane[1] = docker.__create(data.pane1, this, this.$pane[1]);
+      this._pane[1].__restore(data.pane1, docker);
+    }
+  },
+
+  // Attempts to find the best splitter position based on
+  // the contents of each pane.
+  __findBestPos: function() {
     this._findBestPos = true;
+  },
+
+  // Moves the slider bar based on a mouse position.
+  // Params:
+  //    mouse       The mouse offset position.
+  __moveBar: function(mouse) {
+    var width = this.$container.width();
+    var height = this.$container.height();
+    var offset = this.$container.offset();
+
+    mouse.x -= offset.left;
+    mouse.y -= offset.top;
+
+    var minSize = this.__minPos();
+    var maxSize = this.__maxPos();
+
+    if (this._horizontal) {
+      this.pos((mouse.x-3) / width);
+    } else {
+      this.pos((mouse.y-3) / height);
+    }
+  },
+
+  // Gets the minimum position of the splitter divider.
+  __minPos: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    var minSize;
+    if (this._pane[0] && typeof this._pane[0].minSize === 'function') {
+      minSize = this._pane[0].minSize();
+    } else {
+      minSize = {x:50,y:50};
+    }
+
+    var maxSize;
+    if (this._pane[1] && typeof this._pane[1].maxSize === 'function') {
+      maxSize = this._pane[1].maxSize();
+    } else {
+      maxSize = {x:width,y:height};
+    }
+
+    maxSize.x = width  - Math.min(maxSize.x, width);
+    maxSize.y = height - Math.min(maxSize.y, height);
+
+    minSize.x = Math.max(minSize.x, maxSize.x);
+    minSize.y = Math.max(minSize.y, maxSize.y);
+    return minSize;
+  },
+
+  // Gets the maximum position of the splitter divider.
+  __maxPos: function() {
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    var maxSize;
+    if (this._pane[0] && typeof this._pane[0].maxSize === 'function') {
+      maxSize = this._pane[0].maxSize();
+    } else {
+      maxSize = {x:width,y:height};
+    }
+
+    var minSize;
+    if (this._pane[1] && typeof this._pane[1].minSize === 'function') {
+      minSize = this._pane[1].minSize();
+    } else {
+      minSize = {x:50,y:50};
+    }
+
+    minSize.x = width  - minSize.x;
+    minSize.y = height - minSize.y;
+
+    maxSize.x = Math.min(minSize.x, maxSize.x);
+    maxSize.y = Math.min(minSize.y, maxSize.y);
+    return maxSize;
   },
 
   // Gets, or Sets a new container for this layout.
@@ -2994,7 +3051,7 @@ wcSplitter.prototype = {
   //    parent              If supplied, sets a new parent for this layout.
   // Returns:
   //    JQuery collection   The current container.
-  container: function($container) {
+  __container: function($container) {
     if (typeof $container === 'undefined') {
       return this.$container;
     }
@@ -3013,24 +3070,10 @@ wcSplitter.prototype = {
     return this.$container;
   },
 
-  // Gets, or Sets the parent item for this layout.
-  // Params:
-  //    parent        If supplied, sets a new parent for this layout.
-  // Returns:
-  //    object        The current parent.
-  parent: function(parent) {
-    if (typeof parent === 'undefined') {
-      return this._parent;
-    }
-
-    this._parent = parent;
-    return this._parent;
-  },
-
   // Removes a child from this splitter.
   // Params:
   //    child         The child to remove.
-  removeChild: function(child) {
+  __removeChild: function(child) {
     if (this._pane[0] === child) {
       this._pane[0] = false;
     } else if (this._pane[1] === child) {
@@ -3040,48 +3083,22 @@ wcSplitter.prototype = {
     }
  
     if (child) {
-      child.container(null);
-      child.parent(null);
+      child.__container(null);
+      child._parent = null;
     }
-  },
-
-  // Sets, or Gets the widget at a given pane
-  // Params:
-  //    index     The pane index, only 0 or 1 are valid.
-  //    item      If supplied, assigns the item to the pane.
-  // Returns:
-  //    panel     The panel that exists in the pane.
-  //    false     If no pane exists.
-  pane: function(index, item) {
-    if (index >= 0 && index < 2) {
-      if (typeof item === 'undefined') {
-        return this._pane[index];
-      } else {
-        if (item) {
-          this._pane[index] = item;
-          item.parent(this);
-          item.container(this.$pane[index]);
-          return item;
-        } else if (this._pane[index]) {
-          this._pane[index].container(null);
-          this._pane[index] = false;
-        }
-      }
-    }
-    return false;
   },
 
   // Disconnects and prepares this widget for destruction.
-  destroy: function() {
+  __destroy: function() {
     if (this._pane[0]) {
-      this._pane[0].destroy();
+      this._pane[0].__destroy();
     }
     if (this._pane[1]) {
-      this._pane[1].destroy();
+      this._pane[1].__destroy();
     }
 
-    this.container(null);
-    this.parent(null);
+    this.__container(null);
+    this._parent = false;
   },
 };
 /*

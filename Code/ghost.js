@@ -7,55 +7,13 @@ function wcGhost(rect, mouse) {
   this._anchorMouse = false;
   this._anchor = null;
 
-  this._init(rect, mouse);
+  this.__init(rect, mouse);
 };
 
 wcGhost.prototype = {
-  _init: function(rect, mouse) {
-    this.$ghost = $('<div class="wcGhost">')
-      .css('opacity', 0)
-      .css('top', rect.y + 'px')
-      .css('left', rect.x + 'px')
-      .css('width', rect.w + 'px')
-      .css('height', rect.h + 'px');
-
-    this._anchorMouse = {
-      x: rect.x - mouse.x,
-      y: rect.y - mouse.y,
-    };
-
-    this._rect = {
-      x: -this._anchorMouse.x,
-      y: -this._anchorMouse.y,
-      w: rect.w,
-      h: rect.h,
-    };
-
-    this.anchor(mouse, rect);
-
-    $('body').append(this.$ghost);
-  },
-
-  // Gets the original size of the moving widget.
-  rect: function() {
-    return this._rect;
-  },
-
-  // Updates the size of the layout.
-  move: function(mouse) {
-    if (this._anchor) {
-      return;
-    }
-
-    var x = parseInt(this.$ghost.css('left'));
-    var y = parseInt(this.$ghost.css('top'));
-
-    x = mouse.x + this._anchorMouse.x;
-    y = mouse.y + this._anchorMouse.y;
-
-    this.$ghost.css('left', x + 'px');
-    this.$ghost.css('top',  y + 'px');
-  },
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Change the ghost's anchor.
   // Params:
@@ -123,7 +81,59 @@ wcGhost.prototype = {
     }, 200);
   },
 
-  destroy: function() {
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function(rect, mouse) {
+    this.$ghost = $('<div class="wcGhost">')
+      .css('opacity', 0)
+      .css('top', rect.y + 'px')
+      .css('left', rect.x + 'px')
+      .css('width', rect.w + 'px')
+      .css('height', rect.h + 'px');
+
+    this._anchorMouse = {
+      x: rect.x - mouse.x,
+      y: rect.y - mouse.y,
+    };
+
+    this._rect = {
+      x: -this._anchorMouse.x,
+      y: -this._anchorMouse.y,
+      w: rect.w,
+      h: rect.h,
+    };
+
+    this.anchor(mouse, rect);
+
+    $('body').append(this.$ghost);
+  },
+
+  // Gets the original size of the moving widget.
+  __rect: function() {
+    return this._rect;
+  },
+
+  // Updates the size of the layout.
+  __move: function(mouse) {
+    if (this._anchor) {
+      return;
+    }
+
+    var x = parseInt(this.$ghost.css('left'));
+    var y = parseInt(this.$ghost.css('top'));
+
+    x = mouse.x + this._anchorMouse.x;
+    y = mouse.y + this._anchorMouse.y;
+
+    this.$ghost.css('left', x + 'px');
+    this.$ghost.css('top',  y + 'px');
+  },
+
+  // Exorcise the ghost.
+  __destroy: function() {
     this.$ghost.stop().animate({
       opacity: 0.0,
     }, {

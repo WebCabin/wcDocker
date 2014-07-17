@@ -49,148 +49,15 @@ function wcPanel(type) {
   this._moveable = true;
   this._closeable = true;
 
-  this._eventList = [];
+  this._events = {};
 
-  this._init();
+  this.__init();
 };
 
 wcPanel.prototype = {
-  _init: function() {
-    this._layout = new wcLayout(this.$container, this);
-  },
-
-  // Saves the current panel configuration into a meta
-  // object that can be used later to restore it.
-  _save: function() {
-    var data = {};
-    data.type = 'wcPanel';
-    data.panelType = this._type;
-    data.title = this._title;
-    data.minSize = {
-      x: this._minSize.x,
-      y: this._minSize.y,
-    };
-    data.maxSize = {
-      x: this._maxSize.x,
-      y: this._maxSize.y,
-    };
-    data.scrollable = {
-      x: this._scrollable.x,
-      y: this._scrollable.y,
-    };
-    data.moveable = this._moveable;
-    data.closeable = this._closeable;
-    return data;
-  },
-
-  // Restores a previously saved configuration.
-  _restore: function(data, docker) {
-    this._title = data.title;
-    this._minSize.x = data.minSize.x;
-    this._minSize.y = data.minSize.y;
-    this._maxSize.x = data.maxSize.x;
-    this._maxSize.y = data.maxSize.y;
-    this._scrollable.x = data.scrollable.x;
-    this._scrollable.y = data.scrollable.y;
-    this._moveable = data.moveable;
-    this._closeable = data.closeable;
-  },
-
-  // Updates the size of the layout.
-  _update: function() {
-    this._layout._update();
-    if (!this.$container) {
-      return;
-    }
-
-    var width   = this.$container.width();
-    var height  = this.$container.height();
-    if (this._actualSize.x !== width || this._actualSize.y !== height) {
-      this._actualSize.x = width;
-      this._actualSize.y = height;
-      this._trigger(wcDocker.EVENT_RESIZED);
-    }
-
-    var offset  = this.$container.offset();
-    if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
-      this._actualPos.x = offset.left;
-      this._actualPos.y = offset.top;
-      this._trigger(wcDocker.EVENT_MOVED);
-    }
-  },
-
-  // Triggers an event of a given type onto this current panel.
-  // Params:
-  //    eventType     The event to trigger.
-  //    data          A custom data object to pass into all handlers.
-  _trigger: function(eventType, data) {
-    for (var i = 0; i < this._eventList.length; ++i) {
-      if (this._eventList[i].name === eventType) {
-        this._eventList[i].handler(this, data);
-      }
-    }
-  },
-
-
-  // Retrieves the bounding rect for this widget.
-  rect: function() {
-    var offset = this.$container.offset();
-    var width = this.$container.width();
-    var height = this.$container.height();
-
-    return {
-      x: offset.left,
-      y: offset.top,
-      w: width,
-      h: height,
-    };
-  },
-
-  // Gets, or Sets a new container for this layout.
-  // Params:
-  //    $container          If supplied, sets a new container for this layout.
-  //    parent              If supplied, sets a new parent for this layout.
-  // Returns:
-  //    JQuery collection   The current container.
-  container: function($container) {
-    if (typeof $container === 'undefined') {
-      return this.$container;
-    }
-
-    this.$container = $container;
-    
-    if (this.$container) {
-      this._layout.container(this.$container);
-    } else {
-      this._layout.container(null);
-    }
-    return this.$container;
-  },
-
-  // Gets, or Sets the parent item for this layout.
-  // Params:
-  //    parent        If supplied, sets a new parent for this layout.
-  // Returns:
-  //    object        The current parent.
-  parent: function(parent) {
-    if (typeof parent === 'undefined') {
-      return this._parent;
-    }
-
-    this._parent = parent;
-    return this._parent;
-  },
-
-  // Destroys this panel.
-  destroy: function() {
-    this._trigger(wcDocker.EVENT_CLOSED);
-
-    this.container(null);
-    this.parent(null);
-    this._layout.destroy();
-    this._layout = null;
-    this.off();
-  },
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Finds the main Docker window.
   docker: function() {
@@ -220,7 +87,7 @@ wcPanel.prototype = {
   focus: function(flash) {
     var docker = this.docker();
     if (docker) {
-      docker._focus(this._parent, flash);
+      docker.__focus(this._parent, flash);
     }
   },
 
@@ -316,7 +183,7 @@ wcPanel.prototype = {
     if (typeof enabled !== 'undefined') {
       this._closeable = enabled? true: false;
       if (this._parent) {
-        this._parent._update();
+        this._parent.__update();
       }
     }
 
@@ -336,11 +203,24 @@ wcPanel.prototype = {
   //    handler       A handler function to be called for the event.
   //                  Params:
   //                    panel   The panel invoking the event.
+  // Returns:
+  //    true          The event was added.
+  //    false         The event failed to add.
   on: function(eventType, handler) {
-    this._eventList.push({
-      name: eventType,
-      handler: handler,
-    });
+    if (!eventType) {
+      return false;
+    }
+
+    if (!this._events[eventType]) {
+      this._events[eventType] = [];
+    }
+
+    if (this._events[eventType].indexOf(handler) !== -1) {
+      return false;
+    }
+
+    this._events[eventType].push(handler);
+    return true;
   },
 
   // Unregisters an event.
@@ -350,14 +230,18 @@ wcPanel.prototype = {
   //                  the above type are removed.
   off: function(eventType, handler) {
     if (typeof eventType === 'undefined') {
-      while (this._eventList.length) this._eventList.pop();
+      this._events = {};
       return;
     } else {
-      for (var i = 0; i < this._eventList.length; ++i) {
-        if (this._eventList[i].name === eventType) {
-          if (typeof handler === 'undefined' || this._eventList[i].handler === handler) {
-            this._eventList.splice(i, 1);
-            i--;
+      if (this._events[eventType]) {
+        if (typeof handler === 'undefined') {
+          this._events[eventType] = [];
+        } else {
+          for (var i = 0; i < this._events[eventType].length; ++i) {
+            if (this._events[eventType][i] === handler) {
+              this._events[eventType].splice(i, 1);
+              break;
+            }
           }
         }
       }
@@ -373,5 +257,136 @@ wcPanel.prototype = {
     if (docker) {
       docker.trigger(eventType, data);
     }
+  },
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function() {
+    this._layout = new wcLayout(this.$container, this);
+  },
+
+  // Updates the size of the layout.
+  __update: function() {
+    this._layout.__update();
+    if (!this.$container) {
+      return;
+    }
+
+    var width   = this.$container.width();
+    var height  = this.$container.height();
+    if (this._actualSize.x !== width || this._actualSize.y !== height) {
+      this._actualSize.x = width;
+      this._actualSize.y = height;
+      this.__trigger(wcDocker.EVENT_RESIZED);
+    }
+
+    var offset  = this.$container.offset();
+    if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
+      this._actualPos.x = offset.left;
+      this._actualPos.y = offset.top;
+      this.__trigger(wcDocker.EVENT_MOVED);
+    }
+  },
+
+  // Saves the current panel configuration into a meta
+  // object that can be used later to restore it.
+  __save: function() {
+    var data = {};
+    data.type = 'wcPanel';
+    data.panelType = this._type;
+    data.title = this._title;
+    data.minSize = {
+      x: this._minSize.x,
+      y: this._minSize.y,
+    };
+    data.maxSize = {
+      x: this._maxSize.x,
+      y: this._maxSize.y,
+    };
+    data.scrollable = {
+      x: this._scrollable.x,
+      y: this._scrollable.y,
+    };
+    data.moveable = this._moveable;
+    data.closeable = this._closeable;
+    return data;
+  },
+
+  // Restores a previously saved configuration.
+  __restore: function(data, docker) {
+    this._title = data.title;
+    this._minSize.x = data.minSize.x;
+    this._minSize.y = data.minSize.y;
+    this._maxSize.x = data.maxSize.x;
+    this._maxSize.y = data.maxSize.y;
+    this._scrollable.x = data.scrollable.x;
+    this._scrollable.y = data.scrollable.y;
+    this._moveable = data.moveable;
+    this._closeable = data.closeable;
+  },
+
+  // Triggers an event of a given type onto this current panel.
+  // Params:
+  //    eventType     The event to trigger.
+  //    data          A custom data object to pass into all handlers.
+  __trigger: function(eventType, data) {
+    if (!eventType) {
+      return false;
+    }
+
+    if (this._events[eventType]) {
+      for (var i = 0; i < this._events[eventType].length; ++i) {
+        this._events[eventType][i](this, data);
+      }
+    }
+  },
+
+
+  // Retrieves the bounding rect for this widget.
+  __rect: function() {
+    var offset = this.$container.offset();
+    var width = this.$container.width();
+    var height = this.$container.height();
+
+    return {
+      x: offset.left,
+      y: offset.top,
+      w: width,
+      h: height,
+    };
+  },
+
+  // Gets, or Sets a new container for this layout.
+  // Params:
+  //    $container          If supplied, sets a new container for this layout.
+  //    parent              If supplied, sets a new parent for this layout.
+  // Returns:
+  //    JQuery collection   The current container.
+  __container: function($container) {
+    if (typeof $container === 'undefined') {
+      return this.$container;
+    }
+
+    this.$container = $container;
+    
+    if (this.$container) {
+      this._layout.__container(this.$container);
+    } else {
+      this._layout.__container(null);
+    }
+    return this.$container;
+  },
+
+  // Destroys this panel.
+  __destroy: function() {
+    this.__trigger(wcDocker.EVENT_CLOSED);
+    this.off();
+
+    this.__container(null);
+    this._parent = null;
   },
 };

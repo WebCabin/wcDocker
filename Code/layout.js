@@ -1,28 +1,97 @@
 /*
   Handles the contents of a panel.
 */
-function wcLayout($container, parent) {
-  this.$container = $container;
+function wcLayout(container, parent) {
+  this.$container = $(container);
   this._parent = parent;
 
   this._grid = [];
   this.$elem = null;
 
-  this._init();
+  this.__init();
 };
 
 wcLayout.prototype = {
-  _init: function() {
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Adds an item into the layout, expanding the grid
+  // size if necessary.
+  // Params:
+  //    item        The DOM element to add.
+  //    x, y        The grid coordinates to place the item.
+  //    w, h        If supplied, will stretch the item among
+  //                multiple grid elements.
+  // Returns:
+  //    <td>        On success, returns the <td> dom element.
+  //    false       A failure happened, most likely cells could not be merged.
+  addItem: function(item, x, y, w, h) {
+    if (typeof x === 'undefined' || x < 0) {
+      x = 0;
+    }
+    if (typeof y === 'undefined' || y < 0) {
+      y = 0;
+    }
+    if (typeof w === 'undefined' || w <= 0) {
+      w = 1;
+    }
+    if (typeof h === 'undefined' || h <= 0) {
+      h = 1;
+    }
+
+    this.__resizeGrid(x + w - 1, y + h - 1);
+    if (!this.__mergeGrid(x, y, w, h)) {
+      return false;
+    }
+
+    this._grid[y][x].$el.append($(item));
+    return this._grid[y][x].$el;
+  },
+
+  // Clears the layout.
+  clear: function() {
+    var showGrid = this.showGrid();
+    this.__init();
+    this.showGrid(showGrid);
+    this._grid = [];
+  },
+
+  // Gets, or Sets the visible status of the layout grid.
+  // Params:
+  //    enabled     If supplied, will set the grid shown or hidden.
+  // Returns:
+  //    bool        The current visibility of the grid.
+  showGrid: function(enabled) {
+    if (typeof enabled === 'undefined') {
+      return this.$elem.hasClass('wcLayoutGrid');
+    }
+
+    this.$elem.toggleClass('wcLayoutGrid', enabled);
+    return this.$elem.hasClass('wcLayoutGrid');
+  },
+  
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Initialize
+  __init: function() {
     this.$elem = $('<table class="wcLayout wcWide wcTall"></table>');
     this.$elem.append($('<tbody></tbody>'));
-    this.container(this.$container);
+    this.__container(this.$container);
+  },
+
+  // Updates the size of the layout.
+  __update: function() {
   },
 
   // Resizes the grid to fit a given position.
   // Params:
   //    width     The width to expand to.
   //    height    The height to expand to.
-  _resizeGrid: function(width, height) {
+  __resizeGrid: function(width, height) {
     this.$elem.find('tbody').children().remove();
 
     for (var y = 0; y <= height; ++y) {
@@ -67,7 +136,7 @@ wcLayout.prototype = {
   //    true      Cells were merged succesfully.
   //    false     Merge failed, either because the grid position was out of bounds
   //              or some of the cells were already merged.
-  _mergeGrid: function(x, y, w, h) {
+  __mergeGrid: function(x, y, w, h) {
     if (this._grid.length <= y || this._grid[y].length <= x) {
       return false;
     }
@@ -107,74 +176,11 @@ wcLayout.prototype = {
     return true;
   },
 
-  // Updates the size of the layout.
-  _update: function() {
-  },
-
-  // Adds an item into the layout, expanding the grid
-  // size if necessary.
-  // Params:
-  //    item        The DOM element to add.
-  //    x, y        The grid coordinates to place the item.
-  //    w, h        If supplied, will stretch the item among
-  //                multiple grid elements.
-  // Returns:
-  //    <td>        On success, returns the <td> dom element.
-  //    false       A failure happened, most likely cells could not be merged.
-  addItem: function(item, x, y, w, h) {
-    if (typeof x === 'undefined' || x < 0) {
-      x = 0;
-    }
-    if (typeof y === 'undefined' || y < 0) {
-      y = 0;
-    }
-    if (typeof w === 'undefined' || w <= 0) {
-      w = 1;
-    }
-    if (typeof h === 'undefined' || h <= 0) {
-      h = 1;
-    }
-
-    this._resizeGrid(x + w - 1, y + h - 1);
-    if (!this._mergeGrid(x, y, w, h)) {
-      return false;
-    }
-
-    this._grid[y][x].$el.append($(item));
-    return this._grid[y][x].$el;
-  },
-
-  // Removes an item from the layout
-  removeItem: function(item, x, y) {
-  },
-
-  // Clears the layout.
-  clear: function() {
-    var showGrid = this.showGrid();
-    this._init();
-    this.showGrid(showGrid);
-    this._grid = [];
-  },
-
-  // Gets, or Sets the visible status of the layout grid.
-  // Params:
-  //    enabled     If supplied, will set the grid shown or hidden.
-  // Returns:
-  //    bool        The current visibility of the grid.
-  showGrid: function(enabled) {
-    if (typeof enabled === 'undefined') {
-      return this.$elem.hasClass('wcLayoutGrid');
-    }
-
-    this.$elem.toggleClass('wcLayoutGrid', enabled);
-    return this.$elem.hasClass('wcLayoutGrid');
-  },
-
   // Checks if the mouse is in a valid anchor position for nesting another widget.
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
@@ -325,7 +331,7 @@ wcLayout.prototype = {
   //    parent              If supplied, sets a new parent for this layout.
   // Returns:
   //    JQuery collection   The current container.
-  container: function($container) {
+  __container: function($container) {
     if (typeof $container === 'undefined') {
       return this.$container;
     }
@@ -339,24 +345,10 @@ wcLayout.prototype = {
     return this.$container;
   },
 
-  // Gets, or Sets the parent item for this layout.
-  // Params:
-  //    parent        If supplied, sets a new parent for this layout.
-  // Returns:
-  //    object        The current parent.
-  parent: function(parent) {
-    if (typeof parent === 'undefined') {
-      return this._parent;
-    }
-
-    this._parent = parent;
-    return this._parent;
-  },
-
   // Destroys the layout.
-  destroy: function() {
-    this.container(null);
-    this.parent(null);
+  __destroy: function() {
+    this.__container(null);
+    this._parent = null;
     this.clear();
 
     this.$elem.remove();
