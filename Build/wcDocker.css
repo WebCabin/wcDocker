@@ -68,10 +68,6 @@ html, body {
   background-color: white;
 }
 
-.wcFrameShadower {
-  background-color: white;
-}
-
 .wcFrameTitle {
   padding-left: 3px;
   height: 15px;
@@ -343,7 +339,7 @@ html, body {
     list-style-type: none;
     
     border: 1px solid #000;
-    background: #666;
+    background-color: #666;
 
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
        -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
