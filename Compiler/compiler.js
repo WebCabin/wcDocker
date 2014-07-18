@@ -81,3 +81,6 @@ concat({
 // Now minify them. 
 uglifyJS('../Build/wcDocker.js', '../Build/wcDocker.min.js');
 uglifyCSS('../Build/wcDocker.css', '../Build/wcDocker.min.css');
+
+uglifyCSS('../Themes/bigRed.css', '../Build/Themes/bigRed.min.css');
+uglifyCSS('../Themes/shadow.css', '../Build/Themes/shadow.min.css');

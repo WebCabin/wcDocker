@@ -640,7 +640,7 @@ wcDocker.prototype = {
 
     // On some browsers, clicking and dragging a tab will drag it's graphic around.
     // Here I am disabling this as it interferes with my own drag-drop.
-    $('body').on('mousedown', '.wcPanelTab li a', function(event) {
+    $('body').on('mousedown', '.wcPanelTab', function(event) {
       event.preventDefault();
       event.returnValue = false;
     });
@@ -2534,7 +2534,7 @@ wcFrame.prototype = {
 
       this.__updateTabs();
 
-      return this.$title.find('span[id="' + toIndex + '"]')[0];
+      return this.$title.find('.wcPanelTab[id="' + toIndex + '"]')[0];
     }
     return false;
   },

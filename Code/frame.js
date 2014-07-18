@@ -446,7 +446,7 @@ wcFrame.prototype = {
 
       this.__updateTabs();
 
-      return this.$title.find('span[id="' + toIndex + '"]')[0];
+      return this.$title.find('.wcPanelTab[id="' + toIndex + '"]')[0];
     }
     return false;
   },
