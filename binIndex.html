@@ -16,34 +16,49 @@
         var myDocker = new wcDocker(document.body);
         if (myDocker) {
 
-          var $themeSelector = $('<div style="position:absolute;left:0px;top:50px;">Theme: <select><option value="Default">Default</option><option value="bigRed">Big Red</option></select></div>');
-
           myDocker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
           
           var layoutConfiguration;
+          var currentTheme = 'Default';
 
           myDocker.registerPanelType('Top Panel', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong><br>Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 0);
             myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://bitbucket.org/WebCabin/wcdocker">https://bitbucket.org/WebCabin/wcdocker</a></div>'), 0, 1);
-            myPanel.size(100, 100);
+            myPanel.size(Infinity, 100);
             myPanel.minSize(100, 100);
-            myPanel.maxSize(100, 100);
+            myPanel.maxSize(Infinity, 100);
             myPanel.moveable(false);
             myPanel.closeable(false);
+          }, true);
 
-            var $saveButton = $('<button style="position:absolute;right:10px;top:10px;">Remember Layout</button>');
-            var $restoreButton = $('<button style="position:absolute;right:10px;top:50px;">Restore Layout</button>');
-            myPanel.layout().addItem($saveButton);
-            myPanel.layout().addItem($restoreButton);
-            myPanel.layout().addItem($('<div style="position:absolute;width:300px;height:20px;left:10px;top:10px;background-color:darkgray;text-align:center;" class="testMenu">Custom Context Menu here</div>'));
-            myPanel.layout().addItem($themeSelector);
+          myDocker.registerPanelType('Control Panel', function(myPanel) {
+            var $themeSelector = $('<div style="width:100%;text-align:center;" class="themeSelector">Theme: \
+              <select>\
+              <option value="Default">Default</option>\
+              <option value="bigRed">Big Red</option>\
+              <option value="shadow">Shadow</option>\
+              </select></div>');
 
+            var $saveButton = $('<button>Remember Layout</button>');
+            var $restoreButton = $('<button class="restoreButton" style="float:right;">Restore Layout</button>');
+
+            myPanel.layout().addItem($themeSelector, 0, 0, 2, 1);
+            myPanel.layout().addItem($('<div style="width:100%;height:20px;background-color:transparent;text-align:center;" class="testMenu">Custom Context Menu here</div>'), 0, 1, 2, 1);
+            myPanel.layout().addItem($saveButton, 0, 2);
+            myPanel.layout().addItem($restoreButton, 1, 2);
+
+            $themeSelector.find('select').val(currentTheme);
             $themeSelector.change(function() {
-              var cur = $themeSelector.find('option:selected').val();
+              currentTheme = $themeSelector.find('option:selected').val();
               $('#theme').remove();
-              if (cur !== 'Default') {
-                $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/bigRed.css"/>'));
+              if (currentTheme !== 'Default') {
+                $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + currentTheme + '.css"/>'));
               }
+              $('.themeSelector select').each(function() {
+                if ($(this)[0] !== $themeSelector.find('select')[0]) {
+                  $(this).val(currentTheme);
+                }
+              });
             });
 
             var saveTimer;
@@ -57,7 +72,10 @@
               layoutConfiguration = myDocker.save();
 
               $saveButton.html('<b>Remembered!</b>');
-              $restoreButton.attr('disabled', false);
+              $('.restoreButton').each(function() {
+                $(this).attr('disabled', false);
+              });
+
               saveTimer = setTimeout(function() {
                 $saveButton.text('Remember Layout');
                 saveTimer = 0;
@@ -69,7 +87,7 @@
                 myDocker.restore(layoutConfiguration);
               }
             });
-          }, true);
+          });
 
           myDocker.registerPanelType('Panel Cells', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
@@ -219,6 +237,7 @@
           myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, false, panel2);
           myDocker.addPanel('Tabbed Panel', wcDocker.DOCK_BOTTOM, true, panel1);
           myDocker.addPanel('Memory Panel', wcDocker.DOCK_BOTTOM, false, panel1);
+          myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, false);
 
           // Setup our context menus.
           myDocker.basicMenu('.testMenu', [
