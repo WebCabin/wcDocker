@@ -45,11 +45,12 @@ windows are not constrained to the given container element, they can float anywh
 var myDocker = new wcDocker(document.body);
 ```
 The docker window contains a central panel which can not be moved or hidden and should be
-filled with content for your main view.  Use the center() function to access its layout.
+filled with content for your main view.  Use the center() function to access it.
 
 ```
 #!javascript
-var myLayout = myDocker.center();
+var myPanel = myDocker.center();
+var myLayout = myPanel.layout();
 ```
 What you get from the central panel is the layout, layouts are the container where all your window's content will be placed.
 Each layout is a table grid that is dynamically resized based on content given. To add a DOM element, add it into your

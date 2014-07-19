@@ -24,8 +24,8 @@
         var myDocker = new wcDocker(document.body);
         if (myDocker) {
 
-          myDocker.center().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
-          
+          myDocker.center().layout().addItem($('<div style="text-align:center">Central Window<br>This is always present and should contain your main content or view.<br></div>'));
+
           var layoutConfiguration;
           var currentTheme = 'Default';
 
