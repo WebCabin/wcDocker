@@ -370,7 +370,7 @@ wcDocker.prototype = {
 
   // Retreives the center layout for the window.
   center: function() {
-    return this._center.panel().layout();
+    return this._center.panel();
   },
 
   // Assigns a basic context menu to a selector element.  The context
