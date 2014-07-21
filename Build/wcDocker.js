@@ -111,7 +111,7 @@ wcDocker.prototype = {
       if (this._dockPanelTypeList[i].name === typeName) {
         var panel = new wcPanel(typeName);
         panel.__container(this.$transition);
-        this._dockPanelTypeList[i].create(panel);
+        panel._panelObject = new this._dockPanelTypeList[i].create(panel);
 
         if (allowGroup) {
           this.__addPanelGrouped(panel, location, parentPanel);
@@ -1699,6 +1699,8 @@ function wcPanel(type) {
   this.$container = null;
   this._parent = null;
 
+  this._panelObject = null;
+
   this._type = type;
   this._title = type;
 
@@ -2079,6 +2081,7 @@ wcPanel.prototype = {
 
   // Destroys this panel.
   __destroy: function() {
+    this._panelObject = null;
     this.__trigger(wcDocker.EVENT_CLOSED);
     this.off();
 
