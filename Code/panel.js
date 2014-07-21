@@ -6,7 +6,7 @@ function wcPanel(type) {
   this.$container = null;
   this._parent = null;
 
-  this._create = null;
+  this._panelObject = null;
 
   this._type = type;
   this._title = type;
@@ -388,7 +388,7 @@ wcPanel.prototype = {
 
   // Destroys this panel.
   __destroy: function() {
-    this._create = null;
+    this._panelObject = null;
     this.__trigger(wcDocker.EVENT_CLOSED);
     this.off();
 
