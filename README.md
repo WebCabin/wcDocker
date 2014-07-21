@@ -71,7 +71,8 @@ myDocker.registerPanelType('Some type name', function(myPanel) {});
 ```
 Inside the callback function you are given the panel that was just created, from here you can
 access its layout and populate it, much the same as done with the central panel.  The creation function
-passed in is also called using the 'new' operator, in the case that your function is actually a class object.
+passed in is also called using the 'new' operator and stored as a member variable inside the panel,
+in the case that your function is actually a class object.
 ```
 #!javascript
 myPanel.layout().addItem(myElement, x, y, width, height);
