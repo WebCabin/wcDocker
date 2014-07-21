@@ -111,7 +111,7 @@ wcDocker.prototype = {
       if (this._dockPanelTypeList[i].name === typeName) {
         var panel = new wcPanel(typeName);
         panel.__container(this.$transition);
-        this._dockPanelTypeList[i].create(panel);
+        panel._create = new this._dockPanelTypeList[i].create(panel);
 
         if (allowGroup) {
           this.__addPanelGrouped(panel, location, parentPanel);
