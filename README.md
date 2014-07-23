@@ -38,82 +38,41 @@ For more detailed information on the API, check out the [wiki](https://bitbucket
 Begin by creating an instance of the main docker window and assign it a DOM container element.
 Typically this would be the document body, but there is no restriction if you want to use a
 smaller area instead.  Multiple main windows can be used, however, no support exists for
-cross interaction between them, nor do I plan on implementing that.  Also note that floating
-windows are not constrained to the given container element, they can float anywhere in the browser window.
+cross interaction between them (yet?).  Also note that floating windows are not constrained to
+the given container element, they can float anywhere in the browser window.
 ```
 #!javascript
 var myDocker = new wcDocker(document.body);
 ```
-The docker window contains a central panel which can not be moved or hidden and should be
-filled with content for your main view.  Use the center() function to access it.
-
-```
-#!javascript
-var myPanel = myDocker.center();
-var myLayout = myPanel.layout();
-```
-What you get from the central panel is the layout, layouts are the container where all your window's content will be placed.
-Each layout is a table grid that is dynamically resized based on content given. To add a DOM element, add it into your
-layout with an (x, y) grid location. You can also optionally include width and height values which will stretch an element
-over multiple grid cells within the layout.
-```
-#!javascript
-myLayout.addItem(myElement, x, y, width, height);
-```
-The main docker window also contains docking panels, which can be moved around and organized at will by the user.
-All docking panels have to be registered first before use, this allows the docker to know what types
-of docking panels are available and allow the user to add and remove them at will.  To register a new type,
-you will need a unique name to identify it and a function callback which allows you to initialize the panel type when
-one is created.  Note, there is also an optional third parameter to mark it private, by supplying a true value the user will not be able to create an instance of this panel type.
+The main docker window contains docking panels which can be moved around and organized at will by the user.
+All docking panels have to be registered first before use, this allows the docker to manage their creation.
+To register a new type, you will need a unique name to identify it and a function or class object constructor that
+takes in the newly created panel.  If you are unfamiliar with object-oriented javascript, there are plenty of
+tutorials online.  Finally, there is also an optional third parameter that will mark the panel type as private,
+by supplying a true value the user will not be able to create an instance of this panel type via normal, built-in,
+methods.
 ```
 #!javascript
 myDocker.registerPanelType('Some type name', function(myPanel) {});
 ```
-Inside the callback function you are given the panel that was just created, from here you can
-access its layout and populate it, much the same as done with the central panel.  The creation function
-passed in is also called using the 'new' operator and stored as a member variable inside the panel,
-in the case that your function is actually a class object.
+Inside the callback function, or object constructor, you are given the panel that was just created, from the panel
+you can access the layout.  The layout is organized in a grid pattern and will be where all of the contents of your
+panel will go.  To add a DOM element to it, supply it with your element and a grid x, y position (by default = 0, 0).
+You can also stretch an element over multiple grid cells by supplying an optional width and height value, by default
+they stay within their 1 cell.
 ```
 #!javascript
 myPanel.layout().addItem(myElement, x, y, width, height);
 ```
-From here you can set various starting properties of the panel, such as
-the desired or the minimum size:
+You can also assign various starting properties of the panel here, such as the desired or the minimum size.
 ```
 #!javascript
-myPanel.size(200, 200);
+myPanel.initSize(200, 200);
 myPanel.minSize(100, 100);
 ```
-You can also register some events if you feel you need them:
-
-```
-#!javascript
-myPanel.on(wcDocker.EVENT_RESIZE, function(myPanel){});
-```
-The following event types are supported by the Docker:  
-
-wcDocker.EVENT_CLOSED         = 'closed' = When the panel has been closed and is about to be destroyed.  
-wcDocker.EVENT_ATTACHED       = 'attached' = When the panel has changed from a floating panel to a docked panel.  
-wcDocker.EVENT_DETACHED       = 'detached' = When the panel has changed from a docked panel to a floating panel.  
-wcDocker.EVENT_MOVED          = 'moved' = Whenever the position of the panel has changed.  
-wcDocker.EVENT_RESIZED        = 'resized' = Whenever the size of the panel has changed.  
-wcDocker.EVENT_SAVE_LAYOUT    = 'save_layout' = Whenever the layout is being saved on this panel.  
-wcDocker.EVENT_RESTORE_LAYOUT = 'restore_layout' = Whenever the layout is being restored on this panel.  
-
-You can also create your own custom events by supplying your own event names, and then later triggering
-them on your own either from the main Docker instance or from your own panel.  The second parameter you give
-can be any data object that you wish to pass into all receiving handler functions:
-```
-#!javascript
-myDocker.trigger('your event', customDataObj);
-
-// or
-
-myPanel.trigger('your event', customDataObj);
-```
-Now, once you have registered your panel type, if it is not private, the user will be able to create that panel
-whenever they wish.  However, if you also wish to programmatically create an instance of that panel, you can
-use the addPanel() function in the docker (private panels can be made this way).
+Now, once you have registered your panel types, if they are not private, the user will be able to create those panels
+whenever they wish.  However, it is also recommended that you initialize a starting panel layout in order to give
+your users a place to start.
 ```
 #!javascript
 myDocker.addPanel('Registered type name', wcDocker.LEFT, false, optionalTargetPanel);
@@ -128,10 +87,9 @@ wcDocker.DOCK_RIGHT    = Dock it to the right side of the central or target pane
 wcDocker.DOCK_TOP      = Dock it to the top of the central or target panel.  
 wcDocker.DOCK_BOTTOM   = Dock it on the bottom of the central or target panel.  
 
-The third parameter determines whether this panel is allowed to group up (via tabs) with another, already existing,
-panel or if a new panel frame should appear next to it.
-
-The final parameter is optional, normally panels will dock in relation to the main docker's central
+The third parameter determines whether this panel is allowed to group up (via tabs) with another panel, or if it should
+appear by itself.
+And the final parameter is optional, normally panels will dock in relation to the main docker's central
 panel. However, by supplying a specific panel instead, your new panel will be docked in relation to that target.
 The return value is the newly created docking panel, in the case that you may want it.
 

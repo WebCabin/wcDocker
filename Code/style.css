@@ -258,7 +258,7 @@ html, body {
 .wcFrameTitle {
   padding-left: 3px;
   height: 17px;
-  background-color: #AAA;
+  background-color: #555;
 }
 
 .wcFrameCenter {
@@ -271,8 +271,8 @@ html, body {
 
 .wcPanelTab {
   color: #42454a;
-  background-color: #DDD;
-  border: 1px solid #555;
+  background-color: #BBB;
+  border: 1px solid #000;
   border-radius: 2px 2px 0px 0px;
   border-bottom: 0px;
   margin-right: 1px;
@@ -289,7 +289,7 @@ html, body {
 
 .wcPanelTabActive {
   color: #000;
-  background-color: #AAA;
+  background-color: #888;
   font-weight: bold;
   margin-top: 1px;
 }

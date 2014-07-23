@@ -26,7 +26,6 @@ function wcDocker(container) {
   this.$container.append(this.$transition);
 
   this._root = null;
-  this._center = null;
   this._floatingList = [];
 
   this._frameList = [];
@@ -189,6 +188,8 @@ wcDocker.prototype = {
             other.__container(parentContainer);
           }
           this.__update();
+        } else if (parentSplitter === this) {
+          this._root = null;
         }
         parentFrame.__destroy();
       }
@@ -368,11 +369,6 @@ wcDocker.prototype = {
     }
   },
 
-  // Retreives the center layout for the window.
-  center: function() {
-    return this._center.panel();
-  },
-
   // Assigns a basic context menu to a selector element.  The context
   // Menu is a simple list of options, no nesting or special options.
   //
@@ -432,20 +428,7 @@ wcDocker.prototype = {
 
   // Clears out all panels.
   clear: function() {
-    this._root = this._center;
-
-    var parent = this._center._parent;
-    if (parent instanceof wcSplitter) {
-
-      if (parent.pane(0) === this._center) {
-        parent._pane[0] = null;
-      } else {
-        parent._pane[1] = null;
-      }
-    }
-
-    this._center.__container(this.$transition);
-    this._center._parent = this;
+    this._root = null;
 
     for (var i = 0; i < this._splitterList.length; ++i) {
       this._splitterList[i].__destroy();
@@ -466,14 +449,7 @@ wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   __init: function() {
-    var panel = new wcPanel('');
-    panel.closeable(false);
-    panel.layout().$elem.addClass('wcCenter');
-    panel.size(-1, -1);
-    this._center = new wcFrame(this.$container, panel, false, true);
-    this._center.$frame.addClass('wcCenter');
-    this._center.addPanel(panel);
-    this._root = this._center;
+    this._root = null;
 
     var self = this;
     $(window).resize(self.__resize.bind(self));
@@ -487,11 +463,6 @@ wcDocker.prototype = {
           if (self._frameList[i].$frame[0] === $trigger[0]) {
             myFrame = self._frameList[i];
             break;
-          }
-        }
-        if (!myFrame) {
-          if (self._center.$frame[0] === $trigger[0]) {
-            myFrame = self._center;
           }
         }
 
@@ -524,7 +495,7 @@ wcDocker.prototype = {
           if (!myFrame._isFloating) {
             items['Detach Panel'] = {
               name: 'Detach Tab',
-              disabled: (!myFrame.panel().moveable() || myFrame === self._center),
+              disabled: !myFrame.panel().moveable(),
             };
           }
 
@@ -547,7 +518,7 @@ wcDocker.prototype = {
           if (!myFrame._isFloating) {
             items['Detach Panel'] = {
               name: 'Detach Panel',
-              disabled: (!myFrame.panel().moveable() || myFrame === self._center),
+              disabled: !myFrame.panel().moveable(),
             };
           }
 
@@ -832,11 +803,6 @@ wcDocker.prototype = {
                   }
                 }
               }
-
-              if (self._center.__checkAnchorDrop(mouse, false, self._ghost, true)) {
-                // self._draggingFrame.__shadow(true);
-                return;
-              }
             }
 
             self._ghost.anchor(mouse, null);
@@ -921,6 +887,7 @@ wcDocker.prototype = {
             index = index + frame._panelList.length;
           }
           panel = self.movePanel(self._draggingFrame.panel(), anchor.loc, anchor.merge, panel);
+          panel._parent.panel(panel._parent._panelList.length-1);
           // Dragging the entire frame.
           if (!self._draggingFrameTab) {
             while (self._draggingFrame.panel())
@@ -989,17 +956,10 @@ wcDocker.prototype = {
         return splitter;
 
       case 'wcFrame':
-        var frame;
-        if (!data.center) {
-          frame = new wcFrame($container, parent, data.floating);
-          this._frameList.push(frame);
-          if (data.floating) {
-            this._floatingList.push(frame);
-          }
-        } else {
-          frame = this._center;
-          frame.__container($container);
-          frame._parent = parent;
+        var frame = new wcFrame($container, parent, data.floating);
+        this._frameList.push(frame);
+        if (data.floating) {
+          this._floatingList.push(frame);
         }
         return frame;
 
@@ -1074,44 +1034,33 @@ wcDocker.prototype = {
       }
     }
 
-    var splitter;
-    if (this._center === this._root) {
-      // The center is the root when no dock panels have been docked yet.
-      splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
-      this._root = splitter;
+    var frame = new wcFrame(this.$transition, this, false);
+    this._frameList.push(frame);
+
+    if (!this._root) {
+      this._root = frame;
+      frame.__container(this.$container);
     } else {
-      // The parent of the center should be a splitter, we need to insert another one in between.
-      var parent = this._center._parent;
-      if (parent instanceof wcSplitter) {
-        var left  = parent.pane(0);
-        var right = parent.pane(1);
-        if (left === this._center) {
-          splitter = new wcSplitter(this.$transition, parent, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
-          parent.pane(0, splitter);
+      var splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+      if (splitter) {
+        this._splitterList.push(splitter);
+        frame._parent = splitter;
+
+        if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
+          splitter.pane(0, frame);
+          splitter.pane(1, this._root);
+          splitter.__findBestPos();
         } else {
-          splitter = new wcSplitter(this.$transition, parent, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
-          parent.pane(1, splitter);
+          splitter.pane(0, this._root);
+          splitter.pane(1, frame);
+          splitter.__findBestPos();
         }
+
+        this._root = splitter;
       }
     }
 
-    if (splitter) {
-      this._splitterList.push(splitter);
-      var frame = new wcFrame(this.$transition, splitter, false);
-      this._frameList.push(frame);
-
-      if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
-        splitter.pane(0, frame);
-        splitter.pane(1, this._center);
-        splitter.__findBestPos();
-      } else {
-        splitter.pane(0, this._center);
-        splitter.pane(1, frame);
-        splitter.__findBestPos();
-      }
-
-      frame.addPanel(panel);
-    }
+    frame.addPanel(panel);
   },
 
   // Attempts to insert a given dock panel into an already existing frame.
@@ -1148,15 +1097,6 @@ wcDocker.prototype = {
     var needsHorizontal = location !== wcDocker.DOCK_BOTTOM;
 
     function ___iterateParents(item) {
-      // The last item will always be the center.
-      if (item === this._center) {
-        this.__addPanelAlone(panel, location);
-        return;
-      }
-
-      // Iterate through splitters. one side will always be another
-      // frame, while the other will be either the center or another
-      // splitter.
       if (item instanceof wcSplitter) {
         var left = item.pane(0);
         var right = item.pane(1);
@@ -1166,10 +1106,10 @@ wcDocker.prototype = {
           // Make sure the dock panel is on the proper side.
           if (left instanceof wcFrame && (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP)) {
             left.addPanel(panel);
-            return;
+            return true;
           } else if (right instanceof wcFrame && (location === wcDocker.DOCK_RIGHT || location === wcDocker.DOCK_BOTTOM)) {
             right.addPanel(panel);
-            return;
+            return true;
           }
 
           // This splitter was not valid, continue iterating through parents.
@@ -1177,14 +1117,18 @@ wcDocker.prototype = {
 
         // If it isn't, iterate to which ever pane is not a dock panel.
         if (!(left instanceof wcFrame)) {
-          ___iterateParents.call(this, left);
+          return ___iterateParents.call(this, left);
         } else {
-          ___iterateParents.call(this, right);
+          return ___iterateParents.call(this, right);
         }
       }
+      return false;
     };
 
-    ___iterateParents.call(this, this._root);
+    if (!___iterateParents.call(this, this._root)) {
+      // If we did not manage to find a place for this panel, last resort is to put it in its own frame.
+      this.__addPanelAlone(panel, location);
+    }
   },
 };
 
@@ -2230,9 +2174,6 @@ wcFrame.prototype = {
       this._panelList.push(panel);
     } else {
       this._panelList.splice(index, 0, panel);
-      if (this._curTab >= index) {
-        this._curTab++;
-      }
     }
 
     if (this._curTab === -1 && this._panelList.length) {
@@ -2284,6 +2225,7 @@ wcFrame.prototype = {
         this._curTab = tabIndex;
         this.$title.find('div[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
+        this.__onTabChange();
       }
     }
 
@@ -2369,28 +2311,7 @@ wcFrame.prototype = {
       this.$frame.css('height', this._size.y + 'px');
     }
 
-    var panel = this.panel();
-    if (panel) {
-      var scrollable = panel.scrollable();
-      this.$center.toggleClass('wcScrollableX', scrollable.x);
-      this.$center.toggleClass('wcScrollableY', scrollable.y);
-
-      if (panel.moveable() && panel.title()) {
-        this.$frame.prepend(this.$title);
-        this.$center.css('top', '');
-      } else {
-        this.$title.remove();
-        this.$center.css('top', '0px');
-      }
-
-      if (panel.closeable()) {
-        this.$frame.append(this.$close);
-      } else {
-        this.$close.remove();
-      }
-
-      panel.__update();
-    }
+    this.__updateTabs();
   },
 
   // Saves the current panel configuration into a meta
@@ -2399,7 +2320,6 @@ wcFrame.prototype = {
     var data = {};
     data.type = 'wcFrame';
     data.floating = this._isFloating;
-    data.center = this.$frame.hasClass('wcCenter');
     data.pos = {
       x: this._pos.x,
       y: this._pos.y,
@@ -2432,7 +2352,6 @@ wcFrame.prototype = {
       this._panelList.push(panel);
     }
 
-    this.__updateTabs();
     this.__update();
   },
 
@@ -2467,6 +2386,33 @@ wcFrame.prototype = {
     }
 
     $tempCenter.remove();
+
+    this.__onTabChange();
+  },
+
+  __onTabChange: function() {
+    var panel = this.panel();
+    if (panel) {
+      var scrollable = panel.scrollable();
+      this.$center.toggleClass('wcScrollableX', scrollable.x);
+      this.$center.toggleClass('wcScrollableY', scrollable.y);
+
+      if (panel.moveable() && panel.title()) {
+        this.$frame.prepend(this.$title);
+        this.$center.css('top', '');
+      } else {
+        this.$title.remove();
+        this.$center.css('top', '0px');
+      }
+
+      if (panel.closeable()) {
+        this.$frame.append(this.$close);
+      } else {
+        this.$close.remove();
+      }
+
+      panel.__update();
+    }
   },
 
   // Brings the frame into focus.

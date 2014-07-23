@@ -139,9 +139,6 @@ wcFrame.prototype = {
       this._panelList.push(panel);
     } else {
       this._panelList.splice(index, 0, panel);
-      if (this._curTab >= index) {
-        this._curTab++;
-      }
     }
 
     if (this._curTab === -1 && this._panelList.length) {
@@ -193,6 +190,7 @@ wcFrame.prototype = {
         this._curTab = tabIndex;
         this.$title.find('div[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
+        this.__onTabChange();
       }
     }
 
@@ -278,28 +276,7 @@ wcFrame.prototype = {
       this.$frame.css('height', this._size.y + 'px');
     }
 
-    var panel = this.panel();
-    if (panel) {
-      var scrollable = panel.scrollable();
-      this.$center.toggleClass('wcScrollableX', scrollable.x);
-      this.$center.toggleClass('wcScrollableY', scrollable.y);
-
-      if (panel.moveable() && panel.title()) {
-        this.$frame.prepend(this.$title);
-        this.$center.css('top', '');
-      } else {
-        this.$title.remove();
-        this.$center.css('top', '0px');
-      }
-
-      if (panel.closeable()) {
-        this.$frame.append(this.$close);
-      } else {
-        this.$close.remove();
-      }
-
-      panel.__update();
-    }
+    this.__updateTabs();
   },
 
   // Saves the current panel configuration into a meta
@@ -308,7 +285,6 @@ wcFrame.prototype = {
     var data = {};
     data.type = 'wcFrame';
     data.floating = this._isFloating;
-    data.center = this.$frame.hasClass('wcCenter');
     data.pos = {
       x: this._pos.x,
       y: this._pos.y,
@@ -341,7 +317,6 @@ wcFrame.prototype = {
       this._panelList.push(panel);
     }
 
-    this.__updateTabs();
     this.__update();
   },
 
@@ -376,6 +351,33 @@ wcFrame.prototype = {
     }
 
     $tempCenter.remove();
+
+    this.__onTabChange();
+  },
+
+  __onTabChange: function() {
+    var panel = this.panel();
+    if (panel) {
+      var scrollable = panel.scrollable();
+      this.$center.toggleClass('wcScrollableX', scrollable.x);
+      this.$center.toggleClass('wcScrollableY', scrollable.y);
+
+      if (panel.moveable() && panel.title()) {
+        this.$frame.prepend(this.$title);
+        this.$center.css('top', '');
+      } else {
+        this.$title.remove();
+        this.$center.css('top', '0px');
+      }
+
+      if (panel.closeable()) {
+        this.$frame.append(this.$close);
+      } else {
+        this.$close.remove();
+      }
+
+      panel.__update();
+    }
   },
 
   // Brings the frame into focus.
