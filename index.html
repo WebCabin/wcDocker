@@ -101,7 +101,7 @@
             myPanel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
             myPanel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged.</div>'), 0, 2, 2, 1);
             myPanel.layout().showGrid(true);
-            myPanel.size(200, 200);
+            myPanel.size(400, 400);
           });
 
           myDocker.registerPanelType('Dock Me', function(myPanel) {
@@ -111,6 +111,7 @@
 
           myDocker.registerPanelType('Creation Panel', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">New (and even duplicate) panels can be created by right clicking at the location you wish the new panel to go and using the context menu.</div>'));
+            myPanel.layout().addItem($('<div>'), 0, 1);
           });
 
           myDocker.registerPanelType('Floating Panels', function(myPanel) {
@@ -235,18 +236,19 @@
             });
           });
 
-          myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, false);
+          var panel1 = myDocker.addPanel('Creation Panel', wcDocker.DOCK_BOTTOM, false);
+          var panel2 = myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, false, panel1);
+          myDocker.addPanel('Reaction Panel', wcDocker.DOCK_RIGHT, false, panel2);
 
-          var panel1 = myDocker.addPanel('Panel Cells', wcDocker.DOCK_LEFT, false);
-          myDocker.addPanel('Tabbed Panel', wcDocker.DOCK_BOTTOM, true, panel1);
-          myDocker.addPanel('Floating Panels', wcDocker.DOCK_FLOAT, false);
-          myDocker.addPanel('Memory Panel', wcDocker.DOCK_BOTTOM, false, panel1);
+          var panel3 = myDocker.addPanel('Panel Cells', wcDocker.DOCK_LEFT, false);
+          myDocker.addPanel('Tabbed Panel', wcDocker.DOCK_BOTTOM, true, panel3);
+          myDocker.addPanel('Memory Panel', wcDocker.DOCK_BOTTOM, false, panel3);
 
-          var panel2 = myDocker.addPanel('Dock Me', wcDocker.DOCK_RIGHT, false);
-          myDocker.addPanel('Creation Panel', wcDocker.DOCK_BOTTOM, false, panel2);
-          myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, false, panel2);
+          var panel4 = myDocker.addPanel('Dock Me', wcDocker.DOCK_RIGHT, false);
 
           myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
+
+          myDocker.addPanel('Floating Panels', wcDocker.DOCK_FLOAT, false);
 
           // Setup our context menus.
           myDocker.basicMenu('.testMenu', [
