@@ -135,6 +135,11 @@ wcDocker.prototype = {
       return false;
     }
 
+    // Do not remove if this is the last moveable panel.
+    if (this.__isLastPanel(panel)) {
+      return false;
+    }
+
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
       // If no more panels remain in this frame, remove the frame.
@@ -188,7 +193,7 @@ wcDocker.prototype = {
             other.__container(parentContainer);
           }
           this.__update();
-        } else if (parentSplitter === this) {
+        } else if (parentFrame === this._root) {
           this._root = null;
         }
         parentFrame.__destroy();
@@ -214,6 +219,10 @@ wcDocker.prototype = {
   //    wcPanel       The panel that was created.
   //    false         The panel type does not exist.
   movePanel: function(panel, location, allowGroup, parentPanel) {
+    if (this.__isLastPanel(panel)) {
+      return panel;
+    }
+
     var $elem = panel.$container;
     if (panel._parent instanceof wcFrame) {
       $elem = panel._parent.$frame;
@@ -490,12 +499,12 @@ wcDocker.prototype = {
         if (isTitle) {
           items['Close Panel'] = {
             name: 'Close Tab',
-            disabled: !myFrame.panel().closeable(),
+            disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
           };
           if (!myFrame._isFloating) {
             items['Detach Panel'] = {
               name: 'Detach Tab',
-              disabled: !myFrame.panel().moveable(),
+              disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
             };
           }
 
@@ -513,12 +522,12 @@ wcDocker.prototype = {
         } else {
           items['Close Panel'] = {
             name: 'Close Panel',
-            disabled: !myFrame.panel().closeable(),
+            disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
           };
           if (!myFrame._isFloating) {
             items['Detach Panel'] = {
               name: 'Detach Panel',
-              disabled: !myFrame.panel().moveable(),
+              disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
             };
           }
 
@@ -841,27 +850,31 @@ wcDocker.prototype = {
           if (!self._draggingFrameTab) {
             self._draggingFrame.panel(0);
           }
-          var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_FLOAT, false);
+
           var mouse = {
             x: event.clientX,
             y: event.clientY,
           };
-          // Dragging the entire frame.
-          if (!self._draggingFrameTab) {
-            while (self._draggingFrame.panel())
-            self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_BOTTOM, true, panel);
+
+          if (self._draggingFrameTab || !self.__isLastFrame(self._draggingFrame)) {
+            var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_FLOAT, false);
+            // Dragging the entire frame.
+            if (!self._draggingFrameTab) {
+              while (self._draggingFrame.panel())
+              self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_BOTTOM, true, panel);
+            }
+
+            var frame = panel._parent;
+            if (frame instanceof wcFrame) {
+              frame.pos(mouse.x, mouse.y + self._ghost.__rect().h/2 - 10, true);
+              frame.panel(index);
+            }
+
+            frame._size.x = self._ghost.__rect().w;
+            frame._size.y = self._ghost.__rect().h;
+
+            frame.__update();
           }
-
-          var frame = panel._parent;
-          if (frame instanceof wcFrame) {
-            frame.pos(mouse.x, mouse.y + self._ghost.__rect().h/2 - 10, true);
-            frame.panel(index);
-          }
-
-          frame._size.x = self._ghost.__rect().w;
-          frame._size.y = self._ghost.__rect().h;
-
-          frame.__update();
         } else if (!anchor.self) {
           var index = self._draggingFrame._curTab;
           if (!self._draggingFrameTab) {
@@ -945,6 +958,54 @@ wcDocker.prototype = {
     }
 
     frame.__focus(flash)
+  },
+
+  // Checks a given panel to see if it is the final remaining
+  // moveable panel in the docker.
+  // Params:
+  //    panel     The panel.
+  // Returns:
+  //    true      The panel is the last.
+  //    false     The panel is not the last.
+  __isLastPanel: function(panel) {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var testFrame = this._frameList[i];
+      if (testFrame._isFloating) {
+        continue;
+      }
+      for (var a = 0; a < testFrame._panelList.length; ++a) {
+        var testPanel = testFrame._panelList[a];
+        if (testPanel !== panel && testPanel.moveable()) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  },
+
+  // Checks a given frame to see if it is the final remaining
+  // moveable frame in the docker.
+  // Params:
+  //    frame     The frame.
+  // Returns:
+  //    true      The panel is the last.
+  //    false     The panel is not the last.
+  __isLastFrame: function(frame) {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var testFrame = this._frameList[i];
+      if (testFrame._isFloating || testFrame === frame) {
+        continue;
+      }
+      for (var a = 0; a < testFrame._panelList.length; ++a) {
+        var testPanel = testFrame._panelList[a];
+        if (testPanel.moveable()) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   },
 
   // For restore, creates the appropriate object type.
