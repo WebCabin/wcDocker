@@ -33,11 +33,11 @@ function wcDocker(container) {
 
   this._dockPanelTypeList = [];
 
-  this._draggingSplitter = false;
-  this._draggingFrame = false;
-  this._draggingFrameSizer = false;
-  this._draggingFrameTab = false;
-  this._ghost = false;
+  this._draggingSplitter = null;
+  this._draggingFrame = null;
+  this._draggingFrameSizer = null;
+  this._draggingFrameTab = null;
+  this._ghost = null;
 
   this.__init();
 };
@@ -642,9 +642,30 @@ wcDocker.prototype = {
       }
     });
 
+    // Middle mouse button on a panel tab to close it.
+    $('body').on('mouseup', '.wcPanelTab', function(event) {
+      if (event.which !== 2) {
+        return;
+      }
+
+      var index = parseInt($(this).attr('id'));
+
+      for (var i = 0; i < self._frameList.length; ++i) {
+        var frame = self._frameList[i];
+        if (frame.$title[0] === $(this).parent()[0]) {
+          var panel = frame._panelList[index];
+          if (self._removingPanel === panel) {
+            self.removePanel(panel);
+            self.__update();
+          }
+          return;
+        }
+      }
+    });
+
     // Mouse down on a splitter bar will allow you to resize them.
     $('body').on('mousedown', '.wcSplitterBar', function(event) {
-      if (event.which === 3) {
+      if (event.which !== 1) {
         return true;
       }
 
@@ -675,10 +696,14 @@ wcDocker.prototype = {
           self._draggingFrame.__anchorMove(mouse);
 
           if ($(event.target).hasClass('wcPanelTab')) {
+            if (event.which === 2) {
+              self._draggingFrame = null;
+              return;
+            }
             self._draggingFrameTab = event.target;
           }
 
-          // If the window is able to be docked, give it a dark __shadow tint and
+          // If the window is able to be docked, give it a dark shadow tint and
           // begin the movement process
           if (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab) {
             var rect = self._draggingFrame.__rect();
@@ -914,14 +939,33 @@ wcDocker.prototype = {
           }
         }
         self._ghost.__destroy();
-        self._ghost = false;
+        self._ghost = null;
       }
 
-      self._draggingSplitter = false;
-      self._draggingFrame = false;
-      self._draggingFrameSizer = false;
-      self._draggingFrameTab = false;
+      self._draggingSplitter = null;
+      self._draggingFrame = null;
+      self._draggingFrameSizer = null;
+      self._draggingFrameTab = null;
+      self._removingPanel = null;
       return true;
+    });
+
+    // Middle mouse button on a panel tab to close it.
+    $('body').on('mousedown', '.wcPanelTab', function(event) {
+      if (event.which !== 2) {
+        return;
+      }
+
+      var index = parseInt($(this).attr('id'));
+
+      for (var i = 0; i < self._frameList.length; ++i) {
+        var frame = self._frameList[i];
+        if (frame.$title[0] === $(this).parent()[0]) {
+          var panel = frame._panelList[index];
+          self._removingPanel = panel;
+          return;
+        }
+      }
     });
   },
 
@@ -2381,7 +2425,7 @@ wcFrame.prototype = {
       this.$frame.css('height', this._size.y + 'px');
     }
 
-    this.__updateTabs();
+    // this.__updateTabs();
   },
 
   // Saves the current panel configuration into a meta
