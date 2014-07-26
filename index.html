@@ -102,6 +102,10 @@
             myPanel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged.</div>'), 0, 2, 2, 1);
             myPanel.layout().showGrid(true);
             myPanel.size(400, 400);
+
+            myPanel.on(wcDocker.EVENT_SCROLLED, function(myPanel) {
+              alert('scrolled');
+            });
           });
 
           myDocker.registerPanelType('Dock Me', function(myPanel) {

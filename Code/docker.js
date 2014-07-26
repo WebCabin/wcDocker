@@ -53,6 +53,7 @@ wcDocker.EVENT_ATTACHED         = 'attached';
 wcDocker.EVENT_DETACHED         = 'detached';
 wcDocker.EVENT_MOVED            = 'moved';
 wcDocker.EVENT_RESIZED          = 'resized';
+wcDocker.EVENT_SCROLLED         = 'scrolled';
 wcDocker.EVENT_SAVE_LAYOUT      = 'save_layout';
 wcDocker.EVENT_RESTORE_LAYOUT   = 'restore_layout';
 

@@ -53,6 +53,7 @@ wcDocker.EVENT_ATTACHED         = 'attached';
 wcDocker.EVENT_DETACHED         = 'detached';
 wcDocker.EVENT_MOVED            = 'moved';
 wcDocker.EVENT_RESIZED          = 'resized';
+wcDocker.EVENT_SCROLLED         = 'scrolled';
 wcDocker.EVENT_SAVE_LAYOUT      = 'save_layout';
 wcDocker.EVENT_RESTORE_LAYOUT   = 'restore_layout';
 
@@ -2338,6 +2339,8 @@ wcFrame.prototype = {
     if (this._isFloating) {
       this.$frame.addClass('wcFloating');
     }
+
+    this.$center.scroll(this.__scrolled.bind(this));
   },
 
   // Updates the size of the frame.
@@ -2474,6 +2477,11 @@ wcFrame.prototype = {
 
       panel.__update();
     }
+  },
+
+  // Handles scroll notifications.
+  __scrolled: function() {
+    this.panel().__trigger(wcDocker.EVENT_SCROLLED);
   },
 
   // Brings the frame into focus.
