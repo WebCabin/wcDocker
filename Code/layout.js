@@ -184,7 +184,8 @@ wcLayout.prototype = {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
-    var top = this.$elem.offset().top - offset.top;
+    var top = $elem.find('.wcFrameTitle').height();
+    // var top = this.$elem.offset().top - offset.top;
     if (!title) {
       top = 0;
     }

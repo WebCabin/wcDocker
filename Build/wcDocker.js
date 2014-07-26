@@ -1526,7 +1526,8 @@ wcLayout.prototype = {
     var width = $elem.width();
     var height = $elem.height();
     var offset = $elem.offset();
-    var top = this.$elem.offset().top - offset.top;
+    var top = $elem.find('.wcFrameTitle').height();
+    // var top = this.$elem.offset().top - offset.top;
     if (!title) {
       top = 0;
     }
@@ -1740,6 +1741,11 @@ function wcPanel(type) {
   this._maxSize = {
     x: Infinity,
     y: Infinity,
+  };
+
+  this._scroll = {
+    x: 0,
+    y: 0,
   };
 
   this._scrollable = {
@@ -2476,12 +2482,19 @@ wcFrame.prototype = {
       }
 
       panel.__update();
+
+      this.$center.scrollLeft(panel._scroll.x);
+      this.$center.scrollTop(panel._scroll.y);
     }
   },
 
   // Handles scroll notifications.
   __scrolled: function() {
-    this.panel().__trigger(wcDocker.EVENT_SCROLLED);
+    var panel = this.panel();
+    panel._scroll.x = this.$center.scrollLeft();
+    panel._scroll.y = this.$center.scrollTop();
+
+    panel.__trigger(wcDocker.EVENT_SCROLLED);
   },
 
   // Brings the frame into focus.

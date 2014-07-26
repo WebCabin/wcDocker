@@ -37,6 +37,10 @@
             myPanel.closeable(false);
           }, true);
 
+          myDocker.registerPanelType('Scroll Panel', function(myPanel) {
+            myPanel.layout().addItem($('<div style="width:2000px;height:2000px;">'));
+          });
+
           myDocker.registerPanelType('Control Panel', function(myPanel) {
             var $themeSelector = $('<div style="width:100%;text-align:center;" class="themeSelector">Theme: \
               <select>\
@@ -246,6 +250,7 @@
 
           var panel3 = myDocker.addPanel('Panel Cells', wcDocker.DOCK_LEFT, false);
           myDocker.addPanel('Tabbed Panel', wcDocker.DOCK_BOTTOM, true, panel3);
+          myDocker.addPanel('Scroll Panel', wcDocker.DOCK_BOTTOM, true, panel3);
           myDocker.addPanel('Memory Panel', wcDocker.DOCK_BOTTOM, false, panel3);
 
           var panel4 = myDocker.addPanel('Dock Me', wcDocker.DOCK_RIGHT, false);

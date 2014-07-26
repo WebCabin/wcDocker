@@ -379,12 +379,19 @@ wcFrame.prototype = {
       }
 
       panel.__update();
+
+      this.$center.scrollLeft(panel._scroll.x);
+      this.$center.scrollTop(panel._scroll.y);
     }
   },
 
   // Handles scroll notifications.
   __scrolled: function() {
-    this.panel().__trigger(wcDocker.EVENT_SCROLLED);
+    var panel = this.panel();
+    panel._scroll.x = this.$center.scrollLeft();
+    panel._scroll.y = this.$center.scrollTop();
+
+    panel.__trigger(wcDocker.EVENT_SCROLLED);
   },
 
   // Brings the frame into focus.

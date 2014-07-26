@@ -43,6 +43,11 @@ function wcPanel(type) {
     y: Infinity,
   };
 
+  this._scroll = {
+    x: 0,
+    y: 0,
+  };
+
   this._scrollable = {
     x: true,
     y: true,
