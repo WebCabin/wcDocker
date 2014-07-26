@@ -169,12 +169,12 @@ wcSplitter.prototype = {
 
       var size1;
       var size2;
-      if (this._pane[0] && typeof this._pane[0].size === 'function') {
-        size1 = this._pane[0].size();
+      if (this._pane[0] && typeof this._pane[0].initSize === 'function') {
+        size1 = this._pane[0].initSize();
       }
 
-      if (this._pane[1] && typeof this._pane[1].size === 'function') {
-        size2 = this._pane[1].size();
+      if (this._pane[1] && typeof this._pane[1].initSize === 'function') {
+        size2 = this._pane[1].initSize();
 
         if (size2) {
           size2.x = width  - size2.x;

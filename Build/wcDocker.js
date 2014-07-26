@@ -319,7 +319,7 @@ wcDocker.prototype = {
       }
     }
 
-    panel.size(width, height);
+    panel.initSize(width, height);
     if (allowGroup) {
       this.__addPanelGrouped(panel, location, parentPanel);
     } else {
@@ -1801,7 +1801,7 @@ wcPanel.prototype = {
   // Gets, or Sets the default position of the widget if it is floating.
   // Params:
   //    x, y    If supplied, sets the position (percentage value from 0 to 1).
-  pos: function(x, y) {
+  initPos: function(x, y) {
     if (typeof x === 'undefined') {
       return {x: this._pos.x, y: this._pos.y};
     }
@@ -1810,7 +1810,7 @@ wcPanel.prototype = {
   },
 
   // Gets, or Sets the desired size of the widget.
-  size: function(x, y) {
+  initSize: function(x, y) {
     if (typeof x === 'undefined') {
       return {x: this._size.x, y: this._size.y};
     }
@@ -2179,18 +2179,18 @@ wcFrame.prototype = {
   },
 
   // Gets the desired size of the panel.
-  size: function() {
+  initSize: function() {
     var size = {
       x: -1,
       y: -1,
     };
 
     for (var i = 0; i < this._panelList.length; ++i) {
-      if (size.x < this._panelList[i].size().x) {
-        size.x = this._panelList[i].size().x;
+      if (size.x < this._panelList[i].initSize().x) {
+        size.x = this._panelList[i].initSize().x;
       }
-      if (size.y < this._panelList[i].size().y) {
-        size.y = this._panelList[i].size().y;
+      if (size.y < this._panelList[i].initSize().y) {
+        size.y = this._panelList[i].initSize().y;
       }
     }
 
@@ -2248,7 +2248,7 @@ wcFrame.prototype = {
       this._curTab = 0;
     }
 
-    this._size = this.size();
+    this._size = this.initSize();
     this.__updateTabs();
   },
 
@@ -2897,12 +2897,12 @@ wcSplitter.prototype = {
 
       var size1;
       var size2;
-      if (this._pane[0] && typeof this._pane[0].size === 'function') {
-        size1 = this._pane[0].size();
+      if (this._pane[0] && typeof this._pane[0].initSize === 'function') {
+        size1 = this._pane[0].initSize();
       }
 
-      if (this._pane[1] && typeof this._pane[1].size === 'function') {
-        size2 = this._pane[1].size();
+      if (this._pane[1] && typeof this._pane[1].initSize === 'function') {
+        size2 = this._pane[1].initSize();
 
         if (size2) {
           size2.x = width  - size2.x;

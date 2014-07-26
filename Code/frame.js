@@ -76,18 +76,18 @@ wcFrame.prototype = {
   },
 
   // Gets the desired size of the panel.
-  size: function() {
+  initSize: function() {
     var size = {
       x: -1,
       y: -1,
     };
 
     for (var i = 0; i < this._panelList.length; ++i) {
-      if (size.x < this._panelList[i].size().x) {
-        size.x = this._panelList[i].size().x;
+      if (size.x < this._panelList[i].initSize().x) {
+        size.x = this._panelList[i].initSize().x;
       }
-      if (size.y < this._panelList[i].size().y) {
-        size.y = this._panelList[i].size().y;
+      if (size.y < this._panelList[i].initSize().y) {
+        size.y = this._panelList[i].initSize().y;
       }
     }
 
@@ -145,7 +145,7 @@ wcFrame.prototype = {
       this._curTab = 0;
     }
 
-    this._size = this.size();
+    this._size = this.initSize();
     this.__updateTabs();
   },
 

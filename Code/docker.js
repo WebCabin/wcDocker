@@ -319,7 +319,7 @@ wcDocker.prototype = {
       }
     }
 
-    panel.size(width, height);
+    panel.initSize(width, height);
     if (allowGroup) {
       this.__addPanelGrouped(panel, location, parentPanel);
     } else {

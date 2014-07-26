@@ -101,7 +101,7 @@ wcPanel.prototype = {
   // Gets, or Sets the default position of the widget if it is floating.
   // Params:
   //    x, y    If supplied, sets the position (percentage value from 0 to 1).
-  pos: function(x, y) {
+  initPos: function(x, y) {
     if (typeof x === 'undefined') {
       return {x: this._pos.x, y: this._pos.y};
     }
@@ -110,7 +110,7 @@ wcPanel.prototype = {
   },
 
   // Gets, or Sets the desired size of the widget.
-  size: function(x, y) {
+  initSize: function(x, y) {
     if (typeof x === 'undefined') {
       return {x: this._size.x, y: this._size.y};
     }
