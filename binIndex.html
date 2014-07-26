@@ -116,13 +116,13 @@
             myPanel.pos(0.35, 0.8);
 
             // Now register some events.
-            myPanel.on(wcDocker.EVENT_ATTACHED, function(myPanel) {
+            myPanel.on(wcDocker.EVENT_ATTACHED, function() {
               $dockMe.remove();
-              myPanel.layout().addItem($floatMe, 0, 1);
+              this.layout().addItem($floatMe, 0, 1);
             });
-            myPanel.on(wcDocker.EVENT_DETACHED, function(myPanel) {
+            myPanel.on(wcDocker.EVENT_DETACHED, function() {
               $floatMe.remove();
-              myPanel.layout().addItem($dockMe, 0, 1);
+              this.layout().addItem($dockMe, 0, 1);
             });
           });
 
@@ -148,7 +148,7 @@
             myPanel.layout().addItem($resizeInfo, 0, 2);
 
             // Now register some events.
-            myPanel.on(wcDocker.EVENT_ATTACHED, function(myPanel) {
+            myPanel.on(wcDocker.EVENT_ATTACHED, function() {
               if (attachTimer) {
                 clearTimeout(attachTimer);
               }
@@ -156,14 +156,15 @@
               $attachInfo.remove();
               $detachInfo.remove();
               $detached.remove();
-              myPanel.layout().addItem($attached, 0, 0);
+              this.layout().addItem($attached, 0, 0);
 
+              var self = this;
               attachTimer = setTimeout(function() {
                 $attached.remove();
-                myPanel.layout().addItem($detachInfo, 0, 0);
+                self.layout().addItem($detachInfo, 0, 0);
               }, 1000);
             });
-            myPanel.on(wcDocker.EVENT_DETACHED, function(myPanel) {
+            myPanel.on(wcDocker.EVENT_DETACHED, function() {
               if (attachTimer) {
                 clearTimeout(attachTimer);
               }
@@ -171,38 +172,41 @@
               $attachInfo.remove();
               $detachInfo.remove();
               $detached.remove();
-              myPanel.layout().addItem($detached, 0, 0);
+              this.layout().addItem($detached, 0, 0);
 
+              var self = this;
               attachTimer = setTimeout(function() {
                 $detached.remove();
-                myPanel.layout().addItem($attachInfo, 0, 0);
+                self.layout().addItem($attachInfo, 0, 0);
               }, 1000);
             });
-            myPanel.on(wcDocker.EVENT_MOVED, function(myPanel) {
+            myPanel.on(wcDocker.EVENT_MOVED, function() {
               if (moveTimer) {
                 clearTimeout(moveTimer);
               }
 
               $moveInfo.remove();
-              myPanel.layout().addItem($moved, 0, 1);
+              this.layout().addItem($moved, 0, 1);
 
+              var self = this;
               moveTimer = setTimeout(function() {
                 $moved.remove();
-                myPanel.layout().addItem($moveInfo, 0, 1);
+                self.layout().addItem($moveInfo, 0, 1);
                 moveTimer = null;
               }, 500);
             });
-            myPanel.on(wcDocker.EVENT_RESIZED, function(myPanel) {
+            myPanel.on(wcDocker.EVENT_RESIZED, function() {
               if (resizeTimer) {
                 clearTimeout(resizeTimer);
               }
 
               $resizeInfo.remove();
-              myPanel.layout().addItem($resized, 0, 2);
+              this.layout().addItem($resized, 0, 2);
 
+              var self = this;
               resizeTimer = setTimeout(function() {
                 $resized.remove();
-                myPanel.layout().addItem($resizeInfo, 0, 2);
+                self.layout().addItem($resizeInfo, 0, 2);
                 resizeTimer = null;
               }, 500);
             });
@@ -219,11 +223,11 @@
 
             myPanel.layout().addItem($info);
 
-            myPanel.on(wcDocker.EVENT_SAVE_LAYOUT, function(myPanel, data) {
+            myPanel.on(wcDocker.EVENT_SAVE_LAYOUT, function(data) {
               data.value = $spinner.val();
             });
 
-            myPanel.on(wcDocker.EVENT_RESTORE_LAYOUT, function(myPanel, data) {
+            myPanel.on(wcDocker.EVENT_RESTORE_LAYOUT, function(data) {
               $spinner.val(data.value);
             });
           });

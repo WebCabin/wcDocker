@@ -2044,7 +2044,7 @@ wcPanel.prototype = {
 
     if (this._events[eventType]) {
       for (var i = 0; i < this._events[eventType].length; ++i) {
-        this._events[eventType][i](this, data);
+        this._events[eventType][i].call(this, data);
       }
     }
   },
