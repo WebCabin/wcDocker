@@ -1457,6 +1457,11 @@ wcLayout.prototype = {
     return this.$elem.hasClass('wcLayoutGrid');
   },
 
+  // Retrieves the main scene DOM element.
+  scene: function() {
+    return this.$elem;
+  },
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
