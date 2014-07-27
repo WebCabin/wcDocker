@@ -278,7 +278,7 @@ wcFrame.prototype = {
       this.$frame.css('height', this._size.y + 'px');
     }
 
-    // this.__updateTabs();
+    this.__updateTabs();
   },
 
   // Saves the current panel configuration into a meta
