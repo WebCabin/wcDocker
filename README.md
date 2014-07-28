@@ -15,12 +15,12 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * Event system to react on panel changes.
 * Ability to group multiple windows into the same dock panel via tabbing.
 * Saving and Restoring of full window panel configurations.
+* Allow styling of window colors and other options by using themed css files.
 
 ### The following features are still under development: ###
 
 * A possible option of restricting the number of total panels created.
 * A possible option of restricting the total copies of the same panel type.
-* Allow styling of window colors and other options either by changing css files or an internal color picker system.
 
 ****
 # Dependancies #
