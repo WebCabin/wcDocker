@@ -33,7 +33,7 @@ If you use the pre-built packages wcDocker.js or wcDocker.min.js then the contex
 ****
 # Basic Implementation #
 
-For more detailed information on the API, check out the [wiki](https://github.com/WebCabin/wcDocker/wiki).
+For more detailed information on the API, check out the wiki here: [https://github.com/WebCabin/wcDocker/wiki](https://github.com/WebCabin/wcDocker/wiki).
 
 Begin by creating an instance of the main docker window and assign it a DOM container element.
 Typically this would be the document body, but there is no restriction if you want to use a
@@ -93,7 +93,7 @@ And the final parameter is optional, normally panels will dock in relation to th
 panel. However, by supplying a specific panel instead, your new panel will be docked in relation to that target.
 The return value is the newly created docking panel, in the case that you may want it.
 
-For more detailed information on the API, check out the [wiki](https://github.com/WebCabin/wcDocker/wiki).
+For more detailed information on the API, check out the wiki here: [https://github.com/WebCabin/wcDocker/wiki](https://github.com/WebCabin/wcDocker/wiki).
 
 ****
 # User Interaction #
