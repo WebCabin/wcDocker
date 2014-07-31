@@ -1483,7 +1483,7 @@ wcLayout.prototype = {
   //    width     The width to expand to.
   //    height    The height to expand to.
   __resizeGrid: function(width, height) {
-    this.$elem.find('tbody').children().remove();
+    $('.wcDockerTransition').append(this.$elem.find('tbody').children());
 
     for (var y = 0; y <= height; ++y) {
       if (this._grid.length <= y) {
