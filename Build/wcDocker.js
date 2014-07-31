@@ -1483,7 +1483,8 @@ wcLayout.prototype = {
   //    width     The width to expand to.
   //    height    The height to expand to.
   __resizeGrid: function(width, height) {
-    $('.wcDockerTransition').append(this.$elem.find('tbody').children());
+    var $children = this.$elem.find('tbody').children();
+    $('.wcDockerTransition').append($children);
 
     for (var y = 0; y <= height; ++y) {
       if (this._grid.length <= y) {
@@ -1517,6 +1518,8 @@ wcLayout.prototype = {
         }
       }
     }
+
+    $children.remove();
   },
 
   // Merges cells in the layout.
