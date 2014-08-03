@@ -48,6 +48,7 @@ wcDocker.DOCK_LEFT   = 'left';
 wcDocker.DOCK_RIGHT  = 'right';
 wcDocker.DOCK_BOTTOM = 'bottom';
 
+wcDocker.EVENT_UPDATED          = 'updated';
 wcDocker.EVENT_CLOSED           = 'closed';
 wcDocker.EVENT_ATTACHED         = 'attached';
 wcDocker.EVENT_DETACHED         = 'detached';
@@ -110,6 +111,7 @@ wcDocker.prototype = {
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
         var panel = new wcPanel(typeName);
+        panel._parent = this;
         panel.__container(this.$transition);
         panel._panelObject = new this._dockPanelTypeList[i].create(panel);
 
@@ -2049,6 +2051,8 @@ wcPanel.prototype = {
     if (!this.$container) {
       return;
     }
+
+    this.__trigger(wcDocker.EVENT_UPDATED);
 
     var width   = this.$container.width();
     var height  = this.$container.height();

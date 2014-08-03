@@ -298,6 +298,8 @@ wcPanel.prototype = {
       return;
     }
 
+    this.__trigger(wcDocker.EVENT_UPDATED);
+
     var width   = this.$container.width();
     var height  = this.$container.height();
     if (this._actualSize.x !== width || this._actualSize.y !== height) {
