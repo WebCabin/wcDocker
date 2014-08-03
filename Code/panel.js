@@ -53,6 +53,7 @@ function wcPanel(type) {
     y: true,
   };
 
+  this._overflowVisible = false;
   this._moveable = true;
   this._closeable = true;
 
@@ -155,6 +156,20 @@ wcPanel.prototype = {
       x: this.$container.parent().scrollLeft(),
       y: this.$container.parent().scrollTop(),
     };
+  },
+
+  // Gets, or Sets whether overflow on this panel is visible.
+  // Params:
+  //    visible   If supplied, assigns whether overflow is visible.
+  //
+  // Returns:
+  //    boolean   The current overflow visibility.
+  overflowVisible: function(visible) {
+    if (typeof visible !== 'undefined') {
+      this._overflowVisible = visible? true: false;
+    }
+
+    return this._overflowVisible;
   },
 
   // Gets, or Sets whether the window is scrollable.

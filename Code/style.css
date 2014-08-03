@@ -228,7 +228,9 @@ html, body {
   overflow-y: auto;
 }
 
-
+.wcOverflowVisible {
+  overflow: visible;
+}
 
 
 

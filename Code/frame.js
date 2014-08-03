@@ -364,6 +364,9 @@ wcFrame.prototype = {
       this.$center.toggleClass('wcScrollableX', scrollable.x);
       this.$center.toggleClass('wcScrollableY', scrollable.y);
 
+      var overflowVisible = panel.overflowVisible();
+      this.$center.toggleClass('wcOverflowVisible', overflowVisible);
+
       if (panel.moveable() && panel.title()) {
         this.$frame.prepend(this.$title);
         this.$center.css('top', '');
