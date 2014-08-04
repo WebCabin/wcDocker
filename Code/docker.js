@@ -145,6 +145,8 @@ wcDocker.prototype = {
 
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
+      panel.__trigger(wcDocker.EVENT_CLOSED);
+
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.removePanel(panel)) {
         var index = this._floatingList.indexOf(parentFrame);

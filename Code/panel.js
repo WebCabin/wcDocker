@@ -411,7 +411,6 @@ wcPanel.prototype = {
   // Destroys this panel.
   __destroy: function() {
     this._panelObject = null;
-    this.__trigger(wcDocker.EVENT_CLOSED);
     this.off();
 
     this.__container(null);
