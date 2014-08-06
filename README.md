@@ -24,7 +24,7 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 
 ****
 ### Change Log ###
-#### Version Latest Source ####
+#### Version 1.0.1 (Beta) ####
 * Added ability to set the layouts grid spacing size.
 * Added ability to alternate the layout row colors.
 * Layout save and restore now generate a string instead of a data object due to a bug with the default JSON stringify not converting the object properly.
