@@ -412,7 +412,7 @@ wcDocker.prototype = {
   },
 
   // Saves the current panel configuration into a meta
-  // object that can be used later to restore it.
+  // string that can be used later to restore it.
   save: function() {
     var data = {};
 
@@ -422,11 +422,24 @@ wcDocker.prototype = {
     }
 
     data.root = this._root.__save();
-    return data;
+    
+    return JSON.stringify(data, function(key, value) {
+      if (value == Infinity) {
+        return "Infinity";
+      }
+      return value;
+    });
   },
 
   // Restores a previously saved configuration.
-  restore: function(data) {
+  restore: function(dataString) {
+    var data = JSON.parse(dataString, function(key, value) {
+      if (value === 'Infinity') {
+        return Infinity;
+      }
+      return value;
+    });
+
     this.clear();
 
     this._root = this.__create(data.root, this, this.$container);
@@ -1075,11 +1088,12 @@ wcDocker.prototype = {
 
       case 'wcPanel':
         var panel = new wcPanel(data.panelType);
-        panel.__container($container);
         panel._parent = parent;
+        panel.__container(this.$transition);
         for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
           if (this._dockPanelTypeList[i].name === data.panelType) {
-            this._dockPanelTypeList[i].create(panel);
+            panel._panelObject = new this._dockPanelTypeList[i].create(panel);
+            panel.__container($container);
             break;
           }
         }
