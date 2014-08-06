@@ -105,6 +105,8 @@
             myPanel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
             myPanel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged.</div>'), 0, 2, 2, 1);
             myPanel.layout().showGrid(true);
+            myPanel.layout().gridSpacing(5);
+            myPanel.layout().gridAlternate(true);
             myPanel.initSize(400, 400);
           });
 

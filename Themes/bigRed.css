@@ -44,7 +44,11 @@
 }
 
 .wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
-  border: 1px dashed #555555;
+  border: 1px solid #555555;
+}
+
+.wcLayoutGridAlternate tr:nth-child(even) {
+  background-color: rgba(200, 150, 150, 0.4);
 }
 
 .wcFrameEdge {

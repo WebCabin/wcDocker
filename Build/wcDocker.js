@@ -1442,8 +1442,15 @@ wcLayout.prototype = {
   // Clears the layout.
   clear: function() {
     var showGrid = this.showGrid();
+    var spacing = this.gridSpacing();
+    var alternate = this.gridAlternate();
+
     this.__init();
+
     this.showGrid(showGrid);
+    this.gridSpacing(spacing);
+    this.gridAlternate(alternate);
+
     this._grid = [];
   },
 
@@ -1453,12 +1460,39 @@ wcLayout.prototype = {
   // Returns:
   //    bool        The current visibility of the grid.
   showGrid: function(enabled) {
-    if (typeof enabled === 'undefined') {
-      return this.$elem.hasClass('wcLayoutGrid');
+    if (typeof enabled !== 'undefined') {
+      this.$elem.toggleClass('wcLayoutGrid', enabled);
     }
 
-    this.$elem.toggleClass('wcLayoutGrid', enabled);
     return this.$elem.hasClass('wcLayoutGrid');
+  },
+
+  // Version 1.0.1
+  // Gets, or Sets the spacing between cell borders.
+  // Params:
+  //    size      If supplied, sets the pixel size of the border spacing.
+  // Returns:
+  //    int       The current border spacing size.
+  gridSpacing: function(size) {
+    if (typeof size !== 'undefined') {
+      this.$elem.css('border-spacing', size + 'px');
+    }
+
+    return parseInt(this.$elem.css('border-spacing'));
+  },
+
+  // Version 1.0.1
+  // Gets, or Sets whether the table rows alternate in color.
+  // Params:
+  //    enabled     If supplied, will set whether the grid alternates in color.
+  // Returns:
+  //    bool        Whether the grid alternates in color.
+  gridAlternate: function(enabled) {
+    if (typeof enabled !== 'undefined') {
+      this.$elem.toggleClass('wcLayoutGridAlternate', enabled);
+    }
+
+    return this.$elem.hasClass('wcLayoutGridAlternate');
   },
 
   // Retrieves the main scene DOM element.

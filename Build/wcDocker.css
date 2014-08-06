@@ -125,6 +125,8 @@ html, body {
   margin: 0px;
   padding: 0px;
   background-color: transparent;
+
+  border-spacing: 2px;
 }
 
 .wcLayout {
@@ -268,7 +270,11 @@ html, body {
 }
 
 .wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
-  border: 1px dashed #555555;
+  border: 1px solid #555555;
+}
+
+.wcLayoutGridAlternate tr:nth-child(even) {
+  background-color: rgba(200, 200, 200, 0.4);
 }
 
 .wcPanelTab {
