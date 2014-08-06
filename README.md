@@ -22,7 +22,7 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * An option of restricting the total copies of the same panel type.
 
 ### Change Log ###
-#### Version Pending ####
+#### Version Latest Source ####
 * Added ability to set the layouts grid spacing size.
 * Added ability to alternate the layout row colors.
 * Layout save and restore now generate a string instead of a data object due to a bug with the default JSON stringify not converting the object properly.
