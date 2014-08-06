@@ -3,7 +3,6 @@ wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic do
 For a currently working demo, try it here [http://docker.webcabin.org](http://docker.webcabin.org)
 
 ### The following features are supported currently: ###
-
 * Panels can be docked to any side of any other window.
 * Panels can be detached from a dock position to float on their own, and then dock again.
 * Panels can be resized.
@@ -17,10 +16,10 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * Saving and Restoring of full window panel configurations.
 * Allow styling of window colors and other options by using themed css files.
 
-### The following features are still under development: ###
-
-* A possible option of restricting the number of total panels created.
-* A possible option of restricting the total copies of the same panel type.
+### The following features could possibly be developed next: ###
+* The ability for floating windows to be a true window, and therefore leave the bounds of the page.
+* An option of restricting the number of total panels created.
+* An option of restricting the total copies of the same panel type.
 
 ****
 # Dependancies #
