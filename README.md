@@ -21,6 +21,7 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * An option of restricting the number of total panels created.
 * An option of restricting the total copies of the same panel type.
 
+****
 ### Change Log ###
 #### Version Latest Source ####
 * Added ability to set the layouts grid spacing size.
