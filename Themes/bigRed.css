@@ -48,7 +48,7 @@
 }
 
 .wcLayoutGridAlternate tr:nth-child(even), .wcLayoutGridAltColor {
-  background-color: rgba(200, 150, 150, 0.2);
+  background-color: rgba(200, 150, 150, 0.2) !important;
 }
 
 .wcFrameEdge {
