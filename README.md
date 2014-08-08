@@ -17,9 +17,17 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 * Allow styling of window colors and other options by using themed css files.
 
 ### The following features could possibly be developed next: ###
+* Ability to add custom buttons to a panel within the title bar area.
 * The ability for floating windows to be a true window, and therefore leave the bounds of the page.
 * An option of restricting the number of total panels created.
 * An option of restricting the total copies of the same panel type.
+
+****
+### Change Log ###
+#### Version 1.0.1 (Beta) ####
+* Added ability to set the layouts grid spacing size.
+* Added ability to alternate the layout row colors.
+* Layout save and restore now generate a string instead of a data object due to a bug with the default JSON stringify not converting the object properly.
 
 ****
 # Dependancies #
