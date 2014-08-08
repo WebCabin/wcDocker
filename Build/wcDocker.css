@@ -273,7 +273,7 @@ html, body {
   border: 1px solid #555555;
 }
 
-.wcLayoutGridAlternate tr:nth-child(even) {
+.wcLayoutGridAlternate tr:nth-child(even), .wcLayoutGridAltColor {
   background-color: rgba(200, 200, 200, 0.2);
 }
 

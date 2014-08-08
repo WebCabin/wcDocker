@@ -24,7 +24,7 @@ wcLayout.prototype = {
   //    w, h        If supplied, will stretch the item among
   //                multiple grid elements.
   // Returns:
-  //    <td>        On success, returns the <td> dom element.
+  //    <td>        On success, returns the jquery <td> dom element.
   //    false       A failure happened, most likely cells could not be merged.
   addItem: function(item, x, y, w, h) {
     if (typeof x === 'undefined' || x < 0) {
@@ -46,6 +46,26 @@ wcLayout.prototype = {
     }
 
     this._grid[y][x].$el.append($(item));
+    return this._grid[y][x].$el;
+  },
+
+  // Retrieves the table item at a given grid position, if it exists.
+  // Note, if an element spans multiple cells, only the top-left
+  // cell will retrieve the item.
+  // Params:
+  //    x, y        The grid position.
+  // Return:
+  //    <td>        On success, returns the found jquery <td> dom element.
+  //    null        If no element was found.
+  item: function(x, y) {
+    if (y >= this._grid.length) {
+      return null;
+    }
+
+    if (x >= this._grid[y].length) {
+      return null;
+    }
+
     return this._grid[y][x].$el;
   },
 
