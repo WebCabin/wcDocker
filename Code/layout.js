@@ -75,6 +75,7 @@ wcLayout.prototype = {
     var spacing = this.gridSpacing();
     var alternate = this.gridAlternate();
 
+    this.$elem.remove();
     this.__init();
 
     this.showGrid(showGrid);
