@@ -41,8 +41,10 @@ wcLayout.prototype = {
     }
 
     this.__resizeGrid(x + w - 1, y + h - 1);
-    if (!this.__mergeGrid(x, y, w, h)) {
-      return false;
+    if (w > 1 || h > 1) {
+      if (!this.__mergeGrid(x, y, w, h)) {
+        return false;
+      }
     }
 
     this._grid[y][x].$el.append($(item));
@@ -152,8 +154,8 @@ wcLayout.prototype = {
   //    width     The width to expand to.
   //    height    The height to expand to.
   __resizeGrid: function(width, height) {
-    var $children = this.$elem.find('tbody').children();
-    $('.wcDockerTransition').append($children);
+    var $oldBody = this.$elem.find('tbody');
+    $('.wcDockerTransition').append($oldBody);
 
     for (var y = 0; y <= height; ++y) {
       if (this._grid.length <= y) {
@@ -171,7 +173,7 @@ wcLayout.prototype = {
       }
     }
 
-    var $elem = this.$elem.find('tbody');
+    var $newBody = $('<tbody>');
     for (var y = 0; y < this._grid.length; ++y) {
       var $row = null;
 
@@ -180,7 +182,7 @@ wcLayout.prototype = {
         if (item.$el) {
           if (!$row) {
             $row = $('<tr>');
-            this.$elem.append($row);
+            $newBody.append($row);
           }
 
           $row.append(item.$el);
@@ -188,7 +190,8 @@ wcLayout.prototype = {
       }
     }
 
-    $children.remove();
+    this.$elem.append($newBody);
+    $oldBody.remove();
   },
 
   // Merges cells in the layout.
@@ -200,10 +203,6 @@ wcLayout.prototype = {
   //    false     Merge failed, either because the grid position was out of bounds
   //              or some of the cells were already merged.
   __mergeGrid: function(x, y, w, h) {
-    if (this._grid.length <= y || this._grid[y].length <= x) {
-      return false;
-    }
-
     // Make sure each cell to be merged is not already merged somewhere else.
     for (var yy = 0; yy < h; ++yy) {
       for (var xx = 0; xx < w; ++xx) {
