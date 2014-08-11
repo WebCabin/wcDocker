@@ -25,6 +25,8 @@ function wcDocker(container) {
   this.$transition = $('<div class="wcDockerTransition"></div>');
   this.$container.append(this.$transition);
 
+  this._events = {};
+
   this._root = null;
   this._floatingList = [];
 
@@ -369,11 +371,66 @@ wcDocker.prototype = {
     return result;
   },
 
+  // Registers an event.
+  // Params:
+  //    eventType     The event type, as defined by wcDocker.EVENT_...
+  //    handler       A handler function to be called for the event.
+  //                  Params:
+  //                    panel   The panel invoking the event.
+  // Returns:
+  //    true          The event was added.
+  //    false         The event failed to add.
+  on: function(eventType, handler) {
+    if (!eventType) {
+      return false;
+    }
+
+    if (!this._events[eventType]) {
+      this._events[eventType] = [];
+    }
+
+    if (this._events[eventType].indexOf(handler) !== -1) {
+      return false;
+    }
+
+    this._events[eventType].push(handler);
+    return true;
+  },
+
+  // Unregisters an event.
+  // Params:
+  //    eventType     The event type to remove, if omitted, all events are removed.
+  //    handler       The handler function to remove, if omitted, all events of
+  //                  the above type are removed.
+  off: function(eventType, handler) {
+    if (typeof eventType === 'undefined') {
+      this._events = {};
+      return;
+    } else {
+      if (this._events[eventType]) {
+        if (typeof handler === 'undefined') {
+          this._events[eventType] = [];
+        } else {
+          for (var i = 0; i < this._events[eventType].length; ++i) {
+            if (this._events[eventType][i] === handler) {
+              this._events[eventType].splice(i, 1);
+              break;
+            }
+          }
+        }
+      }
+    }
+  },
+
   // Trigger an event on all panels.
   // Params:
   //    eventName   The name of the event.
   //    data        A custom data parameter to pass to all handlers.
   trigger: function(eventName, data) {
+    if (!eventName) {
+      return false;
+    }
+
     for (var i = 0; i < this._frameList.length; ++i) {
       var frame = this._frameList[i];
       for (var a = 0; a < frame._panelList.length; ++a) {
@@ -381,6 +438,8 @@ wcDocker.prototype = {
         panel.__trigger(eventName, data);
       }
     }
+
+    this.__trigger(eventName, data);
   },
 
   // Assigns a basic context menu to a selector element.  The context
@@ -999,6 +1058,7 @@ wcDocker.prototype = {
 
   // On window resized event.
   __resize: function(event) {
+    this.__trigger(wcDocker.EVENT_RESIZED);
     this.__update();
   },
 
@@ -1020,6 +1080,22 @@ wcDocker.prototype = {
     }
 
     frame.__focus(flash)
+  },
+
+  // Triggers an event exclusively on the docker and none of its panels.
+  // Params:
+  //    eventName   The name of the event.
+  //    data        A custom data parameter to pass to all handlers.
+  __trigger: function(eventName, data) {
+    if (!eventName) {
+      return;
+    }
+
+    if (this._events[eventName]) {
+      for (var i = 0; i < this._events[eventName].length; ++i) {
+        this._events[eventName][i].call(this, data);
+      }
+    }
   },
 
   // Checks a given panel to see if it is the final remaining
