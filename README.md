@@ -24,9 +24,12 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 
 ****
 ### Change Log ###
-#### Version 1.0.1 (Beta) ####
-* Added ability to set the layouts grid spacing size.
-* Added ability to alternate the layout row colors.
+#### Version: Beta ####
+* Ability to batch together large layout operations to minimize reflow.
+* Events can now be applied to the main docker, rather than only panels.
+* Ability to retrieve layout table items from a specified grid location.
+* Ability to set the layouts grid spacing size.
+* Ability to alternate the layout row colors.
 * Layout save and restore now generate a string instead of a data object due to a bug with the default JSON stringify not converting the object properly.
 
 ****
