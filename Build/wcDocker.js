@@ -1507,6 +1507,7 @@ function wcLayout(container, parent) {
   this.$container = $(container);
   this._parent = parent;
 
+  this._batchProcess = false;
   this._grid = [];
   this.$elem = null;
 
@@ -1589,6 +1590,19 @@ wcLayout.prototype = {
     this._grid = [];
   },
 
+  // Begins a batch operation.  Basically it refrains from constructing
+  // the layout grid, which causes a reflow, on each item added.  Instead,
+  // The grid is only generated at the end once FinishBatch() is called.
+  startBatch: function() {
+    this._batchProcess = true;
+  },
+
+  // Ends a batch operation. See startBatch() for information.
+  finishBatch: function() {
+    this._batchProcess = false;
+    this.__resizeGrid(0, 0);
+  },
+
   // Gets, or Sets the visible status of the layout grid.
   // Params:
   //    enabled     If supplied, will set the grid shown or hidden.
@@ -1656,9 +1670,6 @@ wcLayout.prototype = {
   //    width     The width to expand to.
   //    height    The height to expand to.
   __resizeGrid: function(width, height) {
-    var $oldBody = this.$elem.find('tbody');
-    $('.wcDockerTransition').append($oldBody);
-
     for (var y = 0; y <= height; ++y) {
       if (this._grid.length <= y) {
         this._grid.push([]);
@@ -1675,25 +1686,30 @@ wcLayout.prototype = {
       }
     }
 
-    var $newBody = $('<tbody>');
-    for (var y = 0; y < this._grid.length; ++y) {
-      var $row = null;
+    if (!this._batchProcess) {
+      var $oldBody = this.$elem.find('tbody');
+      $('.wcDockerTransition').append($oldBody);
 
-      for (var x = 0; x < this._grid[y].length; ++x) {
-        var item = this._grid[y][x];
-        if (item.$el) {
-          if (!$row) {
-            $row = $('<tr>');
-            $newBody.append($row);
+      var $newBody = $('<tbody>');
+      for (var y = 0; y < this._grid.length; ++y) {
+        var $row = null;
+
+        for (var x = 0; x < this._grid[y].length; ++x) {
+          var item = this._grid[y][x];
+          if (item.$el) {
+            if (!$row) {
+              $row = $('<tr>');
+              $newBody.append($row);
+            }
+
+            $row.append(item.$el);
           }
-
-          $row.append(item.$el);
         }
       }
-    }
 
-    this.$elem.append($newBody);
-    $oldBody.remove();
+      this.$elem.append($newBody);
+      $oldBody.remove();
+    }
   },
 
   // Merges cells in the layout.
