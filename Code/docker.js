@@ -730,6 +730,7 @@ wcDocker.prototype = {
             }
 
             var panel = frame.panel();
+            panel.buttonState(result.name, result.isToggled);
             panel.__trigger(wcDocker.EVENT_BUTTON, result);
             return;
           }
