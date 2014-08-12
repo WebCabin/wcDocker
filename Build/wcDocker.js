@@ -61,9 +61,6 @@ wcDocker.EVENT_SCROLLED         = 'panelScrolled';
 wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
 wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
 
-wcDocker.BUTTON_STATE_NORMAL    = 'normal';
-wcDocker.BUTTON_STATE_TOGGLED   = 'toggled';
-
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
@@ -722,13 +719,13 @@ wcDocker.prototype = {
             var $button = frame._buttonList[a];
             var result = {
               name: $button.data('name'),
-              state: wcDocker.BUTTON_STATE_NORMAL,
+              isToggled: false,
             }
 
             if ($button.hasClass('wcFrameButtonToggler')) {
               $button.toggleClass('wcFrameButtonToggled');
               if ($button.hasClass('wcFrameButtonToggled')) {
-                result.state = wcDocker.BUTTON_STATE_TOGGLED;
+                result.isToggled = true;
               }
             }
 
@@ -2041,18 +2038,19 @@ wcPanel.prototype = {
 
   // Creates a new custom button that will appear in the title bar of the panel.
   // Params:
-  //    name        The name of the button, to identify it.
-  //    className   A class name to apply to the button.
-  //    text        Text to apply to the button.
-  //    tip         Tooltip text.
-  //    isToggle    If true, will make the button toggle on and off per click.
-  addButton: function(name, className, text, tip, isToggle) {
+  //    name          The name of the button, to identify it.
+  //    className     A class name to apply to the button.
+  //    text          Text to apply to the button.
+  //    tip           Tooltip text.
+  //    isTogglable   If true, will make the button toggle on and off per click.
+  addButton: function(name, className, text, tip, isTogglable) {
     this._buttonList.push({
       name: name,
       className: className,
       text: text,
       tip: tip,
-      isToggle: isToggle,
+      isTogglable: isTogglable,
+      isToggled: false,
     });
 
     return this._buttonList.length-1;
@@ -2065,7 +2063,33 @@ wcPanel.prototype = {
     for (var i = 0; i < this._buttonList.length; ++i) {
       if (this._buttonList[i].name === name) {
         this._buttonList.splice(i, 1);
+        if (this._parent instanceof wcFrame) {
+          this._parent.__onTabChange();
+        }
         return true;
+      }
+    }
+    return false;
+  },
+
+  // Gets, or Sets the current toggle state of a custom button that was
+  // added using addButton().
+  // Params:
+  //    name          The name identifier of the button.
+  //    isToggled     If supplied, will assign a new toggle state to the button.
+  // Returns:
+  //    Boolean       The current toggle state of the button.
+  buttonState: function(name, isToggled) {
+    for (var i = 0; i < this._buttonList.length; ++i) {
+      if (this._buttonList[i].name === name) {
+        if (typeof isToggled !== 'undefined') {
+          this._buttonList[i].isToggled = isToggled;
+          if (this._parent instanceof wcFrame) {
+            this._parent.__onTabChange();
+          }
+        }
+
+        return this._buttonList[i].isToggled;
       }
     }
     return false;
@@ -2780,8 +2804,12 @@ wcFrame.prototype = {
         var buttonData = panel._buttonList[i];
         var $button = $('<div>');
         $button.addClass('wcFrameButton');
-        if (buttonData.isToggle) {
+        if (buttonData.isTogglable) {
           $button.addClass('wcFrameButtonToggler');
+
+          if (buttonData.isToggled) {
+            $button.addClass('wcFrameButtonToggled');
+          }
         }
         if (buttonData.className) {
           $button.addClass(buttonData.className);

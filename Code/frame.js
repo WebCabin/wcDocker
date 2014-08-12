@@ -389,8 +389,12 @@ wcFrame.prototype = {
         var buttonData = panel._buttonList[i];
         var $button = $('<div>');
         $button.addClass('wcFrameButton');
-        if (buttonData.isToggle) {
+        if (buttonData.isTogglable) {
           $button.addClass('wcFrameButtonToggler');
+
+          if (buttonData.isToggled) {
+            $button.addClass('wcFrameButtonToggled');
+          }
         }
         if (buttonData.className) {
           $button.addClass(buttonData.className);

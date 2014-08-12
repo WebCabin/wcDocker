@@ -61,9 +61,6 @@ wcDocker.EVENT_SCROLLED         = 'panelScrolled';
 wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
 wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
 
-wcDocker.BUTTON_STATE_NORMAL    = 'normal';
-wcDocker.BUTTON_STATE_TOGGLED   = 'toggled';
-
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
@@ -722,13 +719,13 @@ wcDocker.prototype = {
             var $button = frame._buttonList[a];
             var result = {
               name: $button.data('name'),
-              state: wcDocker.BUTTON_STATE_NORMAL,
+              isToggled: false,
             }
 
             if ($button.hasClass('wcFrameButtonToggler')) {
               $button.toggleClass('wcFrameButtonToggled');
               if ($button.hasClass('wcFrameButtonToggled')) {
-                result.state = wcDocker.BUTTON_STATE_TOGGLED;
+                result.isToggled = true;
               }
             }
 
