@@ -161,7 +161,15 @@
             myPanel.layout().addItem($moveInfo, 0, 1);
             myPanel.layout().addItem($resizeInfo, 0, 2);
 
-            // Now register some events.
+            myPanel.addButton('Toggle Button', '', 'T', 'A toggle button', true);
+            myPanel.addButton('Normal Button', '', 'N', 'A normal button', false);
+
+            // React on custom button press.
+            myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+              alert(data.name + ' pressed.  State is now: ' + data.state);
+            });
+
+            // React on attachment.
             myPanel.on(wcDocker.EVENT_ATTACHED, function() {
               if (attachTimer) {
                 clearTimeout(attachTimer);
@@ -178,6 +186,8 @@
                 self.layout().addItem($detachInfo, 0, 0);
               }, 1000);
             });
+
+            // React on detachment.
             myPanel.on(wcDocker.EVENT_DETACHED, function() {
               if (attachTimer) {
                 clearTimeout(attachTimer);
@@ -194,6 +204,8 @@
                 self.layout().addItem($attachInfo, 0, 0);
               }, 1000);
             });
+
+            // React on movement.
             myPanel.on(wcDocker.EVENT_MOVED, function() {
               if (moveTimer) {
                 clearTimeout(moveTimer);
@@ -209,6 +221,8 @@
                 moveTimer = null;
               }, 500);
             });
+
+            // React on resizing.
             myPanel.on(wcDocker.EVENT_RESIZED, function() {
               if (resizeTimer) {
                 clearTimeout(resizeTimer);

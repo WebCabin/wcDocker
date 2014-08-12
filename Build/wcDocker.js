@@ -44,21 +44,25 @@ function wcDocker(container) {
   this.__init();
 };
 
-wcDocker.DOCK_FLOAT  = 'float';
-wcDocker.DOCK_TOP    = 'top';
-wcDocker.DOCK_LEFT   = 'left';
-wcDocker.DOCK_RIGHT  = 'right';
-wcDocker.DOCK_BOTTOM = 'bottom';
+wcDocker.DOCK_FLOAT             = 'float';
+wcDocker.DOCK_TOP               = 'top';
+wcDocker.DOCK_LEFT              = 'left';
+wcDocker.DOCK_RIGHT             = 'right';
+wcDocker.DOCK_BOTTOM            = 'bottom';
 
-wcDocker.EVENT_UPDATED          = 'updated';
-wcDocker.EVENT_CLOSED           = 'closed';
-wcDocker.EVENT_ATTACHED         = 'attached';
-wcDocker.EVENT_DETACHED         = 'detached';
-wcDocker.EVENT_MOVED            = 'moved';
-wcDocker.EVENT_RESIZED          = 'resized';
-wcDocker.EVENT_SCROLLED         = 'scrolled';
-wcDocker.EVENT_SAVE_LAYOUT      = 'save_layout';
-wcDocker.EVENT_RESTORE_LAYOUT   = 'restore_layout';
+wcDocker.EVENT_UPDATED          = 'panelUpdated';
+wcDocker.EVENT_CLOSED           = 'panelClosed';
+wcDocker.EVENT_BUTTON           = 'panelButton';
+wcDocker.EVENT_ATTACHED         = 'panelAttached';
+wcDocker.EVENT_DETACHED         = 'panelDetached';
+wcDocker.EVENT_MOVED            = 'panelMoved';
+wcDocker.EVENT_RESIZED          = 'panelResized';
+wcDocker.EVENT_SCROLLED         = 'panelScrolled';
+wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
+wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
+
+wcDocker.BUTTON_STATE_NORMAL    = 'normal';
+wcDocker.BUTTON_STATE_TOGGLED   = 'toggled';
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -703,18 +707,36 @@ wcDocker.prototype = {
     });
 
     // Close button on frames should __destroy those panels.
-    $('body').on('click', '.wcFrameCloseButton', function() {
+    $('body').on('click', '.wcFrameButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].$close[0] == this) {
-          frame = self._frameList[i];
-          break;
+        var frame = self._frameList[i];
+        if (frame.$close[0] === this) {
+          var panel = frame.panel();
+          self.removePanel(panel);
+          self.__update();
+          return;
         }
-      }
-      if (frame) {
-        var panel = frame.panel();
-        self.removePanel(panel);
-        self.__update();
+        for (var a = 0; a < frame._buttonList.length; ++a) {
+          if (frame._buttonList[a][0] === this) {
+            var $button = frame._buttonList[a];
+            var result = {
+              name: $button.data('name'),
+              state: wcDocker.BUTTON_STATE_NORMAL,
+            }
+
+            if ($button.hasClass('wcFrameButtonToggler')) {
+              $button.toggleClass('wcFrameButtonToggled');
+              if ($button.hasClass('wcFrameButtonToggled')) {
+                result.state = wcDocker.BUTTON_STATE_TOGGLED;
+              }
+            }
+
+            var panel = frame.panel();
+            panel.__trigger(wcDocker.EVENT_BUTTON, result);
+            return;
+          }
+        }
       }
     });
 
@@ -1913,6 +1935,8 @@ function wcPanel(type) {
 
   this._layout = null;
 
+  this._buttonList = [];
+
   this._actualPos = {
     x: 0.5,
     y: 0.5,
@@ -1997,6 +2021,38 @@ wcPanel.prototype = {
     if (docker) {
       docker.__focus(this._parent, flash);
     }
+  },
+
+  // Creates a new custom button that will appear in the title bar of the panel.
+  // Params:
+  //    name        The name of the button, to identify it.
+  //    className   A class name to apply to the button.
+  //    text        Text to apply to the button.
+  //    tip         Tooltip text.
+  //    isToggle    If true, will make the button toggle on and off per click.
+  addButton: function(name, className, text, tip, isToggle) {
+    this._buttonList.push({
+      name: name,
+      className: className,
+      text: text,
+      tip: tip,
+      isToggle: isToggle,
+    });
+
+    return this._buttonList.length-1;
+  },
+
+  // Removes a button from the panel.
+  // Params:
+  //    name        The name identifier for this button.
+  removeButton: function(name) {
+    for (var i = 0; i < this._buttonList.length; ++i) {
+      if (this._buttonList[i].name === name) {
+        this._buttonList.splice(i, 1);
+        return true;
+      }
+    }
+    return false;
   },
 
   // Gets, or Sets the default position of the widget if it is floating.
@@ -2344,6 +2400,7 @@ function wcFrame(container, parent, isFloating) {
 
   this._curTab = -1;
   this._panelList = [];
+  this._buttonList = [];
 
   this._pos = {
     x: 0.5,
@@ -2529,7 +2586,7 @@ wcFrame.prototype = {
     this.$frame   = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
     this.$title   = $('<div class="wcFrameTitle">');
     this.$center  = $('<div class="wcFrameCenter wcWide">');
-    this.$close   = $('<div class="wcFrameCloseButton">X</div>');
+    this.$close   = $('<div class="wcFrameButton">X</div>');
     this.$frame.append(this.$title);
     this.$frame.append(this.$close);
 
@@ -2672,7 +2729,6 @@ wcFrame.prototype = {
     }
 
     $tempCenter.remove();
-
     this.__onTabChange();
   },
 
@@ -2694,10 +2750,32 @@ wcFrame.prototype = {
         this.$center.css('top', '0px');
       }
 
+      while (this._buttonList.length) {
+        this._buttonList.pop().remove();
+      }
+
       if (panel.closeable()) {
-        this.$frame.append(this.$close);
+        this.$title.append(this.$close);
       } else {
         this.$close.remove();
+      }
+
+      for (var i = 0; i < panel._buttonList.length; ++i) {
+        var buttonData = panel._buttonList[i];
+        var $button = $('<div>');
+        $button.addClass('wcFrameButton');
+        if (buttonData.isToggle) {
+          $button.addClass('wcFrameButtonToggler');
+        }
+        if (buttonData.className) {
+          $button.addClass(buttonData.className);
+        }
+        $button.attr('title', buttonData.tip);
+        $button.data('name', buttonData.name);
+        $button.text(buttonData.text);
+
+        this._buttonList.push($button);
+        this.$title.append($button);
       }
 
       panel.__update();

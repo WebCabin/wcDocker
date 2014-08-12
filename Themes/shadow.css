@@ -19,7 +19,6 @@ body {
 }
 
 .wcFrameTitle {
-  padding-left: 3px;
   height: 20px;
   background-color: #111;
   text-align: left;
@@ -29,7 +28,7 @@ body {
   top: 20px;
 }
 
-.wcFrameCloseButton {
+.wcFrameButton {
   width: 16px;
   height: 16px;
   border: 2px outset #222;
@@ -37,14 +36,18 @@ body {
   font-size: 15px;
 }
 
-.wcFrameCloseButton:hover {
+.wcFrameButton:hover {
   border: 2px outset #333;
   background-color: #222;
 }
 
-.wcFrameCloseButton:active {
+.wcFrameButton:active {
   border: 2px inset #444;
   background-color: #333;
+}
+
+.wcFrameButtonToggled, .wcFrameButtonToggled:hover {
+  border-style: inset;
 }
 
 .wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {

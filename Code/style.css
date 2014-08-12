@@ -82,28 +82,32 @@ html, body {
   user-select: none;
 }
 
-.wcFrameCloseButton {
+.wcFrameButton {
   width: 13px;
   height: 13px;
-  top: 0px;
-  right: 0px;
-  position: absolute;
+  position: relative;
+  float: right;
   border: 2px outset #444444;
   font-size: 11px;
   cursor: pointer;
   text-align: center;
+  /*margin-right: 3px;*/
 
   background-color: #555555;
 }
 
-.wcFrameCloseButton:hover {
+.wcFrameButton:hover {
   border: 2px outset #666666;
   background-color: #686868;
 }
 
-.wcFrameCloseButton:active {
+.wcFrameButton:active {
   border: 2px inset #AAAAAA;
   background-color: #888888;
+}
+
+.wcFrameButtonToggled, .wcFrameButtonToggled:hover {
+  border-style: inset;
 }
 
 .wcFrameCenter {
@@ -260,7 +264,6 @@ html, body {
 }
 
 .wcFrameTitle {
-  padding-left: 3px;
   height: 17px;
   background-color: #555;
 }

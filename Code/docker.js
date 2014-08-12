@@ -44,21 +44,25 @@ function wcDocker(container) {
   this.__init();
 };
 
-wcDocker.DOCK_FLOAT  = 'float';
-wcDocker.DOCK_TOP    = 'top';
-wcDocker.DOCK_LEFT   = 'left';
-wcDocker.DOCK_RIGHT  = 'right';
-wcDocker.DOCK_BOTTOM = 'bottom';
+wcDocker.DOCK_FLOAT             = 'float';
+wcDocker.DOCK_TOP               = 'top';
+wcDocker.DOCK_LEFT              = 'left';
+wcDocker.DOCK_RIGHT             = 'right';
+wcDocker.DOCK_BOTTOM            = 'bottom';
 
-wcDocker.EVENT_UPDATED          = 'updated';
-wcDocker.EVENT_CLOSED           = 'closed';
-wcDocker.EVENT_ATTACHED         = 'attached';
-wcDocker.EVENT_DETACHED         = 'detached';
-wcDocker.EVENT_MOVED            = 'moved';
-wcDocker.EVENT_RESIZED          = 'resized';
-wcDocker.EVENT_SCROLLED         = 'scrolled';
-wcDocker.EVENT_SAVE_LAYOUT      = 'save_layout';
-wcDocker.EVENT_RESTORE_LAYOUT   = 'restore_layout';
+wcDocker.EVENT_UPDATED          = 'panelUpdated';
+wcDocker.EVENT_CLOSED           = 'panelClosed';
+wcDocker.EVENT_BUTTON           = 'panelButton';
+wcDocker.EVENT_ATTACHED         = 'panelAttached';
+wcDocker.EVENT_DETACHED         = 'panelDetached';
+wcDocker.EVENT_MOVED            = 'panelMoved';
+wcDocker.EVENT_RESIZED          = 'panelResized';
+wcDocker.EVENT_SCROLLED         = 'panelScrolled';
+wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
+wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
+
+wcDocker.BUTTON_STATE_NORMAL    = 'normal';
+wcDocker.BUTTON_STATE_TOGGLED   = 'toggled';
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -703,18 +707,36 @@ wcDocker.prototype = {
     });
 
     // Close button on frames should __destroy those panels.
-    $('body').on('click', '.wcFrameCloseButton', function() {
+    $('body').on('click', '.wcFrameButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].$close[0] == this) {
-          frame = self._frameList[i];
-          break;
+        var frame = self._frameList[i];
+        if (frame.$close[0] === this) {
+          var panel = frame.panel();
+          self.removePanel(panel);
+          self.__update();
+          return;
         }
-      }
-      if (frame) {
-        var panel = frame.panel();
-        self.removePanel(panel);
-        self.__update();
+        for (var a = 0; a < frame._buttonList.length; ++a) {
+          if (frame._buttonList[a][0] === this) {
+            var $button = frame._buttonList[a];
+            var result = {
+              name: $button.data('name'),
+              state: wcDocker.BUTTON_STATE_NORMAL,
+            }
+
+            if ($button.hasClass('wcFrameButtonToggler')) {
+              $button.toggleClass('wcFrameButtonToggled');
+              if ($button.hasClass('wcFrameButtonToggled')) {
+                result.state = wcDocker.BUTTON_STATE_TOGGLED;
+              }
+            }
+
+            var panel = frame.panel();
+            panel.__trigger(wcDocker.EVENT_BUTTON, result);
+            return;
+          }
+        }
       }
     });
 

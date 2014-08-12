@@ -25,6 +25,7 @@ function wcFrame(container, parent, isFloating) {
 
   this._curTab = -1;
   this._panelList = [];
+  this._buttonList = [];
 
   this._pos = {
     x: 0.5,
@@ -210,7 +211,7 @@ wcFrame.prototype = {
     this.$frame   = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
     this.$title   = $('<div class="wcFrameTitle">');
     this.$center  = $('<div class="wcFrameCenter wcWide">');
-    this.$close   = $('<div class="wcFrameCloseButton">X</div>');
+    this.$close   = $('<div class="wcFrameButton">X</div>');
     this.$frame.append(this.$title);
     this.$frame.append(this.$close);
 
@@ -353,7 +354,6 @@ wcFrame.prototype = {
     }
 
     $tempCenter.remove();
-
     this.__onTabChange();
   },
 
@@ -375,10 +375,32 @@ wcFrame.prototype = {
         this.$center.css('top', '0px');
       }
 
+      while (this._buttonList.length) {
+        this._buttonList.pop().remove();
+      }
+
       if (panel.closeable()) {
-        this.$frame.append(this.$close);
+        this.$title.append(this.$close);
       } else {
         this.$close.remove();
+      }
+
+      for (var i = 0; i < panel._buttonList.length; ++i) {
+        var buttonData = panel._buttonList[i];
+        var $button = $('<div>');
+        $button.addClass('wcFrameButton');
+        if (buttonData.isToggle) {
+          $button.addClass('wcFrameButtonToggler');
+        }
+        if (buttonData.className) {
+          $button.addClass(buttonData.className);
+        }
+        $button.attr('title', buttonData.tip);
+        $button.data('name', buttonData.name);
+        $button.text(buttonData.text);
+
+        this._buttonList.push($button);
+        this.$title.append($button);
       }
 
       panel.__update();

@@ -13,6 +13,8 @@ function wcPanel(type) {
 
   this._layout = null;
 
+  this._buttonList = [];
+
   this._actualPos = {
     x: 0.5,
     y: 0.5,
@@ -97,6 +99,38 @@ wcPanel.prototype = {
     if (docker) {
       docker.__focus(this._parent, flash);
     }
+  },
+
+  // Creates a new custom button that will appear in the title bar of the panel.
+  // Params:
+  //    name        The name of the button, to identify it.
+  //    className   A class name to apply to the button.
+  //    text        Text to apply to the button.
+  //    tip         Tooltip text.
+  //    isToggle    If true, will make the button toggle on and off per click.
+  addButton: function(name, className, text, tip, isToggle) {
+    this._buttonList.push({
+      name: name,
+      className: className,
+      text: text,
+      tip: tip,
+      isToggle: isToggle,
+    });
+
+    return this._buttonList.length-1;
+  },
+
+  // Removes a button from the panel.
+  // Params:
+  //    name        The name identifier for this button.
+  removeButton: function(name) {
+    for (var i = 0; i < this._buttonList.length; ++i) {
+      if (this._buttonList[i].name === name) {
+        this._buttonList.splice(i, 1);
+        return true;
+      }
+    }
+    return false;
   },
 
   // Gets, or Sets the default position of the widget if it is floating.
