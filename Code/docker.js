@@ -451,24 +451,154 @@ wcDocker.prototype = {
   // http://medialize.github.io/jQuery-contextMenu/docs.html
   // for more information.
   // Params:
-  //    selector      A JQuery selector string that designates the
-  //                  elements who use this menu.
-  //    itemList      An array with each context menu item in it, each item
-  //                  is an object {name:string, callback:function(key, opts)}.
-  basicMenu: function(selector, itemList) {
-    var items = {};
+  //    selector        A JQuery selector string that designates the
+  //                    elements who use this menu.
+  //    itemList        An array with each context menu item in it, each item
+  //                    is an object {name:string, callback:function(key, opts)}.
+  //    includeDefault  If true, all default panel menu options will also be shown.
+  basicMenu: function(selector, itemList, includeDefault) {
+    var finalItems = {};
     for (var i = 0; i < itemList.length; ++i) {
-      items[itemList[i].name] = itemList[i];
+      finalItems[itemList[i].name] = itemList[i];
     }
 
-    $.contextMenu({
-      selector: selector,
-      animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
-      reposition: false,
-      autoHide: true,
-      zIndex: 200,
-      items: items,
-    });
+    if (!includeDefault) {
+      $.contextMenu({
+        selector: selector,
+        animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+        reposition: false,
+        autoHide: true,
+        zIndex: 200,
+        items: finalItems,
+      });
+    } else {
+      var self = this;
+      $.contextMenu({
+        selector: selector,
+        build: function($trigger, event) {
+          var myFrame;
+          for (var i = 0; i < self._frameList.length; ++i) {
+            var $frame = $trigger.parents('.wcFrame');
+            if (self._frameList[i].$frame[0] === $frame[0]) {
+              myFrame = self._frameList[i];
+              break;
+            }
+          }
+
+          var mouse = {
+            x: event.clientX,
+            y: event.clientY,
+          };
+          var isTitle = false;
+          if (mouse.y - myFrame.$frame.offset().top <= 20) {
+            isTitle = true;
+          }
+
+          var windowTypes = {};
+          for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
+            var type = self._dockPanelTypeList[i];
+            if (!type.isPrivate) {
+              windowTypes[type.name] = {
+                name: type.name,
+                className: 'wcMenuCreatePanel',
+              };
+            }
+          }
+
+          var items = finalItems;
+          items['sep0'] = "---------";
+
+          if (isTitle) {
+            items['Close Panel'] = {
+              name: 'Close Tab',
+              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
+            };
+            if (!myFrame._isFloating) {
+              items['Detach Panel'] = {
+                name: 'Detach Tab',
+                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+              };
+            }
+
+            items['sep1'] = "---------";
+    
+            items.fold1 = {
+              name: 'Add Tab',
+              items: windowTypes,
+              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+              className: 'wcMenuCreatePanel',
+            };
+            items['sep2'] = "---------";
+
+            items['Flash Panel'] = {name: 'Flash Tab'};
+          } else {
+            items['Close Panel'] = {
+              name: 'Close Panel',
+              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
+            };
+            if (!myFrame._isFloating) {
+              items['Detach Panel'] = {
+                name: 'Detach Panel',
+                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+              };
+            }
+
+            items['sep1'] = "---------";
+
+            items.fold1 = {
+              name: 'Insert Panel',
+              items: windowTypes,
+              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+              className: 'wcMenuCreatePanel',
+            };
+            items['sep2'] = "---------";
+
+            items['Flash Panel'] = {name: 'Flash Panel'};
+          }
+
+          if (!myFrame._isFloating && myFrame.panel().moveable()) {
+            var rect = myFrame.__rect();
+            self._ghost = new wcGhost(rect, mouse);
+            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
+            self._ghost.$ghost.hide();
+          }
+
+          return {
+            callback: function(key, options) {
+              if (key === 'Close Panel') {
+                setTimeout(function() {
+                  myFrame.panel().close();
+                }, 10);
+              } else if (key === 'Detach Panel') {
+                self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
+              } else if (key === 'Flash Panel') {
+                self.__focus(myFrame, true);
+              } else {
+                if (myFrame && self._ghost) {
+                  var anchor = self._ghost.anchor();
+                  self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
+                }
+              }
+            },
+            events: {
+              show: function(opt) {
+              },
+              hide: function(opt) {
+                if (self._ghost) {
+                  self._ghost.__destroy();
+                  self._ghost = false;
+                }
+              },
+            },
+            animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+            reposition: false,
+            autoHide: true,
+            zIndex: 200,
+            items: items,
+          };
+        },
+      });
+    }
   },
 
   // Saves the current panel configuration into a meta
