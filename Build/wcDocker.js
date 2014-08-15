@@ -28,9 +28,9 @@ function wcDocker(container) {
   this._events = {};
 
   this._root = null;
+  this._frameList = [];
   this._floatingList = [];
 
-  this._frameList = [];
   this._splitterList = [];
 
   this._dockPanelTypeList = [];
@@ -858,7 +858,7 @@ wcDocker.prototype = {
     });
 
     // Close button on frames should __destroy those panels.
-    $('body').on('click', '.wcFrameButton', function() {
+    $('body').on('click', '.wcFrameTitle > .wcFrameButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
@@ -934,6 +934,10 @@ wcDocker.prototype = {
       if (event.which === 3) {
         return true;
       }
+      if ($(event.target).hasClass('wcFrameButton')) {
+        return false;
+      }
+      
       self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$title[0] == this) {
@@ -959,14 +963,6 @@ wcDocker.prototype = {
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
-            // self._draggingFrame.__shadow(true);
-
-            // Also fade out all floating windows as they are not dockable.
-            // for (var a = 0; a < self._frameList.length; ++a) {
-            //   if (self._frameList[a]._isFloating) {
-            //     self._frameList[a].__shadow(true);
-            //   }
-            // }
           }
           break;
         }
@@ -983,7 +979,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].$center[0] == this) {
+        if (self._frameList[i].panel().layout().$elem[0] == this) {
           self.__focus(self._frameList[i]);
           break;
         }
