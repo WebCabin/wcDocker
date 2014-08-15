@@ -40,6 +40,7 @@ function wcDocker(container) {
   this._draggingFrameSizer = null;
   this._draggingFrameTab = null;
   this._ghost = null;
+  this._menuTimer = 0;
 
   this.__init();
 };
@@ -599,6 +600,29 @@ wcDocker.prototype = {
         },
       });
     }
+  },
+
+  // Bypasses the next context menu event.
+  // Use this during a mouse up event in which you do not want the
+  // context menu to appear.
+  bypassMenu: function() {
+    if (this._menuTimer) {
+      clearTimeout(this._menuTimer);
+    }
+
+    for (var i in $.contextMenu.menus) {
+      var menuSelector = $.contextMenu.menus[i].selector;
+      $(menuSelector).contextMenu(false);
+    }
+
+    var self = this;
+    this._menuTimer = setTimeout(function() {
+      for (var i in $.contextMenu.menus) {
+        var menuSelector = $.contextMenu.menus[i].selector;
+        $(menuSelector).contextMenu(true);
+      }
+      self._menuTimer = null;
+    }, 0);
   },
 
   // Saves the current panel configuration into a meta
