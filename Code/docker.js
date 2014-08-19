@@ -28,9 +28,9 @@ function wcDocker(container) {
   this._events = {};
 
   this._root = null;
+  this._frameList = [];
   this._floatingList = [];
 
-  this._frameList = [];
   this._splitterList = [];
 
   this._dockPanelTypeList = [];
@@ -40,25 +40,27 @@ function wcDocker(container) {
   this._draggingFrameSizer = null;
   this._draggingFrameTab = null;
   this._ghost = null;
+  this._menuTimer = 0;
 
   this.__init();
 };
 
-wcDocker.DOCK_FLOAT  = 'float';
-wcDocker.DOCK_TOP    = 'top';
-wcDocker.DOCK_LEFT   = 'left';
-wcDocker.DOCK_RIGHT  = 'right';
-wcDocker.DOCK_BOTTOM = 'bottom';
+wcDocker.DOCK_FLOAT             = 'float';
+wcDocker.DOCK_TOP               = 'top';
+wcDocker.DOCK_LEFT              = 'left';
+wcDocker.DOCK_RIGHT             = 'right';
+wcDocker.DOCK_BOTTOM            = 'bottom';
 
-wcDocker.EVENT_UPDATED          = 'updated';
-wcDocker.EVENT_CLOSED           = 'closed';
-wcDocker.EVENT_ATTACHED         = 'attached';
-wcDocker.EVENT_DETACHED         = 'detached';
-wcDocker.EVENT_MOVED            = 'moved';
-wcDocker.EVENT_RESIZED          = 'resized';
-wcDocker.EVENT_SCROLLED         = 'scrolled';
-wcDocker.EVENT_SAVE_LAYOUT      = 'save_layout';
-wcDocker.EVENT_RESTORE_LAYOUT   = 'restore_layout';
+wcDocker.EVENT_UPDATED          = 'panelUpdated';
+wcDocker.EVENT_CLOSED           = 'panelClosed';
+wcDocker.EVENT_BUTTON           = 'panelButton';
+wcDocker.EVENT_ATTACHED         = 'panelAttached';
+wcDocker.EVENT_DETACHED         = 'panelDetached';
+wcDocker.EVENT_MOVED            = 'panelMoved';
+wcDocker.EVENT_RESIZED          = 'panelResized';
+wcDocker.EVENT_SCROLLED         = 'panelScrolled';
+wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
+wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -450,24 +452,192 @@ wcDocker.prototype = {
   // http://medialize.github.io/jQuery-contextMenu/docs.html
   // for more information.
   // Params:
-  //    selector      A JQuery selector string that designates the
-  //                  elements who use this menu.
-  //    itemList      An array with each context menu item in it, each item
-  //                  is an object {name:string, callback:function(key, opts)}.
-  basicMenu: function(selector, itemList) {
-    var items = {};
+  //    selector        A JQuery selector string that designates the
+  //                    elements who use this menu.
+  //    itemList        An array with each context menu item in it, each item
+  //                    is an object {name:string, callback:function(key, opts, panel)}.
+  //    includeDefault  If true, all default panel menu options will also be shown.
+  basicMenu: function(selector, itemList, includeDefault) {
+    var self = this;
+    var finalItems = {};
     for (var i = 0; i < itemList.length; ++i) {
-      items[itemList[i].name] = itemList[i];
+      var callback = itemList[i].callback;
+
+      itemList[i].callback = function(key, opts) {
+        var panel = null;
+        var $frame = opts.$trigger.parents('.wcFrame').first();
+        if ($frame.length) {
+          for (var a = 0; a < self._frameList.length; ++a) {
+            if ($frame[0] === self._frameList[a].$frame[0]) {
+              panel = self._frameList[a].panel();
+            }
+          }
+        }
+
+        callback(key, opts, panel);
+      }
+      finalItems[itemList[i].name] = itemList[i];
     }
 
-    $.contextMenu({
-      selector: selector,
-      animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
-      reposition: false,
-      autoHide: true,
-      zIndex: 200,
-      items: items,
-    });
+    if (!includeDefault) {
+      $.contextMenu({
+        selector: selector,
+        animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+        reposition: false,
+        autoHide: true,
+        zIndex: 200,
+        items: finalItems,
+      });
+    } else {
+      $.contextMenu({
+        selector: selector,
+        build: function($trigger, event) {
+          var myFrame;
+          for (var i = 0; i < self._frameList.length; ++i) {
+            var $frame = $trigger.parents('.wcFrame');
+            if (self._frameList[i].$frame[0] === $frame[0]) {
+              myFrame = self._frameList[i];
+              break;
+            }
+          }
+
+          var mouse = {
+            x: event.clientX,
+            y: event.clientY,
+          };
+          var isTitle = false;
+          if (mouse.y - myFrame.$frame.offset().top <= 20) {
+            isTitle = true;
+          }
+
+          var windowTypes = {};
+          for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
+            var type = self._dockPanelTypeList[i];
+            if (!type.isPrivate) {
+              windowTypes[type.name] = {
+                name: type.name,
+                className: 'wcMenuCreatePanel',
+              };
+            }
+          }
+
+          var items = finalItems;
+          items['sep0'] = "---------";
+
+          if (isTitle) {
+            items['Close Panel'] = {
+              name: 'Close Tab',
+              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
+            };
+            if (!myFrame._isFloating) {
+              items['Detach Panel'] = {
+                name: 'Detach Tab',
+                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+              };
+            }
+
+            items['sep1'] = "---------";
+    
+            items.fold1 = {
+              name: 'Add Tab',
+              items: windowTypes,
+              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+              className: 'wcMenuCreatePanel',
+            };
+            items['sep2'] = "---------";
+
+            items['Flash Panel'] = {name: 'Flash Tab'};
+          } else {
+            items['Close Panel'] = {
+              name: 'Close Panel',
+              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
+            };
+            if (!myFrame._isFloating) {
+              items['Detach Panel'] = {
+                name: 'Detach Panel',
+                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+              };
+            }
+
+            items['sep1'] = "---------";
+
+            items.fold1 = {
+              name: 'Insert Panel',
+              items: windowTypes,
+              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+              className: 'wcMenuCreatePanel',
+            };
+            items['sep2'] = "---------";
+
+            items['Flash Panel'] = {name: 'Flash Panel'};
+          }
+
+          if (!myFrame._isFloating && myFrame.panel().moveable()) {
+            var rect = myFrame.__rect();
+            self._ghost = new wcGhost(rect, mouse);
+            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
+            self._ghost.$ghost.hide();
+          }
+
+          return {
+            callback: function(key, options) {
+              if (key === 'Close Panel') {
+                setTimeout(function() {
+                  myFrame.panel().close();
+                }, 10);
+              } else if (key === 'Detach Panel') {
+                self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
+              } else if (key === 'Flash Panel') {
+                self.__focus(myFrame, true);
+              } else {
+                if (myFrame && self._ghost) {
+                  var anchor = self._ghost.anchor();
+                  self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
+                }
+              }
+            },
+            events: {
+              show: function(opt) {
+              },
+              hide: function(opt) {
+                if (self._ghost) {
+                  self._ghost.__destroy();
+                  self._ghost = false;
+                }
+              },
+            },
+            animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+            reposition: false,
+            autoHide: true,
+            zIndex: 200,
+            items: items,
+          };
+        },
+      });
+    }
+  },
+
+  // Bypasses the next context menu event.
+  // Use this during a mouse up event in which you do not want the
+  // context menu to appear.
+  bypassMenu: function() {
+    if (this._menuTimer) {
+      clearTimeout(this._menuTimer);
+    }
+
+    for (var i in $.contextMenu.menus) {
+      var menuSelector = $.contextMenu.menus[i].selector;
+      $(menuSelector).contextMenu(false);
+    }
+
+    var self = this;
+    this._menuTimer = setTimeout(function() {
+      for (var i in $.contextMenu.menus) {
+        var menuSelector = $.contextMenu.menus[i].selector;
+        $(menuSelector).contextMenu(true);
+      }
+      self._menuTimer = null;
+    }, 0);
   },
 
   // Saves the current panel configuration into a meta
@@ -703,18 +873,37 @@ wcDocker.prototype = {
     });
 
     // Close button on frames should __destroy those panels.
-    $('body').on('click', '.wcFrameCloseButton', function() {
+    $('body').on('click', '.wcFrameTitle > .wcFrameButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].$close[0] == this) {
-          frame = self._frameList[i];
-          break;
+        var frame = self._frameList[i];
+        if (frame.$close[0] === this) {
+          var panel = frame.panel();
+          self.removePanel(panel);
+          self.__update();
+          return;
         }
-      }
-      if (frame) {
-        var panel = frame.panel();
-        self.removePanel(panel);
-        self.__update();
+        for (var a = 0; a < frame._buttonList.length; ++a) {
+          if (frame._buttonList[a][0] === this) {
+            var $button = frame._buttonList[a];
+            var result = {
+              name: $button.data('name'),
+              isToggled: false,
+            }
+
+            if ($button.hasClass('wcFrameButtonToggler')) {
+              $button.toggleClass('wcFrameButtonToggled');
+              if ($button.hasClass('wcFrameButtonToggled')) {
+                result.isToggled = true;
+              }
+            }
+
+            var panel = frame.panel();
+            panel.buttonState(result.name, result.isToggled);
+            panel.__trigger(wcDocker.EVENT_BUTTON, result);
+            return;
+          }
+        }
       }
     });
 
@@ -760,6 +949,10 @@ wcDocker.prototype = {
       if (event.which === 3) {
         return true;
       }
+      if ($(event.target).hasClass('wcFrameButton')) {
+        return false;
+      }
+      
       self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$title[0] == this) {
@@ -785,14 +978,6 @@ wcDocker.prototype = {
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
-            // self._draggingFrame.__shadow(true);
-
-            // Also fade out all floating windows as they are not dockable.
-            // for (var a = 0; a < self._frameList.length; ++a) {
-            //   if (self._frameList[a]._isFloating) {
-            //     self._frameList[a].__shadow(true);
-            //   }
-            // }
           }
           break;
         }
@@ -809,7 +994,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].$center[0] == this) {
+        if (self._frameList[i].panel().layout().$elem[0] == this) {
           self.__focus(self._frameList[i]);
           break;
         }

@@ -143,6 +143,12 @@
           myDocker.registerPanelType('Reaction Panel', function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center"></div>'));
 
+            var $buttonInfo = $('<div style="text-align:center">I react to the custom buttons above</div>');
+            var $buttonN = $('<div style="text-align:center"><b>Normal button pressed!</b></div>');
+            var $buttonTtrue = $('<div style="text-align:center"><b>Toggle button is toggled!</b></div>');
+            var $buttonTfalse = $('<div style="text-align:center"><b>Toggle button is released!</b></div>');
+            var buttonTimer;
+
             var $attachInfo = $('<div style="text-align:center">I react when docked</div>');
             var $attached   = $('<div style="text-align:center"><b>I was just docked!</b></div>');
             var $detachInfo = $('<div style="text-align:center">I react when detached</div>');
@@ -157,11 +163,55 @@
             var $resized    = $('<div style="text-align:center"><b>I was just resized!</b></div>');
             var resizeTimer;
 
-            myPanel.layout().addItem($detachInfo, 0, 0);
-            myPanel.layout().addItem($moveInfo, 0, 1);
-            myPanel.layout().addItem($resizeInfo, 0, 2);
+            myPanel.layout().addItem($buttonInfo, 0, 0);
+            myPanel.layout().addItem($detachInfo, 0, 1);
+            myPanel.layout().addItem($moveInfo, 0, 2);
+            myPanel.layout().addItem($resizeInfo, 0, 3);
 
-            // Now register some events.
+            myPanel.addButton('Toggle Button', '', 'T', 'A toggle button', true);
+            myPanel.addButton('Normal Button', '', 'N', 'A normal button', false);
+
+            // React on custom button press.
+            myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+              if (buttonTimer) {
+                clearTimeout(buttonTimer);
+              }
+
+              // alert(data.name + ' pressed.  isToggled = ' + data.isToggled);
+              if (data.name === 'Normal Button') {
+                $buttonInfo.remove();
+                $buttonN.remove();
+                $buttonTtrue.remove();
+                $buttonTfalse.remove();
+                this.layout().addItem($buttonN, 0, 0);
+
+                var self = this;
+                buttonTimer = setTimeout(function() {
+                  $buttonN.remove();
+                  self.layout().addItem($buttonInfo, 0, 0);
+                }, 1000);
+              } else if (data.name === 'Toggle Button') {
+                $buttonInfo.remove();
+                $buttonN.remove();
+                $buttonTtrue.remove();
+                $buttonTfalse.remove();
+
+                if (data.isToggled) {
+                  this.layout().addItem($buttonTtrue, 0, 0);
+                } else {
+                  this.layout().addItem($buttonTfalse, 0, 0);
+                }
+
+                var self = this;
+                buttonTimer = setTimeout(function() {
+                  $buttonTtrue.remove();
+                  $buttonTfalse.remove();
+                  self.layout().addItem($buttonInfo, 0, 0);
+                }, 1000);
+              }
+            });
+
+            // React on attachment.
             myPanel.on(wcDocker.EVENT_ATTACHED, function() {
               if (attachTimer) {
                 clearTimeout(attachTimer);
@@ -170,14 +220,16 @@
               $attachInfo.remove();
               $detachInfo.remove();
               $detached.remove();
-              this.layout().addItem($attached, 0, 0);
+              this.layout().addItem($attached, 0, 1);
 
               var self = this;
               attachTimer = setTimeout(function() {
                 $attached.remove();
-                self.layout().addItem($detachInfo, 0, 0);
+                self.layout().addItem($detachInfo, 0, 1);
               }, 1000);
             });
+
+            // React on detachment.
             myPanel.on(wcDocker.EVENT_DETACHED, function() {
               if (attachTimer) {
                 clearTimeout(attachTimer);
@@ -186,41 +238,45 @@
               $attachInfo.remove();
               $detachInfo.remove();
               $detached.remove();
-              this.layout().addItem($detached, 0, 0);
+              this.layout().addItem($detached, 0, 1);
 
               var self = this;
               attachTimer = setTimeout(function() {
                 $detached.remove();
-                self.layout().addItem($attachInfo, 0, 0);
+                self.layout().addItem($attachInfo, 0, 1);
               }, 1000);
             });
+
+            // React on movement.
             myPanel.on(wcDocker.EVENT_MOVED, function() {
               if (moveTimer) {
                 clearTimeout(moveTimer);
               }
 
               $moveInfo.remove();
-              this.layout().addItem($moved, 0, 1);
+              this.layout().addItem($moved, 0, 2);
 
               var self = this;
               moveTimer = setTimeout(function() {
                 $moved.remove();
-                self.layout().addItem($moveInfo, 0, 1);
+                self.layout().addItem($moveInfo, 0, 2);
                 moveTimer = null;
               }, 500);
             });
+
+            // React on resizing.
             myPanel.on(wcDocker.EVENT_RESIZED, function() {
               if (resizeTimer) {
                 clearTimeout(resizeTimer);
               }
 
               $resizeInfo.remove();
-              this.layout().addItem($resized, 0, 2);
+              this.layout().addItem($resized, 0, 3);
 
               var self = this;
               resizeTimer = setTimeout(function() {
                 $resized.remove();
-                self.layout().addItem($resizeInfo, 0, 2);
+                self.layout().addItem($resizeInfo, 0, 3);
                 resizeTimer = null;
               }, 500);
             });
@@ -263,10 +319,10 @@
 
           // Setup our context menus.
           myDocker.basicMenu('.testMenu', [
-            {name: 'customMenu1', callback: function(key, opts){alert(key);}},
-            {name: 'customMenu2', callback: function(key, opts){alert(key);}},
-            {name: 'customMenu3', callback: function(key, opts){alert(key);}},
-          ]);
+            {name: 'customMenu1', callback: function(key, opts, panel){alert(key);}},
+            {name: 'customMenu2', callback: function(key, opts, panel){alert(key);}},
+            {name: 'customMenu3', callback: function(key, opts, panel){alert(key);}},
+          ], true);
         }
       });
     </script>

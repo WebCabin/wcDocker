@@ -13,6 +13,8 @@ function wcPanel(type) {
 
   this._layout = null;
 
+  this._buttonList = [];
+
   this._actualPos = {
     x: 0.5,
     y: 0.5,
@@ -97,6 +99,65 @@ wcPanel.prototype = {
     if (docker) {
       docker.__focus(this._parent, flash);
     }
+  },
+
+  // Creates a new custom button that will appear in the title bar of the panel.
+  // Params:
+  //    name          The name of the button, to identify it.
+  //    className     A class name to apply to the button.
+  //    text          Text to apply to the button.
+  //    tip           Tooltip text.
+  //    isTogglable   If true, will make the button toggle on and off per click.
+  addButton: function(name, className, text, tip, isTogglable) {
+    this._buttonList.push({
+      name: name,
+      className: className,
+      text: text,
+      tip: tip,
+      isTogglable: isTogglable,
+      isToggled: false,
+    });
+
+    return this._buttonList.length-1;
+  },
+
+  // Removes a button from the panel.
+  // Params:
+  //    name        The name identifier for this button.
+  removeButton: function(name) {
+    for (var i = 0; i < this._buttonList.length; ++i) {
+      if (this._buttonList[i].name === name) {
+        this._buttonList.splice(i, 1);
+        if (this._parent instanceof wcFrame) {
+          this._parent.__onTabChange();
+        }
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // Gets, or Sets the current toggle state of a custom button that was
+  // added using addButton().
+  // Params:
+  //    name          The name identifier of the button.
+  //    isToggled     If supplied, will assign a new toggle state to the button.
+  // Returns:
+  //    Boolean       The current toggle state of the button.
+  buttonState: function(name, isToggled) {
+    for (var i = 0; i < this._buttonList.length; ++i) {
+      if (this._buttonList[i].name === name) {
+        if (typeof isToggled !== 'undefined') {
+          this._buttonList[i].isToggled = isToggled;
+          if (this._parent instanceof wcFrame) {
+            this._parent.__onTabChange();
+          }
+        }
+
+        return this._buttonList[i].isToggled;
+      }
+    }
+    return false;
   },
 
   // Gets, or Sets the default position of the widget if it is floating.

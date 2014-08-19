@@ -25,7 +25,8 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 ****
 ### Change Log ###
 #### Version: Beta ####
-* Ability to batch together large layout operations to minimize reflow.
+* You can now add custom buttons that appear in the panels title bar.
+* Ability to batch together a large number of elements being added to a layout to minimize reflow.
 * Events can now be applied to the main docker, rather than only panels.
 * Ability to retrieve layout table items from a specified grid location.
 * Ability to set the layouts grid spacing size.
