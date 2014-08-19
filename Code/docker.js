@@ -455,11 +455,27 @@ wcDocker.prototype = {
   //    selector        A JQuery selector string that designates the
   //                    elements who use this menu.
   //    itemList        An array with each context menu item in it, each item
-  //                    is an object {name:string, callback:function(key, opts)}.
+  //                    is an object {name:string, callback:function(key, opts, panel)}.
   //    includeDefault  If true, all default panel menu options will also be shown.
   basicMenu: function(selector, itemList, includeDefault) {
+    var self = this;
     var finalItems = {};
     for (var i = 0; i < itemList.length; ++i) {
+      var callback = itemList[i].callback;
+
+      itemList[i].callback = function(key, opts) {
+        var panel = null;
+        var $frame = opts.$trigger.parents('.wcFrame').first();
+        if ($frame.length) {
+          for (var a = 0; a < self._frameList.length; ++a) {
+            if ($frame[0] === self._frameList[a].$frame[0]) {
+              panel = self._frameList[a].panel();
+            }
+          }
+        }
+
+        callback(key, opts, panel);
+      }
       finalItems[itemList[i].name] = itemList[i];
     }
 
@@ -473,7 +489,6 @@ wcDocker.prototype = {
         items: finalItems,
       });
     } else {
-      var self = this;
       $.contextMenu({
         selector: selector,
         build: function($trigger, event) {
