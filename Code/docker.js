@@ -463,19 +463,21 @@ wcDocker.prototype = {
     for (var i = 0; i < itemList.length; ++i) {
       var callback = itemList[i].callback;
 
-      itemList[i].callback = function(key, opts) {
-        var panel = null;
-        var $frame = opts.$trigger.parents('.wcFrame').first();
-        if ($frame.length) {
-          for (var a = 0; a < self._frameList.length; ++a) {
-            if ($frame[0] === self._frameList[a].$frame[0]) {
-              panel = self._frameList[a].panel();
+      (function(listItem, callback) {
+        listItem.callback = function(key, opts) {
+          var panel = null;
+          var $frame = opts.$trigger.parents('.wcFrame').first();
+          if ($frame.length) {
+            for (var a = 0; a < self._frameList.length; ++a) {
+              if ($frame[0] === self._frameList[a].$frame[0]) {
+                panel = self._frameList[a].panel();
+              }
             }
           }
-        }
 
-        callback(key, opts, panel);
-      }
+          callback(key, opts, panel);
+        };
+      })(itemList[i], callback);
       finalItems[itemList[i].name] = itemList[i];
     }
 
