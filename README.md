@@ -2,22 +2,20 @@ wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic do
 
 For a currently working demo, try it here [http://docker.webcabin.org](http://docker.webcabin.org)
 
+Please share your project with us that uses wcDocker!
+
+
 ### The following features are supported currently: ###
-* Panels can be docked to any side of any other window.
+* Panels can be created, closed, moved, resized, and groupped together.
 * Panels can be detached from a dock position to float on their own, and then dock again.
-* Panels can be resized.
-* Panels can be closed via close button.
-* Panels can be initialized in code for a default layout.
-* Panels can be programmed with a minimum and maximum size constraint.
+* Panels can include their own custom buttons in their upper-right area.
+* Panel configurations can be saved, then later restored.
 * Multiple panels of the same type can be created.
-* Panels can be created via context menu.
-* Event system to react on panel changes.
-* Ability to group multiple windows into the same dock panel via tabbing.
-* Saving and Restoring of full window panel configurations.
+* Built in context menu system with standard panel options as well as custom ones.
+* Event system for intercommunication between panels as well as to react on panel change events.
 * Allow styling of window colors and other options by using themed css files.
 
 ### The following features could possibly be developed next: ###
-* Ability to add custom buttons to a panel within the title bar area.
 * The ability for floating windows to be a true window, and therefore leave the bounds of the page.
 * An option of restricting the number of total panels created.
 * An option of restricting the total copies of the same panel type.
