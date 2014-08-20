@@ -2,7 +2,7 @@
  * Web Cabin Docker - Docking Layout Interface.
  *
  * Dependancies:
- *  JQuery 2.1.1
+ *  JQuery 1.11.1
  *
  * Version: git-master
  *
@@ -15,6 +15,55 @@
  *
  */
 
+
+// Provide backward compatibility for IE8 and other such older browsers.
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (oThis) {
+    if (typeof this !== "function") {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    }
+
+    var aArgs = Array.prototype.slice.call(arguments, 1), 
+        fToBind = this, 
+        fNOP = function () {},
+        fBound = function () {
+          return fToBind.apply(this instanceof fNOP && oThis
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+
+if (!Array.prototype.indexOf)
+{
+  Array.prototype.indexOf = function(elt /*, from*/)
+  {
+    var len = this.length >>> 0;
+
+    var from = Number(arguments[1]) || 0;
+    from = (from < 0)
+         ? Math.ceil(from)
+         : Math.floor(from);
+    if (from < 0)
+      from += len;
+
+    for (; from < len; from++)
+    {
+      if (from in this &&
+          this[from] === elt)
+        return from;
+    }
+    return -1;
+  };
+}
 
 /*
   The main window instance.  This manages all of the docking panels and user input.
@@ -455,7 +504,7 @@ wcDocker.prototype = {
   //    selector        A JQuery selector string that designates the
   //                    elements who use this menu.
   //    itemList        An array with each context menu item in it, each item
-  //                    is an object {name:string, callback:function(key, opts)}.
+  //                    is an object {name:string, callback:function(key, opts, panel)}.
   //    includeDefault  If true, all default panel menu options will also be shown.
   basicMenu: function(selector, itemList, includeDefault) {
     var self = this;
@@ -463,19 +512,21 @@ wcDocker.prototype = {
     for (var i = 0; i < itemList.length; ++i) {
       var callback = itemList[i].callback;
 
-      itemList[i].callback = function(key, opts) {
-        var panel = null;
-        var $frame = opts.$trigger.parents('.wcFrame').first();
-        if ($frame.length) {
-          for (var a = 0; a < self._frameList.length; ++a) {
-            if ($frame[0] === self._frameList[a].$frame[0]) {
-              panel = self._frameList[a].panel();
+      (function(listItem, callback) {
+        listItem.callback = function(key, opts) {
+          var panel = null;
+          var $frame = opts.$trigger.parents('.wcFrame').first();
+          if ($frame.length) {
+            for (var a = 0; a < self._frameList.length; ++a) {
+              if ($frame[0] === self._frameList[a].$frame[0]) {
+                panel = self._frameList[a].panel();
+              }
             }
           }
-        }
 
-        callback(key, opts, panel);
-      }
+          callback(key, opts, panel);
+        };
+      })(itemList[i], callback);
       finalItems[itemList[i].name] = itemList[i];
     }
 
@@ -872,6 +923,10 @@ wcDocker.prototype = {
       event.returnValue = false;
     });
 
+    $('body').on('selectstart', '.wcFrameTitle, .wcPanelTab', function(event) {
+      event.preventDefault();
+    });
+
     // Close button on frames should __destroy those panels.
     $('body').on('click', '.wcFrameTitle > .wcFrameButton', function() {
       var frame;
@@ -934,7 +989,7 @@ wcDocker.prototype = {
         return true;
       }
 
-      self.$container.addClass('wcDisableSelection');
+      // self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
@@ -965,6 +1020,9 @@ wcDocker.prototype = {
           self._draggingFrame.__anchorMove(mouse);
 
           if ($(event.target).hasClass('wcPanelTab')) {
+            var index = parseInt($(event.target).attr('id'));
+            self._draggingFrame.panel(index);
+            
             if (event.which === 2) {
               self._draggingFrame = null;
               return;
@@ -2927,11 +2985,6 @@ wcFrame.prototype = {
       } else {
         $tab.addClass('wcPanelTabActive');
       }
-
-      $tab.on('mousedown', function(event) {
-        var index = parseInt($(this).attr('id'));
-        self.panel(index);
-      });
     }
 
     $tempCenter.remove();

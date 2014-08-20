@@ -2,7 +2,7 @@
  * Web Cabin Docker - Docking Layout Interface.
  *
  * Dependancies:
- *  JQuery 2.1.1
+ *  JQuery 1.11.1
  *
  * Version: git-master
  *
@@ -923,6 +923,10 @@ wcDocker.prototype = {
       event.returnValue = false;
     });
 
+    $('body').on('selectstart', '.wcFrameTitle, .wcPanelTab', function(event) {
+      event.preventDefault();
+    });
+
     // Close button on frames should __destroy those panels.
     $('body').on('click', '.wcFrameTitle > .wcFrameButton', function() {
       var frame;
@@ -985,7 +989,7 @@ wcDocker.prototype = {
         return true;
       }
 
-      self.$container.addClass('wcDisableSelection');
+      // self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
@@ -1016,6 +1020,9 @@ wcDocker.prototype = {
           self._draggingFrame.__anchorMove(mouse);
 
           if ($(event.target).hasClass('wcPanelTab')) {
+            var index = parseInt($(event.target).attr('id'));
+            self._draggingFrame.panel(index);
+            
             if (event.which === 2) {
               self._draggingFrame = null;
               return;

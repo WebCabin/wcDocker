@@ -346,11 +346,6 @@ wcFrame.prototype = {
       } else {
         $tab.addClass('wcPanelTabActive');
       }
-
-      $tab.on('mousedown', function(event) {
-        var index = parseInt($(this).attr('id'));
-        self.panel(index);
-      });
     }
 
     $tempCenter.remove();
