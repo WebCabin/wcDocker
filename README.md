@@ -25,6 +25,7 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 ****
 ### Change Log ###
 #### Version: Beta ####
+* Compatibility with IE8.
 * You can now add custom buttons that appear in the panels title bar.
 * Ability to batch together a large number of elements being added to a layout to minimize reflow.
 * Events can now be applied to the main docker, rather than only panels.
@@ -36,7 +37,7 @@ For a currently working demo, try it here [http://docker.webcabin.org](http://do
 ****
 # Dependancies #
 
-* JQuery Library version 2.1.1 [http://jquery.com/](http://jquery.com/)
+* JQuery Library version 1.11.1 [http://jquery.com/](http://jquery.com/)
 * Custom version of JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
 
 If you use the pre-built packages wcDocker.js or wcDocker.min.js then the contextMenu library is embedded into it already.
