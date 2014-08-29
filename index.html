@@ -280,6 +280,22 @@
                 resizeTimer = null;
               }, 500);
             });
+
+            myPanel.on(wcDocker.EVENT_RESIZE_STARTED, function() {
+              console.log("Started Resize");
+            });
+
+            myPanel.on(wcDocker.EVENT_RESIZE_ENDED, function() {
+              console.log("Ended Resize");
+            });
+
+            myPanel.on(wcDocker.EVENT_MOVE_STARTED, function() {
+              console.log("Started Move");
+            });
+
+            myPanel.on(wcDocker.EVENT_MOVE_ENDED, function() {
+              console.log("Ended Move");
+            });
           });
 
           myDocker.registerPanelType('Tabbed Panel', function(myPanel) {

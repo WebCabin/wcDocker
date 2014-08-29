@@ -25,9 +25,21 @@ function wcPanel(type) {
     y: 0,
   };
 
+  this._resizeData = {
+    time: -1,
+    timeout: false,
+    delta: 150,
+  };
+
   this._pos = {
     x: 0.5,
     y: 0.5,
+  };
+
+  this._moveData = {
+    time: -1,
+    timeout: false,
+    delta: 150,
   };
 
   this._size = {
@@ -366,6 +378,13 @@ wcPanel.prototype = {
     if (this._actualSize.x !== width || this._actualSize.y !== height) {
       this._actualSize.x = width;
       this._actualSize.y = height;
+
+      this._resizeData.time = new Date();
+      if (!this._resizeData.timeout) {
+        this._resizeData.timeout = true;
+        setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+        this.__trigger(wcDocker.EVENT_RESIZE_STARTED);
+      }
       this.__trigger(wcDocker.EVENT_RESIZED);
     }
 
@@ -373,7 +392,32 @@ wcPanel.prototype = {
     if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
       this._actualPos.x = offset.left;
       this._actualPos.y = offset.top;
+
+      this._moveData.time = new Date();
+      if (!this._moveData.timeout) {
+        this._moveData.timeout = true;
+        setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
+        this.__trigger(wcDocker.EVENT_MOVE_STARTED);
+      }
       this.__trigger(wcDocker.EVENT_MOVED);
+    }
+  },
+
+  __resizeEnd: function() {
+    if (new Date() - this._resizeData.time < this._resizeData.delta) {
+      setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+    } else {
+      this._resizeData.timeout = false;
+      this.__trigger(wcDocker.EVENT_RESIZE_ENDED);
+    }
+  },
+
+  __moveEnd: function() {
+    if (new Date() - this._moveData.time < this._moveData.delta) {
+      setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
+    } else {
+      this._moveData.timeout = false;
+      this.__trigger(wcDocker.EVENT_MOVE_ENDED);
     }
   },
 

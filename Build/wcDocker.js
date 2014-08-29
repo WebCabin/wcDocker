@@ -91,6 +91,12 @@ function wcDocker(container) {
   this._ghost = null;
   this._menuTimer = 0;
 
+  this._resizeData = {
+    time: -1,
+    timeout: false,
+    delta: 150,
+  };
+
   this.__init();
 };
 
@@ -105,7 +111,11 @@ wcDocker.EVENT_CLOSED           = 'panelClosed';
 wcDocker.EVENT_BUTTON           = 'panelButton';
 wcDocker.EVENT_ATTACHED         = 'panelAttached';
 wcDocker.EVENT_DETACHED         = 'panelDetached';
+wcDocker.EVENT_MOVE_STARTED     = 'panelMoveStarted';
+wcDocker.EVENT_MOVE_ENDED       = 'panelMoveEnded';
 wcDocker.EVENT_MOVED            = 'panelMoved';
+wcDocker.EVENT_RESIZE_STARTED   = 'panelResizeStarted';
+wcDocker.EVENT_RESIZE_ENDED     = 'panelResizeEnded';
 wcDocker.EVENT_RESIZED          = 'panelResized';
 wcDocker.EVENT_SCROLLED         = 'panelScrolled';
 wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
@@ -927,7 +937,7 @@ wcDocker.prototype = {
       event.preventDefault();
     });
 
-    // Close button on frames should __destroy those panels.
+    // Close button on frames should destroy those panels.
     $('body').on('click', '.wcFrameTitle > .wcFrameButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
@@ -989,7 +999,7 @@ wcDocker.prototype = {
         return true;
       }
 
-      // self.$container.addClass('wcDisableSelection');
+      self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
@@ -1301,8 +1311,24 @@ wcDocker.prototype = {
 
   // On window resized event.
   __resize: function(event) {
+    this._resizeData.time = new Date();
+    if (!this._resizeData.timeout) {
+      this._resizeData.timeout = true;
+      setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+      this.__trigger(wcDocker.EVENT_RESIZE_STARTED);
+    }
     this.__trigger(wcDocker.EVENT_RESIZED);
     this.__update();
+  },
+
+  // On window resize event ended.
+  __resizeEnd: function() {
+    if (new Date() - this._resizeData.time < this._resizeData.delta) {
+      setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+    } else {
+      this._resizeData.timeout = false;
+      this.__trigger(wcDocker.EVENT_RESIZE_ENDED);
+    }
   },
 
   // Brings a floating window to the top.
@@ -2184,9 +2210,21 @@ function wcPanel(type) {
     y: 0,
   };
 
+  this._resizeData = {
+    time: -1,
+    timeout: false,
+    delta: 150,
+  };
+
   this._pos = {
     x: 0.5,
     y: 0.5,
+  };
+
+  this._moveData = {
+    time: -1,
+    timeout: false,
+    delta: 150,
   };
 
   this._size = {
@@ -2525,6 +2563,13 @@ wcPanel.prototype = {
     if (this._actualSize.x !== width || this._actualSize.y !== height) {
       this._actualSize.x = width;
       this._actualSize.y = height;
+
+      this._resizeData.time = new Date();
+      if (!this._resizeData.timeout) {
+        this._resizeData.timeout = true;
+        setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+        this.__trigger(wcDocker.EVENT_RESIZE_STARTED);
+      }
       this.__trigger(wcDocker.EVENT_RESIZED);
     }
 
@@ -2532,7 +2577,32 @@ wcPanel.prototype = {
     if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
       this._actualPos.x = offset.left;
       this._actualPos.y = offset.top;
+
+      this._moveData.time = new Date();
+      if (!this._moveData.timeout) {
+        this._moveData.timeout = true;
+        setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
+        this.__trigger(wcDocker.EVENT_MOVE_STARTED);
+      }
       this.__trigger(wcDocker.EVENT_MOVED);
+    }
+  },
+
+  __resizeEnd: function() {
+    if (new Date() - this._resizeData.time < this._resizeData.delta) {
+      setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+    } else {
+      this._resizeData.timeout = false;
+      this.__trigger(wcDocker.EVENT_RESIZE_ENDED);
+    }
+  },
+
+  __moveEnd: function() {
+    if (new Date() - this._moveData.time < this._moveData.delta) {
+      setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
+    } else {
+      this._moveData.timeout = false;
+      this.__trigger(wcDocker.EVENT_MOVE_ENDED);
     }
   },
 
