@@ -68,8 +68,11 @@ if (!Array.prototype.indexOf)
 /*
   The main window instance.  This manages all of the docking panels and user input.
   There should only be one instance of this, although it is not enforced.
+
+  options allows overriding default options for docker. The current fields are:
+    allowContextMenu: boolean (default true) - Create the right click menu for adding/removing panels.
 */
-function wcDocker(container) {
+function wcDocker(container,options) {
   this.$container = $(container).addClass('wcDocker');
   this.$transition = $('<div class="wcDockerTransition"></div>');
   this.$container.append(this.$transition);
@@ -96,6 +99,18 @@ function wcDocker(container) {
     timeout: false,
     delta: 150,
   };
+
+  this._defaultOptions = {
+    allowContextMenu: true
+  };
+
+  this._options = {};
+  for( var prop in this._defaultOptions ) {
+    this._options[prop] = this._defaultOptions[prop];
+  }
+  for( var prop in options ) {
+    this._options[prop] = options[prop];
+  }
 
   this.__init();
 };
@@ -772,128 +787,130 @@ wcDocker.prototype = {
     $(window).resize(self.__resize.bind(self));
     
     // Setup our context menus.
-    $.contextMenu({
-      selector: '.wcFrame',
-      build: function($trigger, event) {
-        var myFrame;
-        for (var i = 0; i < self._frameList.length; ++i) {
-          if (self._frameList[i].$frame[0] === $trigger[0]) {
-            myFrame = self._frameList[i];
-            break;
+    if ( this._options.allowContextMenu ) {
+      $.contextMenu({
+        selector: '.wcFrame',
+        build: function($trigger, event) {
+          var myFrame;
+          for (var i = 0; i < self._frameList.length; ++i) {
+            if (self._frameList[i].$frame[0] === $trigger[0]) {
+              myFrame = self._frameList[i];
+              break;
+            }
           }
-        }
 
-        var mouse = {
-          x: event.clientX,
-          y: event.clientY,
-        };
-        var isTitle = false;
-        if (mouse.y - myFrame.$frame.offset().top <= 20) {
-          isTitle = true;
-        }
+          var mouse = {
+            x: event.clientX,
+            y: event.clientY,
+          };
+          var isTitle = false;
+          if (mouse.y - myFrame.$frame.offset().top <= 20) {
+            isTitle = true;
+          }
 
-        var windowTypes = {};
-        for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
-          var type = self._dockPanelTypeList[i];
-          if (!type.isPrivate) {
-            windowTypes[type.name] = {
-              name: type.name,
+          var windowTypes = {};
+          for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
+            var type = self._dockPanelTypeList[i];
+            if (!type.isPrivate) {
+              windowTypes[type.name] = {
+                name: type.name,
+                className: 'wcMenuCreatePanel',
+              };
+            }
+          }
+
+          var items = {};
+          if (isTitle) {
+            items['Close Panel'] = {
+              name: 'Close Tab',
+              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
+            };
+            if (!myFrame._isFloating) {
+              items['Detach Panel'] = {
+                name: 'Detach Tab',
+                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+              };
+            }
+
+            items['sep1'] = "---------";
+    
+            items.fold1 = {
+              name: 'Add Tab',
+              items: windowTypes,
+              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
             };
-          }
-        }
+            items['sep2'] = "---------";
 
-        var items = {};
-        if (isTitle) {
-          items['Close Panel'] = {
-            name: 'Close Tab',
-            disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
-          };
-          if (!myFrame._isFloating) {
-            items['Detach Panel'] = {
-              name: 'Detach Tab',
-              disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+            items['Flash Panel'] = {name: 'Flash Tab'};
+          } else {
+            items['Close Panel'] = {
+              name: 'Close Panel',
+              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
             };
-          }
-
-          items['sep1'] = "---------";
-  
-          items.fold1 = {
-            name: 'Add Tab',
-            items: windowTypes,
-            disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
-            className: 'wcMenuCreatePanel',
-          };
-          items['sep2'] = "---------";
-
-          items['Flash Panel'] = {name: 'Flash Tab'};
-        } else {
-          items['Close Panel'] = {
-            name: 'Close Panel',
-            disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
-          };
-          if (!myFrame._isFloating) {
-            items['Detach Panel'] = {
-              name: 'Detach Panel',
-              disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
-            };
-          }
-
-          items['sep1'] = "---------";
-
-          items.fold1 = {
-            name: 'Insert Panel',
-            items: windowTypes,
-            disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
-            className: 'wcMenuCreatePanel',
-          };
-          items['sep2'] = "---------";
-
-          items['Flash Panel'] = {name: 'Flash Panel'};
-        }
-
-        if (!myFrame._isFloating && myFrame.panel().moveable()) {
-          var rect = myFrame.__rect();
-          self._ghost = new wcGhost(rect, mouse);
-          myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
-          self._ghost.$ghost.hide();
-        }
-
-        return {
-          callback: function(key, options) {
-            if (key === 'Close Panel') {
-              setTimeout(function() {
-                myFrame.panel().close();
-              }, 10);
-            } else if (key === 'Detach Panel') {
-              self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
-            } else if (key === 'Flash Panel') {
-              self.__focus(myFrame, true);
-            } else {
-              if (myFrame && self._ghost) {
-                var anchor = self._ghost.anchor();
-                self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
-              }
+            if (!myFrame._isFloating) {
+              items['Detach Panel'] = {
+                name: 'Detach Panel',
+                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+              };
             }
-          },
-          events: {
-            show: function(opt) {
-            },
-            hide: function(opt) {
-              if (self._ghost) {
-                self._ghost.__destroy();
-                self._ghost = false;
+
+            items['sep1'] = "---------";
+
+            items.fold1 = {
+              name: 'Insert Panel',
+              items: windowTypes,
+              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+              className: 'wcMenuCreatePanel',
+            };
+            items['sep2'] = "---------";
+
+            items['Flash Panel'] = {name: 'Flash Panel'};
+          }
+
+          if (!myFrame._isFloating && myFrame.panel().moveable()) {
+            var rect = myFrame.__rect();
+            self._ghost = new wcGhost(rect, mouse);
+            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
+            self._ghost.$ghost.hide();
+          }
+
+          return {
+            callback: function(key, options) {
+              if (key === 'Close Panel') {
+                setTimeout(function() {
+                  myFrame.panel().close();
+                }, 10);
+              } else if (key === 'Detach Panel') {
+                self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
+              } else if (key === 'Flash Panel') {
+                self.__focus(myFrame, true);
+              } else {
+                if (myFrame && self._ghost) {
+                  var anchor = self._ghost.anchor();
+                  self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
+                }
               }
             },
-          },
-          animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
-          reposition: false,
-          autoHide: true,
-          zIndex: 200,
-          items: items,
-        };
-      },
-    });
+            events: {
+              show: function(opt) {
+              },
+              hide: function(opt) {
+                if (self._ghost) {
+                  self._ghost.__destroy();
+                  self._ghost = false;
+                }
+              },
+            },
+            animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+            reposition: false,
+            autoHide: true,
+            zIndex: 200,
+            items: items,
+          };
+        },
+      });
+    }
 
     var contextTimer;
     $('body').on('contextmenu', 'a, img', function() {
