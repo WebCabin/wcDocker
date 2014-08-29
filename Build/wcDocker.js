@@ -1020,6 +1020,8 @@ wcDocker.prototype = {
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
+          self._draggingSplitter.$pane[0].addClass('wcResizing');
+          self._draggingSplitter.$pane[1].addClass('wcResizing');
           break;
         }
       }
@@ -1286,6 +1288,11 @@ wcDocker.prototype = {
         }
         self._ghost.__destroy();
         self._ghost = null;
+      }
+
+      if ( self._draggingSplitter ) {
+        self._draggingSplitter.$pane[0].removeClass('wcResizing');
+        self._draggingSplitter.$pane[1].removeClass('wcResizing');
       }
 
       self._draggingSplitter = null;
@@ -2272,6 +2279,7 @@ function wcPanel(type) {
   this._overflowVisible = false;
   this._moveable = true;
   this._closeable = true;
+  this._resizeVisible = true;
 
   this._events = {};
 
@@ -2447,6 +2455,20 @@ wcPanel.prototype = {
     return this._overflowVisible;
   },
 
+  // Gets, or Sets whether the contents of the panel are visible on resize.
+  // Params:
+  //    visible   If supplied, assigns whether panel contents are visible.
+  //
+  // Returns:
+  //    boolean   The current resize visibility.
+  resizeVisible: function(visible) {
+    if (typeof visible !== 'undefined') {
+      this._resizeVisible = visible? true: false;
+    }
+
+    return this._resizeVisible;
+  },
+
   // Gets, or Sets whether the window is scrollable.
   // Params:
   //    x, y      If supplied, assigns whether the window is scrollable
@@ -2573,6 +2595,12 @@ wcPanel.prototype = {
       return;
     }
 
+    if ( this._resizeVisible ) {
+      this._parent.$frame.removeClass('wcHideOnResize');
+    } else {
+      this._parent.$frame.addClass('wcHideOnResize');
+    }
+
     this.__trigger(wcDocker.EVENT_UPDATED);
 
     var width   = this.$container.width();
@@ -2644,6 +2672,7 @@ wcPanel.prototype = {
     };
     data.moveable = this._moveable;
     data.closeable = this._closeable;
+    data.resizeVisible = this.resizeVisible();
     data.customData = {};
     this.__trigger(wcDocker.EVENT_SAVE_LAYOUT, data.customData);
     return data;
@@ -2660,6 +2689,7 @@ wcPanel.prototype = {
     this._scrollable.y = data.scrollable.y;
     this._moveable = data.moveable;
     this._closeable = data.closeable;
+    this.resizeVisible(data.resizeVisible)
     this.__trigger(wcDocker.EVENT_RESTORE_LAYOUT, data.customData);
   },
 
