@@ -1003,6 +1003,8 @@ wcDocker.prototype = {
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
+          self._draggingSplitter.$pane[0].addClass('wcResizing');
+          self._draggingSplitter.$pane[1].addClass('wcResizing');
           break;
         }
       }
@@ -1269,6 +1271,11 @@ wcDocker.prototype = {
         }
         self._ghost.__destroy();
         self._ghost = null;
+      }
+
+      if ( self._draggingSplitter ) {
+        self._draggingSplitter.$pane[0].removeClass('wcResizing');
+        self._draggingSplitter.$pane[1].removeClass('wcResizing');
       }
 
       self._draggingSplitter = null;
