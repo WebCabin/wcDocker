@@ -288,6 +288,7 @@ wcFrame.prototype = {
     var data = {};
     data.type = 'wcFrame';
     data.floating = this._isFloating;
+    data.isFocus = this.$frame.hasClass('wcFloatingFocus')
     data.pos = {
       x: this._pos.x,
       y: this._pos.y,
@@ -321,6 +322,10 @@ wcFrame.prototype = {
     }
 
     this.__update();
+
+    if (data.isFocus) {
+      this.$frame.addClass('wcFloatingFocus');
+    }
   },
 
   __updateTabs: function() {

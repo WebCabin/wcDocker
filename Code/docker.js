@@ -1076,7 +1076,7 @@ wcDocker.prototype = {
     });
 
     // Mouse down on a panel will put it into focus.
-    $('body').on('mouseup', '.wcLayout', function(event) {
+    $('body').on('mousedown', '.wcLayout', function(event) {
       if (event.which === 3) {
         return true;
       }
@@ -1364,14 +1364,26 @@ wcDocker.prototype = {
   __focus: function(frame, flash) {
     if (frame._isFloating) {
       // frame.$frame.remove();
-      var posList = [];
-      for (var i = 0; i < frame._panelList.length; ++i) {
-        posList.push(frame._panelList[i].scroll());
+      for (var i = 0; i < this._floatingList.length; ++i) {
+        if (this._floatingList[i].$frame.hasClass('wcFloatingFocus')) {
+          this._floatingList[i].$frame.removeClass('wcFloatingFocus');
+          if (this._floatingList[i] !== frame) {
+            $('body').append(this._floatingList[i].$frame);
+          }
+          break;
+        }
       }
-      $('body').append(frame.$frame);
-      for (var i = 0; i < posList.length; ++i) {
-        frame._panelList[i].scroll(posList[i].x, posList[i].y);
-      }
+
+      frame.$frame.addClass('wcFloatingFocus');
+
+      // var posList = [];
+      // for (var i = 0; i < frame._panelList.length; ++i) {
+      //   posList.push(frame._panelList[i].scroll());
+      // }
+      // $('body').append(frame.$frame);
+      // for (var i = 0; i < posList.length; ++i) {
+      //   frame._panelList[i].scroll(posList[i].x, posList[i].y);
+      // }
     }
 
     frame.__focus(flash)
@@ -1487,6 +1499,7 @@ wcDocker.prototype = {
       var frame = new wcFrame(this.$container, this, true);
       this._frameList.push(frame);
       this._floatingList.push(frame);
+      this.__focus(frame);
       frame.addPanel(panel);
       frame.pos(panel._pos.x, panel._pos.y, false);
       return;

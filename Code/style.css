@@ -124,6 +124,10 @@ html, body {
   z-index: 2;
 }
 
+.wcFloatingFocus {
+  z-index: 3;
+}
+
 .wcLayout, .wcLayout tr, .wcLayout td {
   border: 0px;
   margin: 0px;
