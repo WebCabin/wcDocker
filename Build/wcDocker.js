@@ -1076,13 +1076,15 @@ wcDocker.prototype = {
     });
 
     // Mouse down on a panel will put it into focus.
-    $('body').on('mousedown', '.wcLayout', function(event) {
+    $('body').on('mouseup', '.wcLayout', function(event) {
       if (event.which === 3) {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].panel().layout().$elem[0] == this) {
-          self.__focus(self._frameList[i]);
+          setTimeout(function() {
+            self.__focus(self._frameList[i]);
+          }, 10);
           break;
         }
       }
