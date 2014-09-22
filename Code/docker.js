@@ -955,7 +955,7 @@ wcDocker.prototype = {
     });
 
     // Close button on frames should destroy those panels.
-    $('body').on('click', '.wcFrameTitle > .wcFrameButton', function() {
+    $('body').on('click', '.wcFrame > .wcFrameButton', function() {
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];

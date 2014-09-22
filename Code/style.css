@@ -82,6 +82,12 @@ html, body {
   user-select: none;
 }
 
+.wcTabScroller {
+  height: 100%;
+  width: 10000px;
+  position: relative;
+}
+
 .wcFrameButton {
   width: 13px;
   height: 13px;
@@ -209,6 +215,7 @@ html, body {
   position: relative;
   display: inline-block;
   text-decoration: none;
+  top: 0px;
 }
 
 .wcPanelTabContent {

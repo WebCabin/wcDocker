@@ -8,18 +8,19 @@ function wcFrame(container, parent, isFloating) {
   this._parent = parent;
   this._isFloating = isFloating;
 
-  this.$frame   = null;
-  this.$title   = null;
-  this.$center  = null;
-  this.$close   = null;
-  this.$top     = null;
-  this.$bottom  = null;
-  this.$left    = null;
-  this.$right   = null;
-  this.$corner1 = null;
-  this.$corner2 = null;
-  this.$corner3 = null;
-  this.$corner4 = null;
+  this.$frame     = null;
+  this.$title     = null;
+  this.$tabScroll = null;
+  this.$center    = null;
+  this.$close     = null;
+  this.$top       = null;
+  this.$bottom    = null;
+  this.$left      = null;
+  this.$right     = null;
+  this.$corner1   = null;
+  this.$corner2   = null;
+  this.$corner3   = null;
+  this.$corner4   = null;
 
   this.$shadower = null;
 
@@ -208,11 +209,13 @@ wcFrame.prototype = {
 
   // Initialize
   __init: function() {
-    this.$frame   = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
-    this.$title   = $('<div class="wcFrameTitle">');
-    this.$center  = $('<div class="wcFrameCenter wcWide">');
-    this.$close   = $('<div class="wcFrameButton">X</div>');
+    this.$frame     = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
+    this.$title     = $('<div class="wcFrameTitle">');
+    this.$tabScroll = $('<div class="wcTabScroller">');
+    this.$center    = $('<div class="wcFrameCenter wcWide">');
+    this.$close     = $('<div class="wcFrameButton">X</div>');
     this.$frame.append(this.$title);
+    this.$title.append(this.$tabScroll);
     this.$frame.append(this.$close);
 
     if (this._isFloating) {
@@ -329,7 +332,7 @@ wcFrame.prototype = {
   },
 
   __updateTabs: function() {
-    this.$title.empty();
+    this.$tabScroll.empty();
 
     // Move all tabbed panels to a temporary element to preserve event handlers on them.
     var $tempCenter = $('<div>');
@@ -339,7 +342,7 @@ wcFrame.prototype = {
     var self = this;
     for (var i = 0; i < this._panelList.length; ++i) {
       var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
-      this.$title.append($tab);
+      this.$tabScroll.append($tab);
 
       var $tabContent = $('<div class="wcPanelTabContent wcPanelBackground" id="' + i + '">');
       this.$center.append($tabContent);
@@ -380,7 +383,7 @@ wcFrame.prototype = {
       }
 
       if (panel.closeable()) {
-        this.$title.append(this.$close);
+        this.$frame.append(this.$close);
       } else {
         this.$close.remove();
       }
@@ -404,7 +407,7 @@ wcFrame.prototype = {
         $button.text(buttonData.text);
 
         this._buttonList.push($button);
-        this.$title.append($button);
+        this.$frame.append($button);
       }
 
       panel.__update();
