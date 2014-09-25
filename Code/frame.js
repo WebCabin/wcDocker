@@ -12,6 +12,8 @@ function wcFrame(container, parent, isFloating) {
   this.$title     = null;
   this.$tabScroll = null;
   this.$center    = null;
+  this.$tabLeft   = null;
+  this.$tabRight  = null;
   this.$close     = null;
   this.$top       = null;
   this.$bottom    = null;
@@ -24,6 +26,8 @@ function wcFrame(container, parent, isFloating) {
 
   this.$shadower = null;
 
+  this._canScrollTabs = false;
+  this._leftTab = 0;
   this._curTab = -1;
   this._panelList = [];
   this._buttonList = [];
@@ -213,6 +217,8 @@ wcFrame.prototype = {
     this.$title     = $('<div class="wcFrameTitle">');
     this.$tabScroll = $('<div class="wcTabScroller">');
     this.$center    = $('<div class="wcFrameCenter wcWide">');
+    this.$tabLeft   = $('<div class="wcFrameButton wcFrameMiniButton" title="Scroll tabs to the left.">&lt;</div>');
+    this.$tabRight  = $('<div class="wcFrameButton wcFrameMiniButton" title="Scroll tabs to the right.">&gt;</div>');
     this.$close     = $('<div class="wcFrameButton">X</div>');
     this.$frame.append(this.$title);
     this.$title.append(this.$tabScroll);
@@ -285,6 +291,91 @@ wcFrame.prototype = {
     this.__updateTabs();
   },
 
+  __updateTabs: function() {
+    this.$tabScroll.empty();
+
+    // Move all tabbed panels to a temporary element to preserve event handlers on them.
+    var $tempCenter = $('<div>');
+    this.$frame.append($tempCenter);
+    this.$center.children().appendTo($tempCenter);
+
+    var totalWidth = 0;
+    var scrollPos = 0;
+    var parentLeft = this.$tabScroll.offset().left;
+    var self = this;
+
+    if (this._leftTab >= this._panelList.length) {
+      this._leftTab = this._panelList.length-1;
+      if (this._leftTab < 0) {
+        this._leftTab = 0;
+      }
+    }
+
+    for (var i = 0; i < this._panelList.length; ++i) {
+      var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
+      this.$tabScroll.append($tab);
+
+      var $tabContent = $('<div class="wcPanelTabContent wcPanelBackground" id="' + i + '">');
+      this.$center.append($tabContent);
+      this._panelList[i].__container($tabContent);
+      this._panelList[i]._parent = this;
+
+      if (this._curTab !== i) {
+        $tabContent.addClass('wcPanelTabContentHidden');
+      } else {
+        $tab.addClass('wcPanelTabActive');
+      }
+
+      totalWidth = $tab.offset().left - parentLeft;
+
+      if (i == this._leftTab) {
+        scrollPos = totalWidth;
+        if (i > 0) {
+          scrollPos -= 5;
+          if (scrollPos < 0) {
+            scrollPos = 0;
+          }
+        }
+      }
+
+      totalWidth += $tab.outerWidth();
+    }
+
+    $tempCenter.remove();
+    var buttonSize = this.__onTabChange();
+
+    this._canScrollTabs = false;
+    if (totalWidth > this.$title.width() - buttonSize) {
+      this._canScrollTabs = true;
+      var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
+      // If we are beyond our scroll limit, clamp it.
+      if (scrollPos > scrollLimit) {
+        var children = this.$tabScroll.children();
+        for (var i = 0; i < children.length; ++i) {
+          var $tab = $(children[i]);
+
+          totalWidth = $tab.offset().left - parentLeft;
+          if (totalWidth + $tab.outerWidth() > scrollLimit) {
+            scrollPos = totalWidth;
+            this._leftTab = i;
+            if (i > 0) {
+              scrollPos -= 5;
+              if (scrollPos < 0) {
+                scrollPos = 0;
+              }
+            }
+            break;
+          }
+        }
+      }
+    } else {
+      scrollPos = 0;
+      this._leftTab = 0;
+    }
+
+    this.$tabScroll.stop().animate({left: -scrollPos + 'px'}, 'fast');
+  },
+
   // Saves the current panel configuration into a meta
   // object that can be used later to restore it.
   __save: function() {
@@ -331,36 +422,8 @@ wcFrame.prototype = {
     }
   },
 
-  __updateTabs: function() {
-    this.$tabScroll.empty();
-
-    // Move all tabbed panels to a temporary element to preserve event handlers on them.
-    var $tempCenter = $('<div>');
-    this.$frame.append($tempCenter);
-    this.$center.children().appendTo($tempCenter);
-
-    var self = this;
-    for (var i = 0; i < this._panelList.length; ++i) {
-      var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
-      this.$tabScroll.append($tab);
-
-      var $tabContent = $('<div class="wcPanelTabContent wcPanelBackground" id="' + i + '">');
-      this.$center.append($tabContent);
-      this._panelList[i].__container($tabContent);
-      this._panelList[i]._parent = this;
-
-      if (this._curTab !== i) {
-        $tabContent.addClass('wcPanelTabContentHidden');
-      } else {
-        $tab.addClass('wcPanelTabActive');
-      }
-    }
-
-    $tempCenter.remove();
-    this.__onTabChange();
-  },
-
   __onTabChange: function() {
+    var buttonSize = 0;
     var panel = this.panel();
     if (panel) {
       var scrollable = panel.scrollable();
@@ -378,12 +441,16 @@ wcFrame.prototype = {
         this.$center.css('top', '0px');
       }
 
+      this.$tabLeft.remove();
+      this.$tabRight.remove();
+
       while (this._buttonList.length) {
         this._buttonList.pop().remove();
       }
 
       if (panel.closeable()) {
         this.$frame.append(this.$close);
+        buttonSize += this.$close.outerWidth();
       } else {
         this.$close.remove();
       }
@@ -408,6 +475,12 @@ wcFrame.prototype = {
 
         this._buttonList.push($button);
         this.$frame.append($button);
+        buttonSize += $button.outerWidth();
+      }
+
+      if (this._canScrollTabs) {
+        this.$frame.append(this.$tabRight);
+        this.$frame.append(this.$tabLeft);
       }
 
       panel.__update();
@@ -415,6 +488,7 @@ wcFrame.prototype = {
       this.$center.scrollLeft(panel._scroll.x);
       this.$center.scrollTop(panel._scroll.y);
     }
+    return buttonSize;
   },
 
   // Handles scroll notifications.

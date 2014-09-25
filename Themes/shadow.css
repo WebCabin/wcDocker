@@ -36,6 +36,10 @@ body {
   font-size: 15px;
 }
 
+.wcFrameMiniButton {
+  width: 8px;
+}
+
 .wcFrameButton:hover {
   border: 2px outset #333;
   background-color: #222;

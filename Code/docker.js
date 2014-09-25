@@ -965,6 +965,20 @@ wcDocker.prototype = {
           self.__update();
           return;
         }
+        if (frame.$tabLeft[0] === this) {
+          frame._leftTab--;
+          if (frame._leftTab < 0) {
+            frame._leftTab = 0;
+          }
+          frame.__updateTabs();
+          return;
+        }
+        if (frame.$tabRight[0] === this) {
+          frame._leftTab++;
+          frame.__updateTabs();
+          return;
+        }
+
         for (var a = 0; a < frame._buttonList.length; ++a) {
           if (frame._buttonList[a][0] === this) {
             var $button = frame._buttonList[a];

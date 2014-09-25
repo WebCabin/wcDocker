@@ -88,7 +88,7 @@ html, body {
   position: relative;
 }
 
-.wcFrameButton {
+.wcFrameButton, .wcFrameMiniButton {
   width: 13px;
   height: 13px;
   position: relative;
@@ -100,6 +100,10 @@ html, body {
   /*margin-right: 3px;*/
 
   background-color: #555555;
+}
+
+.wcFrameMiniButton {
+  width: 6px;
 }
 
 .wcFrameButton:hover {
