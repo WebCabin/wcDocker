@@ -188,7 +188,7 @@ wcFrame.prototype = {
   //    tabIndex      If supplied, sets the current tab.
   // Returns:
   //    wcPanel       The currently visible panel.
-  panel: function(tabIndex) {
+  panel: function(tabIndex, autoFocus) {
     if (tabIndex !== 'undefined') {
       if (tabIndex > -1 && tabIndex < this._panelList.length) {
         this.$title.find('div[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
@@ -196,7 +196,10 @@ wcFrame.prototype = {
         this._curTab = tabIndex;
         this.$title.find('div[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
-        this.__onTabChange();
+        if (autoFocus) {
+          this._leftTab = this._curTab;
+          this.__updateTabs();
+        }
       }
     }
 
