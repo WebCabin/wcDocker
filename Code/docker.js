@@ -950,12 +950,17 @@ wcDocker.prototype = {
       event.returnValue = false;
     });
 
-    $('body').on('selectstart', '.wcFrameTitle, .wcPanelTab', function(event) {
+    $('body').on('selectstart', '.wcFrameTitle, .wcPanelTab, .wcFrameButton', function(event) {
       event.preventDefault();
     });
 
     // Close button on frames should destroy those panels.
+    $('body').on('mousedown', '.wcFrame > .wcFrameButton', function() {
+      self.$container.addClass('wcDisableSelection');
+    });
+
     $('body').on('click', '.wcFrame > .wcFrameButton', function() {
+      self.$container.removeClass('wcDisableSelection');
       var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
