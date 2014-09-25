@@ -1290,7 +1290,7 @@ wcDocker.prototype = {
             index = index + frame._panelList.length;
           }
           panel = self.movePanel(self._draggingFrame.panel(), anchor.loc, anchor.merge, panel);
-          panel._parent.panel(panel._parent._panelList.length-1);
+          panel._parent.panel(panel._parent._panelList.length-1, true);
           // Dragging the entire frame.
           if (!self._draggingFrameTab) {
             while (self._draggingFrame.panel())

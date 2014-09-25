@@ -82,7 +82,13 @@ html, body {
   user-select: none;
 }
 
-.wcFrameButton {
+.wcTabScroller {
+  height: 100%;
+  width: 10000px;
+  position: relative;
+}
+
+.wcFrameButton, .wcFrameMiniButton {
   width: 13px;
   height: 13px;
   position: relative;
@@ -94,6 +100,10 @@ html, body {
   /*margin-right: 3px;*/
 
   background-color: #555555;
+}
+
+.wcFrameMiniButton {
+  width: 6px;
 }
 
 .wcFrameButton:hover {
@@ -209,6 +219,7 @@ html, body {
   position: relative;
   display: inline-block;
   text-decoration: none;
+  top: 0px;
 }
 
 .wcPanelTabContent {

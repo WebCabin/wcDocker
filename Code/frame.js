@@ -199,6 +199,8 @@ wcFrame.prototype = {
         if (autoFocus) {
           this._leftTab = this._curTab;
           this.__updateTabs();
+        } else {
+          this.__onTabChange();
         }
       }
     }
