@@ -6,6 +6,10 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="Code/style.css"/>
     <link rel="stylesheet" type="text/css" href="Code/ext/jquery.contextMenu.css"/>
+
+    <!-- completely optional external module if you want to show icons in the context menu -->
+    <link rel="stylesheet" type="text/css" href="Code/ext/font-awesome-4.2.0/css/font-awesome.css"/>
+
     <script src="Code/ext/jquery-1.11.1.min.js"></script>
     <script src="Code/ext/jquery.contextMenu.js"></script>
     <script src="Code/ext/jquery.ui.position.js"></script>
@@ -37,11 +41,11 @@
             myPanel.closeable(false);
           }, true);
 
-          myDocker.registerPanelType('Scroll Panel', function(myPanel) {
+          myDocker.registerPanelType('Scroll Panel', {faicon:'unsorted'}, function(myPanel) {
             myPanel.layout().addItem($('<div style="width:2000px;height:2000px;">'));
           });
 
-          myDocker.registerPanelType('Control Panel', function(myPanel) {
+          myDocker.registerPanelType('Control Panel', {faicon:'gears'}, function(myPanel) {
             var $themeSelector = $('<div style="width:100%;text-align:center;" class="themeSelector">Theme: \
               <select>\
               <option value="Default">Default</option>\
@@ -99,7 +103,7 @@
             });
           });
 
-          myDocker.registerPanelType('Panel Cells', function(myPanel) {
+          myDocker.registerPanelType('Panel Cells', {faicon:'qrcode'}, function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
             myPanel.layout().addItem($('<div style="text-align:center">This is a panel.</div>'), 1, 0);
             myPanel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
@@ -110,17 +114,17 @@
             myPanel.initSize(400, 400);
           });
 
-          myDocker.registerPanelType('Dock Me', function(myPanel) {
+          myDocker.registerPanelType('Dock Me', {faicon:'arrows'}, function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">Each panel can be docked anywhere.<br>Just drag me by my title bar to a new dock position.</div>'));
             myPanel.initSize(400, 400);
           });
 
-          myDocker.registerPanelType('Creation Panel', function(myPanel) {
+          myDocker.registerPanelType('Creation Panel', {faicon:'star'}, function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">New (and even duplicate) panels can be created by right clicking at the location you wish the new panel to go and using the context menu.</div>'));
             myPanel.layout().addItem($('<div>'), 0, 1);
           });
 
-          myDocker.registerPanelType('Floating Panels', function(myPanel) {
+          myDocker.registerPanelType('Floating Panels', {faicon:'cloud'}, function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">Floating panels can move freely.<br>Drag me by my title bar.</div>'));
 
             var $dockMe = $('<div style="text-align:center"><b>To dock me</b>, drag me by the tab you wish to dock, or dock the entire frame by dragging the title bar with the middle mouse.</div>');
@@ -140,7 +144,7 @@
             });
           });
 
-          myDocker.registerPanelType('Reaction Panel', function(myPanel) {
+          myDocker.registerPanelType('Reaction Panel', {faicon:'refresh fa-spin'}, function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center"></div>'));
 
             var $buttonInfo = $('<div style="text-align:center">I react to the custom buttons above</div>');
@@ -298,11 +302,11 @@
             });
           });
 
-          myDocker.registerPanelType('Tabbed Panel', function(myPanel) {
+          myDocker.registerPanelType('Tabbed Panel', {faicon:'columns'}, function(myPanel) {
             myPanel.layout().addItem($('<div style="text-align:center">I should start out as a second tab to a panel frame, but can be moved elsewhere like the others.</div>'));
           });
 
-          myDocker.registerPanelType('Memory Panel', function(myPanel) {
+          myDocker.registerPanelType('Memory Panel', {faicon:'save'}, function(myPanel) {
             var $spinner = $('<input type="number" value="0"/>');
             var $info = $('<div style="text-align:center">I will remember this number when the layout is remembered:</div>');
             $info.append($spinner);

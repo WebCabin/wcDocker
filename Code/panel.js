@@ -2,9 +2,19 @@
   The public interface for the docking panel, it contains a layout that can be filled with custom
   elements and a number of convenience functions for use.
 */
-function wcPanel(type) {
+function wcPanel(type, options) {
   this.$container = null;
   this._parent = null;
+  this.$icon = null;
+
+  if (options) {
+    if (options.icon) {
+      this.icon(options.icon);
+    }
+    if (options.faicon) {
+      this.faicon(options.faicon);
+    }
+  }
 
   this._panelObject = null;
 
@@ -209,6 +219,18 @@ wcPanel.prototype = {
     }
     this._maxSize.x = x;
     this._maxSize.y = y;
+  },
+
+  // Sets the icon for the panel, shown in the panels tab widget.
+  // Must be a css class name that contains the image.
+  icon: function(icon) {
+    this.$icon = $('<div class="wcTabIcon ' + icon + '">');
+  },
+
+  // Sets the icon for the panel, shown in the panels tab widget,
+  // to an icon defined from the font-awesome library.
+  faicon: function(icon) {
+    this.$icon = $('<div class="fa fa-fw fa-' + icon + '">');
   },
 
   // Gets, or Sets the scroll position of the window (if it is scrollable).

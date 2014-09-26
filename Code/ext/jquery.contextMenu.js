@@ -1073,10 +1073,16 @@ var // currently active contextMenu trigger
                             $input.on(item.events, opt);
                         }
                     }
-                
+
                     // add icons
                     if (item.icon) {
-                        $t.addClass("icon icon-" + item.icon);
+                        // $t.addClass("icon icon-" + item.icon);
+                        $t.prepend($('<div class="wcMenuIcon ' + item.icon + '">'));
+                    }
+
+                    // add font-awesome icon.
+                    if (item.faicon) {
+                        $t.prepend($('<div class="fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw wcMenuIcon">'));
                     }
                 }
                 

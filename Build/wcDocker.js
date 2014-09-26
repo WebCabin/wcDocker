@@ -144,6 +144,8 @@ wcDocker.prototype = {
   // Registers a new docking panel type to be used later.
   // Params:
   //    name          The name for this new type.
+  //    options       An optional object that defines various options
+  //                  to initialize the panel with.
   //    createFunc    The function that populates the contents of
   //                  a newly created dock panel of this type.
   //                  Params:
@@ -153,7 +155,19 @@ wcDocker.prototype = {
   // Returns:
   //    true        The new type has been added successfully.
   //    false       Failure, the type name already exists.
-  registerPanelType: function(name, createFunc, isPrivate) {
+  registerPanelType: function(name, options, createFunc, isPrivate) {
+
+    // If options were not supplied, shift the other parameters over.
+    if (typeof options === 'function') {
+      isPrivate = createFunc;
+      createFunc = options;
+      options = null;
+    }
+
+    if ($.isEmptyObject(options)) {
+      options = null;
+    }
+
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === name) {
         return false;
@@ -162,6 +176,7 @@ wcDocker.prototype = {
 
     this._dockPanelTypeList.push({
       name: name,
+      options: options,
       create: createFunc,
       isPrivate: isPrivate,
     });
@@ -188,7 +203,7 @@ wcDocker.prototype = {
   addPanel: function(typeName, location, allowGroup, parentPanel) {
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
-        var panel = new wcPanel(typeName);
+        var panel = new wcPanel(typeName, this._dockPanelTypeList[i].options);
         panel._parent = this;
         panel.__container(this.$transition);
         panel._panelObject = new this._dockPanelTypeList[i].create(panel);
@@ -570,7 +585,7 @@ wcDocker.prototype = {
         build: function($trigger, event) {
           var myFrame;
           for (var i = 0; i < self._frameList.length; ++i) {
-            var $frame = $trigger.parents('.wcFrame');
+            var $frame = $trigger.hasClass('wcFrame') && $trigger || $trigger.parents('.wcFrame');
             if (self._frameList[i].$frame[0] === $frame[0]) {
               myFrame = self._frameList[i];
               break;
@@ -590,24 +605,40 @@ wcDocker.prototype = {
           for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
             var type = self._dockPanelTypeList[i];
             if (!type.isPrivate) {
+              var icon = null;
+              var faicon = null;
+              if (type.options) {
+                if (type.options.faicon) {
+                  faicon = type.options.faicon;
+                }
+                if (type.options.icon) {
+                  icon = type.options.icon;
+                }
+              }
               windowTypes[type.name] = {
                 name: type.name,
+                icon: icon,
+                faicon: faicon,
                 className: 'wcMenuCreatePanel',
               };
             }
           }
 
           var items = finalItems;
-          items['sep0'] = "---------";
+          if (!$.isEmptyObject(finalItems)) {
+            items['sep0'] = "---------";
+          }
 
           if (isTitle) {
             items['Close Panel'] = {
               name: 'Close Tab',
+              faicon: 'trash',
               disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
             };
             if (!myFrame._isFloating) {
               items['Detach Panel'] = {
                 name: 'Detach Tab',
+                faicon: 'level-down',
                 disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
               };
             }
@@ -616,21 +647,27 @@ wcDocker.prototype = {
     
             items.fold1 = {
               name: 'Add Tab',
+              faicon: 'plus',
               items: windowTypes,
               disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
             };
             items['sep2'] = "---------";
 
-            items['Flash Panel'] = {name: 'Flash Tab'};
+            items['Flash Panel'] = {
+              name: 'Flash Panel',
+              faicon: 'lightbulb-o',
+            };
           } else {
             items['Close Panel'] = {
               name: 'Close Panel',
+              faicon: 'trash',
               disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
             };
             if (!myFrame._isFloating) {
               items['Detach Panel'] = {
                 name: 'Detach Panel',
+                faicon: 'level-down',
                 disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
               };
             }
@@ -639,13 +676,17 @@ wcDocker.prototype = {
 
             items.fold1 = {
               name: 'Insert Panel',
+              faicon: 'plus',
               items: windowTypes,
               disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
             };
             items['sep2'] = "---------";
 
-            items['Flash Panel'] = {name: 'Flash Panel'};
+            items['Flash Panel'] = {
+              name: 'Flash Panel',
+              faicon: 'lightbulb-o',
+            };
           }
 
           if (!myFrame._isFloating && myFrame.panel().moveable()) {
@@ -684,7 +725,7 @@ wcDocker.prototype = {
             },
             animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
             reposition: false,
-            autoHide: true,
+            // autoHide: true,
             zIndex: 200,
             items: items,
           };
@@ -788,128 +829,7 @@ wcDocker.prototype = {
     
     // Setup our context menus.
     if ( this._options.allowContextMenu ) {
-      $.contextMenu({
-        selector: '.wcFrame',
-        build: function($trigger, event) {
-          var myFrame;
-          for (var i = 0; i < self._frameList.length; ++i) {
-            if (self._frameList[i].$frame[0] === $trigger[0]) {
-              myFrame = self._frameList[i];
-              break;
-            }
-          }
-
-          var mouse = {
-            x: event.clientX,
-            y: event.clientY,
-          };
-          var isTitle = false;
-          if (mouse.y - myFrame.$frame.offset().top <= 20) {
-            isTitle = true;
-          }
-
-          var windowTypes = {};
-          for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
-            var type = self._dockPanelTypeList[i];
-            if (!type.isPrivate) {
-              windowTypes[type.name] = {
-                name: type.name,
-                className: 'wcMenuCreatePanel',
-              };
-            }
-          }
-
-          var items = {};
-          if (isTitle) {
-            items['Close Panel'] = {
-              name: 'Close Tab',
-              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
-            };
-            if (!myFrame._isFloating) {
-              items['Detach Panel'] = {
-                name: 'Detach Tab',
-                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
-              };
-            }
-
-            items['sep1'] = "---------";
-    
-            items.fold1 = {
-              name: 'Add Tab',
-              items: windowTypes,
-              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
-              className: 'wcMenuCreatePanel',
-            };
-            items['sep2'] = "---------";
-
-            items['Flash Panel'] = {name: 'Flash Tab'};
-          } else {
-            items['Close Panel'] = {
-              name: 'Close Panel',
-              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
-            };
-            if (!myFrame._isFloating) {
-              items['Detach Panel'] = {
-                name: 'Detach Panel',
-                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
-              };
-            }
-
-            items['sep1'] = "---------";
-
-            items.fold1 = {
-              name: 'Insert Panel',
-              items: windowTypes,
-              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
-              className: 'wcMenuCreatePanel',
-            };
-            items['sep2'] = "---------";
-
-            items['Flash Panel'] = {name: 'Flash Panel'};
-          }
-
-          if (!myFrame._isFloating && myFrame.panel().moveable()) {
-            var rect = myFrame.__rect();
-            self._ghost = new wcGhost(rect, mouse);
-            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
-            self._ghost.$ghost.hide();
-          }
-
-          return {
-            callback: function(key, options) {
-              if (key === 'Close Panel') {
-                setTimeout(function() {
-                  myFrame.panel().close();
-                }, 10);
-              } else if (key === 'Detach Panel') {
-                self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
-              } else if (key === 'Flash Panel') {
-                self.__focus(myFrame, true);
-              } else {
-                if (myFrame && self._ghost) {
-                  var anchor = self._ghost.anchor();
-                  self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
-                }
-              }
-            },
-            events: {
-              show: function(opt) {
-              },
-              hide: function(opt) {
-                if (self._ghost) {
-                  self._ghost.__destroy();
-                  self._ghost = false;
-                }
-              },
-            },
-            animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
-            reposition: false,
-            autoHide: true,
-            zIndex: 200,
-            items: items,
-          };
-        },
-      });
+      this.basicMenu('.wcFrame', [], true);
     }
 
     var contextTimer;
@@ -2245,9 +2165,19 @@ wcLayout.prototype = {
   The public interface for the docking panel, it contains a layout that can be filled with custom
   elements and a number of convenience functions for use.
 */
-function wcPanel(type) {
+function wcPanel(type, options) {
   this.$container = null;
   this._parent = null;
+  this.$icon = null;
+
+  if (options) {
+    if (options.icon) {
+      this.icon(options.icon);
+    }
+    if (options.faicon) {
+      this.faicon(options.faicon);
+    }
+  }
 
   this._panelObject = null;
 
@@ -2452,6 +2382,18 @@ wcPanel.prototype = {
     }
     this._maxSize.x = x;
     this._maxSize.y = y;
+  },
+
+  // Sets the icon for the panel, shown in the panels tab widget.
+  // Must be a css class name that contains the image.
+  icon: function(icon) {
+    this.$icon = $('<div class="wcTabIcon ' + icon + '">');
+  },
+
+  // Sets the icon for the panel, shown in the panels tab widget,
+  // to an icon defined from the font-awesome library.
+  faicon: function(icon) {
+    this.$icon = $('<div class="fa fa-fw fa-' + icon + '">');
   },
 
   // Gets, or Sets the scroll position of the window (if it is scrollable).
@@ -3109,6 +3051,9 @@ wcFrame.prototype = {
     for (var i = 0; i < this._panelList.length; ++i) {
       var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
       this.$tabScroll.append($tab);
+      if (this._panelList[i].$icon) {
+        $tab.prepend(this._panelList[i].$icon);
+      }
 
       var $tabContent = $('<div class="wcPanelTabContent wcPanelBackground" id="' + i + '">');
       this.$center.append($tabContent);
@@ -5006,10 +4951,16 @@ var // currently active contextMenu trigger
                             $input.on(item.events, opt);
                         }
                     }
-                
+
                     // add icons
                     if (item.icon) {
-                        $t.addClass("icon icon-" + item.icon);
+                        // $t.addClass("icon icon-" + item.icon);
+                        $t.prepend($('<div class="wcMenuIcon ' + item.icon + '">'));
+                    }
+
+                    // add font-awesome icon.
+                    if (item.faicon) {
+                        $t.prepend($('<div class="fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw wcMenuIcon">'));
                     }
                 }
                 

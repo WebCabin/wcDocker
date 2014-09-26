@@ -257,6 +257,33 @@ html, body {
   overflow: visible;
 }
 
+.wcTabIcon {
+  display: inline-block;
+  width: 1.28571429em;
+  height: 1em;
+  text-align: center;
+}
+
+.wcMenuIcon {
+  margin-left: -24px;
+  width: 1.28571429em;
+  font-size: 1.33333333em;
+  line-height: 0.75em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -15%;
+  text-align: center;
+}
+
+.fa-menu {
+  margin-left: -24px;
+  width: 24px;
+}
+
+
+
+
+
 
 
 

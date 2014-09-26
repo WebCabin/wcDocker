@@ -319,6 +319,9 @@ wcFrame.prototype = {
     for (var i = 0; i < this._panelList.length; ++i) {
       var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
       this.$tabScroll.append($tab);
+      if (this._panelList[i].$icon) {
+        $tab.prepend(this._panelList[i].$icon);
+      }
 
       var $tabContent = $('<div class="wcPanelTabContent wcPanelBackground" id="' + i + '">');
       this.$center.append($tabContent);
