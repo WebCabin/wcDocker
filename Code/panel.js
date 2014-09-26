@@ -7,13 +7,11 @@ function wcPanel(type, options) {
   this._parent = null;
   this.$icon = null;
 
-  if (options) {
-    if (options.icon) {
-      this.icon(options.icon);
-    }
-    if (options.faicon) {
-      this.faicon(options.faicon);
-    }
+  if (options.icon) {
+    this.icon(options.icon);
+  }
+  if (options.faicon) {
+    this.faicon(options.faicon);
   }
 
   this._panelObject = null;

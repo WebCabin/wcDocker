@@ -155,13 +155,17 @@ wcDocker.prototype = {
   // Returns:
   //    true        The new type has been added successfully.
   //    false       Failure, the type name already exists.
-  registerPanelType: function(name, options, createFunc, isPrivate) {
+  registerPanelType: function(name, optionsOrCreateFunc, isPrivate) {
 
-    // If options were not supplied, shift the other parameters over.
+    var options = optionsOrCreateFunc;
     if (typeof options === 'function') {
-      isPrivate = createFunc;
-      createFunc = options;
-      options = null;
+      options = {
+        onCreate: optionsOrCreateFunc,
+      };
+    }
+
+    if (typeof isPrivate != 'undefined') {
+      options.isPrivate = isPrivate;
     }
 
     if ($.isEmptyObject(options)) {
@@ -177,8 +181,6 @@ wcDocker.prototype = {
     this._dockPanelTypeList.push({
       name: name,
       options: options,
-      create: createFunc,
-      isPrivate: isPrivate,
     });
 
     var $menu = $('menu').find('menu');
@@ -206,7 +208,7 @@ wcDocker.prototype = {
         var panel = new wcPanel(typeName, this._dockPanelTypeList[i].options);
         panel._parent = this;
         panel.__container(this.$transition);
-        panel._panelObject = new this._dockPanelTypeList[i].create(panel);
+        panel._panelObject = new this._dockPanelTypeList[i].options.onCreate(panel);
 
         if (allowGroup) {
           this.__addPanelGrouped(panel, location, parentPanel);
@@ -604,7 +606,7 @@ wcDocker.prototype = {
           var windowTypes = {};
           for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
             var type = self._dockPanelTypeList[i];
-            if (!type.isPrivate) {
+            if (!type.options.isPrivate) {
               var icon = null;
               var faicon = null;
               if (type.options) {
@@ -1409,12 +1411,12 @@ wcDocker.prototype = {
         return frame;
 
       case 'wcPanel':
-        var panel = new wcPanel(data.panelType);
-        panel._parent = parent;
-        panel.__container(this.$transition);
         for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
           if (this._dockPanelTypeList[i].name === data.panelType) {
-            panel._panelObject = new this._dockPanelTypeList[i].create(panel);
+            var panel = new wcPanel(data.panelType, this._dockPanelTypeList[i].options);
+            panel._parent = parent;
+            panel.__container(this.$transition);
+            panel._panelObject = new this._dockPanelTypeList[i].options.onCreate(panel);
             panel.__container($container);
             break;
           }
