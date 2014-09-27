@@ -71,8 +71,9 @@ if (!Array.prototype.indexOf)
 
   options allows overriding default options for docker. The current fields are:
     allowContextMenu: boolean (default true) - Create the right click menu for adding/removing panels.
+    hideOnResize: boolean (default false) - If true, panels will hide their content as they are being resized.
 */
-function wcDocker(container,options) {
+function wcDocker(container, options) {
   this.$container = $(container).addClass('wcDocker');
   this.$transition = $('<div class="wcDockerTransition"></div>');
   this.$container.append(this.$transition);
@@ -634,7 +635,7 @@ wcDocker.prototype = {
           if (isTitle) {
             items['Close Panel'] = {
               name: 'Close Tab',
-              faicon: 'trash',
+              faicon: 'close',
               disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
             };
             if (!myFrame._isFloating) {
@@ -649,7 +650,7 @@ wcDocker.prototype = {
     
             items.fold1 = {
               name: 'Add Tab',
-              faicon: 'plus',
+              faicon: 'columns',
               items: windowTypes,
               disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
@@ -663,7 +664,7 @@ wcDocker.prototype = {
           } else {
             items['Close Panel'] = {
               name: 'Close Panel',
-              faicon: 'trash',
+              faicon: 'close',
               disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
             };
             if (!myFrame._isFloating) {
@@ -678,7 +679,7 @@ wcDocker.prototype = {
 
             items.fold1 = {
               name: 'Insert Panel',
-              faicon: 'plus',
+              faicon: 'columns',
               items: windowTypes,
               disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
@@ -1233,7 +1234,7 @@ wcDocker.prototype = {
         self._ghost = null;
       }
 
-      if ( self._draggingSplitter ) {
+      if ( self._draggingSplitter ) { 
         self._draggingSplitter.$pane[0].removeClass('wcResizing');
         self._draggingSplitter.$pane[1].removeClass('wcResizing');
       }
