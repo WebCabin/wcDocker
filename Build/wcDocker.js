@@ -2290,15 +2290,18 @@ wcPanel.prototype = {
 
   // Creates a new custom button that will appear in the title bar of the panel.
   // Params:
-  //    name          The name of the button, to identify it.
-  //    className     A class name to apply to the button.
-  //    text          Text to apply to the button.
-  //    tip           Tooltip text.
-  //    isTogglable   If true, will make the button toggle on and off per click.
-  addButton: function(name, className, text, tip, isTogglable) {
+  //    name              The name of the button, to identify it.
+  //    className         A class name to apply to the button.
+  //    text              Text to apply to the button.
+  //    tip               Tooltip text.
+  //    isTogglable       If true, will make the button toggle on and off per click.
+  //    toggleClassName   If this button is toggleable, you can designate an
+  //                      optional class name that will replace the original class name.
+  addButton: function(name, className, text, tip, isTogglable, toggleClassName) {
     this._buttonList.push({
       name: name,
       className: className,
+      toggleClassName: toggleClassName,
       text: text,
       tip: tip,
       isTogglable: isTogglable,
@@ -2955,9 +2958,9 @@ wcFrame.prototype = {
     this.$title     = $('<div class="wcFrameTitle">');
     this.$tabScroll = $('<div class="wcTabScroller">');
     this.$center    = $('<div class="wcFrameCenter wcWide">');
-    this.$tabLeft   = $('<div class="wcFrameButton wcFrameMiniButton" title="Scroll tabs to the left.">&lt;</div>');
-    this.$tabRight  = $('<div class="wcFrameButton wcFrameMiniButton" title="Scroll tabs to the right.">&gt;</div>');
-    this.$close     = $('<div class="wcFrameButton">X</div>');
+    this.$tabLeft   = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
+    this.$tabRight  = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
+    this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-close"></span>X</div>');
     this.$frame.append(this.$title);
     this.$title.append(this.$tabScroll);
     this.$frame.append(this.$close);
@@ -3203,20 +3206,22 @@ wcFrame.prototype = {
       for (var i = 0; i < panel._buttonList.length; ++i) {
         var buttonData = panel._buttonList[i];
         var $button = $('<div>');
+        var buttonClass = buttonData.className;
         $button.addClass('wcFrameButton');
         if (buttonData.isTogglable) {
           $button.addClass('wcFrameButtonToggler');
 
           if (buttonData.isToggled) {
             $button.addClass('wcFrameButtonToggled');
+            buttonClass = buttonData.toggleClassName || buttonClass;
           }
-        }
-        if (buttonData.className) {
-          $button.addClass(buttonData.className);
         }
         $button.attr('title', buttonData.tip);
         $button.data('name', buttonData.name);
         $button.text(buttonData.text);
+        if (buttonClass) {
+          $button.prepend($('<span class="' + buttonClass + '">'));
+        }
 
         this._buttonList.push($button);
         this.$frame.append($button);

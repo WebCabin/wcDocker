@@ -179,9 +179,9 @@
               myPanel.layout().addItem($('<div style="text-align:center"></div>'));
 
               var $buttonInfo = $('<div style="text-align:center">I react to the custom buttons above</div>');
-              var $buttonN = $('<div style="text-align:center"><b>Normal button pressed!</b></div>');
-              var $buttonTtrue = $('<div style="text-align:center"><b>Toggle button is toggled!</b></div>');
-              var $buttonTfalse = $('<div style="text-align:center"><b>Toggle button is released!</b></div>');
+              var $buttonN = $('<div style="text-align:center"><b>Happy button pressed!</b></div>');
+              var $buttonTtrue = $('<div style="text-align:center"><b>Thumbs button is down!</b></div>');
+              var $buttonTfalse = $('<div style="text-align:center"><b>Thumbs button is up!</b></div>');
               var buttonTimer;
 
               var $attachInfo = $('<div style="text-align:center">I react when docked</div>');
@@ -203,8 +203,8 @@
               myPanel.layout().addItem($moveInfo, 0, 2);
               myPanel.layout().addItem($resizeInfo, 0, 3);
 
-              myPanel.addButton('Toggle Button', '', 'T', 'A toggle button', true);
-              myPanel.addButton('Normal Button', '', 'N', 'A normal button', false);
+              myPanel.addButton('Thumbs Button', 'fa fa-thumbs-up', 'T', 'A toggle button', true, 'fa fa-thumbs-down');
+              myPanel.addButton('Happy Button', 'fa fa-smile-o', ':)', 'A normal button', false);
 
               // React on custom button press.
               myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
@@ -213,7 +213,7 @@
                 }
 
                 // alert(data.name + ' pressed.  isToggled = ' + data.isToggled);
-                if (data.name === 'Normal Button') {
+                if (data.name === 'Happy Button') {
                   $buttonInfo.remove();
                   $buttonN.remove();
                   $buttonTtrue.remove();
@@ -225,7 +225,7 @@
                     $buttonN.remove();
                     self.layout().addItem($buttonInfo, 0, 0);
                   }, 1000);
-                } else if (data.name === 'Toggle Button') {
+                } else if (data.name === 'Thumbs Button') {
                   $buttonInfo.remove();
                   $buttonN.remove();
                   $buttonTtrue.remove();

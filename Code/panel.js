@@ -124,15 +124,18 @@ wcPanel.prototype = {
 
   // Creates a new custom button that will appear in the title bar of the panel.
   // Params:
-  //    name          The name of the button, to identify it.
-  //    className     A class name to apply to the button.
-  //    text          Text to apply to the button.
-  //    tip           Tooltip text.
-  //    isTogglable   If true, will make the button toggle on and off per click.
-  addButton: function(name, className, text, tip, isTogglable) {
+  //    name              The name of the button, to identify it.
+  //    className         A class name to apply to the button.
+  //    text              Text to apply to the button.
+  //    tip               Tooltip text.
+  //    isTogglable       If true, will make the button toggle on and off per click.
+  //    toggleClassName   If this button is toggleable, you can designate an
+  //                      optional class name that will replace the original class name.
+  addButton: function(name, className, text, tip, isTogglable, toggleClassName) {
     this._buttonList.push({
       name: name,
       className: className,
+      toggleClassName: toggleClassName,
       text: text,
       tip: tip,
       isTogglable: isTogglable,

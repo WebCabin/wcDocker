@@ -98,6 +98,7 @@ html, body {
   cursor: pointer;
   text-align: center;
   /*margin-right: 3px;*/
+  overflow: hidden;
 
   background-color: #555555;
 }
