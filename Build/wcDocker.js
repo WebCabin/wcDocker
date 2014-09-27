@@ -3088,6 +3088,8 @@ wcFrame.prototype = {
     this._canScrollTabs = false;
     if (totalWidth > this.$title.width() - buttonSize) {
       this._canScrollTabs = true;
+      this.$frame.append(this.$tabRight);
+      this.$frame.append(this.$tabLeft);
       var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
       // If we are beyond our scroll limit, clamp it.
       if (scrollPos > scrollLimit) {
@@ -3112,6 +3114,8 @@ wcFrame.prototype = {
     } else {
       scrollPos = 0;
       this._leftTab = 0;
+      this.$tabLeft.remove();
+      this.$tabRight.remove();
     }
 
     this.$tabScroll.stop().animate({left: -scrollPos + 'px'}, 'fast');
