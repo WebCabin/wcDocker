@@ -3220,7 +3220,7 @@ wcFrame.prototype = {
         $button.data('name', buttonData.name);
         $button.text(buttonData.text);
         if (buttonClass) {
-          $button.prepend($('<span class="' + buttonClass + '">'));
+          $button.prepend($('<div class="' + buttonClass + '">'));
         }
 
         this._buttonList.push($button);
