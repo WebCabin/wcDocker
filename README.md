@@ -37,6 +37,7 @@ Please share your project with us that uses wcDocker!
 
 * JQuery Library version 1.11.1 [http://jquery.com/](http://jquery.com/)
 * Custom version of JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
+* (Optional) Font-Awesome [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/)
 
 If you use the pre-built packages wcDocker.js or wcDocker.min.js then the contextMenu library is embedded into it already.
 
