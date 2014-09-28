@@ -1,7 +1,7 @@
 /*
   Splits an area in two, dividing it with a resize splitter bar
 */
-function wcSplitter($container, parent, isHorizontal) {
+function wcSplitter(docker, $container, parent, isHorizontal) {
   this.$container = $container;
   this._parent = parent;
   this._horizontal = isHorizontal;
@@ -13,12 +13,19 @@ function wcSplitter($container, parent, isHorizontal) {
   this._findBestPos = false;
 
   this.__init();
+
+  docker._splitterList.push(this);
 };
 
 wcSplitter.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Update the contents of the splitter.
+  update: function() {
+    this.__update();
+  },
 
   // Whether the splitter splits horizontally.
   isHorizontal: function() {
@@ -103,6 +110,7 @@ wcSplitter.prototype = {
       return this._pos;
     }
     this._pos = pos;
+    this.__update();
     return this._pos;
   },
 
@@ -122,6 +130,10 @@ wcSplitter.prototype = {
           this._pane[index] = item;
           item._parent = this;
           item.__container(this.$pane[index]);
+
+          if (this._pane[0] && this._pane[1]) {
+            this.__update();
+          }
           return item;
         } else if (this._pane[index]) {
           this._pane[index].__container(null);
@@ -129,7 +141,43 @@ wcSplitter.prototype = {
         }
       }
     }
+    this.__update();
     return false;
+  },
+
+  // Toggles whether a pane can contain scroll bars.
+  // By default, scrolling is enabled.
+  // Params:
+  //    index     The pane index, only 0 or 1 are valid.
+  //    x         Whether to allow scrolling in the horizontal direction.
+  //    y         Whether to allow scrolling in the vertical direction.
+  scrollable: function(index, x, y) {
+    this.$pane[index].toggleClass('wcScrollableX', x).toggleClass('wcScrollableY', y);
+  },
+
+  // Finds the main Docker window.
+  docker: function() {
+    var parent = this._parent;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
+  },
+
+  // Destroys the splitter.
+  // Params:
+  //    destroyPanes    If true, or omitted, both panes attached will be destroyed as well.
+  destroy: function(destroyPanes) {
+    var index = this.docker()._splitterList.indexOf(this);
+    if (index > -1) {
+      this.docker()._splitterList.splice(index, 1);
+    }
+
+    if (typeof destroyPanes === 'undefined' || destroyPanes) {
+      this.__destroy();
+    } else {
+      this.__container(null);
+    }
   },
 
 
@@ -154,6 +202,9 @@ wcSplitter.prototype = {
     }
 
     this.__container(this.$container);
+
+    this.scrollable(0, true, true);
+    this.scrollable(1, true, true);
   },
 
   // Updates the size of the splitter.
@@ -239,8 +290,12 @@ wcSplitter.prototype = {
       this.$pane[1].css('height', height - size - 5 + 'px');
     }
 
-    this._pane[0].__update();
-    this._pane[1].__update();
+    if (this._pane[0]) {
+      this._pane[0].__update();
+    }
+    if (this._pane[1]) {
+      this._pane[1].__update();
+    }
   },
 
   // Saves the current panel configuration into a meta

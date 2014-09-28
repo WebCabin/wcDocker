@@ -1438,8 +1438,7 @@ wcDocker.prototype = {
   __create: function(data, parent, $container) {
     switch (data.type) {
       case 'wcSplitter':
-        var splitter = new wcSplitter($container, parent, data.horizontal);
-        this._splitterList.push(splitter);
+        var splitter = new wcSplitter(this, $container, parent, data.horizontal);
         return splitter;
 
       case 'wcFrame':
@@ -1495,15 +1494,14 @@ wcDocker.prototype = {
           var left  = parentSplitter.pane(0);
           var right = parentSplitter.pane(1);
           if (left === parentFrame) {
-            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+            splitter = new wcSplitter(this, this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
             parentSplitter.pane(0, splitter);
           } else {
-            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+            splitter = new wcSplitter(this, this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
             parentSplitter.pane(1, splitter);
           }
 
           if (splitter) {
-            this._splitterList.push(splitter);
             frame = new wcFrame(this.$transition, splitter, false);
             this._frameList.push(frame);
             if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
@@ -1530,9 +1528,8 @@ wcDocker.prototype = {
       this._root = frame;
       frame.__container(this.$container);
     } else {
-      var splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+      var splitter = new wcSplitter(this, this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
       if (splitter) {
-        this._splitterList.push(splitter);
         frame._parent = splitter;
 
         if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
@@ -3521,7 +3518,7 @@ wcFrame.prototype = {
 /*
   Splits an area in two, dividing it with a resize splitter bar
 */
-function wcSplitter($container, parent, isHorizontal) {
+function wcSplitter(docker, $container, parent, isHorizontal) {
   this.$container = $container;
   this._parent = parent;
   this._horizontal = isHorizontal;
@@ -3533,6 +3530,8 @@ function wcSplitter($container, parent, isHorizontal) {
   this._findBestPos = false;
 
   this.__init();
+
+  docker._splitterList.push(this);
 };
 
 wcSplitter.prototype = {
@@ -3642,6 +3641,10 @@ wcSplitter.prototype = {
           this._pane[index] = item;
           item._parent = this;
           item.__container(this.$pane[index]);
+
+          if (this._pane[0] && this._pane[1]) {
+            this.__update();
+          }
           return item;
         } else if (this._pane[index]) {
           this._pane[index].__container(null);
@@ -3649,7 +3652,33 @@ wcSplitter.prototype = {
         }
       }
     }
+    this.__update();
     return false;
+  },
+
+  // Finds the main Docker window.
+  docker: function() {
+    var parent = this._parent;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
+  },
+
+  // Destroys the splitter.
+  // Params:
+  //    destroyPanes    If true, or omitted, both panes attached will be destroyed as well.
+  destroy: function(destroyPanes) {
+    var index = this.docker()._splitterList.indexOf(this);
+    if (index > -1) {
+      this.docker()._splitterList.splice(index, 1);
+    }
+
+    if (typeof destroyPanes === 'undefined' || destroyPanes) {
+      this.__destroy();
+    } else {
+      this.__container(null);
+    }
   },
 
 
