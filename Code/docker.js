@@ -544,43 +544,55 @@ wcDocker.prototype = {
   // http://medialize.github.io/jQuery-contextMenu/docs.html
   // for more information.
   // Params:
-  //    selector        A JQuery selector string that designates the
-  //                    elements who use this menu.
-  //    itemList        An array with each context menu item in it, each item
-  //                    is an object {name:string, callback:function(key, opts, panel)}.
-  //    includeDefault  If true, all default panel menu options will also be shown.
-  basicMenu: function(selector, itemList, includeDefault) {
+  //    selector              A JQuery selector string that designates the
+  //                          elements who use this menu.
+  //    itemListOrBuildFunc   An array with each context menu item in it, each item
+  //                          is an object {name:string, callback:function(key, opts, panel)}.
+  //                          This can also be a function that dynamically builds and
+  //                          returns the item list, parameters given are the $trigger object
+  //                          of the menu and the menu event object.
+  //    includeDefault        If true, all default panel menu options will also be shown.
+  basicMenu: function(selector, itemListOrBuildFunc, includeDefault) {
     var self = this;
-    var finalItems = {};
-    for (var i = 0; i < itemList.length; ++i) {
-      var callback = itemList[i].callback;
-
-      (function(listItem, callback) {
-        listItem.callback = function(key, opts) {
-          var panel = null;
-          var $frame = opts.$trigger.parents('.wcFrame').first();
-          if ($frame.length) {
-            for (var a = 0; a < self._frameList.length; ++a) {
-              if ($frame[0] === self._frameList[a].$frame[0]) {
-                panel = self._frameList[a].panel();
-              }
-            }
-          }
-
-          callback(key, opts, panel);
-        };
-      })(itemList[i], callback);
-      finalItems[itemList[i].name] = itemList[i];
-    }
-
     if (!includeDefault) {
       $.contextMenu({
         selector: selector,
-        animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
-        reposition: false,
-        autoHide: true,
-        zIndex: 200,
-        items: finalItems,
+        build: function($trigger, event) {
+          var finalItems = {};
+          var itemList = itemListOrBuildFunc;
+          if (typeof itemListOrBuildFunc === 'function') {
+            itemList = itemListOrBuildFunc($trigger, event);
+          }
+
+          for (var i = 0; i < itemList.length; ++i) {
+            var callback = itemList[i].callback;
+
+            (function(listItem, callback) {
+              listItem.callback = function(key, opts) {
+                var panel = null;
+                var $frame = opts.$trigger.parents('.wcFrame').first();
+                if ($frame.length) {
+                  for (var a = 0; a < self._frameList.length; ++a) {
+                    if ($frame[0] === self._frameList[a].$frame[0]) {
+                      panel = self._frameList[a].panel();
+                    }
+                  }
+                }
+
+                callback(key, opts, panel);
+              };
+            })(itemList[i], callback);
+            finalItems[itemList[i].name] = itemList[i];
+          }
+
+          return {
+            animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+            reposition: false,
+            autoHide: true,
+            zIndex: 200,
+            items: finalItems,
+          };
+        }
       });
     } else {
       $.contextMenu({
@@ -625,6 +637,33 @@ wcDocker.prototype = {
                 className: 'wcMenuCreatePanel',
               };
             }
+          }
+
+          var finalItems = {};
+          var itemList = itemListOrBuildFunc;
+          if (typeof itemListOrBuildFunc === 'function') {
+            itemList = itemListOrBuildFunc($trigger, event);
+          }
+
+          for (var i = 0; i < itemList.length; ++i) {
+            var callback = itemList[i].callback;
+
+            (function(listItem, callback) {
+              listItem.callback = function(key, opts) {
+                var panel = null;
+                var $frame = opts.$trigger.parents('.wcFrame').first();
+                if ($frame.length) {
+                  for (var a = 0; a < self._frameList.length; ++a) {
+                    if ($frame[0] === self._frameList[a].$frame[0]) {
+                      panel = self._frameList[a].panel();
+                    }
+                  }
+                }
+
+                callback(key, opts, panel);
+              };
+            })(itemList[i], callback);
+            finalItems[itemList[i].name] = itemList[i];
           }
 
           var items = finalItems;
@@ -728,7 +767,7 @@ wcDocker.prototype = {
             },
             animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
             reposition: false,
-            // autoHide: true,
+            autoHide: true,
             zIndex: 200,
             items: items,
           };
