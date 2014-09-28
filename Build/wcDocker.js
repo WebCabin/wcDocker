@@ -558,6 +558,7 @@ wcDocker.prototype = {
       $.contextMenu({
         selector: selector,
         build: function($trigger, event) {
+          var separatorIndex = 0;
           var finalItems = {};
           var itemList = itemListOrBuildFunc;
           if (typeof itemListOrBuildFunc === 'function') {
@@ -565,23 +566,28 @@ wcDocker.prototype = {
           }
 
           for (var i = 0; i < itemList.length; ++i) {
-            var callback = itemList[i].callback;
+            if ($.isEmptyObject(itemList[i])) {
+              finalItems['sep' + separatorIndex++] = "---------";
+            }
 
-            (function(listItem, callback) {
-              listItem.callback = function(key, opts) {
-                var panel = null;
-                var $frame = opts.$trigger.parents('.wcFrame').first();
-                if ($frame.length) {
-                  for (var a = 0; a < self._frameList.length; ++a) {
-                    if ($frame[0] === self._frameList[a].$frame[0]) {
-                      panel = self._frameList[a].panel();
+            var callback = itemList[i].callback;
+            if (callback) {
+              (function(listItem, callback) {
+                listItem.callback = function(key, opts) {
+                  var panel = null;
+                  var $frame = opts.$trigger.parents('.wcFrame').first();
+                  if ($frame.length) {
+                    for (var a = 0; a < self._frameList.length; ++a) {
+                      if ($frame[0] === self._frameList[a].$frame[0]) {
+                        panel = self._frameList[a].panel();
+                      }
                     }
                   }
-                }
 
-                callback(key, opts, panel);
-              };
-            })(itemList[i], callback);
+                  callback(key, opts, panel);
+                };
+              })(itemList[i], callback);
+            }
             finalItems[itemList[i].name] = itemList[i];
           }
 
@@ -639,6 +645,7 @@ wcDocker.prototype = {
             }
           }
 
+          var separatorIndex = 0;
           var finalItems = {};
           var itemList = itemListOrBuildFunc;
           if (typeof itemListOrBuildFunc === 'function') {
@@ -646,29 +653,34 @@ wcDocker.prototype = {
           }
 
           for (var i = 0; i < itemList.length; ++i) {
-            var callback = itemList[i].callback;
+            if ($.isEmptyObject(itemList[i])) {
+              finalItems['sep' + separatorIndex++] = "---------";
+            }
 
-            (function(listItem, callback) {
-              listItem.callback = function(key, opts) {
-                var panel = null;
-                var $frame = opts.$trigger.parents('.wcFrame').first();
-                if ($frame.length) {
-                  for (var a = 0; a < self._frameList.length; ++a) {
-                    if ($frame[0] === self._frameList[a].$frame[0]) {
-                      panel = self._frameList[a].panel();
+            var callback = itemList[i].callback;
+            if (callback) {
+              (function(listItem, callback) {
+                listItem.callback = function(key, opts) {
+                  var panel = null;
+                  var $frame = opts.$trigger.parents('.wcFrame').first();
+                  if ($frame.length) {
+                    for (var a = 0; a < self._frameList.length; ++a) {
+                      if ($frame[0] === self._frameList[a].$frame[0]) {
+                        panel = self._frameList[a].panel();
+                      }
                     }
                   }
-                }
 
-                callback(key, opts, panel);
-              };
-            })(itemList[i], callback);
+                  callback(key, opts, panel);
+                };
+              })(itemList[i], callback);
+            }
             finalItems[itemList[i].name] = itemList[i];
           }
 
           var items = finalItems;
           if (!$.isEmptyObject(finalItems)) {
-            items['sep0'] = "---------";
+            items['sep' + separatorIndex++] = "---------";
           }
 
           if (isTitle) {
@@ -685,7 +697,7 @@ wcDocker.prototype = {
               };
             }
 
-            items['sep1'] = "---------";
+            items['sep' + separatorIndex++] = "---------";
     
             items.fold1 = {
               name: 'Add Tab',
@@ -694,7 +706,7 @@ wcDocker.prototype = {
               disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
             };
-            items['sep2'] = "---------";
+            items['sep' + separatorIndex++] = "---------";
 
             items['Flash Panel'] = {
               name: 'Flash Panel',
@@ -714,7 +726,7 @@ wcDocker.prototype = {
               };
             }
 
-            items['sep1'] = "---------";
+            items['sep' + separatorIndex++] = "---------";
 
             items.fold1 = {
               name: 'Insert Panel',
@@ -723,7 +735,7 @@ wcDocker.prototype = {
               disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
             };
-            items['sep2'] = "---------";
+            items['sep' + separatorIndex++] = "---------";
 
             items['Flash Panel'] = {
               name: 'Flash Panel',
@@ -1439,6 +1451,8 @@ wcDocker.prototype = {
     switch (data.type) {
       case 'wcSplitter':
         var splitter = new wcSplitter(this, $container, parent, data.horizontal);
+        splitter.scrollable(0, false, false);
+        splitter.scrollable(1, false, false);
         return splitter;
 
       case 'wcFrame':
@@ -1502,6 +1516,8 @@ wcDocker.prototype = {
           }
 
           if (splitter) {
+            splitter.scrollable(0, false, false);
+            splitter.scrollable(1, false, false);
             frame = new wcFrame(this.$transition, splitter, false);
             this._frameList.push(frame);
             if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
@@ -1531,6 +1547,8 @@ wcDocker.prototype = {
       var splitter = new wcSplitter(this, this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
       if (splitter) {
         frame._parent = splitter;
+        splitter.scrollable(0, false, false);
+        splitter.scrollable(1, false, false);
 
         if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
           splitter.pane(0, frame);
@@ -3539,6 +3557,11 @@ wcSplitter.prototype = {
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // Update the contents of the splitter.
+  update: function() {
+    this.__update();
+  },
+
   // Whether the splitter splits horizontally.
   isHorizontal: function() {
     return this._horizontal;
@@ -3622,6 +3645,7 @@ wcSplitter.prototype = {
       return this._pos;
     }
     this._pos = pos;
+    this.__update();
     return this._pos;
   },
 
@@ -3654,6 +3678,16 @@ wcSplitter.prototype = {
     }
     this.__update();
     return false;
+  },
+
+  // Toggles whether a pane can contain scroll bars.
+  // By default, scrolling is enabled.
+  // Params:
+  //    index     The pane index, only 0 or 1 are valid.
+  //    x         Whether to allow scrolling in the horizontal direction.
+  //    y         Whether to allow scrolling in the vertical direction.
+  scrollable: function(index, x, y) {
+    this.$pane[index].toggleClass('wcScrollableX', x).toggleClass('wcScrollableY', y);
   },
 
   // Finds the main Docker window.
@@ -3703,6 +3737,9 @@ wcSplitter.prototype = {
     }
 
     this.__container(this.$container);
+
+    this.scrollable(0, true, true);
+    this.scrollable(1, true, true);
   },
 
   // Updates the size of the splitter.
@@ -3788,8 +3825,12 @@ wcSplitter.prototype = {
       this.$pane[1].css('height', height - size - 5 + 'px');
     }
 
-    this._pane[0].__update();
-    this._pane[1].__update();
+    if (this._pane[0]) {
+      this._pane[0].__update();
+    }
+    if (this._pane[1]) {
+      this._pane[1].__update();
+    }
   },
 
   // Saves the current panel configuration into a meta
