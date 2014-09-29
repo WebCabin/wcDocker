@@ -1046,8 +1046,9 @@ wcDocker.prototype = {
           };
           self._draggingFrame.__anchorMove(mouse);
 
-          if ($(event.target).hasClass('wcPanelTab')) {
-            var index = parseInt($(event.target).attr('id'));
+          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
+          if ($panelTab && $panelTab.length) {
+            var index = parseInt($panelTab.attr('id'));
             self._draggingFrame.panel(index);
             
             if (event.which === 2) {
@@ -1191,9 +1192,9 @@ wcDocker.prototype = {
             self._ghost.anchor(mouse, null);
           } else {
             self._draggingFrame.__shadow(false);
-            if (self._draggingFrameTab && $(event.target).hasClass('wcPanelTab') &&
-                self._draggingFrameTab !== event.target) {
-              self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($(event.target).attr('id')));
+            var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
+            if (self._draggingFrameTab && $panelTab && $panelTab.length && self._draggingFrameTab !== event.target) {
+              self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($panelTab.attr('id')));
             }
           }
         } else if (!self._draggingFrameTab) {
