@@ -19,15 +19,26 @@ Please share your project with us that uses wcDocker!
 
 ****
 ### Change Log ###
-#### Version: Beta ####
-* Compatibility with IE8.
-* You can now add custom buttons that appear in the panels title bar.
-* Ability to batch together a large number of elements being added to a layout to minimize reflow.
-* Events can now be applied to the main docker, rather than only panels.
-* Ability to retrieve layout table items from a specified grid location.
-* Ability to set the layouts grid spacing size.
-* Ability to alternate the layout row colors.
-* Layout save and restore now generate a string instead of a data object due to a bug with the default JSON stringify not converting the object properly.
+#### Version: 2.0.0 ####
+- Layout grid can now have a spacing size.
+- Layout grid can now be set to alternating row color.
+- wcLayout.item() added to retrieve an already existing item in the layout.
+- wcDocker can now send and receive events.
+- wcLayout can now batch large numbers of elements added without page refreshing between each.
+- wcPanel can now contain custom buttons that appear within the title bar.
+- wcDocker.basicMenu() now has an option to include the default menu options along with your custom ones.
+- wcDocker.basicMenu() can now accept a dynamic callback function that returns custom menu's at the time of the event.
+- New events added for resize start, resize end, move start, and move end.
+- Panels can now be set to hide their contents whenever they are resized.
+- wcDocker constructor now takes an options object.
+- wcDocker now has an option to disable the default context menu.
+- Panel tabs are now scrollable.
+- Icons are now supported using regular CSS or the Font-Awesome library [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/).
+- wcDocker.registerPanelType() can now take an options object instead of just a single callback.
+- Fixed layout save/restore.
+- Fixed layout clear not actually removing elements.
+- Fixed compatibility with IE8.
+- Fixed tabs disappearing when the panel is too small to fit them.
 
 ****
 # Dependancies #
