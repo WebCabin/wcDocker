@@ -34,10 +34,12 @@ html, body {
 
 .wcWide {
   width: 100%;
+  left: 0px;
 }
 
 .wcTall {
   height: 100%;
+  top: 0px;
 }
 
 .wcDocker {
@@ -49,7 +51,8 @@ html, body {
 }
 
 .wcFrame {
-  border: 2px inset black;
+  border-right: 2px inset black;
+  border-bottom: 2px inset black;
   position: relative;
 }
 
@@ -145,7 +148,7 @@ html, body {
   padding: 0px;
   background-color: transparent;
 
-  border-spacing: 2px;
+  border-spacing: 0px;
 }
 
 .wcLayout {
@@ -364,7 +367,7 @@ html, body {
 }
 
 .wcSplitterBar {
-  border: 1px outset darkgray;
+  outline: 1px outset darkgray;
   background-color: gray;
 }
 

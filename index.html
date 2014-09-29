@@ -226,28 +226,36 @@
             onCreate: function(myPanel) {
               myPanel.initSize(400, 400);
 
-              // We need at least one element in the main layout that can hold the splitter.
-              var $scene = myPanel.layout().addItem($('<div>'));
+              // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
+              // to size it to the full size of the panel.
+              var $scene = $('<div class="wcWide wcTall">')
+              myPanel.layout().addItem($scene);
 
               // Here we can utilize the splitter used by wcDocker internally so that we may split up
               // a single panel.  Splitters can be nested, and new layouts can be created to fill
               // each side of the split.
-              var splitter = new wcSplitter(myPanel.docker(), $scene, myPanel, false);
+              var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
 
-              // Create a layout for each side of the splitter and attach them to each splitter pane element.
-              var topLayout = new wcLayout(splitter.$pane[0], splitter);
-              var botLayout = new wcLayout(splitter.$pane[1], splitter);
-
-              // Put some content in each layout.
-              topLayout.addItem($('<div style="text-align:center">This panel is partitioned by it\'s own resizable splitter!</div>'));
-              botLayout.addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.</div>'));
+              // Initialize this splitter with a layout in each pane.  This can be done manually, but
+              // it is more convenient this way.
+              splitter.initLayouts();
 
               // By default, the splitter splits down the middle, but the position can be assigned manually by giving it a percentage value from 0-1.
               splitter.pos(0.25);
 
+              // Put some content in each layout.
+              splitter.pane(0).addItem($('<div style="text-align:center">This panel is partitioned by it\'s own resizable splitter!</div>'));
+              splitter.pane(1).addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.</div>'));
+
               // We need to update the splitter whenever the panel is updated.
               myPanel.on(wcDocker.EVENT_UPDATED, function() {
                 splitter.update();
+              });
+
+              // Add a rotation panel button to change the orientation of the splitter.
+              myPanel.addButton('View', 'fa fa-rotate-right', 'O', 'Switch between horizontal and vertical layout.', true);
+              myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+                splitter.orientation(data.isToggled);
               });
             }
           });

@@ -137,6 +137,9 @@ wcDocker.EVENT_SCROLLED         = 'panelScrolled';
 wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
 wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
 
+wcDocker.ORIENTATION_HORIZONTAL = false;
+wcDocker.ORIENTATION_VERTICAL   = true;
+
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
@@ -1450,7 +1453,7 @@ wcDocker.prototype = {
   __create: function(data, parent, $container) {
     switch (data.type) {
       case 'wcSplitter':
-        var splitter = new wcSplitter(this, $container, parent, data.horizontal);
+        var splitter = new wcSplitter($container, parent, data.horizontal);
         splitter.scrollable(0, false, false);
         splitter.scrollable(1, false, false);
         return splitter;
@@ -1508,10 +1511,10 @@ wcDocker.prototype = {
           var left  = parentSplitter.pane(0);
           var right = parentSplitter.pane(1);
           if (left === parentFrame) {
-            splitter = new wcSplitter(this, this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
             parentSplitter.pane(0, splitter);
           } else {
-            splitter = new wcSplitter(this, this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
             parentSplitter.pane(1, splitter);
           }
 
@@ -1544,7 +1547,7 @@ wcDocker.prototype = {
       this._root = frame;
       frame.__container(this.$container);
     } else {
-      var splitter = new wcSplitter(this, this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+      var splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
       if (splitter) {
         frame._parent = splitter;
         splitter.scrollable(0, false, false);
@@ -1606,7 +1609,7 @@ wcDocker.prototype = {
         var right = item.pane(1);
 
         // Check if the orientation of the splitter is one that we want.
-        if (item.isHorizontal() === needsHorizontal) {
+        if (item.orientation() === needsHorizontal) {
           // Make sure the dock panel is on the proper side.
           if (left instanceof wcFrame && (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP)) {
             left.addPanel(panel);
