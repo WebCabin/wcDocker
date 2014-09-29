@@ -9,16 +9,13 @@ Please share your project with us that uses wcDocker!
 * Panels can be created, closed, moved, resized, and groupped together.
 * Panels can be detached from a dock position to float on their own, and then dock again.
 * Panels can include their own custom buttons in their upper-right area.
+* Panel buttons and tabs can contain their own icon image.
 * Panel configurations can be saved, then later restored.
 * Multiple panels of the same type can be created.
 * Built in context menu system with standard panel options as well as custom ones.
 * Event system for intercommunication between panels as well as to react on panel change events.
 * Allow styling of window colors and other options by using themed css files.
-
-### The following features could possibly be developed next: ###
-* The ability for floating windows to be a true window, and therefore leave the bounds of the page.
-* An option of restricting the number of total panels created.
-* An option of restricting the total copies of the same panel type.
+* Re-use the internal splitter within your own panels.
 
 ****
 ### Change Log ###
