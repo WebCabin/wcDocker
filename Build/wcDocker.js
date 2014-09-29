@@ -571,6 +571,7 @@ wcDocker.prototype = {
           for (var i = 0; i < itemList.length; ++i) {
             if ($.isEmptyObject(itemList[i])) {
               finalItems['sep' + separatorIndex++] = "---------";
+              continue;
             }
 
             var callback = itemList[i].callback;
@@ -658,6 +659,7 @@ wcDocker.prototype = {
           for (var i = 0; i < itemList.length; ++i) {
             if ($.isEmptyObject(itemList[i])) {
               finalItems['sep' + separatorIndex++] = "---------";
+              continue;
             }
 
             var callback = itemList[i].callback;
