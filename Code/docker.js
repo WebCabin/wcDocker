@@ -124,6 +124,8 @@ wcDocker.DOCK_BOTTOM                = 'bottom';
 
 wcDocker.EVENT_UPDATED              = 'panelUpdated';
 wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
+wcDocker.EVENT_BEGIN_DOCK           = 'panelBeginDock';
+wcDocker.EVENT_END_DOCK             = 'panelEndDock';
 wcDocker.EVENT_CLOSED               = 'panelClosed';
 wcDocker.EVENT_BUTTON               = 'panelButton';
 wcDocker.EVENT_ATTACHED             = 'panelAttached';
@@ -1055,11 +1057,6 @@ wcDocker.prototype = {
           if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
             self._draggingFrame.panel(index);
-            
-            // if (event.which === 2) {
-            //   self._draggingFrame = null;
-            //   return;
-            // }
             self._draggingFrameTab = $panelTab[0];
           }
 
@@ -1069,6 +1066,7 @@ wcDocker.prototype = {
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
+            self.trigger(wcDocker.EVENT_BEGIN_DOCK);
           }
           break;
         }
@@ -1294,6 +1292,8 @@ wcDocker.prototype = {
         }
         self._ghost.__destroy();
         self._ghost = null;
+
+        self.trigger(wcDocker.EVENT_END_DOCK);
       }
 
       if ( self._draggingSplitter ) { 
