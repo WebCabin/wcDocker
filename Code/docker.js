@@ -630,6 +630,11 @@ wcDocker.prototype = {
           for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
             var type = self._dockPanelTypeList[i];
             if (!type.options.isPrivate) {
+              if (type.options.limit > 0) {
+                if (self.findPanels(type.name).length >= type.options.limit) {
+                  continue;
+                }
+              }
               var icon = null;
               var faicon = null;
               if (type.options) {

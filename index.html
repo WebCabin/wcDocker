@@ -67,6 +67,7 @@
           // Register our scrolling panel, a big empty panel with a large scrollable area inside.
           myDocker.registerPanelType('Scroll Panel', {
             faicon: 'unsorted',
+            limit: 2,
             onCreate: function(myPanel) {
               // By adding an element into the layout that is much larger than the window, it will automatically be scrollable.
               // If you specifically do not want it to scroll, you can use the myPanel.scrollable function.
