@@ -3040,8 +3040,8 @@ wcFrame.prototype = {
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
         if (autoFocus) {
           this._leftTab = this._curTab;
+          this.__updateTabs();
         }
-        this.__updateTabs();
       }
     }
 
@@ -3325,8 +3325,10 @@ wcFrame.prototype = {
       this.$center.toggleClass('wcOverflowVisible', overflowVisible);
 
       if (panel.moveable() && panel.title()) {
-        this.$frame.prepend(this.$title);
-        this.$center.css('top', '');
+        if (!this.$frame.parent()) {
+          this.$frame.prepend(this.$title);
+          this.$center.css('top', '');
+        }
       } else {
         this.$title.remove();
         this.$center.css('top', '0px');
