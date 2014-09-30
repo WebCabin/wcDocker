@@ -3160,9 +3160,9 @@ wcFrame.prototype = {
     this.$tabScroll.empty();
 
     // Move all tabbed panels to a temporary element to preserve event handlers on them.
-    var $tempCenter = $('<div>');
-    this.$frame.append($tempCenter);
-    this.$center.children().appendTo($tempCenter);
+    // var $tempCenter = $('<div>');
+    // this.$frame.append($tempCenter);
+    // this.$center.children().appendTo($tempCenter);
 
     var totalWidth = 0;
     var scrollPos = 0;
@@ -3176,6 +3176,10 @@ wcFrame.prototype = {
       }
     }
 
+    this.$center.find('.wcPanelTabContent').each(function() {
+      $(this).addClass('wcPanelTabContentHidden wcPanelTabUnused');
+    });
+
     for (var i = 0; i < this._panelList.length; ++i) {
       var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
       this.$tabScroll.append($tab);
@@ -3183,21 +3187,25 @@ wcFrame.prototype = {
         $tab.prepend(this._panelList[i].$icon);
       }
 
-      var $tabContent = $('<div class="wcPanelTabContent wcPanelBackground" id="' + i + '">');
-      this.$center.append($tabContent);
+      var $tabContent = this.$center.find('.wcPanelTabContent[id="' + i + '"]');
+      if (!$tabContent.length) {
+        $tabContent = $('<div class="wcPanelTabContent wcPanelBackground wcPanelTabContentHidden" id="' + i + '">');
+        this.$center.append($tabContent);
+      }
+
       this._panelList[i].__container($tabContent);
       this._panelList[i]._parent = this;
 
-      if (this._curTab !== i) {
-        if (this._panelList[i].isVisible()) {
-          this._panelList[i].__isVisible(false);
-        }
-        $tabContent.addClass('wcPanelTabContentHidden');
-      } else {
-        if (!this._panelList[i].isVisible()) {
-          this._panelList[i].__isVisible(true);
-        }
+      var isVisible = this._curTab === i;
+      if (this._panelList[i].isVisible() !== isVisible) {
+        this._panelList[i].__isVisible(isVisible);
+      }
+
+      $tabContent.removeClass('wcPanelTabUnused');
+
+      if (isVisible) {
         $tab.addClass('wcPanelTabActive');
+        $tabContent.removeClass('wcPanelTabContentHidden');
       }
 
       totalWidth = $tab.offset().left - parentLeft;
@@ -3215,7 +3223,12 @@ wcFrame.prototype = {
       totalWidth += $tab.outerWidth();
     }
 
-    $tempCenter.remove();
+    // Now remove all unused panel tabs.
+    this.$center.find('.wcPanelTabUnused').each(function() {
+      $(this).remove();
+    });
+
+    // $tempCenter.remove();
     var buttonSize = this.__onTabChange();
 
     this._canScrollTabs = false;
