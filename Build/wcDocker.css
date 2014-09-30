@@ -332,7 +332,7 @@ html, body {
 
 .wcPanelTab {
   color: #42454a;
-  background-color: #BBB;
+  background-color: #777;
   border: 1px solid #000;
   border-radius: 2px 2px 0px 0px;
   border-bottom: 0px;
@@ -345,12 +345,12 @@ html, body {
 }
 
 .wcPanelTab:hover {
-  background-color: #FFF;
+  background-color: #AAA;
 }
 
 .wcPanelTabActive {
   color: #000;
-  background-color: #888;
+  background-color: gray;
   font-weight: bold;
   margin-top: 1px;
 }
