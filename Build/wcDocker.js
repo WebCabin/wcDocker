@@ -2345,6 +2345,12 @@ wcPanel.prototype = {
     var docker = this.docker();
     if (docker) {
       docker.__focus(this._parent, flash);
+      for (var i = 0; i < this._parent._panelList.length; ++i) {
+        if (this._parent._panelList[i] === this) {
+          this._parent.panel(i);
+          break;
+        }
+      }
     }
   },
 
