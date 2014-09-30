@@ -79,6 +79,7 @@ function wcPanel(type, options) {
   this._moveable = true;
   this._closeable = true;
   this._resizeVisible = true;
+  this._isVisible = false;
 
   this._events = {};
 
@@ -126,6 +127,11 @@ wcPanel.prototype = {
         }
       }
     }
+  },
+
+  // Retrieves whether this panel is within view.
+  isVisible: function() {
+    return this._isVisible;
   },
 
   // Creates a new custom button that will appear in the title bar of the panel.
@@ -231,13 +237,23 @@ wcPanel.prototype = {
   // Sets the icon for the panel, shown in the panels tab widget.
   // Must be a css class name that contains the image.
   icon: function(icon) {
-    this.$icon = $('<div class="wcTabIcon ' + icon + '">');
+    if (!this.$icon) {
+      this.$icon = $('<div>');
+    }
+
+    this.$icon.removeClass();
+    this.$icon.addClass('wcTabIcon ' + icon);
   },
 
   // Sets the icon for the panel, shown in the panels tab widget,
   // to an icon defined from the font-awesome library.
   faicon: function(icon) {
-    this.$icon = $('<div class="fa fa-fw fa-' + icon + '">');
+    if (!this.$icon) {
+      this.$icon = $('<div>');
+    }
+
+    this.$icon.removeClass();
+    this.$icon.addClass('fa fa-fw fa-' + icon);
   },
 
   // Gets, or Sets the scroll position of the window (if it is scrollable).
@@ -468,6 +484,14 @@ wcPanel.prototype = {
     } else {
       this._moveData.timeout = false;
       this.__trigger(wcDocker.EVENT_MOVE_ENDED);
+    }
+  },
+
+  __isVisible: function(inView) {
+    if (this._isVisible !== inView) {
+      this._isVisible = inView;
+
+      this.__trigger(wcDocker.EVENT_VISIBILITY_CHANGED);
     }
   },
 

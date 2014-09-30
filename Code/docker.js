@@ -116,29 +116,30 @@ function wcDocker(container, options) {
   this.__init();
 };
 
-wcDocker.DOCK_FLOAT             = 'float';
-wcDocker.DOCK_TOP               = 'top';
-wcDocker.DOCK_LEFT              = 'left';
-wcDocker.DOCK_RIGHT             = 'right';
-wcDocker.DOCK_BOTTOM            = 'bottom';
+wcDocker.DOCK_FLOAT                 = 'float';
+wcDocker.DOCK_TOP                   = 'top';
+wcDocker.DOCK_LEFT                  = 'left';
+wcDocker.DOCK_RIGHT                 = 'right';
+wcDocker.DOCK_BOTTOM                = 'bottom';
 
-wcDocker.EVENT_UPDATED          = 'panelUpdated';
-wcDocker.EVENT_CLOSED           = 'panelClosed';
-wcDocker.EVENT_BUTTON           = 'panelButton';
-wcDocker.EVENT_ATTACHED         = 'panelAttached';
-wcDocker.EVENT_DETACHED         = 'panelDetached';
-wcDocker.EVENT_MOVE_STARTED     = 'panelMoveStarted';
-wcDocker.EVENT_MOVE_ENDED       = 'panelMoveEnded';
-wcDocker.EVENT_MOVED            = 'panelMoved';
-wcDocker.EVENT_RESIZE_STARTED   = 'panelResizeStarted';
-wcDocker.EVENT_RESIZE_ENDED     = 'panelResizeEnded';
-wcDocker.EVENT_RESIZED          = 'panelResized';
-wcDocker.EVENT_SCROLLED         = 'panelScrolled';
-wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
-wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
+wcDocker.EVENT_UPDATED              = 'panelUpdated';
+wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
+wcDocker.EVENT_CLOSED               = 'panelClosed';
+wcDocker.EVENT_BUTTON               = 'panelButton';
+wcDocker.EVENT_ATTACHED             = 'panelAttached';
+wcDocker.EVENT_DETACHED             = 'panelDetached';
+wcDocker.EVENT_MOVE_STARTED         = 'panelMoveStarted';
+wcDocker.EVENT_MOVE_ENDED           = 'panelMoveEnded';
+wcDocker.EVENT_MOVED                = 'panelMoved';
+wcDocker.EVENT_RESIZE_STARTED       = 'panelResizeStarted';
+wcDocker.EVENT_RESIZE_ENDED         = 'panelResizeEnded';
+wcDocker.EVENT_RESIZED              = 'panelResized';
+wcDocker.EVENT_SCROLLED             = 'panelScrolled';
+wcDocker.EVENT_SAVE_LAYOUT          = 'layoutSave';
+wcDocker.EVENT_RESTORE_LAYOUT       = 'layoutRestore';
 
-wcDocker.ORIENTATION_HORIZONTAL = false;
-wcDocker.ORIENTATION_VERTICAL   = true;
+wcDocker.ORIENTATION_HORIZONTAL     = false;
+wcDocker.ORIENTATION_VERTICAL       = true;
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,14 +336,13 @@ wcDocker.prototype = {
     var width  = $elem.width();
     var height = $elem.height();
 
+    var parentFrame = panel._parent;
     var floating = false;
-    if (panel._parent instanceof wcFrame) {
-      floating = panel._parent._isFloating;
+    if (parentFrame instanceof wcFrame) {
+      floating = parentFrame._isFloating;
     }
 
-    var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
-
       // Remove the panel from the frame.
       for (var i = 0; i < parentFrame._panelList.length; ++i) {
         if (parentFrame._panelList[i] === panel) {

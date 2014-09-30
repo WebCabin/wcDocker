@@ -116,29 +116,30 @@ function wcDocker(container, options) {
   this.__init();
 };
 
-wcDocker.DOCK_FLOAT             = 'float';
-wcDocker.DOCK_TOP               = 'top';
-wcDocker.DOCK_LEFT              = 'left';
-wcDocker.DOCK_RIGHT             = 'right';
-wcDocker.DOCK_BOTTOM            = 'bottom';
+wcDocker.DOCK_FLOAT                 = 'float';
+wcDocker.DOCK_TOP                   = 'top';
+wcDocker.DOCK_LEFT                  = 'left';
+wcDocker.DOCK_RIGHT                 = 'right';
+wcDocker.DOCK_BOTTOM                = 'bottom';
 
-wcDocker.EVENT_UPDATED          = 'panelUpdated';
-wcDocker.EVENT_CLOSED           = 'panelClosed';
-wcDocker.EVENT_BUTTON           = 'panelButton';
-wcDocker.EVENT_ATTACHED         = 'panelAttached';
-wcDocker.EVENT_DETACHED         = 'panelDetached';
-wcDocker.EVENT_MOVE_STARTED     = 'panelMoveStarted';
-wcDocker.EVENT_MOVE_ENDED       = 'panelMoveEnded';
-wcDocker.EVENT_MOVED            = 'panelMoved';
-wcDocker.EVENT_RESIZE_STARTED   = 'panelResizeStarted';
-wcDocker.EVENT_RESIZE_ENDED     = 'panelResizeEnded';
-wcDocker.EVENT_RESIZED          = 'panelResized';
-wcDocker.EVENT_SCROLLED         = 'panelScrolled';
-wcDocker.EVENT_SAVE_LAYOUT      = 'layoutSave';
-wcDocker.EVENT_RESTORE_LAYOUT   = 'layoutRestore';
+wcDocker.EVENT_UPDATED              = 'panelUpdated';
+wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
+wcDocker.EVENT_CLOSED               = 'panelClosed';
+wcDocker.EVENT_BUTTON               = 'panelButton';
+wcDocker.EVENT_ATTACHED             = 'panelAttached';
+wcDocker.EVENT_DETACHED             = 'panelDetached';
+wcDocker.EVENT_MOVE_STARTED         = 'panelMoveStarted';
+wcDocker.EVENT_MOVE_ENDED           = 'panelMoveEnded';
+wcDocker.EVENT_MOVED                = 'panelMoved';
+wcDocker.EVENT_RESIZE_STARTED       = 'panelResizeStarted';
+wcDocker.EVENT_RESIZE_ENDED         = 'panelResizeEnded';
+wcDocker.EVENT_RESIZED              = 'panelResized';
+wcDocker.EVENT_SCROLLED             = 'panelScrolled';
+wcDocker.EVENT_SAVE_LAYOUT          = 'layoutSave';
+wcDocker.EVENT_RESTORE_LAYOUT       = 'layoutRestore';
 
-wcDocker.ORIENTATION_HORIZONTAL = false;
-wcDocker.ORIENTATION_VERTICAL   = true;
+wcDocker.ORIENTATION_HORIZONTAL     = false;
+wcDocker.ORIENTATION_VERTICAL       = true;
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,14 +336,13 @@ wcDocker.prototype = {
     var width  = $elem.width();
     var height = $elem.height();
 
+    var parentFrame = panel._parent;
     var floating = false;
-    if (panel._parent instanceof wcFrame) {
-      floating = panel._parent._isFloating;
+    if (parentFrame instanceof wcFrame) {
+      floating = parentFrame._isFloating;
     }
 
-    var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
-
       // Remove the panel from the frame.
       for (var i = 0; i < parentFrame._panelList.length; ++i) {
         if (parentFrame._panelList[i] === panel) {
@@ -2310,6 +2310,7 @@ function wcPanel(type, options) {
   this._moveable = true;
   this._closeable = true;
   this._resizeVisible = true;
+  this._isVisible = false;
 
   this._events = {};
 
@@ -2357,6 +2358,11 @@ wcPanel.prototype = {
         }
       }
     }
+  },
+
+  // Retrieves whether this panel is within view.
+  isVisible: function() {
+    return this._isVisible;
   },
 
   // Creates a new custom button that will appear in the title bar of the panel.
@@ -2462,13 +2468,23 @@ wcPanel.prototype = {
   // Sets the icon for the panel, shown in the panels tab widget.
   // Must be a css class name that contains the image.
   icon: function(icon) {
-    this.$icon = $('<div class="wcTabIcon ' + icon + '">');
+    if (!this.$icon) {
+      this.$icon = $('<div>');
+    }
+
+    this.$icon.removeClass();
+    this.$icon.addClass('wcTabIcon ' + icon);
   },
 
   // Sets the icon for the panel, shown in the panels tab widget,
   // to an icon defined from the font-awesome library.
   faicon: function(icon) {
-    this.$icon = $('<div class="fa fa-fw fa-' + icon + '">');
+    if (!this.$icon) {
+      this.$icon = $('<div>');
+    }
+
+    this.$icon.removeClass();
+    this.$icon.addClass('fa fa-fw fa-' + icon);
   },
 
   // Gets, or Sets the scroll position of the window (if it is scrollable).
@@ -2699,6 +2715,14 @@ wcPanel.prototype = {
     } else {
       this._moveData.timeout = false;
       this.__trigger(wcDocker.EVENT_MOVE_ENDED);
+    }
+  },
+
+  __isVisible: function(inView) {
+    if (this._isVisible !== inView) {
+      this._isVisible = inView;
+
+      this.__trigger(wcDocker.EVENT_VISIBILITY_CHANGED);
     }
   },
 
@@ -3007,7 +3031,7 @@ wcFrame.prototype = {
   // Returns:
   //    wcPanel       The currently visible panel.
   panel: function(tabIndex, autoFocus) {
-    if (tabIndex !== 'undefined') {
+    if (typeof tabIndex !== 'undefined') {
       if (tabIndex > -1 && tabIndex < this._panelList.length) {
         this.$title.find('div[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
@@ -3016,10 +3040,8 @@ wcFrame.prototype = {
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
         if (autoFocus) {
           this._leftTab = this._curTab;
-          this.__updateTabs();
-        } else {
-          this.__onTabChange();
         }
+        this.__updateTabs();
       }
     }
 
@@ -3167,8 +3189,14 @@ wcFrame.prototype = {
       this._panelList[i]._parent = this;
 
       if (this._curTab !== i) {
+        if (this._panelList[i].isVisible()) {
+          this._panelList[i].__isVisible(false);
+        }
         $tabContent.addClass('wcPanelTabContentHidden');
       } else {
+        if (!this._panelList[i].isVisible()) {
+          this._panelList[i].__isVisible(true);
+        }
         $tab.addClass('wcPanelTabActive');
       }
 

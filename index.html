@@ -264,7 +264,7 @@
           // --------------------------------------------------------------------------------
           // Register the reaction panel, demonstrates the event handler system.
           myDocker.registerPanelType('Reaction Panel', {
-            faicon:'refresh fa-spin',
+            faicon:'refresh',
             onCreate: function(myPanel) {
               // Setup a number of different text alerts that can be displayed based on certain events.
               var $buttonInfo = $('<div style="text-align:center">I react to the custom buttons above</div>');
@@ -292,6 +292,7 @@
               myPanel.layout().addItem($detachInfo, 0, 1);
               myPanel.layout().addItem($moveInfo, 0, 2);
               myPanel.layout().addItem($resizeInfo, 0, 3);
+              myPanel.layout().addItem($('<div style="text-align:center">Lastly, if you can see my tab icon, it will only be spinning when my panel is visible</div>'), 0, 4);
 
               // Add some custom buttons that will appear in the upper right corner of the panel.
               myPanel.addButton('Thumbs Button', 'fa fa-thumbs-up', 'T', 'A toggle button', true, 'fa fa-thumbs-down');
@@ -394,6 +395,14 @@
                   self.layout().addItem($resizeInfo, 0, 3);
                   resizeTimer = 0;
                 }, 500);
+              });
+
+              myPanel.on(wcDocker.EVENT_VISIBILITY_CHANGED, function() {
+                if (this.isVisible()) {
+                  this.faicon('refresh fa-spin');
+                } else {
+                  this.faicon('refresh');
+                }
               });
             }
           });

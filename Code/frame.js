@@ -200,7 +200,7 @@ wcFrame.prototype = {
   // Returns:
   //    wcPanel       The currently visible panel.
   panel: function(tabIndex, autoFocus) {
-    if (tabIndex !== 'undefined') {
+    if (typeof tabIndex !== 'undefined') {
       if (tabIndex > -1 && tabIndex < this._panelList.length) {
         this.$title.find('div[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.find('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
@@ -209,10 +209,8 @@ wcFrame.prototype = {
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
         if (autoFocus) {
           this._leftTab = this._curTab;
-          this.__updateTabs();
-        } else {
-          this.__onTabChange();
         }
+        this.__updateTabs();
       }
     }
 
@@ -360,8 +358,14 @@ wcFrame.prototype = {
       this._panelList[i]._parent = this;
 
       if (this._curTab !== i) {
+        if (this._panelList[i].isVisible()) {
+          this._panelList[i].__isVisible(false);
+        }
         $tabContent.addClass('wcPanelTabContentHidden');
       } else {
+        if (!this._panelList[i].isVisible()) {
+          this._panelList[i].__isVisible(true);
+        }
         $tab.addClass('wcPanelTabActive');
       }
 
