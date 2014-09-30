@@ -83,6 +83,7 @@ function wcDocker(container, options) {
   this._root = null;
   this._frameList = [];
   this._floatingList = [];
+  this._focusFrame = null;
 
   this._splitterList = [];
 
@@ -126,6 +127,8 @@ wcDocker.EVENT_UPDATED              = 'panelUpdated';
 wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
 wcDocker.EVENT_BEGIN_DOCK           = 'panelBeginDock';
 wcDocker.EVENT_END_DOCK             = 'panelEndDock';
+wcDocker.EVENT_GAIN_FOCUS           = 'panelGainFocus';
+wcDocker.EVENT_LOST_FOCUS           = 'panelLostFocus';
 wcDocker.EVENT_CLOSED               = 'panelClosed';
 wcDocker.EVENT_BUTTON               = 'panelButton';
 wcDocker.EVENT_ATTACHED             = 'panelAttached';
@@ -432,19 +435,19 @@ wcDocker.prototype = {
     }
 
     var frame = panel._parent;
-    if (frame instanceof wcFrame && frame.panel() === panel) {
+    if (frame instanceof wcFrame) {
       frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
 
       if (floating !== frame._isFloating) {
         if (frame._isFloating) {
-          panel.trigger(wcDocker.EVENT_DETACHED);
+          panel.__trigger(wcDocker.EVENT_DETACHED);
         } else {
-          panel.trigger(wcDocker.EVENT_ATTACHED);
+          panel.__trigger(wcDocker.EVENT_ATTACHED);
         }
       }
     }
 
-    panel.trigger(wcDocker.EVENT_MOVED);
+    panel.__trigger(wcDocker.EVENT_MOVED);
 
     this.__update();
     return panel;
@@ -1366,28 +1369,50 @@ wcDocker.prototype = {
   //    frame     The frame to focus.
   //    flash     Whether to flash the frame.
   __focus: function(frame, flash) {
-    if (frame._isFloating) {
-      // frame.$frame.remove();
-      for (var i = 0; i < this._floatingList.length; ++i) {
-        if (this._floatingList[i].$frame.hasClass('wcFloatingFocus')) {
-          this._floatingList[i].$frame.removeClass('wcFloatingFocus');
-          if (this._floatingList[i] !== frame) {
-            $('body').append(this._floatingList[i].$frame);
-          }
-          break;
+    // if (frame._isFloating) {
+    //   // frame.$frame.remove();
+    //   for (var i = 0; i < this._floatingList.length; ++i) {
+    //     if (this._floatingList[i].$frame.hasClass('wcFloatingFocus')) {
+    //       this._floatingList[i].panel().__trigger(wcDocker.EVENT_LOST_FOCUS);
+    //       this._floatingList[i].$frame.removeClass('wcFloatingFocus');
+    //       if (this._floatingList[i] !== frame) {
+    //         $('body').append(this._floatingList[i].$frame);
+    //       }
+    //       break;
+    //     }
+    //   }
+
+    //   frame.$frame.addClass('wcFloatingFocus');
+    //   frame.panel().__trigger(wcDocker.EVENT_GAIN_FOCUS);
+
+    //   // var posList = [];
+    //   // for (var i = 0; i < frame._panelList.length; ++i) {
+    //   //   posList.push(frame._panelList[i].scroll());
+    //   // }
+    //   // $('body').append(frame.$frame);
+    //   // for (var i = 0; i < posList.length; ++i) {
+    //   //   frame._panelList[i].scroll(posList[i].x, posList[i].y);
+    //   // }
+    // }
+
+    if (this._focusFrame) {
+      if (this._focusFrame._isFloating) {
+        this._focusFrame.$frame.removeClass('wcFloatingFocus');
+        if (this._focusFrame !== frame) {
+          $('body').append(this._focusFrame.$frame);
         }
       }
 
-      frame.$frame.addClass('wcFloatingFocus');
+      this._focusFrame.__trigger(wcDocker.EVENT_LOST_FOCUS);
+      this._focusFrame = null;
+    }
 
-      // var posList = [];
-      // for (var i = 0; i < frame._panelList.length; ++i) {
-      //   posList.push(frame._panelList[i].scroll());
-      // }
-      // $('body').append(frame.$frame);
-      // for (var i = 0; i < posList.length; ++i) {
-      //   frame._panelList[i].scroll(posList[i].x, posList[i].y);
-      // }
+    this._focusFrame = frame;
+    if (this._focusFrame) {
+      if (this._focusFrame._isFloating) {
+        this._focusFrame.$frame.addClass('wcFloatingFocus');
+      }
+      this._focusFrame.__trigger(wcDocker.EVENT_GAIN_FOCUS);
     }
 
     frame.__focus(flash)
