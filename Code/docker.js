@@ -1002,7 +1002,7 @@ wcDocker.prototype = {
 
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
-        if (frame.$title[0] === $(this).parent()[0]) {
+        if (frame.$title[0] === $(this).parents('.wcFrameTitle')[0]) {
           var panel = frame._panelList[index];
           if (self._removingPanel === panel) {
             self.removePanel(panel);
@@ -1056,11 +1056,11 @@ wcDocker.prototype = {
             var index = parseInt($panelTab.attr('id'));
             self._draggingFrame.panel(index);
             
-            if (event.which === 2) {
-              self._draggingFrame = null;
-              return;
-            }
-            self._draggingFrameTab = event.target;
+            // if (event.which === 2) {
+            //   self._draggingFrame = null;
+            //   return;
+            // }
+            self._draggingFrameTab = $panelTab[0];
           }
 
           // If the window is able to be docked, give it a dark shadow tint and
@@ -1319,7 +1319,7 @@ wcDocker.prototype = {
 
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
-        if (frame.$title[0] === $(this).parent()[0]) {
+        if (frame.$title[0] === $(this).parents('.wcFrameTitle')[0]) {
           var panel = frame._panelList[index];
           self._removingPanel = panel;
           return;
