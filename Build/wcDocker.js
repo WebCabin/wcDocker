@@ -3040,8 +3040,8 @@ wcFrame.prototype = {
         this.$center.find('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
         if (autoFocus) {
           this._leftTab = this._curTab;
-          this.__updateTabs();
         }
+        this.__updateTabs();
       }
     }
 
