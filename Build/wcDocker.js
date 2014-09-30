@@ -2828,12 +2828,23 @@ function wcFrame(container, parent, isFloating) {
   this._panelList = [];
   this._buttonList = [];
 
+  this._resizeData = {
+    time: -1,
+    timeout: false,
+    delta: 150,
+  };
+
   this._pos = {
     x: 0.5,
     y: 0.5,
   };
 
   this._size = {
+    x: 400,
+    y: 400,
+  };
+
+  this._lastSize = {
     x: 400,
     y: 400,
   };
@@ -3089,7 +3100,27 @@ wcFrame.prototype = {
       this.$frame.css('height', this._size.y + 'px');
     }
 
+    if (width !== this._lastSize.x || height !== this._lastSize.y) {
+      this._lastSize.x = width;
+      this._lastSize.y = height;
+
+      this._resizeData.time = new Date();
+      if (!this._resizeData.timeout) {
+        this._resizeData.timeout = true;
+        setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+      }
+    }
+    // this.__updateTabs();
+    this.__onTabChange();
+  },
+
+  __resizeEnd: function() {
     this.__updateTabs();
+    if (new Date() - this._resizeData.time < this._resizeData.delta) {
+      setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
+    } else {
+      this._resizeData.timeout = false;
+    }
   },
 
   __updateTabs: function() {
