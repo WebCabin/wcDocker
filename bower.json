@@ -11,8 +11,7 @@
   ],
   "homepage": "http://docker.webcabin.org/",
   "main": [
-    "Build/wcDocker.min.css",
-    "Build/wcDocker.min.js"
+    "Build"
   ],
   "ignore": [
     "/.*",
