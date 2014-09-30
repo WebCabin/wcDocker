@@ -277,7 +277,7 @@ wcDocker.prototype = {
           }
 
           // Keep the panel in a hidden transition container so as to not
-          // __destroy any event handlers that may be on it.
+          // destroy any event handlers that may be on it.
           other.__container(this.$transition);
           other._parent = null;
 
@@ -305,6 +305,10 @@ wcDocker.prototype = {
           this.__update();
         } else if (parentFrame === this._root) {
           this._root = null;
+        }
+
+        if (this._focusFrame === parentFrame) {
+          this._focusFrame = null;
         }
         parentFrame.__destroy();
       }
@@ -356,7 +360,7 @@ wcDocker.prototype = {
           }
 
           // Keep the panel in a hidden transition container so as to not
-          // __destroy any event handlers that may be on it.
+          // destroy any event handlers that may be on it.
           panel.__container(this.$transition);
           panel._parent = null;
 
@@ -396,7 +400,7 @@ wcDocker.prototype = {
           }
 
           // Keep the item in a hidden transition container so as to not
-          // __destroy any event handlers that may be on it.
+          // destroy any event handlers that may be on it.
           other.__container(this.$transition);
           other._parent = null;
 
@@ -423,6 +427,11 @@ wcDocker.prototype = {
           }
           this.__update();
         }
+
+        if (this._focusFrame === parentFrame) {
+          this._focusFrame = null;
+        }
+
         parentFrame.__destroy();
       }
     }
@@ -1060,6 +1069,12 @@ wcDocker.prototype = {
           if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
             self._draggingFrame.panel(index);
+
+            // if (event.which === 2) {
+            //   self._draggingFrame = null;
+            //   return;
+            // }
+
             self._draggingFrameTab = $panelTab[0];
           }
 
