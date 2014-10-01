@@ -445,7 +445,9 @@ wcDocker.prototype = {
 
     var frame = panel._parent;
     if (frame instanceof wcFrame) {
-      frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
+      if (frame._panelList.length === 1) {
+        frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
+      }
 
       if (floating !== frame._isFloating) {
         if (frame._isFloating) {
@@ -3031,9 +3033,9 @@ wcFrame.prototype = {
 
     if (this._curTab === -1 && this._panelList.length) {
       this._curTab = 0;
+      this._size = this.initSize();
     }
 
-    this._size = this.initSize();
     this.__updateTabs();
   },
 
