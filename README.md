@@ -19,6 +19,17 @@ Please share your project with us that uses wcDocker!
 
 ****
 ### Change Log ###
+#### Version: Trunk ####
+- wcSplitter is now usable inside a panel.
+- Improved performance of panel resizing.
+- wcPanel.focus() now actually sets itself as the current active tab.
+- wcDocker.registerPanelType() has a new option {limit: Number} that limits the total number of copies for this panel.
+- New event type wcDocker.EVENT_VISIBILITY_CHANGED, triggered whenever the panel gains or loses visibility.  Use wcPanel.isVisible() to retrieve the current state.
+- Reduced DOM changes during tab change and resize.
+- New event types wcDocker.EVENT_BEGIN_DOCK and wcDocker.EVENT_END_DOCK that trigger whenever the user is dragging a panel to a new location.
+- New event types wcDocker.EVENT_GAIN_FOCUS and wcDocker.EVENT_LOST_FOCUS that trigger whenever a panel is brought it and out of focus.
+- Floating panels no longer change size whenever a new panel is added to it as a tab.
+
 #### Version: 2.0.0 ####
 - Layout grid can now have a spacing size.
 - Layout grid can now be set to alternating row color.
