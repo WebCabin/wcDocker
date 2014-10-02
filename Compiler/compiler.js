@@ -26,7 +26,7 @@ var header = '\
  * Web Cabin Docker - Docking Layout Interface.\n\
  *\n\
  * Dependancies:\n\
- *  JQuery 2.1.1\n\
+ *  JQuery 1.11.1\n\
  *\n\
  * Version: git-master\n\
  *\n\
@@ -63,8 +63,8 @@ concat({
     '../Code/panel.js',
     '../Code/frame.js',
     '../Code/splitter.js',
-    '../Code/ext/jquery.contextMenu.js',
-    '../Code/ext/jquery.ui.position.js',
+    '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.js',
+    '../bower_components/jQuery-contextMenu/src/jquery.ui.position.js',
   ],
   dest: '../Build/wcDocker.js',
 });
@@ -72,7 +72,7 @@ concat({
 concat({
   src: [
     '../Code/style.css',
-    '../Code/ext/jquery.contextMenu.css',
+    '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.css',
   ],
   dest: '../Build/wcDocker.css',
 });
