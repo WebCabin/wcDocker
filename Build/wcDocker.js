@@ -795,6 +795,41 @@ wcDocker.prototype = {
             },
             events: {
               show: function(opt) {
+                (function(items){
+
+                  //Whenever them menu is shown, we update and add the faicons.
+                  //Grab all those menu items, and propogate a list with them.
+                  var l = document.getElementsByClassName('context-menu-item');
+                  var menuItems = {};
+                  for(var m in l) {
+                    if(l[m].textContent) {
+                      //We use span, instead of .textContent so that submenus don't break.
+                      menuItems[l[m].getElementsByTagName('span')[0].innerHTML] = $(l[m]);
+                    }
+                  }
+
+                  //function calls itself so that we get nice icons inside of menus as well.
+                  (function recursiveIconAdd(items) {
+                    console.log(items);
+                    for(var it in items) {
+                      var item = items[it];
+                      //ToDo: make this also work with item.icon
+                                  //ToDo: when working with icon, we also need to remove whatever div was added.
+                      //It doesn't look like you're using icon anywhere though.
+                      if(item.faicon) {
+                        //If there's a list item that matches it that could use a favicon.
+                        if(menuItems[item.name]){
+                          //Add it here.
+                          menuItems[item.name].prepend($('<div class="fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw wcMenuIcon">'));
+                          if(item.items) {
+                            recursiveIconAdd(item.items);
+                          }
+                        }
+                      }
+                    }
+                  })(items);
+
+                })(items);
               },
               hide: function(opt) {
                 if (self._ghost) {
@@ -4175,10 +4210,10 @@ wcSplitter.prototype = {
     this._parent = false;
   },
 };
-/*
+/*!
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *
- * Version: git-master
+ * Version: 1.6.6
  *
  * Authors: Rodney Rehm, Addy Osmani (patches for FF)
  * Web: http://medialize.github.com/jQuery-contextMenu/
@@ -4389,6 +4424,10 @@ var // currently active contextMenu trigger
         contextmenu: function(e) {
             var $this = $(this);
             
+            // disable actual context-menu
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
             // abort native-triggered events unless we're triggering on right click
             if (e.data.trigger != 'right' && e.originalEvent) {
                 return;
@@ -4400,10 +4439,6 @@ var // currently active contextMenu trigger
             }
             
             if (!$this.hasClass('context-menu-disabled')) {
-                // disable actual context-menu
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                
                 // theoretically need to fire a show event at <menu>
                 // http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#context-menus
                 // var evt = jQuery.Event("show", { data: data, pageX: e.pageX, pageY: e.pageY, relatedTarget: this });
@@ -5250,16 +5285,10 @@ var // currently active contextMenu trigger
                             $input.on(item.events, opt);
                         }
                     }
-
+                
                     // add icons
                     if (item.icon) {
-                        // $t.addClass("icon icon-" + item.icon);
-                        $t.prepend($('<div class="wcMenuIcon ' + item.icon + '">'));
-                    }
-
-                    // add font-awesome icon.
-                    if (item.faicon) {
-                        $t.prepend($('<div class="fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw wcMenuIcon">'));
+                        $t.addClass("icon icon-" + item.icon);
                     }
                 }
                 

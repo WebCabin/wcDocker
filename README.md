@@ -52,7 +52,7 @@ Please share your project with us that uses wcDocker!
 - Fixed tabs disappearing when the panel is too small to fit them.
 
 ****
-# Dependancies #
+# Dependencies #
 
 * JQuery Library version 1.11.1 [http://jquery.com/](http://jquery.com/)
 * Custom version of JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)

@@ -397,10 +397,10 @@ html, body {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
 }
 
-/*
+/*!
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *
- * Version: git-master
+ * Version: 1.6.6
  *
  * Authors: Rodney Rehm, Addy Osmani (patches for FF)
  * Web: http://medialize.github.com/jQuery-contextMenu/
@@ -421,9 +421,9 @@ html, body {
     position: absolute;
     list-style-type: none;
     
-    border: 1px solid #000;
-    background-color: #666;
-
+    border: 1px solid #DDD;
+    background: #EEE;
+    
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
        -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         -ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -432,12 +432,11 @@ html, body {
     
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 11px;
-    font-weight: bold;
 }
 
 .context-menu-item {
-    padding: 2px 15px 2px 24px;
-    background-color: #666;
+    padding: 2px 2px 2px 24px;
+    background-color: #EEE;
     position: relative;
     -webkit-user-select: none;
        -moz-user-select: -moz-none;
@@ -447,7 +446,7 @@ html, body {
 
 .context-menu-separator {
     padding-bottom:0;
-    border-bottom: 2px solid #888;
+    border-bottom: 1px solid #DDD;
 }
 
 .context-menu-item > label > input,
@@ -460,11 +459,11 @@ html, body {
 
 .context-menu-item.hover {
     cursor: pointer;
-    background-color: #333;
+    background-color: #39F;
 }
 
 .context-menu-item.disabled {
-    color: #444;
+    color: #666;
 }
 
 .context-menu-input.hover,
@@ -474,15 +473,12 @@ html, body {
 }
 
 .context-menu-submenu:after {
-    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAN1gAADdYBkG95nAAAAAd0SU1FB9gEGw0eCwtqN7gAAAAWdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjA76PVpAAAAJ0lEQVQ4T2MYBdQF/5EwWWBgDUDWTLIB6JpJMoBsjSAwhDQSAAwMAAC6HuLAItWPAAAAAElFTkSuQmCC);
+    content: ">";
+    color: #666;
     position: absolute;
     top: 0;
-    right: 0px;
+    right: 3px;
     z-index: 1;
-}
-
-.context-menu-submenu.disabled:after {
-    opacity: 0.25;
 }
 
 /* icons
