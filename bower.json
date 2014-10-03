@@ -11,7 +11,8 @@
   ],
   "homepage": "http://docker.webcabin.org/",
   "main": [
-    "Build"
+    "Build",
+    "Build/Themes"
   ],
   "ignore": [
     "/.*",
