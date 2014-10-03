@@ -160,9 +160,9 @@ wcFrame.prototype = {
 
     if (this._curTab === -1 && this._panelList.length) {
       this._curTab = 0;
+      this._size = this.initSize();
     }
 
-    this._size = this.initSize();
     this.__updateTabs();
   },
 
@@ -434,6 +434,16 @@ wcFrame.prototype = {
     }
 
     this.$tabScroll.stop().animate({left: -scrollPos + 'px'}, 'fast');
+  },
+
+  // Triggers an event exclusively on the docker and none of its panels.
+  // Params:
+  //    eventName   The name of the event.
+  //    data        A custom data parameter to pass to all handlers.
+  __trigger: function(eventName, data) {
+    for (var i = 0; i < this._panelList.length; ++i) {
+      this._panelList[i].__trigger(eventName, data);
+    }
   },
 
   // Saves the current panel configuration into a meta

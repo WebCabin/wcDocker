@@ -135,11 +135,11 @@ html, body {
 
 .wcFloating {
   position: fixed;
-  z-index: 2;
+  z-index: 10;
 }
 
 .wcFloatingFocus {
-  z-index: 3;
+  z-index: 20;
 }
 
 .wcLayout, .wcLayout tr, .wcLayout td {
