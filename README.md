@@ -83,7 +83,7 @@ Once installed, all of the source files will now be located in the `bower_compon
 <script src="bower_components/wcdocker/Build/wcDocker.min.js"></script>
 ```
 
-You may also include any of the optional css themes found in the folder `bower_components/wcdocker/Build/Themes/` folder.    
+You may also include any of the optional css themes found in the `bower_components/wcdocker/Build/Themes/` folder.    
 
 ****
 # Basic Implementation #
