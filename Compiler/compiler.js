@@ -63,8 +63,8 @@ concat({
     '../Code/panel.js',
     '../Code/frame.js',
     '../Code/splitter.js',
-    '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.js',
-    '../bower_components/jQuery-contextMenu/src/jquery.ui.position.js',
+    // '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.js',
+    // '../bower_components/jQuery-contextMenu/src/jquery.ui.position.js',
   ],
   dest: '../Build/wcDocker.js',
 });
@@ -72,9 +72,23 @@ concat({
 concat({
   src: [
     '../Code/style.css',
-    '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.css',
+    // '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.css',
   ],
   dest: '../Build/wcDocker.css',
+});
+
+// Move the un-minified version to the build folder.
+concat({
+  src: [
+    '../Themes/bigRed.css',
+  ],
+  dest: '../Build/Themes/bigRed.css',
+});
+concat({
+  src: [
+    '../Themes/shadow.css',
+  ],
+  dest: '../Build/Themes/shadow.css',
 });
 
 

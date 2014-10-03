@@ -17,8 +17,10 @@
     "/.*",
     "favicon.ico",
     "index.html",
+    "Code",
     "Compiler",
-    "Extra"
+    "Extra",
+    "Themes"
   ],
   "dependencies": {
     "jquery": "1.11.1",
