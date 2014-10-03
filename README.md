@@ -55,10 +55,35 @@ Please share your project with us that uses wcDocker!
 # Dependencies #
 
 * JQuery Library version 1.11.1 [http://jquery.com/](http://jquery.com/)
-* Custom version of JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
+* JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
 * (Optional) Font-Awesome [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/)
 
-If you use the pre-built packages wcDocker.js or wcDocker.min.js then the contextMenu library is embedded into it already.
+****
+# Installation #
+
+wcDocker now uses [bower](http://bower.io/) for easy installation.  You can install bower using `npm`:
+```
+npm install -g bower
+```
+
+This command will install bower *globally*, from there you can install wcDocker with the following command:  
+```
+bower install wcdocker
+```
+
+Once installed, all of the source files will now be located in the `bower_components` folder and ready to link into your project:
+```
+<link rel="stylesheet" type="text/css" href="bower_components/jQuery-contextMenu/src/jquery.contextMenu.css"/>
+<link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.css"/>
+<link rel="stylesheet" type="text/css" href="bower_components/wcdocker/Build/wcDocker.min.css"/>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/jQuery-contextMenu/src/jquery.contextMenu.js"></script>
+<script src="bower_components/jQuery-contextMenu/src/jquery.ui.position.js"></script>
+<script src="bower_components/wcdocker/Build/wcDocker.min.js"></script>
+```
+
+You may also include any of the optional css themes found in the folder `bower_components/wcdocker/Build/Themes/` folder.    
 
 ****
 # Basic Implementation #
