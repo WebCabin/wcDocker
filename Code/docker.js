@@ -573,138 +573,92 @@ wcDocker.prototype = {
   //    includeDefault        If true, all default panel menu options will also be shown.
   basicMenu: function(selector, itemListOrBuildFunc, includeDefault) {
     var self = this;
-    if (!includeDefault) {
-      $.contextMenu({
-        selector: selector,
-        build: function($trigger, event) {
-          var separatorIndex = 0;
-          var finalItems = {};
-          var itemList = itemListOrBuildFunc;
-          if (typeof itemListOrBuildFunc === 'function') {
-            itemList = itemListOrBuildFunc($trigger, event);
+    $.contextMenu({
+      selector: selector,
+      build: function($trigger, event) {
+        var myFrame;
+        for (var i = 0; i < self._frameList.length; ++i) {
+          var $frame = $trigger.hasClass('wcFrame') && $trigger || $trigger.parents('.wcFrame');
+          if (self._frameList[i].$frame[0] === $frame[0]) {
+            myFrame = self._frameList[i];
+            break;
           }
-
-          for (var i = 0; i < itemList.length; ++i) {
-            if ($.isEmptyObject(itemList[i])) {
-              finalItems['sep' + separatorIndex++] = "---------";
-              continue;
-            }
-
-            var callback = itemList[i].callback;
-            if (callback) {
-              (function(listItem, callback) {
-                listItem.callback = function(key, opts) {
-                  var panel = null;
-                  var $frame = opts.$trigger.parents('.wcFrame').first();
-                  if ($frame.length) {
-                    for (var a = 0; a < self._frameList.length; ++a) {
-                      if ($frame[0] === self._frameList[a].$frame[0]) {
-                        panel = self._frameList[a].panel();
-                      }
-                    }
-                  }
-
-                  callback(key, opts, panel);
-                };
-              })(itemList[i], callback);
-            }
-            finalItems[itemList[i].name] = itemList[i];
-          }
-
-          return {
-            animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
-            reposition: false,
-            autoHide: true,
-            zIndex: 200,
-            items: finalItems,
-          };
         }
-      });
-    } else {
-      $.contextMenu({
-        selector: selector,
-        build: function($trigger, event) {
-          var myFrame;
-          for (var i = 0; i < self._frameList.length; ++i) {
-            var $frame = $trigger.hasClass('wcFrame') && $trigger || $trigger.parents('.wcFrame');
-            if (self._frameList[i].$frame[0] === $frame[0]) {
-              myFrame = self._frameList[i];
-              break;
-            }
-          }
 
-          var mouse = {
-            x: event.clientX,
-            y: event.clientY,
-          };
-          var isTitle = false;
-          if (mouse.y - myFrame.$frame.offset().top <= 20) {
-            isTitle = true;
-          }
+        var mouse = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+        var isTitle = false;
+        if (mouse.y - myFrame.$frame.offset().top <= 20) {
+          isTitle = true;
+        }
 
-          var windowTypes = {};
-          for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
-            var type = self._dockPanelTypeList[i];
-            if (!type.options.isPrivate) {
-              if (type.options.limit > 0) {
-                if (self.findPanels(type.name).length >= type.options.limit) {
-                  continue;
-                }
+        var windowTypes = {};
+        for (var i = 0; i < self._dockPanelTypeList.length; ++i) {
+          var type = self._dockPanelTypeList[i];
+          if (!type.options.isPrivate) {
+            if (type.options.limit > 0) {
+              if (self.findPanels(type.name).length >= type.options.limit) {
+                continue;
               }
-              var icon = null;
-              var faicon = null;
-              if (type.options) {
-                if (type.options.faicon) {
-                  faicon = type.options.faicon;
-                }
-                if (type.options.icon) {
-                  icon = type.options.icon;
-                }
+            }
+            var icon = null;
+            var faicon = null;
+            if (type.options) {
+              if (type.options.faicon) {
+                faicon = type.options.faicon;
               }
-              windowTypes[type.name] = {
-                name: type.name,
-                icon: icon,
-                faicon: faicon,
-                className: 'wcMenuCreatePanel',
-              };
+              if (type.options.icon) {
+                icon = type.options.icon;
+              }
             }
+            windowTypes[type.name] = {
+              name: type.name,
+              icon: icon,
+              faicon: faicon,
+              className: 'wcMenuCreatePanel',
+            };
+          }
+        }
+
+        var separatorIndex = 0;
+        var finalItems = {};
+        var itemList = itemListOrBuildFunc;
+        if (typeof itemListOrBuildFunc === 'function') {
+          itemList = itemListOrBuildFunc($trigger, event);
+        }
+
+        for (var i = 0; i < itemList.length; ++i) {
+          if ($.isEmptyObject(itemList[i])) {
+            finalItems['sep' + separatorIndex++] = "---------";
+            continue;
           }
 
-          var separatorIndex = 0;
-          var finalItems = {};
-          var itemList = itemListOrBuildFunc;
-          if (typeof itemListOrBuildFunc === 'function') {
-            itemList = itemListOrBuildFunc($trigger, event);
-          }
-
-          for (var i = 0; i < itemList.length; ++i) {
-            if ($.isEmptyObject(itemList[i])) {
-              finalItems['sep' + separatorIndex++] = "---------";
-              continue;
-            }
-
-            var callback = itemList[i].callback;
-            if (callback) {
-              (function(listItem, callback) {
-                listItem.callback = function(key, opts) {
-                  var panel = null;
-                  var $frame = opts.$trigger.parents('.wcFrame').first();
-                  if ($frame.length) {
-                    for (var a = 0; a < self._frameList.length; ++a) {
-                      if ($frame[0] === self._frameList[a].$frame[0]) {
-                        panel = self._frameList[a].panel();
-                      }
+          var callback = itemList[i].callback;
+          if (callback) {
+            (function(listItem, callback) {
+              listItem.callback = function(key, opts) {
+                var panel = null;
+                var $frame = opts.$trigger.parents('.wcFrame').first();
+                if ($frame.length) {
+                  for (var a = 0; a < self._frameList.length; ++a) {
+                    if ($frame[0] === self._frameList[a].$frame[0]) {
+                      panel = self._frameList[a].panel();
                     }
                   }
+                }
 
-                  callback(key, opts, panel);
-                };
-              })(itemList[i], callback);
-            }
-            finalItems[itemList[i].name] = itemList[i];
+                callback(key, opts, panel);
+              };
+            })(itemList[i], callback);
           }
+          finalItems[itemList[i].name] = itemList[i];
+        }
 
-          var items = finalItems;
+        var items = finalItems;
+
+        if (includeDefault) {
           if (!$.isEmptyObject(finalItems)) {
             items['sep' + separatorIndex++] = "---------";
           }
@@ -775,78 +729,78 @@ wcDocker.prototype = {
             myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
             self._ghost.$ghost.hide();
           }
+        }
 
-          return {
-            callback: function(key, options) {
-              if (key === 'Close Panel') {
-                setTimeout(function() {
-                  myFrame.panel().close();
-                }, 10);
-              } else if (key === 'Detach Panel') {
-                self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
-              } else if (key === 'Flash Panel') {
-                self.__focus(myFrame, true);
-              } else {
-                if (myFrame && self._ghost) {
-                  var anchor = self._ghost.anchor();
-                  self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
-                }
+        return {
+          callback: function(key, options) {
+            if (key === 'Close Panel') {
+              setTimeout(function() {
+                myFrame.panel().close();
+              }, 10);
+            } else if (key === 'Detach Panel') {
+              self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
+            } else if (key === 'Flash Panel') {
+              self.__focus(myFrame, true);
+            } else {
+              if (myFrame && self._ghost) {
+                var anchor = self._ghost.anchor();
+                self.addPanel(key, anchor.loc, anchor.merge, myFrame.panel());
               }
-            },
-            events: {
-              show: function(opt) {
-                (function(items){
+            }
+          },
+          events: {
+            show: function(opt) {
+              (function(items){
 
-                  //Whenever them menu is shown, we update and add the faicons.
-                  //Grab all those menu items, and propogate a list with them.
-                  var l = document.getElementsByClassName('context-menu-item');
-                  var menuItems = {};
-                  for(var m in l) {
-                    if(l[m].textContent) {
-                      //We use span, instead of .textContent so that submenus don't break.
-                      menuItems[l[m].getElementsByTagName('span')[0].innerHTML] = $(l[m]);
-                    }
+                //Whenever them menu is shown, we update and add the faicons.
+                //Grab all those menu items, and propogate a list with them.
+                var l = document.getElementsByClassName('context-menu-item');
+                var menuItems = {};
+                for(var m in l) {
+                  if(l[m].textContent) {
+                    //We use span, instead of .textContent so that submenus don't break.
+                    menuItems[l[m].getElementsByTagName('span')[0].innerHTML] = $(l[m]);
                   }
+                }
 
-                  //function calls itself so that we get nice icons inside of menus as well.
-                  (function recursiveIconAdd(items) {
-                    console.log(items);
-                    for(var it in items) {
-                      var item = items[it];
-                      //ToDo: make this also work with item.icon
-                                  //ToDo: when working with icon, we also need to remove whatever div was added.
-                      //It doesn't look like you're using icon anywhere though.
-                      if(item.faicon) {
-                        //If there's a list item that matches it that could use a favicon.
-                        if(menuItems[item.name]){
-                          //Add it here.
-                          menuItems[item.name].prepend($('<div class="fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw wcMenuIcon">'));
-                          if(item.items) {
-                            recursiveIconAdd(item.items);
-                          }
+                //function calls itself so that we get nice icons inside of menus as well.
+                (function recursiveIconAdd(items) {
+                  console.log(items);
+                  for(var it in items) {
+                    var item = items[it];
+                    //ToDo: make this also work with item.icon
+                                //ToDo: when working with icon, we also need to remove whatever div was added.
+                    //It doesn't look like you're using icon anywhere though.
+                    if(item.faicon) {
+                      //If there's a list item that matches it that could use a favicon.
+                      if(menuItems[item.name]){
+                        //Add it here.
+                        menuItems[item.name].prepend($('<div class="fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw wcMenuIcon">'));
+                        if(item.items) {
+                          recursiveIconAdd(item.items);
                         }
                       }
                     }
-                  })(items);
-
+                  }
                 })(items);
-              },
-              hide: function(opt) {
-                if (self._ghost) {
-                  self._ghost.__destroy();
-                  self._ghost = false;
-                }
-              },
+
+              })(items);
             },
-            animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
-            reposition: false,
-            autoHide: true,
-            zIndex: 200,
-            items: items,
-          };
-        },
-      });
-    }
+            hide: function(opt) {
+              if (self._ghost) {
+                self._ghost.__destroy();
+                self._ghost = false;
+              }
+            },
+          },
+          animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
+          reposition: false,
+          autoHide: true,
+          zIndex: 200,
+          items: items,
+        };
+      },
+    });
   },
 
   // Bypasses the next context menu event.
