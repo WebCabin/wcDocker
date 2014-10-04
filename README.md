@@ -19,6 +19,9 @@ Please share your project with us that uses wcDocker!
 
 ****
 ### Change Log ###
+#### Version: Trunk ####
+- Fixed issue with using normal CSS icons in the context menu.
+- 
 #### Version: 2.1.0 ####
 - wcDocker now has Bower support for easy package management.
 - wcSplitter is now usable inside a panel.
@@ -57,7 +60,7 @@ Please share your project with us that uses wcDocker!
 
 * JQuery Library version 1.11.1 [http://jquery.com/](http://jquery.com/)
 * JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
-* (Optional) Font-Awesome [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/)
+* Font-Awesome [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/)
 
 ****
 # Installation #
