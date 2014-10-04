@@ -284,12 +284,13 @@ html, body {
   width: 24px;
 }
 
+.context-menu-submenu:after {
+  content: '' !important;
+}
 
-
-
-
-
-
+.wcMenuSubMenu {
+  float: right;
+}
 
 
 

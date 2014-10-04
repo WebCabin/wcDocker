@@ -752,34 +752,46 @@ wcDocker.prototype = {
             show: function(opt) {
               (function(items){
 
-                //Whenever them menu is shown, we update and add the faicons.
-                //Grab all those menu items, and propogate a list with them.
-                var l = document.getElementsByClassName('context-menu-item');
+                // Whenever them menu is shown, we update and add the faicons.
+                // Grab all those menu items, and propogate a list with them.
                 var menuItems = {};
-                for(var m in l) {
-                  if(l[m].textContent) {
-                    //We use span, instead of .textContent so that submenus don't break.
-                    menuItems[l[m].getElementsByTagName('span')[0].innerHTML] = $(l[m]);
+                var options = opt.$menu.find('.context-menu-item');
+                for (var i = 0; i < options.length; ++i) {
+                  var $option = $(options[i]);
+                  var $span = $option.find('span');
+                  if ($span.length) {
+                    menuItems[$span[0].innerHTML] = $option;
                   }
                 }
 
-                //function calls itself so that we get nice icons inside of menus as well.
+                // function calls itself so that we get nice icons inside of menus as well.
                 (function recursiveIconAdd(items) {
-                  console.log(items);
                   for(var it in items) {
                     var item = items[it];
-                    //ToDo: make this also work with item.icon
-                                //ToDo: when working with icon, we also need to remove whatever div was added.
-                    //It doesn't look like you're using icon anywhere though.
-                    if(item.faicon) {
-                      //If there's a list item that matches it that could use a favicon.
-                      if(menuItems[item.name]){
-                        //Add it here.
-                        menuItems[item.name].prepend($('<div class="fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw wcMenuIcon">'));
-                        if(item.items) {
-                          recursiveIconAdd(item.items);
-                        }
+                    var $menu = menuItems[item.name];
+
+                    if ($menu) {
+                      var $icon = $('<div class="wcMenuIcon">');
+                      $menu.prepend($icon);
+
+                      if (item.icon) {
+                        $icon.addClass(item.icon);
                       }
+
+                      if (item.faicon) {
+                        $icon.addClass('fa fa-menu fa-' + item.faicon + ' fa-lg fa-fw');
+                      }
+
+                      // Custom submenu arrow.
+                      if ($menu.hasClass('context-menu-submenu')) {
+                        var $expander = $('<div class="wcMenuSubMenu fa fa-caret-right fa-lg">');
+                        $menu.append($expander);
+                      }
+                    }
+
+                    // Iterate through sub-menus.
+                    if (item.items) {
+                      recursiveIconAdd(item.items);
                     }
                   }
                 })(items);

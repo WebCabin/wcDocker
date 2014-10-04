@@ -70,7 +70,7 @@ body {
 }
 
 .wcSplitterBar {
-  border: 1px solid #222;
+  outline: 1px solid #222;
   background-color: #111;
 }
 

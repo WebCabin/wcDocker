@@ -66,7 +66,7 @@
 }
 
 .wcSplitterBar {
-  border: 1px outset #833;
+  outline: 1px outset #833;
   background-color: #411;
 }
 

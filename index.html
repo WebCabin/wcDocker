@@ -170,10 +170,10 @@
           // panels.  Here we add three custom menu options that appear on top of the normal context
           // options.  Use an empty object as a menu option to create a separator.
           myDocker.basicMenu('.testMenu', [
-            {name: 'Custom Menu 1', callback: function(key, opts, panel){alert(key);}},
-            {name: 'Custom Menu 2', callback: function(key, opts, panel){alert(key);}},
+            {name: 'Custom Menu 1',                    callback: function(key, opts, panel){alert(key);}},
+            {name: 'Custom Menu 2',                    callback: function(key, opts, panel){alert(key);}},
             {},
-            {name: 'Custom Menu 3', callback: function(key, opts, panel){alert(key);}}
+            {name: 'Custom Menu 3', faicon: 'refresh', callback: function(key, opts, panel){alert(key);}}
           ], true);
 
           // --------------------------------------------------------------------------------
@@ -247,7 +247,7 @@
 
               // Put some content in each layout.
               splitter.pane(0).addItem($('<div style="text-align:center">This panel is partitioned by it\'s own resizable splitter!</div>'));
-              splitter.pane(1).addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.</div>'));
+              splitter.pane(1).addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.<br><br>Toggle the rotation button in the upper right to change the orientation of the splitter.</div>'));
 
               // We need to update the splitter whenever the panel is updated.
               myPanel.on(wcDocker.EVENT_UPDATED, function() {
