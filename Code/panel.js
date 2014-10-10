@@ -154,6 +154,10 @@ wcPanel.prototype = {
       isToggled: false,
     });
 
+    if (this._parent instanceof wcFrame) {
+      this._parent.__update();
+    }
+
     return this._buttonList.length-1;
   },
 
@@ -167,6 +171,11 @@ wcPanel.prototype = {
         if (this._parent instanceof wcFrame) {
           this._parent.__onTabChange();
         }
+
+        if (this._parent instanceof wcFrame) {
+          this._parent.__update();
+        }
+
         return true;
       }
     }
@@ -188,6 +197,10 @@ wcPanel.prototype = {
           if (this._parent instanceof wcFrame) {
             this._parent.__onTabChange();
           }
+        }
+
+        if (this._parent instanceof wcFrame) {
+          this._parent.__update();
         }
 
         return this._buttonList[i].isToggled;
