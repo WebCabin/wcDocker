@@ -93,6 +93,10 @@ html, body {
   cursor: move !important;
 }
 
+.wcCustomTab {
+  position: relative;
+}
+
 .wcTabScroller {
   height: 100%;
   width: 10000px;

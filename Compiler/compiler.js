@@ -27,8 +27,8 @@ var header = '\
  *\n\
  * Dependancies:\n\
  *  JQuery 1.11.1\n\
- *\n\
- * Version: git-master\n\
+ *  JQuery-contextMenu 1.6.6\n\
+ *  font-awesome 4.2.0\n\
  *\n\
  * Author: Jeff Houde (Lochemage@gmail.com)\n\
  * Web: http://docker.webcabin.org/\n\
