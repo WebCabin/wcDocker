@@ -1,7 +1,7 @@
 /*
   A tab widget container, to break up multiple elements into separate tabs.
 */
-function wcCustomTabs(container, parent) {
+function wcTabFrame(container, parent) {
   this.$container = $(container);
   this._parent = parent;
 
@@ -22,7 +22,7 @@ function wcCustomTabs(container, parent) {
   this.__init();
 };
 
-wcCustomTabs.prototype = {
+wcTabFrame.prototype = {
   LEFT_TAB_BUFFER: 15,
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
