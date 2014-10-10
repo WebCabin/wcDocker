@@ -30,6 +30,7 @@
     <script src="Code/panel.js"></script>
     <script src="Code/layout.js"></script>
     <script src="Code/ghost.js"></script>
+    <script src="Code/customtabs.js"></script>
 
     <!-- Initialization -->
     <script>
@@ -249,9 +250,22 @@
               splitter.pane(0).addItem($('<div style="text-align:center">This panel is partitioned by it\'s own resizable splitter!</div>'));
               splitter.pane(1).addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.<br><br>Toggle the rotation button in the upper right to change the orientation of the splitter.</div>'));
 
+              var $tabArea = $('<div style="position:relative;left:10%;top:0px;width:80%;height:300px;border:1px solid black;"></div>');
+              splitter.pane(1).addItem($tabArea, 0, 1);
+
+              // Create our custom tab box and give it a containing element.
+              var tabs = new wcCustomTabs($tabArea, myPanel);
+              tabs.addTab('Custom Tab 1').addItem($('<div style="text-align:center">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
+              tabs.addTab('Custom Tab 2').addItem($('<div style="text-align:center">Each tab has its own layout, and can be configured however you wish.</div>'));
+              tabs.addTab('Custom Tab 3').addItem($('<div style="text-align:center">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
+              tabs.addTab('Custom Tab 4').addItem($('<div style="text-align:center">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
+              tabs.addTab('Custom Tab 5').addItem($('<div style="text-align:center">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
+              tabs.closeable(3, true);
+
               // We need to update the splitter whenever the panel is updated.
               myPanel.on(wcDocker.EVENT_UPDATED, function() {
                 splitter.update();
+                tabs.update();
               });
 
               // Add a rotation panel button to change the orientation of the splitter.

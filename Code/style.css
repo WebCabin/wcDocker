@@ -85,6 +85,14 @@ html, body {
   user-select: none;
 }
 
+.wcCustomTabTitle {
+  cursor: default !important;
+}
+
+.wcCustomTabMoveable {
+  cursor: move !important;
+}
+
 .wcTabScroller {
   height: 100%;
   width: 10000px;

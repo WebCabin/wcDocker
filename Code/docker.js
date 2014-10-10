@@ -4,8 +4,6 @@
  * Dependancies:
  *  JQuery 1.11.1
  *
- * Version: git-master
- *
  * Author: Jeff Houde (Lochemage@gmail.com)
  * Web: http://docker.webcabin.org/
  *
@@ -14,7 +12,6 @@
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
  */
-
 
 // Provide backward compatibility for IE8 and other such older browsers.
 if (!Function.prototype.bind) {
@@ -86,6 +83,7 @@ function wcDocker(container, options) {
   this._focusFrame = null;
 
   this._splitterList = [];
+  this._tabList = [];
 
   this._dockPanelTypeList = [];
 
@@ -93,6 +91,7 @@ function wcDocker(container, options) {
   this._draggingFrame = null;
   this._draggingFrameSizer = null;
   this._draggingFrameTab = null;
+  this._draggingCustomTabFrame = null;
   this._ghost = null;
   this._menuTimer = 0;
 
@@ -117,12 +116,14 @@ function wcDocker(container, options) {
   this.__init();
 };
 
+// Docking positions.
 wcDocker.DOCK_FLOAT                 = 'float';
 wcDocker.DOCK_TOP                   = 'top';
 wcDocker.DOCK_LEFT                  = 'left';
 wcDocker.DOCK_RIGHT                 = 'right';
 wcDocker.DOCK_BOTTOM                = 'bottom';
 
+// Internal events.
 wcDocker.EVENT_UPDATED              = 'panelUpdated';
 wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
 wcDocker.EVENT_BEGIN_DOCK           = 'panelBeginDock';
@@ -142,7 +143,10 @@ wcDocker.EVENT_RESIZED              = 'panelResized';
 wcDocker.EVENT_SCROLLED             = 'panelScrolled';
 wcDocker.EVENT_SAVE_LAYOUT          = 'layoutSave';
 wcDocker.EVENT_RESTORE_LAYOUT       = 'layoutRestore';
+wcDocker.EVENT_CUSTOM_TAB_CHANGED   = 'customTabChanged';
+wcDocker.EVENT_CUSTOM_TAB_CLOSED    = 'customTabClosed';
 
+// Used for the splitter bar orientation.
 wcDocker.ORIENTATION_HORIZONTAL     = false;
 wcDocker.ORIENTATION_VERTICAL       = true;
 
@@ -960,9 +964,9 @@ wcDocker.prototype = {
       self.$container.addClass('wcDisableSelection');
     });
 
+    // Clicking on a panel frame button.
     $('body').on('click', '.wcFrame > .wcFrameButton', function() {
       self.$container.removeClass('wcDisableSelection');
-      var frame;
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
         if (frame.$close[0] === this) {
@@ -972,15 +976,15 @@ wcDocker.prototype = {
           return;
         }
         if (frame.$tabLeft[0] === this) {
-          frame._leftTab--;
-          if (frame._leftTab < 0) {
-            frame._leftTab = 0;
+          frame._tabScrollPos-=frame.$title.width()/2;
+          if (frame._tabScrollPos < 0) {
+            frame._tabScrollPos = 0;
           }
           frame.__updateTabs();
           return;
         }
         if (frame.$tabRight[0] === this) {
-          frame._leftTab++;
+          frame._tabScrollPos+=frame.$title.width()/2;
           frame.__updateTabs();
           return;
         }
@@ -1005,6 +1009,33 @@ wcDocker.prototype = {
             panel.__trigger(wcDocker.EVENT_BUTTON, result);
             return;
           }
+        }
+      }
+    });
+
+    // Clicking on a custom tab button.
+    $('body').on('click', '.wcCustomTab > .wcFrameButton', function() {
+      self.$container.removeClass('wcDisableSelection');
+      for (var i = 0; i < self._tabList.length; ++i) {
+        var customTab = self._tabList[i];
+        if (customTab.$close[0] === this) {
+          var tabIndex = customTab.tab();
+          customTab.removeTab(tabIndex);
+          return;
+        }
+
+        if (customTab.$tabLeft[0] === this) {
+          customTab._tabScrollPos-=customTab.$title.width()/2;
+          if (customTab._tabScrollPos < 0) {
+            customTab._tabScrollPos = 0;
+          }
+          customTab.__updateTabs();
+          return;
+        }
+        if (customTab.$tabRight[0] === this) {
+          customTab._tabScrollPos+=customTab.$title.width()/2;
+          customTab.__updateTabs();
+          return;
         }
       }
     });
@@ -1068,10 +1099,9 @@ wcDocker.prototype = {
           };
           self._draggingFrame.__anchorMove(mouse);
 
-          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
-          if ($panelTab && $panelTab.length) {
+          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');          if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
-            self._draggingFrame.panel(index);
+            self._draggingFrame.panel(index, true);
 
             // if (event.which === 2) {
             //   self._draggingFrame = null;
@@ -1088,6 +1118,18 @@ wcDocker.prototype = {
             self._ghost = new wcGhost(rect, mouse);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
             self.trigger(wcDocker.EVENT_BEGIN_DOCK);
+          }
+          break;
+        }
+      }
+      for (var i = 0; i < self._tabList.length; ++i) {
+        if (self._tabList[i].$title[0] == this) {
+          self._draggingCustomTabFrame = self._tabList[i];
+
+          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');          if ($panelTab && $panelTab.length) {
+            var index = parseInt($panelTab.attr('id'));
+            self._draggingCustomTabFrame.tab(index, true);
+            self._draggingFrameTab = $panelTab[0];
           }
           break;
         }
@@ -1216,14 +1258,19 @@ wcDocker.prototype = {
             self._ghost.anchor(mouse, null);
           } else {
             self._draggingFrame.__shadow(false);
-            var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
-            if (self._draggingFrameTab && $panelTab && $panelTab.length && self._draggingFrameTab !== event.target) {
-              self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($panelTab.attr('id')));
+            var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
+            if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+              self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
             }
           }
         } else if (!self._draggingFrameTab) {
           self._draggingFrame.__move(mouse);
           self._draggingFrame.__update();
+        }
+      } else if (self._draggingCustomTabFrame) {
+        var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
+        if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+          self._draggingFrameTab = self._draggingCustomTabFrame.moveTab(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
         }
       }
       return true;
@@ -1326,6 +1373,7 @@ wcDocker.prototype = {
       self._draggingFrame = null;
       self._draggingFrameSizer = null;
       self._draggingFrameTab = null;
+      self._draggingCustomTabFrame = null;
       self._removingPanel = null;
       return true;
     });
