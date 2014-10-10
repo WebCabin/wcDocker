@@ -63,7 +63,7 @@ concat({
     '../Code/panel.js',
     '../Code/frame.js',
     '../Code/splitter.js',
-    '../Code/customtabs.js',
+    '../Code/tabframe.js',
     // '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.js',
     // '../bower_components/jQuery-contextMenu/src/jquery.ui.position.js',
   ],
