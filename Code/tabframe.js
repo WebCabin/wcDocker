@@ -44,10 +44,17 @@ wcCustomTabs.prototype = {
     this.__update();
   },
 
+  // Destroys the tab area.
+  destroy: function() {
+    this.__destroy();
+  },
+
   // Adds a new tab item at a given index
   // Params:
   //    name      The name of the tab.
   //    index     An optional index to insert the tab at.
+  // Returns:
+  //    wcLayout  The layout of the newly created tab.
   addTab: function(name, index) {
     var newLayout = new wcLayout('.wcDockerTransition', this._parent);
     newLayout.name = name;
