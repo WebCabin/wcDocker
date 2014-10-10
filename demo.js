@@ -221,7 +221,7 @@ $(document).ready(function() {
         splitter.pane(1).addItem($tabArea, 0, 1);
 
         // Create our custom tab box and give it a containing element.
-        var tabs = new wcCustomTabs($tabArea, myPanel);
+        var tabs = new wcTabFrame($tabArea, myPanel);
         tabs.addTab('Custom Tab 1').addItem($('<div style="text-align:center">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
         tabs.addTab('Custom Tab 2').addItem($('<div style="text-align:center">Each tab has its own layout, and can be configured however you wish.</div>'));
         tabs.addTab('Custom Tab 3').addItem($('<div style="text-align:center">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
