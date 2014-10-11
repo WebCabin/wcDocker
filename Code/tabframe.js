@@ -112,9 +112,9 @@ wcTabFrame.prototype = {
 
   // Gets, or Sets the currently visible tab.
   // Params:
-  //    index     If supplied, sets the current tab.
+  //    index     If supplied, sets the current tab index.
   // Returns:
-  //    number    The currently visible tab.
+  //    number    The currently visible tab index.
   tab: function(index, autoFocus) {
     if (typeof index !== 'undefined') {
       if (index > -1 && index < this._layoutList.length) {
@@ -254,6 +254,40 @@ wcTabFrame.prototype = {
       return layout._overflowVisible;
     }
     return false;
+  },
+
+  // Sets the icon for a tab.
+  // Params:
+  //    index     The index of the tab to alter.
+  //    icon      A CSS class name that represents the icon.
+  icon: function(index, icon) {
+    if (index > -1 && index < this._layoutList.length) {
+      var layout = this._layoutList[index];
+
+      if (!layout.$icon) {
+        layout.$icon = $('<div>');
+      }
+
+      layout.$icon.removeClass();
+      layout.$icon.addClass('wcTabIcon ' + icon);
+    }
+  },
+
+  // Sets the icon for a tab.
+  // Params:
+  //    index     The index of the tab to alter.
+  //    icon      A font-awesome icon name (without the 'fa-' prefix).
+  faicon: function(index, icon) {
+    if (index > -1 && index < this._layoutList.length) {
+      var layout = this._layoutList[index];
+
+      if (!layout.$icon) {
+        layout.$icon = $('<div>');
+      }
+
+      layout.$icon.removeClass();
+      layout.$icon.addClass('fa fa-fw fa-' + icon);
+    }
   },
 
 

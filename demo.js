@@ -229,6 +229,8 @@ $(document).ready(function() {
         tabs.addTab('Custom Tab 5').addItem($('<div style="text-align:center">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
         tabs.closeable(3, true);
 
+        tabs.faicon(0, 'gears fa-spin')
+
         // We need to update the splitter whenever the panel is updated.
         myPanel.on(wcDocker.EVENT_UPDATED, function() {
           splitter.update();
