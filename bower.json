@@ -18,6 +18,8 @@
     "/.*",
     "favicon.ico",
     "index.html",
+    "indexBin.html",
+    "demo.js",
     "Code",
     "Compiler",
     "Themes"
