@@ -495,7 +495,7 @@ wcFrame.prototype = {
 
     this._canScrollTabs = false;
     if (totalWidth > this.$title.width() - buttonSize) {
-      this._canScrollTabs = true;
+      this._canScrollTabs = titleVisible;
       this.$frame.append(this.$tabRight);
       this.$frame.append(this.$tabLeft);
       var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
