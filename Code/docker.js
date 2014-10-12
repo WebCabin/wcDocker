@@ -1458,32 +1458,6 @@ wcDocker.prototype = {
   //    frame     The frame to focus.
   //    flash     Whether to flash the frame.
   __focus: function(frame, flash) {
-    // if (frame._isFloating) {
-    //   // frame.$frame.remove();
-    //   for (var i = 0; i < this._floatingList.length; ++i) {
-    //     if (this._floatingList[i].$frame.hasClass('wcFloatingFocus')) {
-    //       this._floatingList[i].panel().__trigger(wcDocker.EVENT_LOST_FOCUS);
-    //       this._floatingList[i].$frame.removeClass('wcFloatingFocus');
-    //       if (this._floatingList[i] !== frame) {
-    //         $('body').append(this._floatingList[i].$frame);
-    //       }
-    //       break;
-    //     }
-    //   }
-
-    //   frame.$frame.addClass('wcFloatingFocus');
-    //   frame.panel().__trigger(wcDocker.EVENT_GAIN_FOCUS);
-
-    //   // var posList = [];
-    //   // for (var i = 0; i < frame._panelList.length; ++i) {
-    //   //   posList.push(frame._panelList[i].scroll());
-    //   // }
-    //   // $('body').append(frame.$frame);
-    //   // for (var i = 0; i < posList.length; ++i) {
-    //   //   frame._panelList[i].scroll(posList[i].x, posList[i].y);
-    //   // }
-    // }
-
     if (this._focusFrame) {
       if (this._focusFrame._isFloating) {
         this._focusFrame.$frame.removeClass('wcFloatingFocus');
@@ -1501,10 +1475,10 @@ wcDocker.prototype = {
       if (this._focusFrame._isFloating) {
         this._focusFrame.$frame.addClass('wcFloatingFocus');
       }
+      this._focusFrame.__focus(flash);
+
       this._focusFrame.__trigger(wcDocker.EVENT_GAIN_FOCUS);
     }
-
-    frame.__focus(flash)
   },
 
   // Triggers an event exclusively on the docker and none of its panels.
