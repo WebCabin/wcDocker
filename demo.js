@@ -426,7 +426,7 @@ $(document).ready(function() {
         myPanel.layout().addItem($('<div style="text-align:center;margin:20px;">Welcome to the Web Cabin Docker!<br><br>This demonstration has been made to show you some of the features available to you when using wcDocker.</div>'));
         myPanel.layout().addItem($('<div style="text-align:center;margin:20px;">The first example is this panel.  A modal panel that blocks access to other panels until it has been closed.</div>'), 0, 1);
 
-        var $button = $('<button type="button" style="float:right;width:150px;margin:20px;">Ok</button>');
+        var $button = $('<button type="button" style="float:right;width:150px;margin:20px;">Continue...</button>');
         var $buttonContainer = $('<div>');
 
         $buttonContainer.append($button);
