@@ -23,6 +23,7 @@ Please share your project with us that uses wcDocker!
 - Fixed issue with using normal CSS icons in the context menu.
 - Improved auto scrolling of tab items when clicked.
 - Created a new wcCustomTabs object for creating docker styled tab areas inside a panel.
+- Floating panels can now be modal.
 
 #### Version: 2.1.0 ####
 - wcDocker now has Bower support for easy package management.
