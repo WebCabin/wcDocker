@@ -76,12 +76,14 @@ function wcDocker(container, options) {
   this.$container = $(container).addClass('wcDocker');
   this.$transition = $('<div class="wcDockerTransition"></div>');
   this.$container.append(this.$transition);
+  this.$modalBlocker = null;
 
   this._events = {};
 
   this._root = null;
   this._frameList = [];
   this._floatingList = [];
+  this._modalList = [];
   this._focusFrame = null;
 
   this._splitterList = [];
@@ -119,6 +121,7 @@ function wcDocker(container, options) {
 };
 
 // Docking positions.
+wcDocker.DOCK_MODAL                 = 'modal';
 wcDocker.DOCK_FLOAT                 = 'float';
 wcDocker.DOCK_TOP                   = 'top';
 wcDocker.DOCK_LEFT                  = 'left';
@@ -208,7 +211,7 @@ wcDocker.prototype = {
   // Params:
   //    typeName      The type of panel to create.
   //    location      The location to 'try' docking at, as defined by
-  //                  wcGLOBALS.DOCK_LOC enum.
+  //                  wcDocker.DOCK_ values.
   //    allowGroup    True to allow this panel to be tab grouped with
   //                  another already existing panel at that location.
   //                  If, for any reason, the panel can not fit at the
@@ -226,7 +229,7 @@ wcDocker.prototype = {
         panel.__container(this.$transition);
         panel._panelObject = new this._dockPanelTypeList[i].options.onCreate(panel);
 
-        if (allowGroup) {
+        if (allowGroup && location !== wcDocker.DOCK_MODAL) {
           this.__addPanelGrouped(panel, location, parentPanel);
         } else {
           this.__addPanelAlone(panel, location, parentPanel);
@@ -267,6 +270,15 @@ wcDocker.prototype = {
         index = this._frameList.indexOf(parentFrame);
         if (index !== -1) {
           this._frameList.splice(index, 1);
+        }
+        index = this._modalList.indexOf(parentFrame);
+        if (index !== -1) {
+          this._modalList.splice(index, 1);
+
+          if (!this._modalList.length && this.$modalBlocker) {
+            this.$modalBlocker.remove();
+            this.$modalBlocker = null;
+          }
         }
 
         var parentSplitter = parentFrame._parent;
@@ -328,7 +340,7 @@ wcDocker.prototype = {
   // Params:
   //    panel         The panel to move.
   //    location      The location to 'try' docking at, as defined by
-  //                  wcGLOBALS.DOCK_LOC enum.
+  //                  wcDocker.DOCK_ values.
   //    allowGroup    True to allow this panel to be tab groupped with
   //                  another already existing panel at that location.
   //                  If, for any reason, the panel can not fit at the
@@ -443,7 +455,7 @@ wcDocker.prototype = {
     }
 
     panel.initSize(width, height);
-    if (allowGroup) {
+    if (allowGroup && location !== wcDocker.DOCK_MODAL) {
       this.__addPanelGrouped(panel, location, parentPanel);
     } else {
       this.__addPanelAlone(panel, location, parentPanel);
@@ -950,6 +962,12 @@ wcDocker.prototype = {
       }
     });
 
+    $('body').on('mousedown', '.wcModalBlocker', function(event) {
+      for (var i = 0; i < self._modalList.length; ++i) {
+        self._modalList[i].__focus(true);
+      }
+    });
+
     // On some browsers, clicking and dragging a tab will drag it's graphic around.
     // Here I am disabling this as it interferes with my own drag-drop.
     $('body').on('mousedown', '.wcPanelTab', function(event) {
@@ -1101,7 +1119,8 @@ wcDocker.prototype = {
           };
           self._draggingFrame.__anchorMove(mouse);
 
-          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');          if ($panelTab && $panelTab.length) {
+          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab'); 
+          if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
             self._draggingFrame.panel(index, true);
 
@@ -1115,7 +1134,8 @@ wcDocker.prototype = {
 
           // If the window is able to be docked, give it a dark shadow tint and
           // begin the movement process
-          if (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab) {
+          if ((!self._draggingFrame.$title.hasClass('wcNotMoveable') && !$panelTab.hasClass('wcNotMoveable')) &&
+          (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
@@ -1128,7 +1148,8 @@ wcDocker.prototype = {
         if (self._tabList[i].$title[0] == this) {
           self._draggingCustomTabFrame = self._tabList[i];
 
-          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');          if ($panelTab && $panelTab.length) {
+          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
+          if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
             self._draggingCustomTabFrame.tab(index, true);
             self._draggingFrameTab = $panelTab[0];
@@ -1593,13 +1614,25 @@ wcDocker.prototype = {
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, parentPanel) {
     // Floating windows need no placement.
-    if (location === wcDocker.DOCK_FLOAT) {
+    if (location === wcDocker.DOCK_FLOAT || location === wcDocker.DOCK_MODAL) {
       var frame = new wcFrame(this.$container, this, true);
       this._frameList.push(frame);
       this._floatingList.push(frame);
       this.__focus(frame);
       frame.addPanel(panel);
       frame.pos(panel._pos.x, panel._pos.y, false);
+
+      if (location === wcDocker.DOCK_MODAL) {
+        if (!this.$modalBlocker) {
+          this.$modalBlocker = $('<div class="wcModalBlocker"></div>');
+          this.$container.append(this.$modalBlocker);
+        }
+
+        this.$modalBlocker.show();
+        panel.moveable(false);
+        frame.$frame.addClass('wcModal');
+        this._modalList.push(frame);
+      }
       return;
     }
 

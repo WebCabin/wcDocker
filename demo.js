@@ -25,6 +25,7 @@ $(document).ready(function() {
         myPanel.initSize(Infinity, 100);
         myPanel.minSize(100, 100);
         myPanel.maxSize(Infinity, 100);
+        myPanel.title(false);
 
         // Do not allow the user to move or remove this panel, this will remove the title bar completely from the frame.
         myPanel.moveable(false);
@@ -418,6 +419,29 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
+    // Register a modal dialog panel as an introduction.
+    myDocker.registerPanelType('Introduction', {
+      faicon: 'exclamation',
+      onCreate: function(myPanel) {
+        myPanel.layout().addItem($('<div style="text-align:center;margin:20px;">Welcome to the Web Cabin Docker!<br><br>This demonstration has been made to show you some of the features available to you when using wcDocker.</div>'));
+        myPanel.layout().addItem($('<div style="text-align:center;margin:20px;">The first example is this panel.  A modal panel that blocks access to other panels until it has been closed.</div>'), 0, 1);
+
+        var $button = $('<button type="button" style="float:right;width:150px;margin:20px;">Ok</button>');
+        var $buttonContainer = $('<div>');
+
+        $buttonContainer.append($button);
+        myPanel.layout().addItem($buttonContainer, 0, 2).parent().css('vertical-align', 'bottom');
+
+        myPanel.initSize(500, 500);
+
+        $button.click(function() {
+          myPanel.close();
+        });
+      },
+      isPrivate: true,
+    });
+
+    // --------------------------------------------------------------------------------
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
@@ -442,5 +466,7 @@ $(document).ready(function() {
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
 
     myDocker.addPanel('Dock Me', wcDocker.DOCK_FLOAT, false);
+
+    myDocker.addPanel('Introduction', wcDocker.DOCK_MODAL, false);
   }
 });

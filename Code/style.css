@@ -32,6 +32,15 @@ html, body {
   user-select: none;
 }
 
+.wcModalBlocker {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 30;
+}
+
 .wcWide {
   width: 100%;
   left: 0px;
@@ -83,6 +92,10 @@ html, body {
   -moz-user-select: -moz-none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.wcFrameTitle.wcNotMoveable {
+  cursor: default !important;
 }
 
 .wcCustomTabTitle {
@@ -152,6 +165,10 @@ html, body {
 
 .wcFloatingFocus {
   z-index: 20;
+}
+
+.wcModal {
+  z-index: 40;
 }
 
 .wcLayout, .wcLayout tr, .wcLayout td {
@@ -307,7 +324,10 @@ html, body {
 
 
 
-
+.wcModalBlocker {
+  background-color: black;
+  opacity: 0.8;
+}
 
 /* Default Theme */
 .wcPanelBackground {

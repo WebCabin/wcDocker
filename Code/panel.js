@@ -18,6 +18,7 @@ function wcPanel(type, options) {
 
   this._type = type;
   this._title = type;
+  this._titleVisible = true;
 
   this._layout = null;
 
@@ -103,7 +104,11 @@ wcPanel.prototype = {
   // Gets, or Sets the title for this dock widget.
   title: function(title) {
     if (typeof title !== 'undefined') {
-      this._title = title;
+      if (title === false) {
+        this._titleVisible = false;
+      } else {
+        this._title = title;
+      }
     }
     return this._title;
   },

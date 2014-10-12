@@ -24,7 +24,7 @@ function wcFrame(container, parent, isFloating) {
   this.$corner3   = null;
   this.$corner4   = null;
 
-  this.$shadower = null;
+  this.$shadower  = null;
 
   this._canScrollTabs = false;
   this._tabScrollPos = 0;
@@ -393,15 +393,31 @@ wcFrame.prototype = {
     var parentLeft = this.$tabScroll.offset().left;
     var self = this;
 
+    this.$title.removeClass('wcNotMoveable');
+
     this.$center.children('.wcPanelTabContent').each(function() {
       $(this).addClass('wcPanelTabContentHidden wcPanelTabUnused');
     });
 
+    var titleVisible = true;
+
     for (var i = 0; i < this._panelList.length; ++i) {
-      var $tab = $('<div id="' + i + '" class="wcPanelTab">' + this._panelList[i].title() + '</div>');
+      var panel = this._panelList[i];
+
+      var $tab = $('<div id="' + i + '" class="wcPanelTab">' + panel.title() + '</div>');
       this.$tabScroll.append($tab);
-      if (this._panelList[i].$icon) {
-        $tab.prepend(this._panelList[i].$icon);
+      if (panel.$icon) {
+        $tab.prepend(panel.$icon);
+      }
+
+      $tab.toggleClass('wcNotMoveable', !panel.moveable());
+      if (!panel.moveable()) {
+        this.$title.addClass('wcNotMoveable');
+      }
+
+      // 
+      if (!panel._titleVisible) {
+        titleVisible = false;
       }
 
       var $tabContent = this.$center.children('.wcPanelTabContent[id="' + i + '"]');
@@ -410,12 +426,12 @@ wcFrame.prototype = {
         this.$center.append($tabContent);
       }
 
-      this._panelList[i].__container($tabContent);
-      this._panelList[i]._parent = this;
+      panel.__container($tabContent);
+      panel._parent = this;
 
       var isVisible = this._curTab === i;
-      if (this._panelList[i].isVisible() !== isVisible) {
-        this._panelList[i].__isVisible(isVisible);
+      if (panel.isVisible() !== isVisible) {
+        panel.__isVisible(isVisible);
       }
 
       $tabContent.removeClass('wcPanelTabUnused');
@@ -429,6 +445,16 @@ wcFrame.prototype = {
       tabPositions.push(totalWidth);
 
       totalWidth += $tab.outerWidth();
+    }
+
+    if (titleVisible) {
+      if (!this.$frame.parent()) {
+        this.$frame.prepend(this.$title);
+        this.$center.css('top', '');
+      }
+    } else {
+      this.$title.remove();
+      this.$center.css('top', '0px');
     }
 
     // Now remove all unused panel tabs.
@@ -508,16 +534,6 @@ wcFrame.prototype = {
 
       var overflowVisible = panel.overflowVisible();
       this.$center.toggleClass('wcOverflowVisible', overflowVisible);
-
-      if (panel.moveable() && panel.title()) {
-        if (!this.$frame.parent()) {
-          this.$frame.prepend(this.$title);
-          this.$center.css('top', '');
-        }
-      } else {
-        this.$title.remove();
-        this.$center.css('top', '0px');
-      }
 
       this.$tabLeft.remove();
       this.$tabRight.remove();
