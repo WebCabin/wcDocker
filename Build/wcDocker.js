@@ -3380,7 +3380,11 @@ wcFrame.prototype = {
 
       var isVisible = this._curTab === i;
       if (panel.isVisible() !== isVisible) {
-        panel.__isVisible(isVisible);
+        (function(p, v) {
+          setTimeout(function() {
+            p.__isVisible(v);
+          });
+        })(panel, isVisible);
       }
 
       $tabContent.removeClass('wcPanelTabUnused');
