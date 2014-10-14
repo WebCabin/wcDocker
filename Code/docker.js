@@ -461,6 +461,8 @@ wcDocker.prototype = {
       this.__addPanelAlone(panel, location, parentPanel);
     }
 
+    this.__update();
+
     var frame = panel._parent;
     if (frame instanceof wcFrame) {
       if (frame._panelList.length === 1) {
@@ -477,8 +479,6 @@ wcDocker.prototype = {
     }
 
     panel.__trigger(wcDocker.EVENT_MOVED);
-
-    this.__update();
     return panel;
   },
 

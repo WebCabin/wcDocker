@@ -461,6 +461,8 @@ wcDocker.prototype = {
       this.__addPanelAlone(panel, location, parentPanel);
     }
 
+    this.__update();
+
     var frame = panel._parent;
     if (frame instanceof wcFrame) {
       if (frame._panelList.length === 1) {
@@ -477,8 +479,6 @@ wcDocker.prototype = {
     }
 
     panel.__trigger(wcDocker.EVENT_MOVED);
-
-    this.__update();
     return panel;
   },
 
@@ -3337,6 +3337,7 @@ wcFrame.prototype = {
     // this.$frame.append($tempCenter);
     // this.$center.children().appendTo($tempCenter);
 
+    var visibilityChanged = [];
     var tabPositions = [];
     var totalWidth = 0;
     var parentLeft = this.$tabScroll.offset().left;
@@ -3380,11 +3381,10 @@ wcFrame.prototype = {
 
       var isVisible = this._curTab === i;
       if (panel.isVisible() !== isVisible) {
-        (function(p, v) {
-          setTimeout(function() {
-            p.__isVisible(v);
-          });
-        })(panel, isVisible);
+        visibilityChanged.push({
+          panel: panel,
+          isVisible: isVisible,
+        });
       }
 
       $tabContent.removeClass('wcPanelTabUnused');
@@ -3475,6 +3475,11 @@ wcFrame.prototype = {
     }
 
     this.$tabScroll.stop().animate({left: -this._tabScrollPos + 'px'}, 'fast');
+
+    // Update visibility on panels.
+    for (var i = 0; i < visibilityChanged.length; ++i) {
+      visibilityChanged[i].panel.__isVisible(visibilityChanged[i].isVisible);
+    }
   },
 
   __onTabChange: function() {
