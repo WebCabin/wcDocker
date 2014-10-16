@@ -323,6 +323,9 @@ html, body {
 
 
 
+.wcDocker {
+  background-color: gray;
+}
 
 .wcModalBlocker {
   background-color: black;

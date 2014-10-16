@@ -62,7 +62,7 @@ $(document).ready(function() {
 
         // Create an element that will hold our custom context menu items.
         // The actual menu will be set up later, outside of the panel and be bound to the 'testMenu' class.
-        var $testMenu = $('<div style="width:100%;height:20px;background-color:transparent;text-align:center;background-color:lightgray;" class="testMenu">Custom Context Menu here</div>');
+        var $testMenu = $('<div style="width:100%;height:20px;text-align:center;border:2px solid black" class="testMenu">Custom Context Menu here</div>');
 
         // Add Save and Restore buttons to record the current layout.
         var $saveButton = $('<button>Remember Layout</button>');
@@ -467,6 +467,6 @@ $(document).ready(function() {
 
     myDocker.addPanel('Dock Me', wcDocker.DOCK_FLOAT, false);
 
-    myDocker.addPanel('Introduction', wcDocker.DOCK_MODAL, false);
+    // myDocker.addPanel('Introduction', wcDocker.DOCK_MODAL, false);
   }
 });

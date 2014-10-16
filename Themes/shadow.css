@@ -1,9 +1,10 @@
-body {
-  color: gray;
+.wcDocker {
+  background-color: black;
+  color: #AAA;
 }
 
 .wcPanelBackground {
-  background-color: #000;
+  background-color: #222;
 }
 
 .wcPanelBackground .wcCenter {
@@ -11,7 +12,7 @@ body {
 }
 
 .wcFrameFlasher {
-  background-color: #555;
+  background-color: #777;
 }
 
 .wcFrameShadower {
@@ -20,7 +21,7 @@ body {
 
 .wcFrameTitle {
   height: 20px;
-  background-color: #111;
+  background-color: black;
   text-align: left;
 }
 
@@ -29,10 +30,11 @@ body {
 }
 
 .wcFrameButton {
-  width: 16px;
-  height: 16px;
-  border: 2px outset #222;
-  background-color: #111;
+  width: 20px;
+  height: 20px;
+  border: 0px solid black;
+  background-color: black;
+  color: #888;
   font-size: 15px;
 }
 
@@ -41,13 +43,15 @@ body {
 }
 
 .wcFrameButton:hover {
-  border: 2px outset #333;
-  background-color: #222;
+  border: 0px solid black;
+  background-color: black;
+  color: #CCC;
 }
 
 .wcFrameButton:active {
-  border: 2px inset #444;
-  background-color: #333;
+  border: 0px solid black;
+  background-color: black;
+  color: #FFF;
 }
 
 .wcFrameButtonToggled, .wcFrameButtonToggled:hover {
@@ -65,27 +69,25 @@ body {
 .wcFrameEdge {
   position: absolute;
   z-index: 2;
-  border: 2px solid #222;
-  background-color: #111;
+  border: 2px solid black;
+  background-color: black;
 }
 
 .wcSplitterBar {
-  outline: 1px solid #222;
-  background-color: #111;
+  outline: 1px solid black;
+  background-color: black;
 }
 
 .wcPanelTab {
-  color: #666;
-  background-color: #000;
-  border: 1px solid #444;
-  border-radius: 2px 2px 0px 0px;
-  border-bottom: 2px solid 444;
+  font-family: sans-serif;
+  color: #999;
+  background-color: #111;
   margin-right: 1px;
-  margin-top: 5px;
-  font-size: 15px;
-  padding-left: 2px;
-  padding-right: 2px;
-  padding-bottom: 0px;
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .wcPanelTab:hover {
@@ -93,25 +95,27 @@ body {
 }
 
 .wcPanelTabActive {
-  color: #666;
-  background-color: #000;
-  font-weight: bold;
+  font-family: sans-serif;
+  color: #DDD;
+  background-color: #222;
   margin-top: 1px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: normal;
 }
 
 .wcPanelTabActive:hover {
-  background-color: #222;
 }
 
 .wcGhost {
-  background-color: #555;
+  background-color: #000;
   border-radius: 0px;
 }
 
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
-  background-color: #000;
+  background-color: black;
 }
 
 ::-webkit-scrollbar-corner {
@@ -132,7 +136,7 @@ body {
 }
 
 .context-menu-list {
-  border: 1px solid #444;
+  border: 1px solid #111;
 }
 
 .context-menu-item {
@@ -153,16 +157,32 @@ body {
 }
 
 input {
-  color: #777;
+  color: #AAA;
   background-color: #222;
 }
 
 select {
-  color: #777;
+  color: #AAA;
   background-color: #222;
+  outline: 0px;
 }
 
 button {
-  color: #777;
+  color: #AAA;
   background-color: #222;
+  border: 2px outset #333;
+}
+
+button:active {
+  border: 2px inset #333;
+}
+
+button:disabled {
+  /*border: 2px solid black;*/
+  background-color: #111;
+  color: #555;
+}
+
+button:focus {
+  outline: 0px;
 }
