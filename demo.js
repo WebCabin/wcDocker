@@ -467,6 +467,6 @@ $(document).ready(function() {
 
     myDocker.addPanel('Dock Me', wcDocker.DOCK_FLOAT, false);
 
-    // myDocker.addPanel('Introduction', wcDocker.DOCK_MODAL, false);
+    myDocker.addPanel('Introduction', wcDocker.DOCK_MODAL, false);
   }
 });
