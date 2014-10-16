@@ -1806,7 +1806,7 @@ wcGhost.prototype = {
         'margin-top': this._rect.y - 10 + 'px',
         width: this._rect.w + 'px',
         height: this._rect.h + 'px',
-      }, 200);
+      }, 150);
       return;
     }
 
@@ -1827,7 +1827,7 @@ wcGhost.prototype = {
       top: anchor.y + 'px',
       width: anchor.w + 'px',
       height: anchor.h + 'px',
-    }, 200);
+    }, 150);
   },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1886,7 +1886,7 @@ wcGhost.prototype = {
     this.$ghost.stop().animate({
       opacity: 0.0,
     }, {
-      duration: 250,
+      duration: 175,
       complete: function() {
         $(this).remove();
       },
