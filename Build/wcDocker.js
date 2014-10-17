@@ -2851,21 +2851,21 @@ wcPanel.prototype = {
     data.type = 'wcPanel';
     data.panelType = this._type;
     data.title = this._title;
-    data.minSize = {
-      x: this._minSize.x,
-      y: this._minSize.y,
-    };
-    data.maxSize = {
-      x: this._maxSize.x,
-      y: this._maxSize.y,
-    };
-    data.scrollable = {
-      x: this._scrollable.x,
-      y: this._scrollable.y,
-    };
-    data.moveable = this._moveable;
-    data.closeable = this._closeable;
-    data.resizeVisible = this.resizeVisible();
+    // data.minSize = {
+    //   x: this._minSize.x,
+    //   y: this._minSize.y,
+    // };
+    // data.maxSize = {
+    //   x: this._maxSize.x,
+    //   y: this._maxSize.y,
+    // };
+    // data.scrollable = {
+    //   x: this._scrollable.x,
+    //   y: this._scrollable.y,
+    // };
+    // data.moveable = this._moveable;
+    // data.closeable = this._closeable;
+    // data.resizeVisible = this.resizeVisible();
     data.customData = {};
     this.__trigger(wcDocker.EVENT_SAVE_LAYOUT, data.customData);
     return data;
@@ -2874,15 +2874,15 @@ wcPanel.prototype = {
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
     this._title = data.title;
-    this._minSize.x = data.minSize.x;
-    this._minSize.y = data.minSize.y;
-    this._maxSize.x = data.maxSize.x;
-    this._maxSize.y = data.maxSize.y;
-    this._scrollable.x = data.scrollable.x;
-    this._scrollable.y = data.scrollable.y;
-    this._moveable = data.moveable;
-    this._closeable = data.closeable;
-    this.resizeVisible(data.resizeVisible)
+    // this._minSize.x = data.minSize.x;
+    // this._minSize.y = data.minSize.y;
+    // this._maxSize.x = data.maxSize.x;
+    // this._maxSize.y = data.maxSize.y;
+    // this._scrollable.x = data.scrollable.x;
+    // this._scrollable.y = data.scrollable.y;
+    // this._moveable = data.moveable;
+    // this._closeable = data.closeable;
+    // this.resizeVisible(data.resizeVisible)
     this.__trigger(wcDocker.EVENT_RESTORE_LAYOUT, data.customData);
   },
 
