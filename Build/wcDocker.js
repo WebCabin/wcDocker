@@ -1777,6 +1777,8 @@ wcGhost.prototype = {
 
         if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true)) {
           this.anchor(position, null);
+        } else {
+          this._anchor.panel = this._docker._floatingList[i].panel();
         }
         return;
       }
@@ -1789,6 +1791,8 @@ wcGhost.prototype = {
 
         if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true)) {
           this.anchor(position, null);
+        } else {
+          this._anchor.panel = this._docker._frameList[i].panel();
         }
         return;
       }
@@ -1859,6 +1863,11 @@ wcGhost.prototype = {
       width: anchor.w + 'px',
       height: anchor.h + 'px',
     }, 150);
+  },
+
+  // --------------------------------------------------------------------------------
+  destroy: function() {
+    this.__destroy();
   },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
