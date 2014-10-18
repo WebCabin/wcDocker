@@ -701,7 +701,7 @@ wcDocker.prototype = {
               name: 'Add Tab',
               faicon: 'columns',
               items: windowTypes,
-              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+              disabled: !(!myFrame._isFloating || myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
             };
             items['sep' + separatorIndex++] = "---------";
@@ -743,7 +743,7 @@ wcDocker.prototype = {
 
           if (!myFrame._isFloating && myFrame.panel().moveable()) {
             var rect = myFrame.__rect();
-            self._ghost = new wcGhost(rect, mouse);
+            self._ghost = new wcGhost(rect, mouse, self);
             myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
             self._ghost.$ghost.hide();
           }
@@ -1137,7 +1137,7 @@ wcDocker.prototype = {
           if ((!self._draggingFrame.$title.hasClass('wcNotMoveable') && !$panelTab.hasClass('wcNotMoveable')) &&
           (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
             var rect = self._draggingFrame.__rect();
-            self._ghost = new wcGhost(rect, mouse);
+            self._ghost = new wcGhost(rect, mouse, self);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
             self.trigger(wcDocker.EVENT_BEGIN_DOCK);
           }

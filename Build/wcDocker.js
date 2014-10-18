@@ -701,7 +701,7 @@ wcDocker.prototype = {
               name: 'Add Tab',
               faicon: 'columns',
               items: windowTypes,
-              disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
+              disabled: !(!myFrame._isFloating || myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
             };
             items['sep' + separatorIndex++] = "---------";
@@ -743,7 +743,7 @@ wcDocker.prototype = {
 
           if (!myFrame._isFloating && myFrame.panel().moveable()) {
             var rect = myFrame.__rect();
-            self._ghost = new wcGhost(rect, mouse);
+            self._ghost = new wcGhost(rect, mouse, self);
             myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
             self._ghost.$ghost.hide();
           }
@@ -1137,7 +1137,7 @@ wcDocker.prototype = {
           if ((!self._draggingFrame.$title.hasClass('wcNotMoveable') && !$panelTab.hasClass('wcNotMoveable')) &&
           (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
             var rect = self._draggingFrame.__rect();
-            self._ghost = new wcGhost(rect, mouse);
+            self._ghost = new wcGhost(rect, mouse, self);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
             self.trigger(wcDocker.EVENT_BEGIN_DOCK);
           }
@@ -1750,11 +1750,12 @@ wcDocker.prototype = {
 /*
   A ghost object that follows the mouse around during dock movement.
 */
-function wcGhost(rect, mouse) {
+function wcGhost(rect, mouse, docker) {
   this.$ghost = null;
   this._rect;
   this._anchorMouse = false;
   this._anchor = null;
+  this._docker = docker;
 
   this.__init(rect, mouse);
 };
@@ -1764,11 +1765,41 @@ wcGhost.prototype = {
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Change the ghost's anchor.
+  // --------------------------------------------------------------------------------
+  // Updates the ghost based on the given screen position.
+  update: function(position) {
+    this.__move(position);
+
+    for (var i = 0; i < this._docker._floatingList.length; ++i) {
+      var rect = this._docker._floatingList[i].__rect();
+      if (position.x > rect.x && position.y > rect.y 
+        && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
+
+        if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true)) {
+          this.anchor(position, null);
+        }
+        return;
+      }
+    }
+
+    for (var i = 0; i < this._docker._frameList.length; ++i) {
+      var rect = this._docker._frameList[i].__rect();
+      if (position.x > rect.x && position.y > rect.y 
+        && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
+
+        if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true)) {
+          this.anchor(position, null);
+        }
+        return;
+      }
+    }
+  },
+
+  // --------------------------------------------------------------------------------
+  // Get, or Sets the ghost's anchor.
   // Params:
   //    mouse     The current mouse position.
-  //    rect      If supplied, will change to this size,
-  //              otherwise will revert to default size.
+  //    anchor    If supplied, assigns a new anchor.
   anchor: function(mouse, anchor) {
     if (typeof mouse === 'undefined') {
       return this._anchor;

@@ -1,11 +1,12 @@
 /*
   A ghost object that follows the mouse around during dock movement.
 */
-function wcGhost(rect, mouse) {
+function wcGhost(rect, mouse, docker) {
   this.$ghost = null;
   this._rect;
   this._anchorMouse = false;
   this._anchor = null;
+  this._docker = docker;
 
   this.__init(rect, mouse);
 };
@@ -15,11 +16,41 @@ wcGhost.prototype = {
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Change the ghost's anchor.
+  // --------------------------------------------------------------------------------
+  // Updates the ghost based on the given screen position.
+  update: function(position) {
+    this.__move(position);
+
+    for (var i = 0; i < this._docker._floatingList.length; ++i) {
+      var rect = this._docker._floatingList[i].__rect();
+      if (position.x > rect.x && position.y > rect.y 
+        && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
+
+        if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true)) {
+          this.anchor(position, null);
+        }
+        return;
+      }
+    }
+
+    for (var i = 0; i < this._docker._frameList.length; ++i) {
+      var rect = this._docker._frameList[i].__rect();
+      if (position.x > rect.x && position.y > rect.y 
+        && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
+
+        if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true)) {
+          this.anchor(position, null);
+        }
+        return;
+      }
+    }
+  },
+
+  // --------------------------------------------------------------------------------
+  // Get, or Sets the ghost's anchor.
   // Params:
   //    mouse     The current mouse position.
-  //    rect      If supplied, will change to this size,
-  //              otherwise will revert to default size.
+  //    anchor    If supplied, assigns a new anchor.
   anchor: function(mouse, anchor) {
     if (typeof mouse === 'undefined') {
       return this._anchor;
