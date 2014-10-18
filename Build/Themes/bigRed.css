@@ -102,6 +102,7 @@
   background-color: #A55;
   font-weight: bold;
   margin-top: 1px;
+  font-size: 16px;
 }
 
 .wcPanelTabActive:hover {
@@ -150,7 +151,8 @@
 }
 
 .context-menu-separator {
-  border-bottom: 2px solid #833;
+  border: 2px solid #622;
+  background-color: #733;
 }
 
 input {

@@ -474,14 +474,16 @@ wcDocker.prototype = {
       this.__addPanelAlone(panel, location, parentPanel);
     }
 
-    this.__update();
-
     var frame = panel._parent;
     if (frame instanceof wcFrame) {
       if (frame._panelList.length === 1) {
         frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
       }
+    }
 
+    this.__update();
+
+    if (frame instanceof wcFrame) {
       if (floating !== frame._isFloating) {
         if (frame._isFloating) {
           panel.__trigger(wcDocker.EVENT_DETACHED);
@@ -1182,7 +1184,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel().layout().$elem[0] == this) {
+        if (self._frameList[i].panel().layout().$table[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);
@@ -1965,7 +1967,7 @@ function wcLayout(container, parent) {
 
   this._batchProcess = false;
   this._grid = [];
-  this.$elem = null;
+  this.$table = null;
 
   this.__init();
 };
@@ -2036,7 +2038,7 @@ wcLayout.prototype = {
     var spacing = this.gridSpacing();
     var alternate = this.gridAlternate();
 
-    this.$elem.remove();
+    this.$table.remove();
     this.__init();
 
     this.showGrid(showGrid);
@@ -2066,10 +2068,10 @@ wcLayout.prototype = {
   //    bool        The current visibility of the grid.
   showGrid: function(enabled) {
     if (typeof enabled !== 'undefined') {
-      this.$elem.toggleClass('wcLayoutGrid', enabled);
+      this.$table.toggleClass('wcLayoutGrid', enabled);
     }
 
-    return this.$elem.hasClass('wcLayoutGrid');
+    return this.$table.hasClass('wcLayoutGrid');
   },
 
   // Version 1.0.1
@@ -2080,10 +2082,10 @@ wcLayout.prototype = {
   //    int       The current border spacing size.
   gridSpacing: function(size) {
     if (typeof size !== 'undefined') {
-      this.$elem.css('border-spacing', size + 'px');
+      this.$table.css('border-spacing', size + 'px');
     }
 
-    return parseInt(this.$elem.css('border-spacing'));
+    return parseInt(this.$table.css('border-spacing'));
   },
 
   // Version 1.0.1
@@ -2094,15 +2096,15 @@ wcLayout.prototype = {
   //    bool        Whether the grid alternates in color.
   gridAlternate: function(enabled) {
     if (typeof enabled !== 'undefined') {
-      this.$elem.toggleClass('wcLayoutGridAlternate', enabled);
+      this.$table.toggleClass('wcLayoutGridAlternate', enabled);
     }
 
-    return this.$elem.hasClass('wcLayoutGridAlternate');
+    return this.$table.hasClass('wcLayoutGridAlternate');
   },
 
   // Retrieves the main scene DOM element.
   scene: function() {
-    return this.$elem;
+    return this.$table;
   },
 
 
@@ -2112,8 +2114,8 @@ wcLayout.prototype = {
 
   // Initialize
   __init: function() {
-    this.$elem = $('<table class="wcLayout wcWide wcTall wcPanelBackground"></table>');
-    this.$elem.append($('<tbody></tbody>'));
+    this.$table = $('<table class="wcLayout wcWide wcTall wcPanelBackground"></table>');
+    this.$table.append($('<tbody></tbody>'));
     this.__container(this.$container);
   },
 
@@ -2143,7 +2145,7 @@ wcLayout.prototype = {
     }
 
     if (!this._batchProcess) {
-      var $oldBody = this.$elem.find('tbody');
+      var $oldBody = this.$table.find('tbody');
       $('.wcDockerTransition').append($oldBody);
 
       var $newBody = $('<tbody>');
@@ -2163,7 +2165,7 @@ wcLayout.prototype = {
         }
       }
 
-      this.$elem.append($newBody);
+      this.$table.append($newBody);
       $oldBody.remove();
     }
   },
@@ -2221,7 +2223,7 @@ wcLayout.prototype = {
     var height = $elem.height();
     var offset = $elem.offset();
     var top = $elem.find('.wcFrameTitle').height();
-    // var top = this.$elem.offset().top - offset.top;
+    // var top = this.$table.offset().top - offset.top;
     if (!title) {
       top = 0;
     }
@@ -2375,9 +2377,9 @@ wcLayout.prototype = {
 
     this.$container = $container;
     if (this.$container) {
-      this.$container.append(this.$elem);
+      this.$container.append(this.$table);
     } else {
-      this.$elem.remove();
+      this.$table.remove();
     }
     return this.$container;
   },
@@ -2388,8 +2390,8 @@ wcLayout.prototype = {
     this._parent = null;
     this.clear();
 
-    this.$elem.remove();
-    this.$elem = null;
+    this.$table.remove();
+    this.$table = null;
   },
 };
 /*
@@ -3479,69 +3481,71 @@ wcFrame.prototype = {
     });
 
     // $tempCenter.remove();
-    var buttonSize = this.__onTabChange();
+    if (titleVisible) {
+      var buttonSize = this.__onTabChange();
 
-    if (autoFocus) {
-      for (var i = 0; i < tabPositions.length; ++i) {
-        if (i === this._curTab) {
-          var left = tabPositions[i];
-          var right = totalWidth;
-          if (i+1 < tabPositions.length) {
-            right = tabPositions[i+1];
-          }
-
-          var scrollPos = -parseInt(this.$tabScroll.css('left'));
-          var titleWidth = this.$title.width() - buttonSize;
-
-          // If the tab is behind the current scroll position.
-          if (left < scrollPos) {
-            this._tabScrollPos = left - this.LEFT_TAB_BUFFER;
-            if (this._tabScrollPos < 0) {
-              this._tabScrollPos = 0;
+      if (autoFocus) {
+        for (var i = 0; i < tabPositions.length; ++i) {
+          if (i === this._curTab) {
+            var left = tabPositions[i];
+            var right = totalWidth;
+            if (i+1 < tabPositions.length) {
+              right = tabPositions[i+1];
             }
-          }
-          // If the tab is beyond the current scroll position.
-          else if (right - scrollPos > titleWidth) {
-            this._tabScrollPos = right - titleWidth + this.LEFT_TAB_BUFFER;
-          }
-          break;
-        }
-      }
-    }
 
-    this._canScrollTabs = false;
-    if (totalWidth > this.$title.width() - buttonSize) {
-      this._canScrollTabs = titleVisible;
-      this.$frame.append(this.$tabRight);
-      this.$frame.append(this.$tabLeft);
-      var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
-      // If we are beyond our scroll limit, clamp it.
-      if (this._tabScrollPos > scrollLimit) {
-        var children = this.$tabScroll.children();
-        for (var i = 0; i < children.length; ++i) {
-          var $tab = $(children[i]);
+            var scrollPos = -parseInt(this.$tabScroll.css('left'));
+            var titleWidth = this.$title.width() - buttonSize;
 
-          totalWidth = $tab.offset().left - parentLeft;
-          if (totalWidth + $tab.outerWidth() > scrollLimit) {
-            this._tabScrollPos = totalWidth - this.LEFT_TAB_BUFFER;
-            if (this._tabScrollPos < 0) {
-              this._tabScrollPos = 0;
+            // If the tab is behind the current scroll position.
+            if (left < scrollPos) {
+              this._tabScrollPos = left - this.LEFT_TAB_BUFFER;
+              if (this._tabScrollPos < 0) {
+                this._tabScrollPos = 0;
+              }
+            }
+            // If the tab is beyond the current scroll position.
+            else if (right - scrollPos > titleWidth) {
+              this._tabScrollPos = right - titleWidth + this.LEFT_TAB_BUFFER;
             }
             break;
           }
         }
       }
-    } else {
-      this._tabScrollPos = 0;
-      this.$tabLeft.remove();
-      this.$tabRight.remove();
-    }
 
-    this.$tabScroll.stop().animate({left: -this._tabScrollPos + 'px'}, 'fast');
+      this._canScrollTabs = false;
+      if (totalWidth > this.$title.width() - buttonSize) {
+        this._canScrollTabs = titleVisible;
+        this.$frame.append(this.$tabRight);
+        this.$frame.append(this.$tabLeft);
+        var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
+        // If we are beyond our scroll limit, clamp it.
+        if (this._tabScrollPos > scrollLimit) {
+          var children = this.$tabScroll.children();
+          for (var i = 0; i < children.length; ++i) {
+            var $tab = $(children[i]);
 
-    // Update visibility on panels.
-    for (var i = 0; i < visibilityChanged.length; ++i) {
-      visibilityChanged[i].panel.__isVisible(visibilityChanged[i].isVisible);
+            totalWidth = $tab.offset().left - parentLeft;
+            if (totalWidth + $tab.outerWidth() > scrollLimit) {
+              this._tabScrollPos = totalWidth - this.LEFT_TAB_BUFFER;
+              if (this._tabScrollPos < 0) {
+                this._tabScrollPos = 0;
+              }
+              break;
+            }
+          }
+        }
+      } else {
+        this._tabScrollPos = 0;
+        this.$tabLeft.remove();
+        this.$tabRight.remove();
+      }
+
+      this.$tabScroll.stop().animate({left: -this._tabScrollPos + 'px'}, 'fast');
+
+      // Update visibility on panels.
+      for (var i = 0; i < visibilityChanged.length; ++i) {
+        visibilityChanged[i].panel.__isVisible(visibilityChanged[i].isVisible);
+      }
     }
   },
 

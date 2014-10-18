@@ -467,69 +467,71 @@ wcFrame.prototype = {
     });
 
     // $tempCenter.remove();
-    var buttonSize = this.__onTabChange();
+    if (titleVisible) {
+      var buttonSize = this.__onTabChange();
 
-    if (autoFocus) {
-      for (var i = 0; i < tabPositions.length; ++i) {
-        if (i === this._curTab) {
-          var left = tabPositions[i];
-          var right = totalWidth;
-          if (i+1 < tabPositions.length) {
-            right = tabPositions[i+1];
-          }
-
-          var scrollPos = -parseInt(this.$tabScroll.css('left'));
-          var titleWidth = this.$title.width() - buttonSize;
-
-          // If the tab is behind the current scroll position.
-          if (left < scrollPos) {
-            this._tabScrollPos = left - this.LEFT_TAB_BUFFER;
-            if (this._tabScrollPos < 0) {
-              this._tabScrollPos = 0;
+      if (autoFocus) {
+        for (var i = 0; i < tabPositions.length; ++i) {
+          if (i === this._curTab) {
+            var left = tabPositions[i];
+            var right = totalWidth;
+            if (i+1 < tabPositions.length) {
+              right = tabPositions[i+1];
             }
-          }
-          // If the tab is beyond the current scroll position.
-          else if (right - scrollPos > titleWidth) {
-            this._tabScrollPos = right - titleWidth + this.LEFT_TAB_BUFFER;
-          }
-          break;
-        }
-      }
-    }
 
-    this._canScrollTabs = false;
-    if (totalWidth > this.$title.width() - buttonSize) {
-      this._canScrollTabs = titleVisible;
-      this.$frame.append(this.$tabRight);
-      this.$frame.append(this.$tabLeft);
-      var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
-      // If we are beyond our scroll limit, clamp it.
-      if (this._tabScrollPos > scrollLimit) {
-        var children = this.$tabScroll.children();
-        for (var i = 0; i < children.length; ++i) {
-          var $tab = $(children[i]);
+            var scrollPos = -parseInt(this.$tabScroll.css('left'));
+            var titleWidth = this.$title.width() - buttonSize;
 
-          totalWidth = $tab.offset().left - parentLeft;
-          if (totalWidth + $tab.outerWidth() > scrollLimit) {
-            this._tabScrollPos = totalWidth - this.LEFT_TAB_BUFFER;
-            if (this._tabScrollPos < 0) {
-              this._tabScrollPos = 0;
+            // If the tab is behind the current scroll position.
+            if (left < scrollPos) {
+              this._tabScrollPos = left - this.LEFT_TAB_BUFFER;
+              if (this._tabScrollPos < 0) {
+                this._tabScrollPos = 0;
+              }
+            }
+            // If the tab is beyond the current scroll position.
+            else if (right - scrollPos > titleWidth) {
+              this._tabScrollPos = right - titleWidth + this.LEFT_TAB_BUFFER;
             }
             break;
           }
         }
       }
-    } else {
-      this._tabScrollPos = 0;
-      this.$tabLeft.remove();
-      this.$tabRight.remove();
-    }
 
-    this.$tabScroll.stop().animate({left: -this._tabScrollPos + 'px'}, 'fast');
+      this._canScrollTabs = false;
+      if (totalWidth > this.$title.width() - buttonSize) {
+        this._canScrollTabs = titleVisible;
+        this.$frame.append(this.$tabRight);
+        this.$frame.append(this.$tabLeft);
+        var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
+        // If we are beyond our scroll limit, clamp it.
+        if (this._tabScrollPos > scrollLimit) {
+          var children = this.$tabScroll.children();
+          for (var i = 0; i < children.length; ++i) {
+            var $tab = $(children[i]);
 
-    // Update visibility on panels.
-    for (var i = 0; i < visibilityChanged.length; ++i) {
-      visibilityChanged[i].panel.__isVisible(visibilityChanged[i].isVisible);
+            totalWidth = $tab.offset().left - parentLeft;
+            if (totalWidth + $tab.outerWidth() > scrollLimit) {
+              this._tabScrollPos = totalWidth - this.LEFT_TAB_BUFFER;
+              if (this._tabScrollPos < 0) {
+                this._tabScrollPos = 0;
+              }
+              break;
+            }
+          }
+        }
+      } else {
+        this._tabScrollPos = 0;
+        this.$tabLeft.remove();
+        this.$tabRight.remove();
+      }
+
+      this.$tabScroll.stop().animate({left: -this._tabScrollPos + 'px'}, 'fast');
+
+      // Update visibility on panels.
+      for (var i = 0; i < visibilityChanged.length; ++i) {
+        visibilityChanged[i].panel.__isVisible(visibilityChanged[i].isVisible);
+      }
     }
   },
 

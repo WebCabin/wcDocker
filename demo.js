@@ -4,11 +4,13 @@
 $(document).ready(function() {
   // --------------------------------------------------------------------------------
   // Create an instance of our docker window and assign it to the document.
-  var myDocker = new wcDocker(document.body);
+  var myDocker = new wcDocker('.dockerContainer');
   if (myDocker) {
 
-    var layoutConfiguration;
-    var currentTheme = 'Default';
+    var _currentTheme = 'Default';
+    var _showingInfo  = true;
+    var _savedLayouts = [];
+    var _chatterIndex = 1;
 
     // --------------------------------------------------------------------------------
     // Register the top panel, this is the static panel at the top of the window
@@ -34,81 +36,143 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
-    // Register our scrolling panel, a big empty panel with a large scrollable area inside.
-    myDocker.registerPanelType('Scroll Panel', {
-      faicon: 'unsorted',
-      limit: 2,
-      onCreate: function(myPanel) {
-        // By adding an element into the layout that is much larger than the window, it will automatically be scrollable.
-        // If you specifically do not want it to scroll, you can use the myPanel.scrollable function.
-        myPanel.layout().addItem($('<div style="width:2000px;height:2000px;">'));
-      }
-    });
-
-    // --------------------------------------------------------------------------------
-    // Register our control panel, this contains various controls supported by the docker.
+    // Register the control panel, this one has a few controls that allow you to change
+    // dockers theme as well as layout configuration controls.
     myDocker.registerPanelType('Control Panel', {
       faicon: 'gears',
       onCreate: function(myPanel) {
-        // Create a drop down with different themes to choose from.
-        var $themeSelector = $('<div style="width:100%;text-align:center;" class="themeSelector">Theme: \
-          <select>\
-          <option value="Default">Default</option>\
-          <option value="bigRed">Big Red</option>\
-          <option value="shadow">Shadow</option>\
-          </select></div>');
-        // Initialize the current selection to the currently active theme.
-        $themeSelector.find('select').val(currentTheme);
+        myPanel.initSize(800, 400);
+        myPanel.layout().$table.css('padding', '10px');
 
-        // Create an element that will hold our custom context menu items.
-        // The actual menu will be set up later, outside of the panel and be bound to the 'testMenu' class.
-        var $testMenu = $('<div style="width:100%;height:20px;text-align:center;border:2px solid black" class="testMenu">Custom Context Menu here</div>');
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the control panel!  Here you will find controls for changing docker-wide options.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
+        
+        // Toggle info button.
+        var $toggleInfoButton = $('<button class="toggleInfo" style="width:100%;height:100%;">Hide All Info Text</button>');
+        if (!_showingInfo) {
+          $infoText.hide();
+          $toggleInfoButton.text('Show All Info Text');
+        }
 
-        // Add Save and Restore buttons to record the current layout.
-        var $saveButton = $('<button>Remember Layout</button>');
-        var $restoreButton = $('<button class="restoreButton" style="float:right;">Restore Layout</button>');
+        // Create our theme dropdown menu.
+        var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
+        var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
+        $themeSelector.append('<option value="Default">Default</option>');
+        $themeSelector.append('<option value="bigRed">Big Red</option>');
+        $themeSelector.append('<option value="shadow">Shadow</option>');
+        $themeSelector.val(_currentTheme);
 
-        myPanel.layout().addItem($themeSelector, 0, 0, 2, 1);
-        myPanel.layout().addItem($testMenu, 0, 1, 2, 1);
-        myPanel.layout().addItem($saveButton, 0, 2);
-        myPanel.layout().addItem($restoreButton, 1, 2);
+        // Pre-configured layout configurations.
+        var $layoutNameLabel  = $('<div style="white-space:nowrap;text-align:right;">Layout: </div>');
+        var $layoutNameEdit   = $('<input type="text" placeholder="Layout Name" style="width:100%"></input>');
+        var $saveButton       = $('<button style="width:100%;">Save Layout</button>');
+
+        var $layoutListLabel = $('<div style="white-space:nowrap;width:100%;text-align:center;">Restore layout: </div>');
+        var $layoutList = $('<select class="layoutSelector" style="width:100%;">');
+        $layoutList.append('<option value="">&lt;Choose one&gt;</option>');
+        for (var i = 0; i < _savedLayouts.length; ++i) {
+          $layoutList.append('<option value="' + _savedLayouts[i].name + '">' + _savedLayouts[i].name + '</option>');
+        }
+
+        myPanel.layout().startBatch();
+        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
+        myPanel.layout().addItem($toggleInfoButton, 1, 1).css('text-align', 'left');
+        myPanel.layout().addItem($themeLabel, 0, 2).css('text-align', 'right').css('width', '1%');
+        myPanel.layout().addItem($themeSelector, 1, 2).css('text-align', 'left');
+
+        myPanel.layout().addItem('<div style="height: 20px;"></div>', 0, 3, 2, 1);
+        myPanel.layout().addItem($layoutNameLabel, 0, 4);
+        myPanel.layout().addItem($layoutNameEdit, 1, 4);
+        myPanel.layout().addItem($layoutListLabel, 0, 5);
+        myPanel.layout().addItem($layoutList, 1, 5);
+        myPanel.layout().addItem($saveButton, 1, 6);
+        myPanel.layout().finishBatch();
 
         // Here we do some css table magic to make all other cells align to the top of the window.
-        myPanel.layout().addItem($('<div>'), 0, 3, 2, 1).parent().css('height', '100%');
+        // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
+        myPanel.layout().addItem('<div>', 0, 10, 2, 1).parent().css('height', '100%');
+
+        $toggleInfoButton.click(function() {
+          _showingInfo = !_showingInfo;
+          $('.info').each(function() {
+            if (_showingInfo) {
+              $(this).fadeIn();
+            } else {
+              $(this).fadeOut();
+            }
+          });
+
+          $('.toggleInfo').each(function() {
+            if (_showingInfo) {
+              $(this).text('Hide All Info Text');
+            } else {
+              $(this).text('Show All Info Text');
+            }
+          });
+        });
 
         // Bind an event to catch when the theme has been changed.
         $themeSelector.change(function() {
-          currentTheme = $themeSelector.find('option:selected').val();
+          _currentTheme = $themeSelector.find('option:selected').val();
 
           // To load a theme, you just need to create a new 'link' element that includes the theme css file.
           // First we remove any already existing theme, so they don't conflict.
           $('#theme').remove();
 
           // The default theme requires no additional theme css file.
-          if (currentTheme !== 'Default') {
-            $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + currentTheme + '.css"/>'));
+          if (_currentTheme !== 'Default') {
+            $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + _currentTheme + '.css"/>'));
           }
 
           // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
-          $('.themeSelector select').each(function() {
-            if ($(this)[0] !== $themeSelector.find('select')[0]) {
-              $(this).val(currentTheme);
+          $('.themeSelector').each(function() {
+            if (this !== $themeSelector[0]) {
+              $(this).val(_currentTheme);
             }
           });
         });
 
-        // layoutConfiguration is a global variable that stores the last saved layout data, if it is null then
-        // disable the restore button, as there is no layout to restore.
-        $restoreButton.attr('disabled', layoutConfiguration? false: true);
+        // Disable the restore layout button if there are no layouts to restore.
+        // $restoreButton.attr('disabled', _savedLayouts.length? false: true);
 
         // Setup a click handler for the save button.
         var saveTimer = 0;
         $saveButton.click(function() {
-          // Save the layout into a global variable for later.
-          layoutConfiguration = myDocker.save();
+          // Save the layout.
+          var layoutConfig = myDocker.save();
+
+          // Add the saved layout into the saved layout list.
+          var foundLayout = false;
+          var layoutName = $layoutNameEdit.val();
+          if (!layoutName) {
+            layoutName = 'Default';
+          }
+          for (var i = 0; i < _savedLayouts.length; ++i) {
+            if (_savedLayouts[i].name === layoutName) {
+              foundLayout = true;
+              _savedLayouts[i].data = layoutConfig;
+              break;
+            }
+          }
+          if (!foundLayout) {
+            _savedLayouts.push({
+              name: layoutName,
+              data: layoutConfig,
+            });
+          }
+
+          // Update all saved layout list boxes with the new list.
+          $('.layoutSelector').each(function() {
+            var $selector = $(this);
+            $selector.children().remove();
+            $selector.append('<option value="">&lt;Choose one&gt;</option>');
+    
+            for (var i = 0; i < _savedLayouts.length; ++i) {
+              $selector.append('<option value="' + _savedLayouts[i].name + '">' + _savedLayouts[i].name + '</option>');
+            }
+          });
 
           // Enable all restore buttons on the page, as there may be more than one control panel open.
-          $saveButton.html('<b>Remembered!</b>');
+          $saveButton.html('<b>Layout Saved!</b>');
           $('.restoreButton').each(function() {
             $(this).attr('disabled', false);
           });
@@ -119,129 +183,169 @@ $(document).ready(function() {
             saveTimer = 0;
           }
           saveTimer = setTimeout(function() {
-            $saveButton.text('Remember Layout');
+            $saveButton.text('Save Layout');
             saveTimer = 0;
           }, 500);
         });
 
-        // Setup a click handler to restore a previously saved layout configuration.
-        $restoreButton.click(function() {
-          if (layoutConfiguration) {
-            myDocker.restore(layoutConfiguration);
+        // Restore a layout whenever a selection on the layout list is changed.
+        $layoutList.change(function() {
+          var str = '';
+          var value = $('option:selected', this).val();
+          if (value) {
+            for (var i = 0; i < _savedLayouts.length; ++i) {
+              if (_savedLayouts[i].name === value) {
+                myDocker.restore(_savedLayouts[i].data);
+              }
+            }
           }
         });
       }
     });
 
     // --------------------------------------------------------------------------------
-    // Create a custom basic menu, found on the control panel.  Note, this does not happen inside
-    // the creation of the panel, as it only needs to be created once and it will work on all
-    // panels.  Here we add three custom menu options that appear on top of the normal context
-    // options.  Use an empty object as a menu option to create a separator.
-    myDocker.basicMenu('.testMenu', [
-      {name: 'Custom Menu 1',                    callback: function(key, opts, panel){alert(key);}},
-      {name: 'Custom Menu 2',                    callback: function(key, opts, panel){alert(key);}},
-      {},
-      {name: 'Custom Menu 3', faicon: 'refresh', callback: function(key, opts, panel){alert(key);}}
-    ], true);
-
-    // --------------------------------------------------------------------------------
-    // Register the cell panel, a demonstration of the grid cell layout system.
-    myDocker.registerPanelType('Panel Cells', {
-      faicon: 'qrcode',
-      onCreate: function(myPanel) {
-        myPanel.layout().addItem($('<div style="text-align:center">All panels contain a gridded layout.</div>'), 0, 0, 1, 2);
-        myPanel.layout().addItem($('<div style="text-align:center">This is a panel.</div>'), 1, 0);
-        myPanel.layout().addItem($('<div style="text-align:center">Each grid cell can be used individually...</div>'), 1, 1);
-        myPanel.layout().addItem($('<div style="text-align:center">or multiple cells can be merged.</div>'), 0, 2, 2, 1);
-
-        // By default, the grid is hidden and there is no space in between each cell.  We also flag the grid to alternate row colors.
-        myPanel.layout().showGrid(true);
-        myPanel.layout().gridSpacing(5);
-        myPanel.layout().gridAlternate(true);
-
-        myPanel.initSize(400, 400);
-      }
-    });
-
-    // --------------------------------------------------------------------------------
-    // Register the creation panel, shows information on how to create new panels on the fly.
-    myDocker.registerPanelType('Creation Panel', {
-      faicon: 'star',
-      onCreate: function(myPanel) {
-        myPanel.layout().addItem($('<div style="text-align:center">New (and even duplicate) panels can be created by right clicking at the location you wish the new panel to go and using the context menu.</div>'));
-        myPanel.layout().addItem($('<div>'), 0, 1);
-      }
-    });
-
-    // --------------------------------------------------------------------------------
-    // Register the Dock me panel, demonstrates floating panels and gives information
-    // about docking and moving them.
-    myDocker.registerPanelType('Dock Me', {
-      faicon: 'crosshairs',
-      onCreate: function(myPanel) {
-        myPanel.layout().addItem($('<div style="text-align:center">Panels can float on their own, or be docked beside other panels.  Dragging the title bar will move all panels within the frame while dragging an individual tab item will separate the panel from its current frame.<br><br>Try moving this panel to a new location.</div>'));
-        myPanel.initSize(400, 300);
-
-        // Floating windows appear in the center of the screen by default, but that can be
-        // changed by assigning a new init position.  Each parameter is a percentage value from 0-1.
-        myPanel.initPos(0.5, 0.8);
-      }
-    });
-
-    // --------------------------------------------------------------------------------
-    // Register the Customized UI panel, demonstrates using the splitter window
-    // and the custom tab area inside of a panel.
-    myDocker.registerPanelType('Customized UI', {
-      faicon: 'columns',
+    // Register the chat panel, a demonstration of the built in panel event/messaging
+    // system to communicate between multiple chat panels.
+    myDocker.registerPanelType('Chat Panel', {
+      faicon: 'comment-o',
       onCreate: function(myPanel) {
         myPanel.initSize(400, 400);
+        myPanel.layout().$table.css('padding', '10px');
 
-        // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
-        // to size it to the full size of the panel.
-        var $scene = $('<div class="wcWide wcTall">')
-        myPanel.layout().addItem($scene);
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the chat panel!  Here is a simple demonstration of the built in event/messaging system between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
+        if (!_showingInfo) {
+          $infoText.hide();
+        }
 
-        // Here we can utilize the splitter used by wcDocker internally so that we may split up
-        // a single panel.  Splitters can be nested, and new layouts can be created to fill
-        // each side of the split.
-        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
+        // Create our chat window.
+        var $senderLabel    = $('<div style="white-space:nowrap;">Sender Name: </div>');
+        var $senderName     = $('<input type="text" style="width:100%;padding:0px;" placeholder="Sender name here" value="Chatter' + _chatterIndex++ + '"/>');
 
-        // Initialize this splitter with a layout in each pane.  This can be done manually, but
-        // it is more convenient this way.
-        splitter.initLayouts();
+        var $chatArea       = $('<textarea style="width:100%;height:100%;padding:0px;margin-top:10px;border:0px;"></textarea>');
+        var $chatEdit       = $('<input type="text" style="width:100%;padding:0px;" placeholder="Type a message here!"/>');
+        var $chatSend       = $('<button>Send</button>');
+        var $chatContainer  = $('<table style="width:100%;"><tr><td></td><td></td></tr></table>');
+        $chatContainer.find('td').first().append($chatEdit).css('width', '100%');
+        $chatContainer.find('td').last().append($chatSend).css('width', '1%');
 
-        // By default, the splitter splits down the middle, but the position can be assigned manually by giving it a percentage value from 0-1.
-        splitter.pos(0.25);
+        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
+        myPanel.layout().addItem($senderLabel, 0, 1).css('width', '1%');
+        myPanel.layout().addItem($senderName, 1, 1).css('width', '100%');
+        var chatCell = myPanel.layout().addItem($chatArea, 0, 2, 2, 1);
+        myPanel.layout().addItem($chatContainer, 0, 3, 2, 1);
 
-        // Put some content in each layout.
-        splitter.pane(0).addItem($('<div style="text-align:center">This panel is partitioned by it\'s own resizable splitter!</div>'));
-        splitter.pane(1).addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.<br><br>Toggle the rotation button in the upper right to change the orientation of the splitter.</div>'));
+        chatCell.parent().css('height', '100%');
 
-        var $tabArea = $('<div style="position:relative;left:10%;top:0px;width:80%;height:300px;border:1px solid black;"></div>');
-        splitter.pane(1).addItem($tabArea, 0, 1);
+        // Send a chat message.
+        function onChatSent() {
+          var sender = $senderName.val();
+          var message = $chatEdit.val();
 
-        // Create our custom tab box and give it a containing element.
-        var tabs = new wcTabFrame($tabArea, myPanel);
-        tabs.addTab('Custom Tab 1').addItem($('<div style="text-align:center">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
-        tabs.addTab('Custom Tab 2').addItem($('<div style="text-align:center">Each tab has its own layout, and can be configured however you wish.</div>'));
-        tabs.addTab('Custom Tab 3').addItem($('<div style="text-align:center">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
-        tabs.addTab('Custom Tab 4').addItem($('<div style="text-align:center">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
-        tabs.addTab('Custom Tab 5').addItem($('<div style="text-align:center">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
-        tabs.closeable(3, true);
+          // Use our built in event/messaging system, this sends a message
+          // of name "Message" to anyone who is listening to it, and sends
+          // a data object that describes the message.
+          myPanel.trigger('Message', {
+            sender: sender,
+            message: message,
+          });
 
-        tabs.faicon(0, 'gears fa-spin')
+          $chatEdit.val('');
+        };
 
-        // We need to update the splitter whenever the panel is updated.
-        myPanel.on(wcDocker.EVENT_UPDATED, function() {
-          splitter.update();
-          tabs.update();
+        $chatEdit.keypress(function(event) {
+          if (event.keyCode == 13) {
+            onChatSent();
+          }
+        });
+        $chatSend.click(onChatSent);
+
+        // Register this panel to listen for any messages of type "Message".
+        myPanel.on('Message', function(data) {
+          // The data passed in is the data object sent by the sender.
+          var text = data.sender + ': ' + data.message + '\n';
+          $chatArea.html($chatArea.html() + text);
+        });
+      }
+    });
+
+    // --------------------------------------------------------------------------------
+    // Register the batch panel, a demonstration of the layout batch system when
+    // adding an overwhelming number of elements into the layout all at once.
+    myDocker.registerPanelType('Batch Panel', {
+      faicon: 'cubes',
+      onCreate: function(myPanel) {
+        myPanel.initSize(400, 400);
+        myPanel.layout().$table.css('padding', '10px');
+
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the batch panel!  Here illustrates a comparison between adding layout items one at a time vs using the batching system.  The batching system avoids re-calculating elements each time a new one is added until the batch has been finished.  Use this if you are adding a large number of elements into the panel\'s layout.</div>');
+        if (!_showingInfo) {
+          $infoText.hide();
+        }
+
+        var $clearItemsButton   = $('<button style="white-space:nowrap;">Clear Items</buttons>');
+        var $normalAddButton    = $('<button style="white-space:nowrap;margin-left:10px;margin-right:10px;">Add Items Normally</button>');
+        var $batchAddButton     = $('<button style="white-space:nowrap;">Add Items Batched</button>');
+
+        myPanel.layout().addItem($infoText, 0, 0, 3, 1);
+        myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
+        myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
+        myPanel.layout().addItem($batchAddButton, 2, 1);
+
+        // Here we do some css table magic to make all other cells align to the top of the window.
+        // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
+        myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
+
+        var currentItemIndex = 0;
+        function __addItems() {
+          myPanel.layout().item(0, currentItemIndex+3).css('height', '');
+
+          // Add a large number of items into the layout.
+          var min = 0;
+          var max = 2;
+          for (var i = 0; i < 250; ++i) {
+            currentItemIndex++;
+            var randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
+            var $item = null;
+            switch (randomInt) {
+              case 0:
+                $item = $('<div>Some Random Text Item</div>');
+                break;
+              case 1:
+                $item = $('<input placeholder="Some Random Text Input"/>');
+                break;
+              case 2:
+                $item = $('<button>Some Random Button</button>');
+                break;
+            }
+            if ($item) {
+              myPanel.layout().addItem($item, 0, currentItemIndex+3, 3, 1).css('border-bottom', '2px solid black').css('padding-bottom', '5px').css('text-align', 'center');
+            }
+          }
+        };
+
+        $clearItemsButton.click(function() {
+          $('body').append($clearItemsButton).append($normalAddButton).append($batchAddButton);
+          myPanel.layout().clear();
+          myPanel.layout().$table.css('padding', '10px');
+          myPanel.layout().addItem($infoText, 0, 0, 3, 1);
+          myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
+          myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
+          myPanel.layout().addItem($batchAddButton, 2, 1);
+
+          // Here we do some css table magic to make all other cells align to the top of the window.
+          // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
+          myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
+          currentItemIndex = 0;
         });
 
-        // Add a rotation panel button to change the orientation of the splitter.
-        myPanel.addButton('View', 'fa fa-rotate-right', 'O', 'Switch between horizontal and vertical layout.', true);
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
-          splitter.orientation(data.isToggled);
+        $normalAddButton.click(function() {
+          __addItems();
+        });
+
+        $batchAddButton.click(function() {
+          myPanel.layout().startBatch();
+          __addItems();
+          myPanel.layout().finishBatch();
         });
       }
     });
@@ -251,10 +355,17 @@ $(document).ready(function() {
     myDocker.registerPanelType('Reaction Panel', {
       faicon:'refresh',
       onCreate: function(myPanel) {
+        myPanel.layout().$table.css('padding', '10px');
+
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the reaction panel!  Get notification for common built in events by using the built in event system.</div>');
+        if (!_showingInfo) {
+          $infoText.hide();
+        }
+
         // Setup a number of different text alerts that can be displayed based on certain events.
-        var $buttonInfo = $('<div style="text-align:center">I react to the custom buttons above</div>');
-        var $buttonN = $('<div style="text-align:center"><b>Happy button pressed!</b></div>');
-        var $buttonTtrue = $('<div style="text-align:center"><b>Thumbs button is down!</b></div>');
+        var $buttonInfo   = $('<div style="text-align:center">I react to the custom buttons above</div>');
+        var $buttonN      = $('<div style="text-align:center"><b>Happy button pressed!</b></div>');
+        var $buttonTtrue  = $('<div style="text-align:center"><b>Thumbs button is down!</b></div>');
         var $buttonTfalse = $('<div style="text-align:center"><b>Thumbs button is up!</b></div>');
         var buttonTimer;
 
@@ -272,11 +383,11 @@ $(document).ready(function() {
         var $resized    = $('<div style="text-align:center"><b>I was just resized!</b></div>');
         var resizeTimer;
 
-        myPanel.layout().addItem($('<div style="text-align:center"></div>'));
-        myPanel.layout().addItem($buttonInfo, 0, 0);
-        myPanel.layout().addItem($detachInfo, 0, 1);
-        myPanel.layout().addItem($moveInfo, 0, 2);
-        myPanel.layout().addItem($resizeInfo, 0, 3);
+        myPanel.layout().addItem($infoText, 0, 0);
+        myPanel.layout().addItem($buttonInfo, 0, 1);
+        myPanel.layout().addItem($detachInfo, 0, 2);
+        myPanel.layout().addItem($moveInfo, 0, 3);
+        myPanel.layout().addItem($resizeInfo, 0, 4);
         myPanel.layout().addItem($('<div style="text-align:center">Lastly, if you can see my tab icon, it will only be spinning when my panel is visible</div>'), 0, 4);
 
         // Add some custom buttons that will appear in the upper right corner of the panel.
@@ -291,24 +402,24 @@ $(document).ready(function() {
 
           if (data.name === 'Happy Button') {
             // Show an alert when the smile face button is clicked.
-            this.layout().item(0, 0).empty();
-            this.layout().addItem($buttonN, 0, 0);
+            this.layout().item(0, 1).empty();
+            this.layout().addItem($buttonN, 0, 1);
 
             var self = this;
             buttonTimer = setTimeout(function() {
-              self.layout().item(0, 0).empty();
-              self.layout().addItem($buttonInfo, 0, 0);
+              self.layout().item(0, 1).empty();
+              self.layout().addItem($buttonInfo, 0, 1);
               buttonTimer = 0;
             }, 1000);
           } else if (data.name === 'Thumbs Button') {
             // Show an alert when the thumbs button is toggled.
-            this.layout().item(0, 0).empty();
-            this.layout().addItem((data.isToggled? $buttonTtrue: $buttonTfalse), 0, 0)
+            this.layout().item(0, 1).empty();
+            this.layout().addItem((data.isToggled? $buttonTtrue: $buttonTfalse), 0, 1)
 
             var self = this;
             buttonTimer = setTimeout(function() {
-              self.layout().item(0, 0).empty();
-              self.layout().addItem($buttonInfo, 0, 0);
+              self.layout().item(0, 1).empty();
+              self.layout().addItem($buttonInfo, 0, 1);
               buttonTimer = 0;
             }, 1000);
           }
@@ -320,13 +431,13 @@ $(document).ready(function() {
             clearTimeout(attachTimer);
           }
 
-          this.layout().item(0, 1).empty();
-          this.layout().addItem($attached, 0, 1);
+          this.layout().item(0, 2).empty();
+          this.layout().addItem($attached, 0, 2);
 
           var self = this;
           attachTimer = setTimeout(function() {
-            self.layout().item(0, 1).empty();
-            self.layout().addItem($detachInfo, 0, 1);
+            self.layout().item(0, 2).empty();
+            self.layout().addItem($detachInfo, 0, 2);
             attachTimer = 0;
           }, 1000);
         });
@@ -337,13 +448,13 @@ $(document).ready(function() {
             clearTimeout(attachTimer);
           }
 
-          this.layout().item(0, 1).empty();
-          this.layout().addItem($detached, 0, 1);
+          this.layout().item(0, 2).empty();
+          this.layout().addItem($detached, 0, 2);
 
           var self = this;
           attachTimer = setTimeout(function() {
-            self.layout().item(0, 1).empty();
-            self.layout().addItem($attachInfo, 0, 1);
+            self.layout().item(0, 2).empty();
+            self.layout().addItem($attachInfo, 0, 2);
             attachTimer = 0;
           }, 1000);
         });
@@ -354,13 +465,13 @@ $(document).ready(function() {
             clearTimeout(moveTimer);
           }
 
-          this.layout().item(0, 2).empty();
-          this.layout().addItem($moved, 0, 2);
+          this.layout().item(0, 3).empty();
+          this.layout().addItem($moved, 0, 3);
 
           var self = this;
           moveTimer = setTimeout(function() {
-            self.layout().item(0, 2).empty();
-            self.layout().addItem($moveInfo, 0, 2);
+            self.layout().item(0, 3).empty();
+            self.layout().addItem($moveInfo, 0, 3);
             moveTimer = 0;
           }, 500);
         });
@@ -371,13 +482,13 @@ $(document).ready(function() {
             clearTimeout(resizeTimer);
           }
 
-          this.layout().item(0, 3).empty();
-          this.layout().addItem($resized, 0, 3);
+          this.layout().item(0, 4).empty();
+          this.layout().addItem($resized, 0, 4);
 
           var self = this;
           resizeTimer = setTimeout(function() {
-            self.layout().item(0, 3).empty();
-            self.layout().addItem($resizeInfo, 0, 3);
+            self.layout().item(0, 4).empty();
+            self.layout().addItem($resizeInfo, 0, 4);
             resizeTimer = 0;
           }, 500);
         });
@@ -393,80 +504,15 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
-    // Register the memory panel, demonstrates how internal data can be remembered along with the layout.
-    myDocker.registerPanelType('Memory Panel', {
-      faicon:'save',
-      onCreate: function(myPanel) {
-        // Create a number input control for the user to set.
-        var $spinner = $('<input type="number" value="0"/>');
-        var $info = $('<div style="text-align:center">I will remember this number when the layout is remembered:</div>');
-        $info.append($spinner);
-
-        myPanel.layout().addItem($info);
-
-        // Setup an event handler for when the layout is being saved.
-        myPanel.on(wcDocker.EVENT_SAVE_LAYOUT, function(data) {
-          // The data parameter given is an empty object, fill it with whatever you want to record.
-          data.value = $spinner.val();
-        });
-
-        // Setup an event handler for when the layout is being restored.
-        myPanel.on(wcDocker.EVENT_RESTORE_LAYOUT, function(data) {
-          // The data parameter should be filled with any previously saved data, here we restore our saved number value.
-          $spinner.val(data.value);
-        });
-      }
-    });
-
-    // --------------------------------------------------------------------------------
-    // Register a modal dialog panel as an introduction.
-    myDocker.registerPanelType('Introduction', {
-      faicon: 'exclamation',
-      onCreate: function(myPanel) {
-        myPanel.layout().addItem($('<div style="text-align:center;margin:20px;">Welcome to the Web Cabin Docker!<br><br>This demonstration has been made to show you some of the features available to you when using wcDocker.</div>'));
-        myPanel.layout().addItem($('<div style="text-align:center;margin:20px;">The first example is this panel.  A modal panel that blocks access to other panels until it has been closed.</div>'), 0, 1);
-
-        var $button = $('<button type="button" style="float:right;width:150px;margin:20px;">Continue...</button>');
-        var $buttonContainer = $('<div>');
-
-        $buttonContainer.append($button);
-        myPanel.layout().addItem($buttonContainer, 0, 2).parent().css('vertical-align', 'bottom');
-
-        myPanel.initSize(500, 500);
-
-        $button.click(function() {
-          myPanel.close();
-        });
-      },
-      isPrivate: true,
-    });
-
-    // --------------------------------------------------------------------------------
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var panel1 = myDocker.addPanel('Control Panel', wcDocker.DOCK_BOTTOM, false);
-
-    var panel2 = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_TOP, false, panel1);
-    var panel3 = myDocker.addPanel('Creation Panel', wcDocker.DOCK_RIGHT, false, panel2);
-    myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, true, panel3);
-    myDocker.addPanel('Control Panel', wcDocker.DOCK_BOTTOM, true, panel3);
-    myDocker.addPanel('Panel Cells', wcDocker.DOCK_BOTTOM, true, panel3);
-    myDocker.addPanel('Scroll Panel', wcDocker.DOCK_BOTTOM, true, panel3);
-    myDocker.addPanel('Memory Panel', wcDocker.DOCK_BOTTOM, true, panel3);
-    myDocker.addPanel('Customized UI', wcDocker.DOCK_BOTTOM, true, panel3);
-    myDocker.addPanel('Dock Me', wcDocker.DOCK_BOTTOM, true, panel3);
-
-    var panel4 = myDocker.addPanel('Panel Cells', wcDocker.DOCK_LEFT, false);
-    myDocker.addPanel('Scroll Panel', wcDocker.DOCK_BOTTOM, true, panel4);
-    myDocker.addPanel('Memory Panel', wcDocker.DOCK_BOTTOM, false, panel4);
-
-    myDocker.addPanel('Customized UI', wcDocker.DOCK_RIGHT, false);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_BOTTOM, false);
+    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, false);
+    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_RIGHT, false);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, false, controlPanel);
+    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, false, controlPanel);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
-
-    myDocker.addPanel('Dock Me', wcDocker.DOCK_FLOAT, false);
-
-    myDocker.addPanel('Introduction', wcDocker.DOCK_MODAL, false);
   }
 });

@@ -474,14 +474,16 @@ wcDocker.prototype = {
       this.__addPanelAlone(panel, location, parentPanel);
     }
 
-    this.__update();
-
     var frame = panel._parent;
     if (frame instanceof wcFrame) {
       if (frame._panelList.length === 1) {
         frame.pos(offset.left + width/2 + 20, offset.top + height/2 + 20, true);
       }
+    }
 
+    this.__update();
+
+    if (frame instanceof wcFrame) {
       if (floating !== frame._isFloating) {
         if (frame._isFloating) {
           panel.__trigger(wcDocker.EVENT_DETACHED);
@@ -1182,7 +1184,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel().layout().$elem[0] == this) {
+        if (self._frameList[i].panel().layout().$table[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);

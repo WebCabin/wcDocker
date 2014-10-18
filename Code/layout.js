@@ -7,7 +7,7 @@ function wcLayout(container, parent) {
 
   this._batchProcess = false;
   this._grid = [];
-  this.$elem = null;
+  this.$table = null;
 
   this.__init();
 };
@@ -78,7 +78,7 @@ wcLayout.prototype = {
     var spacing = this.gridSpacing();
     var alternate = this.gridAlternate();
 
-    this.$elem.remove();
+    this.$table.remove();
     this.__init();
 
     this.showGrid(showGrid);
@@ -108,10 +108,10 @@ wcLayout.prototype = {
   //    bool        The current visibility of the grid.
   showGrid: function(enabled) {
     if (typeof enabled !== 'undefined') {
-      this.$elem.toggleClass('wcLayoutGrid', enabled);
+      this.$table.toggleClass('wcLayoutGrid', enabled);
     }
 
-    return this.$elem.hasClass('wcLayoutGrid');
+    return this.$table.hasClass('wcLayoutGrid');
   },
 
   // Version 1.0.1
@@ -122,10 +122,10 @@ wcLayout.prototype = {
   //    int       The current border spacing size.
   gridSpacing: function(size) {
     if (typeof size !== 'undefined') {
-      this.$elem.css('border-spacing', size + 'px');
+      this.$table.css('border-spacing', size + 'px');
     }
 
-    return parseInt(this.$elem.css('border-spacing'));
+    return parseInt(this.$table.css('border-spacing'));
   },
 
   // Version 1.0.1
@@ -136,15 +136,15 @@ wcLayout.prototype = {
   //    bool        Whether the grid alternates in color.
   gridAlternate: function(enabled) {
     if (typeof enabled !== 'undefined') {
-      this.$elem.toggleClass('wcLayoutGridAlternate', enabled);
+      this.$table.toggleClass('wcLayoutGridAlternate', enabled);
     }
 
-    return this.$elem.hasClass('wcLayoutGridAlternate');
+    return this.$table.hasClass('wcLayoutGridAlternate');
   },
 
   // Retrieves the main scene DOM element.
   scene: function() {
-    return this.$elem;
+    return this.$table;
   },
 
 
@@ -154,8 +154,8 @@ wcLayout.prototype = {
 
   // Initialize
   __init: function() {
-    this.$elem = $('<table class="wcLayout wcWide wcTall wcPanelBackground"></table>');
-    this.$elem.append($('<tbody></tbody>'));
+    this.$table = $('<table class="wcLayout wcWide wcTall wcPanelBackground"></table>');
+    this.$table.append($('<tbody></tbody>'));
     this.__container(this.$container);
   },
 
@@ -185,7 +185,7 @@ wcLayout.prototype = {
     }
 
     if (!this._batchProcess) {
-      var $oldBody = this.$elem.find('tbody');
+      var $oldBody = this.$table.find('tbody');
       $('.wcDockerTransition').append($oldBody);
 
       var $newBody = $('<tbody>');
@@ -205,7 +205,7 @@ wcLayout.prototype = {
         }
       }
 
-      this.$elem.append($newBody);
+      this.$table.append($newBody);
       $oldBody.remove();
     }
   },
@@ -263,7 +263,7 @@ wcLayout.prototype = {
     var height = $elem.height();
     var offset = $elem.offset();
     var top = $elem.find('.wcFrameTitle').height();
-    // var top = this.$elem.offset().top - offset.top;
+    // var top = this.$table.offset().top - offset.top;
     if (!title) {
       top = 0;
     }
@@ -417,9 +417,9 @@ wcLayout.prototype = {
 
     this.$container = $container;
     if (this.$container) {
-      this.$container.append(this.$elem);
+      this.$container.append(this.$table);
     } else {
-      this.$elem.remove();
+      this.$table.remove();
     }
     return this.$container;
   },
@@ -430,7 +430,7 @@ wcLayout.prototype = {
     this._parent = null;
     this.clear();
 
-    this.$elem.remove();
-    this.$elem = null;
+    this.$table.remove();
+    this.$table = null;
   },
 };
