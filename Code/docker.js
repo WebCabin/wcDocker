@@ -218,10 +218,13 @@ wcDocker.prototype = {
   //                  desired location, a floating window will be used.
   //    parentPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the central panel.
+  //    rect          An optional object that contains an x and y position
+  //                  and a w and h to size the panel.
+  //                  
   // Returns:
   //    wcPanel       The panel that was created.
   //    false         The panel type does not exist.
-  addPanel: function(typeName, location, allowGroup, parentPanel) {
+  addPanel: function(typeName, location, allowGroup, parentPanel, rect) {
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
         var panel = new wcPanel(typeName, this._dockPanelTypeList[i].options);
@@ -234,6 +237,16 @@ wcDocker.prototype = {
         } else {
           this.__addPanelAlone(panel, location, parentPanel);
         }
+
+        if (typeof rect !== 'undefined') {
+          var frame = panel._parent;
+          if (frame instanceof wcFrame) {
+            frame.pos(rect.x + rect.w/2, rect.y + rect.h/2, true);
+            frame._size.x = rect.w;
+            frame._size.y = rect.h;
+          }
+        }
+
         this.__update();
         return panel;
       }
@@ -1337,10 +1350,10 @@ wcDocker.prototype = {
             if (frame instanceof wcFrame) {
               frame.pos(mouse.x, mouse.y + self._ghost.__rect().h/2 - 10, true);
               frame.panel(index);
-            }
 
-            frame._size.x = self._ghost.__rect().w;
-            frame._size.y = self._ghost.__rect().h;
+              frame._size.x = self._ghost.__rect().w;
+              frame._size.y = self._ghost.__rect().h;
+            }
 
             frame.__update();
           }
@@ -1381,7 +1394,7 @@ wcDocker.prototype = {
             frame.panel(index);
           }
         }
-        self._ghost.__destroy();
+        self._ghost.destroy();
         self._ghost = null;
 
         self.trigger(wcDocker.EVENT_END_DOCK);

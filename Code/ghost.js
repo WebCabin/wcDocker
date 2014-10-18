@@ -117,6 +117,16 @@ wcGhost.prototype = {
   },
 
   // --------------------------------------------------------------------------------
+  rect: function() {
+    return {
+      x: this.$ghost.offset().left,
+      y: this.$ghost.offset().top,
+      w: parseInt(this.$ghost.css('width')),
+      h: parseInt(this.$ghost.css('height')),
+    };
+  },
+
+  // --------------------------------------------------------------------------------
   destroy: function() {
     this.__destroy();
   },
@@ -151,11 +161,6 @@ wcGhost.prototype = {
     this.anchor(mouse, rect);
   },
 
-  // Gets the original size of the moving widget.
-  __rect: function() {
-    return this._rect;
-  },
-
   // Updates the size of the layout.
   __move: function(mouse) {
     if (this._anchor) {
@@ -170,6 +175,11 @@ wcGhost.prototype = {
 
     this.$ghost.css('left', x + 'px');
     this.$ghost.css('top',  y + 'px');
+  },
+
+  // Gets the original size of the moving widget.
+  __rect: function() {
+    return this._rect;
   },
 
   // Exorcise the ghost.
