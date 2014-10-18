@@ -357,7 +357,7 @@ $(document).ready(function() {
       onCreate: function(myPanel) {
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the reaction panel!  Get notification for common built in events by using the built in event system.</div>');
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the reaction panel!  Get notifications for common events by using the built in event system.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }
@@ -369,18 +369,18 @@ $(document).ready(function() {
         var $buttonTfalse = $('<div style="text-align:center"><b>Thumbs button is up!</b></div>');
         var buttonTimer;
 
-        var $attachInfo = $('<div style="text-align:center">I react when docked</div>');
-        var $attached   = $('<div style="text-align:center"><b>I was just docked!</b></div>');
-        var $detachInfo = $('<div style="text-align:center">I react when detached</div>');
-        var $detached   = $('<div style="text-align:center"><b>I was just detached!</b></div>');
+        var $attachInfo   = $('<div style="text-align:center">I react when docked</div>');
+        var $attached     = $('<div style="text-align:center"><b>I was just docked!</b></div>');
+        var $detachInfo   = $('<div style="text-align:center">I react when detached</div>');
+        var $detached     = $('<div style="text-align:center"><b>I was just detached!</b></div>');
         var attachTimer;
 
-        var $moveInfo = $('<div style="text-align:center">I react on move</div>');
-        var $moved    = $('<div style="text-align:center"><b>I was just moved!</b></div>');
+        var $moveInfo     = $('<div style="text-align:center">I react on move</div>');
+        var $moved        = $('<div style="text-align:center"><b>I was just moved!</b></div>');
         var moveTimer;
 
-        var $resizeInfo = $('<div style="text-align:center">I react on resize</div>');
-        var $resized    = $('<div style="text-align:center"><b>I was just resized!</b></div>');
+        var $resizeInfo   = $('<div style="text-align:center">I react on resize</div>');
+        var $resized      = $('<div style="text-align:center"><b>I was just resized!</b></div>');
         var resizeTimer;
 
         myPanel.layout().addItem($infoText, 0, 0);
@@ -504,14 +504,68 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
+    // Register the widget panel, a demonstration of some of the built in
+    // panel widget items.
+    myDocker.registerPanelType('Widget Panel', {
+      faicon: 'trophy',
+      onCreate: function(myPanel) {
+        myPanel.initSize(400, 400);
+        myPanel.layout().showGrid(true);
+        myPanel.layout().$table.css('padding', '10px');
+
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the widget panel!  A demonstration of some of the custom layout widgets provided for you by wcDocker.</div>');
+        if (!_showingInfo) {
+          $infoText.hide();
+        }
+
+        // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
+        // to size it to the full size of the panel.
+        var $scene = $('<div style="width:100%;height:100%;position:relative;">')
+
+        myPanel.layout().addItem($infoText, 0, 0);
+        myPanel.layout().addItem($scene, 0, 1).parent().css('height', '100%');
+
+
+        // Here we can utilize the splitter used by wcDocker internally so that we may split up
+        // a single panel.  Splitters can be nested, and new layouts can be created to fill
+        // each side of the split.
+        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
+
+        // Initialize this splitter with a layout in each pane.  This can be done manually, but
+        // it is more convenient this way.
+        splitter.initLayouts();
+
+        // By default, the splitter splits down the middle, but the position can be assigned manually by giving it a percentage value from 0-1.
+        splitter.pos(0.25);
+
+        // Put some content in each layout.
+        // splitter.pane(0).addItem($('<div style="text-align:center">This panel is partitioned by it\'s own resizable splitter!</div>'));
+        // splitter.pane(1).addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.<br><br>Toggle the rotation button in the upper right to change the orientation of the splitter.</div>'));
+
+        // We need to update the splitter whenever the panel is updated.
+        myPanel.on(wcDocker.EVENT_UPDATED, function() {
+          splitter.update();
+          // tabs.update();
+        });
+
+        // Add a rotation panel button to change the orientation of the splitter.
+        myPanel.addButton('View', 'verticalPanelButton', 'O', 'Switch between horizontal and vertical layout.', true, 'horizontalPanelButton');
+        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+          splitter.orientation(data.isToggled);
+        });
+      }
+    });
+
+    // --------------------------------------------------------------------------------
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_BOTTOM, false);
-    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, false);
-    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_RIGHT, false);
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, false, controlPanel);
-    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, false, controlPanel);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_BOTTOM, false);
+    var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, false);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, false);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_RIGHT, false, batchPanel);
+    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, false, batchPanel);
+    var bottomChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_BOTTOM, false, topChatPanel);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
   }
