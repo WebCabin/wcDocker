@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     var _currentTheme = 'Default';
     var _showingInfo  = true;
-    var _savedLayouts = [];
+    var _savedLayout  = null;
     var _chatterIndex = 1;
 
     // --------------------------------------------------------------------------------
@@ -62,15 +62,10 @@ $(document).ready(function() {
         $themeSelector.val(_currentTheme);
 
         // Pre-configured layout configurations.
-        var $layoutNameLabel  = $('<div style="white-space:nowrap;text-align:right;">Layout: </div>');
-        var $layoutNameEdit   = $('<input type="text" placeholder="Layout Name" style="width:100%"></input>');
         var $saveButton       = $('<button style="width:100%;">Save Layout</button>');
-
-        var $layoutListLabel = $('<div style="white-space:nowrap;width:100%;text-align:center;">Restore layout: </div>');
-        var $layoutList = $('<select class="layoutSelector" style="width:100%;">');
-        $layoutList.append('<option value="">&lt;Choose one&gt;</option>');
-        for (var i = 0; i < _savedLayouts.length; ++i) {
-          $layoutList.append('<option value="' + _savedLayouts[i].name + '">' + _savedLayouts[i].name + '</option>');
+        var $loadButton       = $('<button class="restoreButton" style="width:100%;">Restore Layout</button>');
+        if (!_savedLayout) {
+          $loadButton.attr('disabled', true);
         }
 
         myPanel.layout().startBatch();
@@ -80,11 +75,8 @@ $(document).ready(function() {
         myPanel.layout().addItem($themeSelector, 1, 2).css('text-align', 'left');
 
         myPanel.layout().addItem('<div style="height: 20px;"></div>', 0, 3, 2, 1);
-        myPanel.layout().addItem($layoutNameLabel, 0, 4);
-        myPanel.layout().addItem($layoutNameEdit, 1, 4);
-        myPanel.layout().addItem($layoutListLabel, 0, 5);
-        myPanel.layout().addItem($layoutList, 1, 5);
-        myPanel.layout().addItem($saveButton, 1, 6);
+        myPanel.layout().addItem($saveButton, 1, 5);
+        myPanel.layout().addItem($loadButton, 1, 6);
         myPanel.layout().finishBatch();
 
         // Here we do some css table magic to make all other cells align to the top of the window.
@@ -138,38 +130,7 @@ $(document).ready(function() {
         var saveTimer = 0;
         $saveButton.click(function() {
           // Save the layout.
-          var layoutConfig = myDocker.save();
-
-          // Add the saved layout into the saved layout list.
-          var foundLayout = false;
-          var layoutName = $layoutNameEdit.val();
-          if (!layoutName) {
-            layoutName = 'Default';
-          }
-          for (var i = 0; i < _savedLayouts.length; ++i) {
-            if (_savedLayouts[i].name === layoutName) {
-              foundLayout = true;
-              _savedLayouts[i].data = layoutConfig;
-              break;
-            }
-          }
-          if (!foundLayout) {
-            _savedLayouts.push({
-              name: layoutName,
-              data: layoutConfig,
-            });
-          }
-
-          // Update all saved layout list boxes with the new list.
-          $('.layoutSelector').each(function() {
-            var $selector = $(this);
-            $selector.children().remove();
-            $selector.append('<option value="">&lt;Choose one&gt;</option>');
-    
-            for (var i = 0; i < _savedLayouts.length; ++i) {
-              $selector.append('<option value="' + _savedLayouts[i].name + '">' + _savedLayouts[i].name + '</option>');
-            }
-          });
+          _savedLayout = myDocker.save();
 
           // Enable all restore buttons on the page, as there may be more than one control panel open.
           $saveButton.html('<b>Layout Saved!</b>');
@@ -189,15 +150,9 @@ $(document).ready(function() {
         });
 
         // Restore a layout whenever a selection on the layout list is changed.
-        $layoutList.change(function() {
-          var str = '';
-          var value = $('option:selected', this).val();
-          if (value) {
-            for (var i = 0; i < _savedLayouts.length; ++i) {
-              if (_savedLayouts[i].name === value) {
-                myDocker.restore(_savedLayouts[i].data);
-              }
-            }
+        $loadButton.click(function() {
+          if (_savedLayout) {
+            myDocker.restore(_savedLayout);
           }
         });
       }
@@ -510,7 +465,7 @@ $(document).ready(function() {
       faicon: 'trophy',
       onCreate: function(myPanel) {
         myPanel.initSize(400, 400);
-        myPanel.layout().showGrid(true);
+        // myPanel.layout().showGrid(true);
         myPanel.layout().$table.css('padding', '10px');
 
         var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the widget panel!  A demonstration of some of the custom layout widgets provided for you by wcDocker.</div>');
@@ -523,7 +478,7 @@ $(document).ready(function() {
         var $scene = $('<div style="width:100%;height:100%;position:relative;">')
 
         myPanel.layout().addItem($infoText, 0, 0);
-        myPanel.layout().addItem($scene, 0, 1).parent().css('height', '100%');
+        myPanel.layout().addItem($scene, 0, 1).css('border', '1px solid black').parent().css('height', '100%');
 
 
         // Here we can utilize the splitter used by wcDocker internally so that we may split up
