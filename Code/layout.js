@@ -154,7 +154,7 @@ wcLayout.prototype = {
 
   // Initialize
   __init: function() {
-    this.$table = $('<table class="wcLayout wcWide wcTall wcPanelBackground"></table>');
+    this.$table = $('<table class="wcLayout wcWide wcTall"></table>');
     this.$table.append($('<tbody></tbody>'));
     this.__container(this.$container);
   },

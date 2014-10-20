@@ -2171,7 +2171,7 @@ wcLayout.prototype = {
 
   // Initialize
   __init: function() {
-    this.$table = $('<table class="wcLayout wcWide wcTall wcPanelBackground"></table>');
+    this.$table = $('<table class="wcLayout wcWide wcTall"></table>');
     this.$table.append($('<tbody></tbody>'));
     this.__container(this.$container);
   },
@@ -4781,7 +4781,7 @@ wcTabFrame.prototype = {
 
       var $tabContent = this.$center.children('.wcPanelTabContent[id="' + i + '"]');
       if (!$tabContent.length) {
-        $tabContent = $('<div class="wcPanelTabContent wcPanelBackground wcPanelTabContentHidden" id="' + i + '">');
+        $tabContent = $('<div class="wcPanelTabContent wcPanelTabContentHidden" id="' + i + '">');
         this.$center.append($tabContent);
       }
 

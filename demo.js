@@ -32,13 +32,13 @@ $(document).ready(function() {
         myPanel.closeable(false);
 
         // Toggle info button.
-        var $toggleInfoButton = $('<button class="toggleInfo" style="float:right;">Hide All Info Text</button>');
+        var $toggleInfoButton = $('<button class="toggleInfo" style="position:absolute;right:10px;top:10px;">Hide All Info Text</button>');
         if (!_showingInfo) {
           $infoText.hide();
           $toggleInfoButton.text('Show All Info Text');
         }
 
-        var $header = $('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong></div>');
+        var $header = $('<div style="text-align:center;"><strong>Welcome to the Web Cabin Docker!</strong></div>');
         $header.append($toggleInfoButton);
 
         // Add some text information into the panel
@@ -95,7 +95,7 @@ $(document).ready(function() {
         myPanel.initSize(500, 300);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the control panel!  Here you will find controls for changing docker-wide options.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The control panel demonstrates a few of the wcDocker-wide features available to you.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
         
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
@@ -183,146 +183,73 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
-    // Register the chat panel, a demonstration of the built in panel event/messaging
-    // system to communicate between multiple chat panels.
-    myDocker.registerPanelType('Chat Panel', {
-      faicon: 'comment-o',
+    // Register the widget panel, a demonstration of some of the built in
+    // panel widget items.
+    myDocker.registerPanelType('Widget Panel', {
+      faicon: 'trophy',
       onCreate: function(myPanel) {
+        myPanel.initSize(400, 400);
+        // myPanel.layout().showGrid(true);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the chat panel!  Here is a simple demonstration of the built in event messaging system between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }
 
-        // Create our chat window.
-        var $senderLabel    = $('<div style="white-space:nowrap;">Sender Name: </div>');
-        var $senderName     = $('<input type="text" style="width:100%;padding:0px;" placeholder="Sender name here" value="Chatter' + _chatterIndex++ + '"/>');
+        // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
+        // to size it to the full size of the panel.
+        var $scene = $('<div style="width:100%;height:100%;position:relative;">');
 
-        var $chatArea       = $('<textarea style="width:100%;height:100%;padding:0px;margin-top:10px;border:0px;"></textarea>');
-        var $chatEdit       = $('<input type="text" style="width:100%;padding:0px;" placeholder="Type a message here!"/>');
-        var $chatSend       = $('<button>Send</button>');
-        var $chatContainer  = $('<table style="width:100%;"><tr><td></td><td></td></tr></table>');
-        $chatContainer.find('td').first().append($chatEdit).css('width', '100%');
-        $chatContainer.find('td').last().append($chatSend).css('width', '1%');
+        myPanel.layout().addItem($infoText, 0, 0);
+        myPanel.layout().addItem($scene, 0, 1).css('border', '1px solid black').parent().css('height', '100%');
 
-        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
-        myPanel.layout().addItem($senderLabel, 0, 1).css('width', '1%');
-        myPanel.layout().addItem($senderName, 1, 1).css('width', '100%');
-        var chatCell = myPanel.layout().addItem($chatArea, 0, 2, 2, 1);
-        myPanel.layout().addItem($chatContainer, 0, 3, 2, 1);
 
-        chatCell.parent().css('height', '100%');
+        // Here we can utilize the splitter used by wcDocker internally so that we may split up
+        // a single panel.  Splitters can be nested, and new layouts can be created to fill
+        // each side of the split.
+        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
 
-        // Send a chat message.
-        function onChatSent() {
-          var sender = $senderName.val();
-          var message = $chatEdit.val();
+        // Initialize this splitter with a layout in each pane.  This can be done manually, but
+        // it is more convenient this way.
+        splitter.initLayouts();
 
-          // Use our built in event/messaging system, this sends a message
-          // of name "Message" to anyone who is listening to it, and sends
-          // a data object that describes the message.
-          myPanel.trigger('Message', {
-            sender: sender,
-            message: message,
-          });
+        // By default, the splitter splits down the middle, but the position can be assigned manually by giving it a percentage value from 0-1.
+        splitter.pos(0.5);
 
-          $chatEdit.val('');
-        };
+        // Now create a second, nested, splitter to go inside the existing one.
+        var $subScene = $('<div style="width:100%;height:100%;position:relative;">');
+        splitter.pane(0).addItem($subScene);
 
-        $chatEdit.keypress(function(event) {
-          if (event.keyCode == 13) {
-            onChatSent();
-          }
-        });
-        $chatSend.click(onChatSent);
+        var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION_VERTICAL);
+        subSplitter.initLayouts();
+        subSplitter.pos(0.25);
 
-        // Register this panel to listen for any messages of type "Message".
-        myPanel.on('Message', function(data) {
-          // The data passed in is the data object sent by the sender.
-          var text = data.sender + ': ' + data.message + '\n';
-          $chatArea.html($chatArea.html() + text);
-        });
-      }
-    });
+        // Now create a tab widget and put that into one of the sub splits.
+        var $tabArea = $('<div style="width:100%;height:100%;position:relative;">');
+        subSplitter.pane(1).addItem($tabArea);
+        var tabFrame = new wcTabFrame($tabArea, myPanel);
+        tabFrame.addTab('Custom Tab 1').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
+        tabFrame.addTab('Custom Tab 2').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Each tab has its own layout, and can be configured however you wish.</div>'));
+        tabFrame.addTab('Custom Tab 3').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
+        tabFrame.addTab('Custom Tab 4').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
+        tabFrame.addTab('Custom Tab 5').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
+        tabFrame.closeable(3, true);
+        tabFrame.faicon(0, 'gears')
 
-    // --------------------------------------------------------------------------------
-    // Register the batch panel, a demonstration of the layout batch system when
-    // adding an overwhelming number of elements into the layout all at once.
-    myDocker.registerPanelType('Batch Panel', {
-      faicon: 'cubes',
-      onCreate: function(myPanel) {
-        myPanel.layout().$table.css('padding', '10px');
+        splitter.pane(1).addItem($('<div class="info" style="background-color:lightgray;margin:20px;">The same splitter widget used to separate panels can also be used anywhere within a panel.  Each side of the splitter comes with its own layout.</div>'));
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the batch panel!  Here illustrates a comparison between adding layout items one at a time vs using the batching system.  The batching system avoids re-calculating elements each time a new one is added until the batch has been finished.  Use this if you are adding a large number of elements into the panel\'s layout.</div>');
-        if (!_showingInfo) {
-          $infoText.hide();
-        }
+        // // Now create an IFrame widget and put it into the large split.
+        // var $frameArea = $('<div style="width:100%;height:100%;position:relative;">');
+        // splitter.pane(1).addItem($frameArea);
+        // var iFrame = new wcIFrame($frameArea, myPanel);
+        // iFrame.openURL('http://webcabin.org/');
 
-        var $clearItemsButton   = $('<button style="white-space:nowrap;">Clear Items</buttons>');
-        var $normalAddButton    = $('<button style="white-space:nowrap;margin-left:10px;margin-right:10px;">Add Items Normally</button>');
-        var $batchAddButton     = $('<button style="white-space:nowrap;">Add Items Batched</button>');
-
-        myPanel.layout().addItem($infoText, 0, 0, 3, 1);
-        myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
-        myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
-        myPanel.layout().addItem($batchAddButton, 2, 1);
-
-        // Here we do some css table magic to make all other cells align to the top of the window.
-        // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-        myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
-
-        var currentItemIndex = 0;
-        function __addItems() {
-          myPanel.layout().item(0, currentItemIndex+3).css('height', '');
-
-          // Add a large number of items into the layout.
-          var min = 0;
-          var max = 2;
-          for (var i = 0; i < 250; ++i) {
-            currentItemIndex++;
-            var randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
-            var $item = null;
-            switch (randomInt) {
-              case 0:
-                $item = $('<div>Some Random Text Item</div>');
-                break;
-              case 1:
-                $item = $('<input placeholder="Some Random Text Input"/>');
-                break;
-              case 2:
-                $item = $('<button>Some Random Button</button>');
-                break;
-            }
-            if ($item) {
-              myPanel.layout().addItem($item, 0, currentItemIndex+3, 3, 1).css('border-bottom', '2px solid black').css('padding-bottom', '5px').css('text-align', 'center');
-            }
-          }
-        };
-
-        $clearItemsButton.click(function() {
-          $('body').append($clearItemsButton).append($normalAddButton).append($batchAddButton);
-          myPanel.layout().clear();
-          myPanel.layout().$table.css('padding', '10px');
-          myPanel.layout().addItem($infoText, 0, 0, 3, 1);
-          myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
-          myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
-          myPanel.layout().addItem($batchAddButton, 2, 1);
-
-          // Here we do some css table magic to make all other cells align to the top of the window.
-          // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-          myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
-          currentItemIndex = 0;
-        });
-
-        $normalAddButton.click(function() {
-          __addItems();
-        });
-
-        $batchAddButton.click(function() {
-          myPanel.layout().startBatch();
-          __addItems();
-          myPanel.layout().finishBatch();
+        // Add a rotation panel button to change the orientation of the splitter.
+        myPanel.addButton('View', 'fa fa-mail-reply', 'O', 'Switch between horizontal and vertical layout.', true, 'fa fa-mail-forward');
+        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+          splitter.orientation(data.isToggled);
+          subSplitter.orientation(!data.isToggled);
         });
       }
     });
@@ -335,7 +262,7 @@ $(document).ready(function() {
         myPanel.initSize(300, 300);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the reaction panel!  Get notifications for common events by using the built in event system.</div>');
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The reaction panel demonstrates how to receive built-in notifications for common events by using the event messaging system.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }
@@ -482,87 +409,171 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
-    // Register the widget panel, a demonstration of some of the built in
-    // panel widget items.
-    myDocker.registerPanelType('Widget Panel', {
-      faicon: 'trophy',
+    // Register the chat panel, a demonstration of the built in panel event/messaging
+    // system to communicate between multiple chat panels.
+    myDocker.registerPanelType('Chat Panel', {
+      faicon: 'comment-o',
       onCreate: function(myPanel) {
-        myPanel.initSize(400, 400);
-        // myPanel.layout().showGrid(true);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the widget panel!  A demonstration of some of the custom layout widgets provided for you by wcDocker.</div>');
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The chat panel demonstrates the use of the built-in event messaging system to broadcast information between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }
 
-        // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
-        // to size it to the full size of the panel.
-        var $scene = $('<div style="width:100%;height:100%;position:relative;">');
+        // Create our chat window.
+        var $senderLabel    = $('<div style="white-space:nowrap;">Sender Name: </div>');
+        var $senderName     = $('<input type="text" style="width:100%;padding:0px;" placeholder="Sender name here" value="Chatter' + _chatterIndex++ + '"/>');
 
-        myPanel.layout().addItem($infoText, 0, 0);
-        myPanel.layout().addItem($scene, 0, 1).css('border', '1px solid black').parent().css('height', '100%');
+        var $chatArea       = $('<textarea style="width:100%;height:100%;padding:0px;margin-top:10px;border:0px;"></textarea>');
+        var $chatEdit       = $('<input type="text" style="width:100%;padding:0px;" placeholder="Type a message here!"/>');
+        var $chatSend       = $('<button>Send</button>');
+        var $chatContainer  = $('<table style="width:100%;"><tr><td></td><td></td></tr></table>');
+        $chatContainer.find('td').first().append($chatEdit).css('width', '100%');
+        $chatContainer.find('td').last().append($chatSend).css('width', '1%');
 
+        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
+        myPanel.layout().addItem($senderLabel, 0, 1).css('width', '1%');
+        myPanel.layout().addItem($senderName, 1, 1).css('width', '100%');
+        var chatCell = myPanel.layout().addItem($chatArea, 0, 2, 2, 1);
+        myPanel.layout().addItem($chatContainer, 0, 3, 2, 1);
 
-        // Here we can utilize the splitter used by wcDocker internally so that we may split up
-        // a single panel.  Splitters can be nested, and new layouts can be created to fill
-        // each side of the split.
-        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
+        chatCell.parent().css('height', '100%');
 
-        // Initialize this splitter with a layout in each pane.  This can be done manually, but
-        // it is more convenient this way.
-        splitter.initLayouts();
+        // Send a chat message.
+        function onChatSent() {
+          var sender = $senderName.val();
+          var message = $chatEdit.val();
 
-        // By default, the splitter splits down the middle, but the position can be assigned manually by giving it a percentage value from 0-1.
-        splitter.pos(0.25);
+          // Use our built in event/messaging system, this sends a message
+          // of name "Message" to anyone who is listening to it, and sends
+          // a data object that describes the message.
+          myPanel.trigger('Message', {
+            sender: sender,
+            message: message,
+          });
 
-        // Now create a second, nested, splitter to go inside the existing one.
-        var $subScene = $('<div style="width:100%;height:100%;position:relative;">');
-        splitter.pane(0).addItem($subScene);
+          $chatEdit.val('');
+        };
 
-        var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION_VERTICAL);
-        subSplitter.initLayouts();
-        subSplitter.pos(0.5);
+        $chatEdit.keypress(function(event) {
+          if (event.keyCode == 13) {
+            onChatSent();
+          }
+        });
+        $chatSend.click(onChatSent);
 
-        // Now create a tab widget and put that into one of the sub splits.
-        var $tabArea = $('<div style="width:100%;height:100%;position:relative;">');
-        subSplitter.pane(1).addItem($tabArea);
-        var tabFrame = new wcTabFrame($tabArea, myPanel);
-        tabFrame.addTab('Custom Tab 1').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
-        tabFrame.addTab('Custom Tab 2').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Each tab has its own layout, and can be configured however you wish.</div>'));
-        tabFrame.addTab('Custom Tab 3').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
-        tabFrame.addTab('Custom Tab 4').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
-        tabFrame.addTab('Custom Tab 5').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
-        tabFrame.closeable(3, true);
-        tabFrame.faicon(0, 'gears')
-
-        // // Now create an IFrame widget and put it into the large split.
-        // var $frameArea = $('<div style="width:100%;height:100%;position:relative;">');
-        // splitter.pane(1).addItem($frameArea);
-        // var iFrame = new wcIFrame($frameArea, myPanel);
-        // iFrame.openURL('http://webcabin.org/');
-
-        // Add a rotation panel button to change the orientation of the splitter.
-        myPanel.addButton('View', 'fa fa-mail-reply', 'O', 'Switch between horizontal and vertical layout.', true, 'fa fa-mail-forward');
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
-          splitter.orientation(data.isToggled);
-          subSplitter.orientation(!data.isToggled);
+        // Register this panel to listen for any messages of type "Message".
+        myPanel.on('Message', function(data) {
+          // The data passed in is the data object sent by the sender.
+          var text = data.sender + ': ' + data.message + '\n';
+          $chatArea.html($chatArea.html() + text);
         });
       }
+    });
+
+    // --------------------------------------------------------------------------------
+    // Register the batch panel, a demonstration of the layout batch system when
+    // adding an overwhelming number of elements into the layout all at once.
+    myDocker.registerPanelType('Batch Panel', {
+      faicon: 'cubes',
+      onCreate: function(myPanel) {
+        myPanel.layout().$table.css('padding', '10px');
+
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The batch panel demonstrates a speed comparison between adding layout items one at a time vs using the batching system.  The batching system avoids re-calculating elements each time a new one is added until the batch has been finished.  Use this if you are adding a large number of elements into the panel\'s layout.</div>');
+        if (!_showingInfo) {
+          $infoText.hide();
+        }
+
+        var $clearItemsButton   = $('<button style="white-space:nowrap;">Clear Items</buttons>');
+        var $normalAddButton    = $('<button style="white-space:nowrap;margin-left:10px;margin-right:10px;">Add Items Normally</button>');
+        var $batchAddButton     = $('<button style="white-space:nowrap;">Add Items Batched</button>');
+
+        myPanel.layout().addItem($infoText, 0, 0, 3, 1);
+        myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
+        myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
+        myPanel.layout().addItem($batchAddButton, 2, 1);
+
+        // Here we do some css table magic to make all other cells align to the top of the window.
+        // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
+        myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
+
+        var currentItemIndex = 0;
+        function __addItems() {
+          myPanel.layout().item(0, currentItemIndex+3).css('height', '');
+
+          // Add a large number of items into the layout.
+          var min = 0;
+          var max = 2;
+          for (var i = 0; i < 250; ++i) {
+            currentItemIndex++;
+            var randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
+            var $item = null;
+            switch (randomInt) {
+              case 0:
+                $item = $('<div>Some Random Text Item</div>');
+                break;
+              case 1:
+                $item = $('<input placeholder="Some Random Text Input"/>');
+                break;
+              case 2:
+                $item = $('<button>Some Random Button</button>');
+                break;
+            }
+            if ($item) {
+              myPanel.layout().addItem($item, 0, currentItemIndex+3, 3, 1).css('border-bottom', '2px solid black').css('padding-bottom', '5px').css('text-align', 'center');
+            }
+          }
+        };
+
+        $clearItemsButton.click(function() {
+          $('body').append($clearItemsButton).append($normalAddButton).append($batchAddButton);
+          myPanel.layout().clear();
+          myPanel.layout().$table.css('padding', '10px');
+          myPanel.layout().addItem($infoText, 0, 0, 3, 1);
+          myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
+          myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
+          myPanel.layout().addItem($batchAddButton, 2, 1);
+
+          // Here we do some css table magic to make all other cells align to the top of the window.
+          // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
+          myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
+          currentItemIndex = 0;
+        });
+
+        $normalAddButton.click(function() {
+          __addItems();
+        });
+
+        $batchAddButton.click(function() {
+          myPanel.layout().startBatch();
+          __addItems();
+          myPanel.layout().finishBatch();
+        });
+      }
+    });
+
+    // ---------------------------------------------------------------------------
+    // Register the instruction panel, explains the code used to initialize docker
+    // as well as explains every panel type.
+    myDocker.registerPanelType('How-To Panel', {
+      faicon: 'graduation-cap',
+      onCreate: HowToPanel,
     });
 
     // --------------------------------------------------------------------------------
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_BOTTOM);
+    var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK_BOTTOM);
 
     var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, null, {h: -1, w:400});
     var bottomChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_BOTTOM, topChatPanel);
 
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, false, {w:500,h:-1});
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, batchPanel);
-    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, batchPanel);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, false, {w:500,h:-1});
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, widgetPanel);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, widgetPanel);
+    // var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_STACKED, controlPanel);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
   }

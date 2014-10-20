@@ -347,7 +347,7 @@ wcTabFrame.prototype = {
 
       var $tabContent = this.$center.children('.wcPanelTabContent[id="' + i + '"]');
       if (!$tabContent.length) {
-        $tabContent = $('<div class="wcPanelTabContent wcPanelBackground wcPanelTabContentHidden" id="' + i + '">');
+        $tabContent = $('<div class="wcPanelTabContent wcPanelTabContentHidden" id="' + i + '">');
         this.$center.append($tabContent);
       }
 
