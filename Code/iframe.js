@@ -1,10 +1,10 @@
-function wcIFrame(panel, container) {
+function wcIFrame(container, panel) {
 
   this._panel = panel;
   this._layout = panel.layout();
 
-  this.$outer = null;
-  this.$game = null;
+  this.$container = $(container);
+  this.$frame = null;
 
   this._window = null;
   this._isAttached = true;
@@ -21,45 +21,45 @@ wcIFrame.prototype = {
 
   // ---------------------------------------------------------------------------
   onBeginDock: function() {
-    if (this.$game) {
-      this.$game.addClass('ARPG_GameFrameMoving');
+    if (this.$frame) {
+      this.$frame.addClass('wcIFrameMoving');
     }
   },
 
   // ---------------------------------------------------------------------------
   onEndDock: function() {
-    if (this.$game && this._hasFocus) {
-      this.$game.removeClass('ARPG_GameFrameMoving');
+    if (this.$frame && this._hasFocus) {
+      this.$frame.removeClass('wcIFrameMoving');
     }
   },
 
   // ---------------------------------------------------------------------------
   onMoveStarted: function() {
-    if (this.$game) {
+    if (this.$frame) {
       // Hide the frame while it is moving.
-      this.$game.addClass('ARPG_GameFrameMoving');
+      this.$frame.addClass('wcIFrameMoving');
     }
   },
 
   // ---------------------------------------------------------------------------
   onMoveFinished: function() {
-    if (this.$game && this._hasFocus) {
-      this.$game.removeClass('ARPG_GameFrameMoving');
+    if (this.$frame) {
+      this.$frame.removeClass('wcIFrameMoving');
     }
   },
 
   // --------------------------------------------------------------------------------
   onMoved: function() {
-    if (this.$game) {
+    if (this.$frame) {
       // Size, position, and show the frame once the move is finished.
-      var pos = this.$outer.offset();
-      var width = this.$outer.width();
-      var height = this.$outer.height();
+      var pos = this.$container.offset();
+      var width = this.$container.width();
+      var height = this.$container.height();
 
-      this.$game.css('left', pos.left);
-      this.$game.css('top', pos.top);
-      this.$game.css('width', width);
-      this.$game.css('height', height);
+      this.$frame.css('left', pos.left);
+      this.$frame.css('top', pos.top);
+      this.$frame.css('width', width);
+      this.$frame.css('height', height);
     }
   },
 
@@ -89,67 +89,76 @@ wcIFrame.prototype = {
 
   // --------------------------------------------------------------------------------
   onClosed: function() {
-    if (ARPG.isPlaytesting()) {
-      ARPG.stopPlaytest();
-    }
-  },
-
-  // --------------------------------------------------------------------------------
-  updateFrame: function() {
-    if (this.$game) {
-      this.$game.toggleClass('ARPG_GameFrameFloating', !this._isAttached);
-      if (!this._isAttached) {
-        this.$game.toggleClass('ARPG_GameFrameFloatingFocus', this._hasFocus);
-      } else {
-        this.$game.removeClass('ARPG_GameFrameFloatingFocus');
-      }
-      this.$game.toggleClass('ARPG_GameHidden', !this._panel.isVisible());
-    }
-  },
-
-  // --------------------------------------------------------------------------------
-  startPlaytest: function(code) {
-    this.stopPlaytest();
-
-    this.$game = $('<iframe class="ARPG_GameFrame">');
-    this._panel.docker().$container.append(this.$game);
-    this.$game[0].srcdoc = code;
-    this.onMoved();
-    this.$game.toggleClass('ARPG_GameHidden', !this._panel.isVisible());
-    this.$game.toggleClass('ARPG_GameFrameFloating', !this._isAttached);
-    this.$game.toggleClass('ARPG_GameFrameFloatingFocus', this._hasFocus);
-
-    this._window = this.$game[0].contentWindow || this.$game[0];
-
-    var self = window;
-    var win = this._window;
-
-    // Finish up the playtest
-    $(this.$game).load(function() {
-      win.ARPG.init();
-    });
-
-    this.$game[0].focus();
-  },
-
-  // --------------------------------------------------------------------------------
-  stopPlaytest: function() {
-    if (this.$game) {
-      this.$game[0].srcdoc = '';
-      this.$game.remove();
-      this.$game = null;
+    if (this.$frame) {
+      this.$frame[0].srcdoc = '';
+      this.$frame.remove();
+      this.$frame = null;
       this._window = null;
     }
   },
 
   // --------------------------------------------------------------------------------
+  updateFrame: function() {
+    if (this.$frame) {
+      this.$frame.toggleClass('wcIFrameFloating', !this._isAttached);
+      if (!this._isAttached) {
+        this.$frame.toggleClass('wcIFrameFloatingFocus', this._hasFocus);
+      } else {
+        this.$frame.removeClass('wcIFrameFloatingFocus');
+      }
+      this.$frame.toggleClass('wcIFramePanelHidden', !this._panel.isVisible());
+    }
+  },
+
+  // --------------------------------------------------------------------------------
+  openURL: function(url, crossDomain) {
+    this.onClosed();
+
+    this.$frame = $('<iframe class="wcIFrame">');
+    this._panel.docker().$container.append(this.$frame);
+    this.onMoved();
+    this._window = this.$frame[0].contentWindow || this.$frame[0];
+    this.updateFrame();
+
+    var URL = url;
+    if (crossDomain) {
+      URL += '&output=embed';
+    }
+    this._window.location.replace(URL);
+  },
+
+  // --------------------------------------------------------------------------------
+  openSRC: function(src) {
+    this.onClosed();
+
+    this.$frame = $('<iframe class="wcIFrame">');
+    this._panel.docker().$container.append(this.$frame);
+    this.onMoved();
+    this._window = this.$frame[0].contentWindow || this.$frame[0];
+    this.updateFrame();
+
+    // Write the frame source.
+    this._window.document.open();
+    this._window.document.write(src);
+    this._window.document.close();
+  },
+
+  // --------------------------------------------------------------------------------
+  show: function() {
+    if (this.$frame) {
+      this.$frame.removeClass('wcIFrameHidden');
+    }
+  },
+
+  // --------------------------------------------------------------------------------
+  hide: function() {
+    if (this.$frame) {
+      this.$frame.addClass('wcIFrameHidden');
+    }
+  },
+
+  // --------------------------------------------------------------------------------
   __init: function() {
-    this._panel.scrollable(false, false);
-    // this._panel.resizeVisible(false);
-
-    this.$outer = $('<div class="wcWide wcTall">');
-    this._layout.addItem(this.$outer);
-
     this._panel.on(wcDocker.EVENT_VISIBILITY_CHANGED, this.onVisibilityChanged.bind(this));
     this._panel.on(wcDocker.EVENT_BEGIN_DOCK,         this.onBeginDock.bind(this));
     this._panel.on(wcDocker.EVENT_END_DOCK,           this.onEndDock.bind(this));

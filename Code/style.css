@@ -321,6 +321,50 @@ html, body {
   float: right;
 }
 
+.wcIFrame {
+  position: fixed;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 1;
+
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.wcIFrameFloating {
+  z-index: 11;
+}
+
+.wcIFrameFloatingFocus {
+  z-index: 21;
+}
+
+.wcIFrameHidden, .wcIFramePanelHidden {
+  display: none;
+}
+
+.wcIFrameMoving {
+  pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 .wcDocker {

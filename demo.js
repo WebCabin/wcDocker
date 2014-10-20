@@ -19,69 +19,34 @@ $(document).ready(function() {
     myDocker.registerPanelType('Top Panel', {
       isPrivate: true,
       onCreate: function(myPanel) {
-        // Add some text information into the panel
-        myPanel.layout().addItem($('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong><br>Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 0);
-        myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://github.com/WebCabin/wcDocker">https://github.com/WebCabin/wcDocker</a></div>'), 0, 1);
+        myPanel.layout().$table.css('padding', '10px');
 
         // Constrain the sizing of this window so the user can't resize it.
-        myPanel.initSize(Infinity, 100);
-        myPanel.minSize(100, 100);
-        myPanel.maxSize(Infinity, 100);
+        myPanel.initSize(Infinity, 120);
+        myPanel.minSize(100, 120);
+        myPanel.maxSize(Infinity, 120);
         myPanel.title(false);
 
         // Do not allow the user to move or remove this panel, this will remove the title bar completely from the frame.
         myPanel.moveable(false);
         myPanel.closeable(false);
-      }
-    });
 
-    // --------------------------------------------------------------------------------
-    // Register the control panel, this one has a few controls that allow you to change
-    // dockers theme as well as layout configuration controls.
-    myDocker.registerPanelType('Control Panel', {
-      faicon: 'gears',
-      onCreate: function(myPanel) {
-        // myPanel.initSize(500, 400);
-        myPanel.layout().$table.css('padding', '10px');
-
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the control panel!  Here you will find controls for changing docker-wide options.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
-        
         // Toggle info button.
-        var $toggleInfoButton = $('<button class="toggleInfo" style="width:100%;height:100%;">Hide All Info Text</button>');
+        var $toggleInfoButton = $('<button class="toggleInfo" style="float:right;">Hide All Info Text</button>');
         if (!_showingInfo) {
           $infoText.hide();
           $toggleInfoButton.text('Show All Info Text');
         }
 
-        // Create our theme dropdown menu.
-        var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
-        var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
-        $themeSelector.append('<option value="Default">Default</option>');
-        $themeSelector.append('<option value="bigRed">Big Red</option>');
-        $themeSelector.append('<option value="shadow">Shadow</option>');
-        $themeSelector.val(_currentTheme);
+        var $header = $('<div style="text-align:center"><strong>Welcome to the Web Cabin Docker!</strong></div>');
+        $header.append($toggleInfoButton);
 
-        // Pre-configured layout configurations.
-        var $saveButton       = $('<button style="width:100%;">Save Layout</button>');
-        var $loadButton       = $('<button class="restoreButton" style="width:100%;">Restore Layout</button>');
-        if (!_savedLayout) {
-          $loadButton.attr('disabled', true);
-        }
+        // Add some text information into the panel
+        myPanel.layout().addItem($header, 0, 0);
+        myPanel.layout().addItem($('<div style="text-align:center">Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 1);
+        myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://github.com/WebCabin/wcDocker">https://github.com/WebCabin/wcDocker</a></div>'), 0, 2);
+        myPanel.layout().addItem($('<div style="text-align:center">View the instructions and documentation here: <a href="https://github.com/WebCabin/wcDocker/wiki/Instructions">https://github.com/WebCabin/wcDocker/wiki/Instructions</a></div>'), 0, 3);
 
-        myPanel.layout().startBatch();
-        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
-        myPanel.layout().addItem($toggleInfoButton, 1, 1).css('text-align', 'left');
-        myPanel.layout().addItem($themeLabel, 0, 2).css('text-align', 'right').css('width', '1%');
-        myPanel.layout().addItem($themeSelector, 1, 2).css('text-align', 'left');
-
-        myPanel.layout().addItem('<div style="height: 20px;"></div>', 0, 3, 2, 1);
-        myPanel.layout().addItem($saveButton, 1, 5);
-        myPanel.layout().addItem($loadButton, 1, 6);
-        myPanel.layout().finishBatch();
-
-        // Here we do some css table magic to make all other cells align to the top of the window.
-        // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-        myPanel.layout().addItem('<div>', 0, 10, 2, 1).parent().css('height', '100%');
 
         $toggleInfoButton.click(function() {
           _showingInfo = !_showingInfo;
@@ -101,6 +66,65 @@ $(document).ready(function() {
             }
           });
         });
+      }
+    });
+
+    // // --------------------------------------------------------------------------------
+    // // Register the wiki panel, this uses the built in wcIFrame object to provide
+    // // a frame that links to wcDocker's wiki page.
+    // myDocker.registerPanelType('Wiki Panel', {
+    //   options: {
+    //     url: 'https://github.com/WebCabin/wcDocker/wiki',
+    //   },
+    //   onCreate: function(myPanel, options) {
+    //     var $scene = $('<div class="wcWide wcTall">');
+
+    //     myPanel.layout().addItem($scene);
+
+    //     var frame = new wcIFrame($scene, myPanel);
+    //     frame.openURL(options.url);
+    //   },
+    // });
+
+    // --------------------------------------------------------------------------------
+    // Register the control panel, this one has a few controls that allow you to change
+    // dockers theme as well as layout configuration controls.
+    myDocker.registerPanelType('Control Panel', {
+      faicon: 'gears',
+      onCreate: function(myPanel) {
+        myPanel.initSize(500, 300);
+        myPanel.layout().$table.css('padding', '10px');
+
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the control panel!  Here you will find controls for changing docker-wide options.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
+        
+        // Create our theme dropdown menu.
+        var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
+        var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
+        $themeSelector.append('<option value="Default">Default</option>');
+        $themeSelector.append('<option value="bigRed">Big Red</option>');
+        $themeSelector.append('<option value="shadow">Shadow</option>');
+        $themeSelector.val(_currentTheme);
+
+        // Pre-configured layout configurations.
+        var $saveButton       = $('<button style="width:100%;">Save Layout</button>');
+        var $loadButton       = $('<button class="restoreButton" style="width:100%;">Restore Layout</button>');
+        if (!_savedLayout) {
+          $loadButton.attr('disabled', true);
+        }
+
+        myPanel.layout().startBatch();
+        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
+        myPanel.layout().addItem($themeLabel, 0, 2).css('text-align', 'right').css('width', '1%');
+        myPanel.layout().addItem($themeSelector, 1, 2).css('text-align', 'left');
+
+        myPanel.layout().addItem('<div style="height: 20px;"></div>', 0, 3, 2, 1);
+        myPanel.layout().addItem($saveButton, 0, 5, 2, 1);
+        myPanel.layout().addItem($loadButton, 0, 6, 2, 1);
+        myPanel.layout().finishBatch();
+
+        // Here we do some css table magic to make all other cells align to the top of the window.
+        // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
+        myPanel.layout().addItem('<div>', 0, 10, 2, 1).parent().css('height', '100%');
 
         // Bind an event to catch when the theme has been changed.
         $themeSelector.change(function() {
@@ -166,7 +190,7 @@ $(document).ready(function() {
       onCreate: function(myPanel) {
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the chat panel!  Here is a simple demonstration of the built in event/messaging system between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
+        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the chat panel!  Here is a simple demonstration of the built in event messaging system between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }
@@ -308,7 +332,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Reaction Panel', {
       faicon:'refresh',
       onCreate: function(myPanel) {
-        myPanel.initSize(200, 200);
+        myPanel.initSize(300, 300);
         myPanel.layout().$table.css('padding', '10px');
 
         var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the reaction panel!  Get notifications for common events by using the built in event system.</div>');
@@ -474,7 +498,7 @@ $(document).ready(function() {
 
         // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
         // to size it to the full size of the panel.
-        var $scene = $('<div style="width:100%;height:100%;position:relative;">')
+        var $scene = $('<div style="width:100%;height:100%;position:relative;">');
 
         myPanel.layout().addItem($infoText, 0, 0);
         myPanel.layout().addItem($scene, 0, 1).css('border', '1px solid black').parent().css('height', '100%');
@@ -492,20 +516,45 @@ $(document).ready(function() {
         // By default, the splitter splits down the middle, but the position can be assigned manually by giving it a percentage value from 0-1.
         splitter.pos(0.25);
 
-        // Put some content in each layout.
-        // splitter.pane(0).addItem($('<div style="text-align:center">This panel is partitioned by it\'s own resizable splitter!</div>'));
-        // splitter.pane(1).addItem($('<div style="text-align:center">Each side of the splitter has it\'s own layout.<br><br>Toggle the rotation button in the upper right to change the orientation of the splitter.</div>'));
+        // Now create a second, nested, splitter to go inside the existing one.
+        var $subScene = $('<div style="width:100%;height:100%;position:relative;">');
+        splitter.pane(0).addItem($subScene);
+
+        var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION_VERTICAL);
+        subSplitter.initLayouts();
+        subSplitter.pos(0.5);
+
+        // Now create a tab widget and put that into one of the sub splits.
+        var $tabArea = $('<div style="width:100%;height:100%;position:relative;">');
+        subSplitter.pane(1).addItem($tabArea);
+        var tabFrame = new wcTabFrame($tabArea, myPanel);
+        tabFrame.addTab('Custom Tab 1').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
+        tabFrame.addTab('Custom Tab 2').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Each tab has its own layout, and can be configured however you wish.</div>'));
+        tabFrame.addTab('Custom Tab 3').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
+        tabFrame.addTab('Custom Tab 4').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
+        tabFrame.addTab('Custom Tab 5').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
+        tabFrame.closeable(3, true);
+        tabFrame.faicon(0, 'gears')
+
+        // // Now create an IFrame widget and put it into the large split.
+        // var $frameArea = $('<div style="width:100%;height:100%;position:relative;">');
+        // splitter.pane(1).addItem($frameArea);
+        // var iFrame = new wcIFrame($frameArea, myPanel);
+        // iFrame.openURL('http://webcabin.org/');
+
 
         // We need to update the splitter whenever the panel is updated.
         myPanel.on(wcDocker.EVENT_UPDATED, function() {
           splitter.update();
-          // tabs.update();
+          subSplitter.update();
+          tabFrame.update();
         });
 
         // Add a rotation panel button to change the orientation of the splitter.
         myPanel.addButton('View', 'verticalPanelButton', 'O', 'Switch between horizontal and vertical layout.', true, 'horizontalPanelButton');
         myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
           splitter.orientation(data.isToggled);
+          subSplitter.orientation(!data.isToggled);
         });
       }
     });
@@ -514,15 +563,14 @@ $(document).ready(function() {
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var wikiPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_BOTTOM);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_BOTTOM);
+
     var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, null, {h: -1, w:400});
     var bottomChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_BOTTOM, topChatPanel);
 
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_RIGHT, wikiPanel);
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, controlPanel);
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_STACKED, controlPanel);
-
-    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_TOP, controlPanel);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, false, {w:500,h:-1});
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, batchPanel);
+    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, batchPanel);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
   }
