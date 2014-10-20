@@ -277,8 +277,7 @@ wcLayout.prototype = {
           y: offset.top,
           w: width,
           h: top-2,
-          merge: true,
-          loc: wcDocker.DOCK_FLOAT,
+          loc: wcDocker.DOCK_STACKED,
           item: this,
           self: true,
         });
@@ -295,8 +294,7 @@ wcLayout.prototype = {
           y: offset.top,
           w: width,
           h: top-2,
-          merge: true,
-          loc: wcDocker.DOCK_BOTTOM,
+          loc: wcDocker.DOCK_STACKED,
           item: this,
           self: false,
         });
@@ -316,7 +314,7 @@ wcLayout.prototype = {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: height*0.4,
+          h: height*0.5,
           loc: wcDocker.DOCK_TOP,
           item: this,
           self: false,
@@ -329,9 +327,9 @@ wcLayout.prototype = {
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left,
-          y: offset.top + (height - height*0.4),
+          y: offset.top + (height - height*0.5),
           w: width,
-          h: height*0.4,
+          h: height*0.5,
           loc: wcDocker.DOCK_BOTTOM,
           item: this,
           self: false,
@@ -346,7 +344,7 @@ wcLayout.prototype = {
         ghost.anchor(mouse, {
           x: offset.left,
           y: offset.top,
-          w: width*0.4,
+          w: width*0.5,
           h: height,
           loc: wcDocker.DOCK_LEFT,
           item: this,
@@ -358,9 +356,9 @@ wcLayout.prototype = {
       // Right side docking
       if (mouse.x >= offset.left + width*0.75 && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left + width*0.6,
+          x: offset.left + width*0.5,
           y: offset.top,
-          w: width*0.4,
+          w: width*0.5,
           h: height,
           loc: wcDocker.DOCK_RIGHT,
           item: this,
@@ -378,7 +376,7 @@ wcLayout.prototype = {
           x: offset.left,
           y: offset.top,
           w: width,
-          h: height*0.4,
+          h: height*0.5,
           loc: wcDocker.DOCK_TOP,
           item: this,
           self: false,
@@ -391,9 +389,9 @@ wcLayout.prototype = {
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left,
-          y: offset.top + (height - height*0.4),
+          y: offset.top + (height - height*0.5),
           w: width,
-          h: height*0.4,
+          h: height*0.5,
           loc: wcDocker.DOCK_BOTTOM,
           item: this,
           self: false,

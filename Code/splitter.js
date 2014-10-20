@@ -259,12 +259,26 @@ wcSplitter.prototype = {
       var size2;
       if (this._pane[0] && typeof this._pane[0].initSize === 'function') {
         size1 = this._pane[0].initSize();
+        if (size1) {
+          if (size1.x < 0) {
+            size1.x = width/2;
+          }
+          if (size1.y < 0) {
+            size1.y = height/2;
+          }
+        }
       }
 
       if (this._pane[1] && typeof this._pane[1].initSize === 'function') {
         size2 = this._pane[1].initSize();
-
         if (size2) {
+          if (size2.x < 0) {
+            size2.x = width/2;
+          }
+          if (size2.y < 0) {
+            size2.y = height/2;
+          }
+
           size2.x = width  - size2.x;
           size2.y = height - size2.y;
         }

@@ -41,7 +41,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Control Panel', {
       faicon: 'gears',
       onCreate: function(myPanel) {
-        myPanel.initSize(800, 400);
+        // myPanel.initSize(500, 400);
         myPanel.layout().$table.css('padding', '10px');
 
         var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the control panel!  Here you will find controls for changing docker-wide options.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
@@ -164,7 +164,6 @@ $(document).ready(function() {
     myDocker.registerPanelType('Chat Panel', {
       faicon: 'comment-o',
       onCreate: function(myPanel) {
-        myPanel.initSize(400, 400);
         myPanel.layout().$table.css('padding', '10px');
 
         var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the chat panel!  Here is a simple demonstration of the built in event/messaging system between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
@@ -229,7 +228,6 @@ $(document).ready(function() {
     myDocker.registerPanelType('Batch Panel', {
       faicon: 'cubes',
       onCreate: function(myPanel) {
-        myPanel.initSize(400, 400);
         myPanel.layout().$table.css('padding', '10px');
 
         var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the batch panel!  Here illustrates a comparison between adding layout items one at a time vs using the batching system.  The batching system avoids re-calculating elements each time a new one is added until the batch has been finished.  Use this if you are adding a large number of elements into the panel\'s layout.</div>');
@@ -310,6 +308,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Reaction Panel', {
       faicon:'refresh',
       onCreate: function(myPanel) {
+        myPanel.initSize(200, 200);
         myPanel.layout().$table.css('padding', '10px');
 
         var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">This is the reaction panel!  Get notifications for common events by using the built in event system.</div>');
@@ -515,13 +514,16 @@ $(document).ready(function() {
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_BOTTOM, false);
-    var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, false);
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, false);
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_RIGHT, false, batchPanel);
-    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_BOTTOM, false, batchPanel);
-    var bottomChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_BOTTOM, false, topChatPanel);
+    var wikiPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_BOTTOM);
+    var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, null, {h: -1, w:400});
+    var bottomChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_BOTTOM, topChatPanel);
 
-    myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP, false);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_RIGHT, wikiPanel);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, controlPanel);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_STACKED, controlPanel);
+
+    var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_TOP, controlPanel);
+
+    myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
   }
 });

@@ -52,8 +52,8 @@ function wcPanel(type, options) {
   };
 
   this._size = {
-    x: 200,
-    y: 200,
+    x: -1,
+    y: -1,
   };
 
   this._minSize = {

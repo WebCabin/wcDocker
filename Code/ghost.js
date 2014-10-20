@@ -98,7 +98,7 @@ wcGhost.prototype = {
 
     this._anchor = anchor;
     var opacity = 0.8;
-    if (anchor.self && anchor.merge) {
+    if (anchor.self && anchor.loc === wcDocker.DOCK_STACKED) {
       opacity = 0;
       this.$ghost.hide();
     } else {

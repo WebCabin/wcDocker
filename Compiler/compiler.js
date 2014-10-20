@@ -64,8 +64,7 @@ concat({
     '../Code/frame.js',
     '../Code/splitter.js',
     '../Code/tabframe.js',
-    // '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.js',
-    // '../bower_components/jQuery-contextMenu/src/jquery.ui.position.js',
+    '../Code/iframe.js',
   ],
   dest: '../Build/wcDocker.js',
 });
@@ -73,7 +72,6 @@ concat({
 concat({
   src: [
     '../Code/style.css',
-    // '../bower_components/jQuery-contextMenu/src/jquery.contextMenu.css',
   ],
   dest: '../Build/wcDocker.css',
 });
