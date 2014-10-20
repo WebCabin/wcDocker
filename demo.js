@@ -551,7 +551,7 @@ $(document).ready(function() {
         });
 
         // Add a rotation panel button to change the orientation of the splitter.
-        myPanel.addButton('View', 'verticalPanelButton', 'O', 'Switch between horizontal and vertical layout.', true, 'horizontalPanelButton');
+        myPanel.addButton('View', 'fa fa-mail-reply', 'O', 'Switch between horizontal and vertical layout.', true, 'fa fa-mail-forward');
         myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
           splitter.orientation(data.isToggled);
           subSplitter.orientation(!data.isToggled);
