@@ -542,14 +542,6 @@ $(document).ready(function() {
         // var iFrame = new wcIFrame($frameArea, myPanel);
         // iFrame.openURL('http://webcabin.org/');
 
-
-        // We need to update the splitter whenever the panel is updated.
-        myPanel.on(wcDocker.EVENT_UPDATED, function() {
-          splitter.update();
-          subSplitter.update();
-          tabFrame.update();
-        });
-
         // Add a rotation panel button to change the orientation of the splitter.
         myPanel.addButton('View', 'fa fa-mail-reply', 'O', 'Switch between horizontal and vertical layout.', true, 'fa fa-mail-forward');
         myPanel.on(wcDocker.EVENT_BUTTON, function(data) {

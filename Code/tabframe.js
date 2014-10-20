@@ -310,6 +310,11 @@ wcTabFrame.prototype = {
 
     this.__container(this.$container);
 
+    var self = this;
+    this._parent.on(wcDocker.EVENT_UPDATED, function() {
+      self.update();
+    });
+
     this.docker()._tabList.push(this);
   },
 

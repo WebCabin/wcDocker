@@ -4058,6 +4058,11 @@ wcSplitter.prototype = {
     }
     this._pos = value;
     this.__update();
+
+    if (this._parent instanceof wcPanel) {
+      this._parent.__trigger(wcDocker.EVENT_UPDATED);
+    }
+
     return this._pos;
   },
 
@@ -4151,6 +4156,13 @@ wcSplitter.prototype = {
     }
 
     this.__container(this.$container);
+
+    if (this._parent instanceof wcPanel) {
+      var self = this;
+      this._parent.on(wcDocker.EVENT_UPDATED, function() {
+        self.update();
+      });
+    }
   },
 
   // Updates the size of the splitter.
@@ -4731,6 +4743,11 @@ wcTabFrame.prototype = {
     this.$frame.append(this.$center);
 
     this.__container(this.$container);
+
+    var self = this;
+    this._parent.on(wcDocker.EVENT_UPDATED, function() {
+      self.update();
+    });
 
     this.docker()._tabList.push(this);
   },
