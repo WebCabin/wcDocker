@@ -51,8 +51,12 @@ HowToPanel.prototype = {
         html += line.replace(/\t/g, '  ') + '\n';
       }
     }
-
-    this._currentLayout.addItem('<pre><code data-language="html">' + html + '</code></pre>', 0, this._layoutRow++);
+    
+    var $pre = $('<pre>');
+    var $code = $('<code data-language="html">');
+    $pre.append($code);
+    $code.text(html);
+    this._currentLayout.addItem($pre, 0, this._layoutRow++);
   },
 
   // --------------------------------------------------------------------------------
@@ -105,7 +109,7 @@ HowToPanel.prototype = {
   __constructGeneralTab: function(layout) {
     this.__initTabLayout(layout);
 
-    this.text("<b>wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking panels. Panels can float on their own or be docked on any side of any other panel. All panels can be moved, resized, removed, and created at will by the user (unless otherwise restricted). This project is currently under development by Jeff Houde (<a href='mailto:lochemage@gmail.com' target='_blank'>lochemage@gmail.com</a>). wcDocker requires the JQuery library, currently developed using version 1.11.1 although earlier versions should work as well.</b>");
+    this.text("<b>wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking panels. Panels can float on their own or be docked on any side of any other panel. All panels can be moved, resized, removed, and created at will by the user (unless otherwise restricted). This project is currently under development by Jeff Houde (<a href='mailto:lochemage@gmail.com' target='_blank'>lochemage@gmail.com</a>). wcDocker requires the JQuery library, currently developed using version 1.11.1 although earlier and 2.x.x versions should work as well.</b>");
     this.text("<b>For detailed information on the API, check out the <a href='https://github.com/WebCabin/wcDocker/wiki' target='_blank'>wiki</a>.</b>");
     this.text([
       "\tBegin by including the necessary dependencies.",
@@ -121,9 +125,9 @@ HowToPanel.prototype = {
     ]);
     this.text("\tOnce the dependencies are included, also include wcDocker files as well:");
     this.html([
-      "<link rel='stylesheet' type='text/css' href='Build/wcDocker.min.css'/>",
-      "",
-      "<script src='Build/wcDocker.min.js'></script>",
+      '<link rel="stylesheet" type="text/css" href="Build/wcDocker.min.css"/>',
+      '',
+      '<script src="Build/wcDocker.min.js"></script>',
     ]);
     this.text("\tOnce the dependencies have been included, start by creating an instance of the main docker window and assign it a DOM container element (this should be done after the document is ready). Typically this would be the document body, but there is no restriction if you want to use a smaller area instead.  Multiple main windows can be used, however, no support exists for cross interaction between them (yet?).  Also note that floating windows are not constrained to the given container element, they can float anywhere in the browser window.");
     this.code([

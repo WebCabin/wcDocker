@@ -15,7 +15,9 @@ Please share your project with us that uses wcDocker!
 * Built in context menu system with standard panel options as well as custom ones.
 * Event system for intercommunication between panels as well as to react on panel change events.
 * Allow styling of window colors and other options by using themed css files.
-* Re-use the internal splitter within your own panels.
+* Create your own splitter widget within a panel.
+* Create your own tabbed frame widget within a panel.
+* Create your own iFrame widget within a panel.
 
 ****
 ### Change Log ###

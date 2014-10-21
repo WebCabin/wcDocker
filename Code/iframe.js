@@ -18,7 +18,11 @@ function wcIFrame(container, panel) {
 wcIFrame.prototype = {
   // --------------------------------------------------------------------------------
   docker: function() {
-    return this._panel.docker();
+    var parent = this._panel;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
   },
 
   // --------------------------------------------------------------------------------

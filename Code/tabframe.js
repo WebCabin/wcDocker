@@ -323,7 +323,10 @@ wcTabFrame.prototype = {
       this._parent.on(this._boundEvents[i].event, this._boundEvents[i].handler);
     }
 
-    this.docker()._tabList.push(this);
+    var docker = this.docker();
+    if (docker) {
+      docker._tabList.push(this);
+    }
   },
 
   // Updates the size of the frame.
@@ -504,6 +507,14 @@ wcTabFrame.prototype = {
 
   // Disconnects and prepares this widget for destruction.
   __destroy: function() {
+    var docker = this.docker();
+    if (docker) {
+      var index = docker._tabList.indexOf(this);
+      if (index > -1) {
+        docker._tabList.splice(index, 1);
+      }
+    }
+
     // Remove all registered events.
     while (this._boundEvents.length){
       this._parent.off(this._boundEvents[0].event, this._boundEvents[0].handler);
