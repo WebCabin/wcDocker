@@ -119,7 +119,8 @@ $(document).ready(function() {
 
           // The default theme requires no additional theme css file.
           if (_currentTheme !== 'Default') {
-            $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + _currentTheme + '.css"/>'));
+            var cacheBreak = (new Date()).getTime();
+            $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + _currentTheme + '.css?v=' + cacheBreak + '"/>'));
           }
 
           // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
