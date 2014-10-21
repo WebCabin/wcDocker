@@ -149,9 +149,12 @@ HowToPanel.prototype = {
       "});",
     ]);
     this.text([
-      "\tThe first parameter is a unique name identifier that identifies the panel.  You will also need a callback function or object constructor (the function is called with the 'new' operator, which will either create a new instance of your panel object if you have provided a constructor, or simply calls the creation function) that will be passed into the second parameter as either the function directly, or within an object with other possible options.",
+      "\tThe first parameter is a unique name identifier that identifies the panel.",
+      "\tThe second parameter is a callback function or object constructor (the function is called with the 'new' operator, which will either create a new instance of your panel object if you have provided a constructor, or simply call the creation function) that can either be by itself, it embedded within an object that could contain additional options.",
       "",
-      "\tInside the creation function, or object constructor, you are given the wcPanel that was just created, as well as an optional data value provided during the registration of the panel type (when registering the panel type, the second parameter can be an object with an 'options' key/value).  Every panel contains a wcLayout object which lays out the contents of the panel in a grid format.  To add a DOM element to it, use the layouts addItem function and supply it with either your element directly, a jQuery collection object, or a jQuery creation string, and an x, y grid position within the layout (by default = 0, 0).",
+      "\tInside the creation function, or object constructor, you are given the wcPanel that was just created and any optional data provided during the registration of the panel type (when registering the panel using the second method, include an 'options' key containing whatever data you wish).",
+      "",
+      "\tEvery panel contains a wcLayout object which lays out the contents of the panel in a grid format.  To add a DOM element to it, use the layouts addItem function and supply it with either your element directly, a jQuery collection object, or a jQuery creation string, and an x, y grid position within the layout (0, 0 by default).",
       "",
       "\tYou can also stretch an element over multiple grid cells by supplying an optional width and height value.",
     ]);
