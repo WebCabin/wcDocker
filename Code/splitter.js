@@ -335,15 +335,17 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.x, size);
       }
 
+      // Bar is top to bottom
+
       this.$bar.css('left', size+2);
-      this.$bar.css('top', '1px');
+      this.$bar.css('top', '0px');
       this.$bar.css('height', height-2);
-      this.$pane[0].css('width', size + 'px');
+      this.$pane[0].css('width', size+2);
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
       this.$pane[1].css('right', '0px');
-      this.$pane[1].css('width', width - size - 5 + 'px');
+      this.$pane[1].css('width', width - size - 6);
     } else {
       var size = height * this._pos;
 
@@ -354,15 +356,17 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.y, size);
       }
 
+      // Bar is left to right
+
       this.$bar.css('top', size+2);
-      this.$bar.css('left', '1px');
+      this.$bar.css('left', '0px');
       this.$bar.css('width', width-2);
-      this.$pane[0].css('height', size + 'px');
+      this.$pane[0].css('height', size+2);
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
-      this.$pane[1].css('height', height - size - 5 + 'px');
+      this.$pane[1].css('height', height - size - 6);
     }
 
     if (this._pane[0]) {

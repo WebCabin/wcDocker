@@ -60,8 +60,6 @@ html, body {
 }
 
 .wcFrame {
-  border-right: 2px inset black;
-  border-bottom: 2px inset black;
   position: relative;
 }
 
@@ -224,6 +222,7 @@ html, body {
 .wcSplitterBar {
   z-index: 2;
   position: absolute;
+  border: 1px outset darkgray;
 }
 
 .wcSplitterBarV {
@@ -447,7 +446,7 @@ html, body {
 }
 
 .wcSplitterBar {
-  outline: 1px outset darkgray;
+  border: 1px outset darkgray;
   background-color: gray;
 }
 
