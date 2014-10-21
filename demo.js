@@ -192,6 +192,8 @@ $(document).ready(function() {
         // a single panel.  Splitters can be nested, and new layouts can be created to fill
         // each side of the split.
         var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_VERTICAL);
+        splitter.scrollable(0, false, false);
+        splitter.scrollable(1, false, false);
 
         // Initialize this splitter with a layout in each pane.  This can be done manually, but
         // it is more convenient this way.
