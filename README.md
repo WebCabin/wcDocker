@@ -1,24 +1,18 @@
-wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking panels.  Panels can float on their own or be docked on any side of any other panel.  All panels can be moved, resized, removed, and created at will by the user (unless otherwise restricted).  This project is currently under development by Jeff Houde (lochemage@gmail.com).  wcDocker requires the JQuery library, currently developed using version 1.11.1 although earlier versions should work as well.
+Try the demo here:  [http://docker.webcabin.org/](http://docker.webcabin.org/)  
 
-For a currently working demo, try it here [http://docker.webcabin.org/](http://docker.webcabin.org/).  
-For details on how to use wcDocker and all of its public API, see the [wiki](https://github.com/WebCabin/wcDocker/wiki).  
+wcDocker (Web Cabin Docker) is a powerful window layout system with a responsive and completely interactive design.  Move, remove, create, and duplicate panel windows at any time!  Organize how you wish!
 
-Please share your project with us that uses wcDocker!
+View the API documentation here: [https://github.com/WebCabin/wcDocker/wiki](https://github.com/WebCabin/wcDocker/wiki)  
 
 
-### The following features are supported currently: ###
-* Panels can be created, closed, moved, resized, and groupped together.
-* Panels can be detached from a dock position to float on their own, and then dock again.
-* Panels can include their own custom buttons in their upper-right area.
-* Panel buttons and tabs can contain their own icon image.
-* Panel configurations can be saved, then later restored.
-* Multiple panels of the same type can be created.
-* Built in context menu system with standard panel options as well as custom ones.
-* Event system for intercommunication between panels as well as to react on panel change events.
-* Allow styling of window colors and other options by using themed css files.
-* Create your own splitter widget within a panel.
-* Create your own tabbed frame widget within a panel.
-* Create your own iFrame widget within a panel.
+### Features ###
+* Extremely responsive design!
+* Organization and duplicate panels at any time!
+* Easily create your own themes!
+* Comprehensive API Documentation!
+* Easily save and restore your layout!
+* Compatible with all major browsers, including IE8.
+* Completely free!
 
 ****
 ### Change Log ###
@@ -27,6 +21,9 @@ Please share your project with us that uses wcDocker!
 - Improved auto scrolling of tab items when clicked.
 - Created a new wcCustomTabs object for creating docker styled tab areas inside a panel.
 - Floating panels can now be modal.
+- Create your own splitter widget within a panel.
+- Create your own tabbed frame widget within a panel.
+- Create your own iFrame widget within a panel.
 
 #### Version: 2.1.0 ####
 - wcDocker now has Bower support for easy package management.
