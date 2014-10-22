@@ -153,8 +153,8 @@ wcDocker.EVENT_CUSTOM_TAB_CHANGED   = 'customTabChanged';
 wcDocker.EVENT_CUSTOM_TAB_CLOSED    = 'customTabClosed';
 
 // Used for the splitter bar orientation.
-wcDocker.ORIENTATION_HORIZONTAL     = false;
-wcDocker.ORIENTATION_VERTICAL       = true;
+wcDocker.ORIENTATION_VERTICAL       = false;
+wcDocker.ORIENTATION_HORIZONTAL     = true;
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

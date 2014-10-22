@@ -19,6 +19,8 @@ function wcTabFrame(container, parent) {
   this._layoutList = [];
   this._moveable = true;
 
+  this._boundEvents = [];
+
   this.__init();
 };
 
@@ -36,12 +38,6 @@ wcTabFrame.prototype = {
       parent = parent._parent;
     }
     return parent;
-  },
-
-  // Updates the tab elements.  Use them whenever its container
-  // is resized.
-  update: function() {
-    this.__update();
   },
 
   // Destroys the tab area.
@@ -276,7 +272,7 @@ wcTabFrame.prototype = {
   // Sets the icon for a tab.
   // Params:
   //    index     The index of the tab to alter.
-  //    icon      A font-awesome icon name (without the 'fa-' prefix).
+  //    icon      A font-awesome icon name (without the 'fa fa-' prefix).
   faicon: function(index, icon) {
     if (index > -1 && index < this._layoutList.length) {
       var layout = this._layoutList[index];
@@ -288,6 +284,16 @@ wcTabFrame.prototype = {
       layout.$icon.removeClass();
       layout.$icon.addClass('fa fa-fw fa-' + icon);
     }
+  },
+
+  // Reaction to the panels update event.
+  onUpdate: function() {
+    this.__update();
+  },
+
+  // Reaction to the panels close event.
+  onClosed: function() {
+    this.destroy();
   },
 
 
@@ -310,12 +316,17 @@ wcTabFrame.prototype = {
 
     this.__container(this.$container);
 
-    var self = this;
-    this._parent.on(wcDocker.EVENT_UPDATED, function() {
-      self.update();
-    });
+    this._boundEvents.push({event: wcDocker.EVENT_UPDATED, handler: this.onUpdate.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_CLOSED,  handler: this.onClosed.bind(this)});
 
-    this.docker()._tabList.push(this);
+    for (var i = 0; i < this._boundEvents.length; ++i) {
+      this._parent.on(this._boundEvents[i].event, this._boundEvents[i].handler);
+    }
+
+    var docker = this.docker();
+    if (docker) {
+      docker._tabList.push(this);
+    }
   },
 
   // Updates the size of the frame.
@@ -496,6 +507,20 @@ wcTabFrame.prototype = {
 
   // Disconnects and prepares this widget for destruction.
   __destroy: function() {
+    var docker = this.docker();
+    if (docker) {
+      var index = docker._tabList.indexOf(this);
+      if (index > -1) {
+        docker._tabList.splice(index, 1);
+      }
+    }
+
+    // Remove all registered events.
+    while (this._boundEvents.length){
+      this._parent.off(this._boundEvents[0].event, this._boundEvents[0].handler);
+      this._boundEvents.pop();
+    }
+
     this._curTab = -1;
     for (var i = 0; i < this._layoutList.length; ++i) {
       this._layoutList[i].__destroy();

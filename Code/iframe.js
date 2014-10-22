@@ -10,13 +10,87 @@ function wcIFrame(container, panel) {
   this._isAttached = true;
   this._hasFocus = false;
 
+  this._boundEvents = [];
+
   this.__init();
 };
 
 wcIFrame.prototype = {
+  // --------------------------------------------------------------------------------
+  docker: function() {
+    var parent = this._panel;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
+  },
+
+  // --------------------------------------------------------------------------------
+  openURL: function(url) {
+    this.__clearFrame();
+
+    this.$frame = $('<iframe class="wcIFrame">');
+    this._panel.docker().$container.append(this.$frame);
+    this.onMoved();
+    this._window = this.$frame[0].contentWindow || this.$frame[0];
+    this.__updateFrame();
+    this._window.location.replace(url);
+  },
+
+  // --------------------------------------------------------------------------------
+  openHTML: function(html) {
+    this.__clearFrame();
+
+    this.$frame = $('<iframe class="wcIFrame">');
+    this._panel.docker().$container.append(this.$frame);
+    this.onMoved();
+    this._window = this.$frame[0].contentWindow || this.$frame[0];
+    this.__updateFrame();
+
+    this._boundEvents = [];
+
+    // Write the frame source.
+    this._window.document.open();
+    this._window.document.write(html);
+    this._window.document.close();
+  },
+
+  // --------------------------------------------------------------------------------
+  show: function() {
+    if (this.$frame) {
+      this.$frame.removeClass('wcIFrameHidden');
+    }
+  },
+
+  // --------------------------------------------------------------------------------
+  hide: function() {
+    if (this.$frame) {
+      this.$frame.addClass('wcIFrameHidden');
+    }
+  },
+
+  // --------------------------------------------------------------------------------
+  window: function() {
+    return this._window;
+  },
+
+  // --------------------------------------------------------------------------------
+  destroy: function() {
+    // Remove all registered events.
+    while (this._boundEvents.length){
+      this._panel.off(this._boundEvents[0].event, this._boundEvents[0].handler);
+      this._boundEvents.pop();
+    }
+
+    this.__clearFrame();
+    this._panel = null;
+    this._layout = null;
+    this.$container = null;
+  },
+
   // ---------------------------------------------------------------------------
   onVisibilityChanged: function() {
-    this.updateFrame();
+    this.__updateFrame();
   },
 
   // ---------------------------------------------------------------------------
@@ -66,29 +140,34 @@ wcIFrame.prototype = {
   // ---------------------------------------------------------------------------
   onAttached: function() {
     this._isAttached = true;
-    this.updateFrame();
+    this.__updateFrame();
   },
 
   // ---------------------------------------------------------------------------
   onDetached: function() {
     this._isAttached = false;
-    this.updateFrame();
+    this.__updateFrame();
   },
 
   // ---------------------------------------------------------------------------
   onGainFocus: function() {
     this._hasFocus = true;
-    this.updateFrame();
+    this.__updateFrame();
   },
 
   // ---------------------------------------------------------------------------
   onLostFocus: function() {
     this._hasFocus = false;
-    this.updateFrame();
+    this.__updateFrame();
   },
 
   // --------------------------------------------------------------------------------
   onClosed: function() {
+    this.destroy();
+  },
+
+  // --------------------------------------------------------------------------------
+  __clearFrame: function() {
     if (this.$frame) {
       this.$frame[0].srcdoc = '';
       this.$frame.remove();
@@ -98,7 +177,7 @@ wcIFrame.prototype = {
   },
 
   // --------------------------------------------------------------------------------
-  updateFrame: function() {
+  __updateFrame: function() {
     if (this.$frame) {
       this.$frame.toggleClass('wcIFrameFloating', !this._isAttached);
       if (!this._isAttached) {
@@ -111,67 +190,24 @@ wcIFrame.prototype = {
   },
 
   // --------------------------------------------------------------------------------
-  openURL: function(url, crossDomain) {
-    this.onClosed();
-
-    this.$frame = $('<iframe class="wcIFrame">');
-    this._panel.docker().$container.append(this.$frame);
-    this.onMoved();
-    this._window = this.$frame[0].contentWindow || this.$frame[0];
-    this.updateFrame();
-
-    var URL = url;
-    if (crossDomain) {
-      URL += '&output=embed';
-    }
-    this._window.location.replace(URL);
-  },
-
-  // --------------------------------------------------------------------------------
-  openSRC: function(src) {
-    this.onClosed();
-
-    this.$frame = $('<iframe class="wcIFrame">');
-    this._panel.docker().$container.append(this.$frame);
-    this.onMoved();
-    this._window = this.$frame[0].contentWindow || this.$frame[0];
-    this.updateFrame();
-
-    // Write the frame source.
-    this._window.document.open();
-    this._window.document.write(src);
-    this._window.document.close();
-  },
-
-  // --------------------------------------------------------------------------------
-  show: function() {
-    if (this.$frame) {
-      this.$frame.removeClass('wcIFrameHidden');
-    }
-  },
-
-  // --------------------------------------------------------------------------------
-  hide: function() {
-    if (this.$frame) {
-      this.$frame.addClass('wcIFrameHidden');
-    }
-  },
-
-  // --------------------------------------------------------------------------------
   __init: function() {
-    this._panel.on(wcDocker.EVENT_VISIBILITY_CHANGED, this.onVisibilityChanged.bind(this));
-    this._panel.on(wcDocker.EVENT_BEGIN_DOCK,         this.onBeginDock.bind(this));
-    this._panel.on(wcDocker.EVENT_END_DOCK,           this.onEndDock.bind(this));
-    this._panel.on(wcDocker.EVENT_MOVE_STARTED,       this.onMoveStarted.bind(this));
-    this._panel.on(wcDocker.EVENT_RESIZE_STARTED,     this.onMoveStarted.bind(this));
-    this._panel.on(wcDocker.EVENT_MOVE_ENDED,         this.onMoveFinished.bind(this));
-    this._panel.on(wcDocker.EVENT_RESIZE_ENDED,       this.onMoveFinished.bind(this));
-    this._panel.on(wcDocker.EVENT_MOVED,              this.onMoved.bind(this));
-    this._panel.on(wcDocker.EVENT_RESIZED,            this.onMoved.bind(this));
-    this._panel.on(wcDocker.EVENT_ATTACHED,           this.onAttached.bind(this));
-    this._panel.on(wcDocker.EVENT_DETACHED,           this.onDetached.bind(this));
-    this._panel.on(wcDocker.EVENT_GAIN_FOCUS,         this.onGainFocus.bind(this));
-    this._panel.on(wcDocker.EVENT_LOST_FOCUS,         this.onLostFocus.bind(this));
-    this._panel.on(wcDocker.EVENT_CLOSED,             this.onClosed.bind(this));
+    this._boundEvents.push({event: wcDocker.EVENT_VISIBILITY_CHANGED, handler: this.onVisibilityChanged.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_BEGIN_DOCK,         handler: this.onBeginDock.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_END_DOCK,           handler: this.onEndDock.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_MOVE_STARTED,       handler: this.onMoveStarted.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_RESIZE_STARTED,     handler: this.onMoveStarted.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_MOVE_ENDED,         handler: this.onMoveFinished.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_RESIZE_ENDED,       handler: this.onMoveFinished.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_MOVED,              handler: this.onMoved.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_RESIZED,            handler: this.onMoved.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_ATTACHED,           handler: this.onAttached.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_DETACHED,           handler: this.onDetached.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_GAIN_FOCUS,         handler: this.onGainFocus.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_LOST_FOCUS,         handler: this.onLostFocus.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT_CLOSED,             handler: this.onClosed.bind(this)});
+
+    for (var i = 0; i < this._boundEvents.length; ++i) {
+      this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
+    }
   },
 };

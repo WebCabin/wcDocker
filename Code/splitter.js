@@ -12,6 +12,8 @@ function wcSplitter(container, parent, orientation) {
   this._pos = 0.5;
   this._findBestPos = false;
 
+  this._boundEvents = [];
+
   this.__init();
 
   this.docker()._splitterList.push(this);
@@ -37,11 +39,6 @@ wcSplitter.prototype = {
       parent = parent._parent;
     }
     return parent;
-  },
-
-  // Update the contents of the splitter.
-  update: function() {
-    this.__update();
   },
 
   // Gets, or Sets the orientation of the splitter.
@@ -213,9 +210,12 @@ wcSplitter.prototype = {
   // Params:
   //    destroyPanes    If true, or omitted, both panes attached will be destroyed as well.
   destroy: function(destroyPanes) {
-    var index = this.docker()._splitterList.indexOf(this);
-    if (index > -1) {
-      this.docker()._splitterList.splice(index, 1);
+    var docker = this.docker();
+    if (docker) {
+      var index = this.docker()._splitterList.indexOf(this);
+      if (index > -1) {
+        this.docker()._splitterList.splice(index, 1);
+      }
     }
 
     if (typeof destroyPanes === 'undefined' || destroyPanes) {
@@ -225,6 +225,15 @@ wcSplitter.prototype = {
     }
   },
 
+  // Reaction to the panels update event.
+  onUpdate: function() {
+    this.__update();
+  },
+
+  // Reaction to the panels close event.
+  onClosed: function() {
+    this.destroy();
+  },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
@@ -249,10 +258,12 @@ wcSplitter.prototype = {
     this.__container(this.$container);
 
     if (this._parent instanceof wcPanel) {
-      var self = this;
-      this._parent.on(wcDocker.EVENT_UPDATED, function() {
-        self.update();
-      });
+      this._boundEvents.push({event: wcDocker.EVENT_UPDATED, handler: this.onUpdate.bind(this)});
+      this._boundEvents.push({event: wcDocker.EVENT_CLOSED,  handler: this.onClosed.bind(this)});
+
+      for (var i = 0; i < this._boundEvents.length; ++i) {
+        this._parent.on(this._boundEvents[i].event, this._boundEvents[i].handler);
+      }
     }
   },
 
@@ -327,13 +338,17 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.x, size);
       }
 
+      // Bar is top to bottom
+
       this.$bar.css('left', size+2);
-      this.$pane[0].css('width', size + 'px');
+      this.$bar.css('top', '0px');
+      this.$bar.css('height', height-2);
+      this.$pane[0].css('width', size+2);
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
       this.$pane[1].css('right', '0px');
-      this.$pane[1].css('width', width - size - 5 + 'px');
+      this.$pane[1].css('width', width - size - 6);
     } else {
       var size = height * this._pos;
 
@@ -344,13 +359,17 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.y, size);
       }
 
+      // Bar is left to right
+
       this.$bar.css('top', size+2);
-      this.$pane[0].css('height', size + 'px');
+      this.$bar.css('left', '0px');
+      this.$bar.css('width', width-2);
+      this.$pane[0].css('height', size+2);
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
-      this.$pane[1].css('height', height - size - 5 + 'px');
+      this.$pane[1].css('height', height - size - 6);
     }
 
     if (this._pane[0]) {
@@ -512,11 +531,19 @@ wcSplitter.prototype = {
 
   // Disconnects and prepares this widget for destruction.
   __destroy: function() {
+    // Remove all registered events.
+    while (this._boundEvents.length){
+      this._parent.off(this._boundEvents[0].event, this._boundEvents[0].handler);
+      this._boundEvents.pop();
+    }
+
     if (this._pane[0]) {
       this._pane[0].__destroy();
+      this._pane[0] = null;
     }
     if (this._pane[1]) {
       this._pane[1].__destroy();
+      this._pane[1] = null;
     }
 
     this.__container(null);

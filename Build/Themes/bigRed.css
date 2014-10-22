@@ -70,8 +70,16 @@
 }
 
 .wcSplitterBar {
-  outline: 1px outset #833;
+  border: 1px solid #411;
   background-color: #411;
+}
+
+.wcSplitterBarV {
+  border-left: 1px solid #822;
+}
+
+.wcSplitterBarH {
+  border-top: 1px solid #822;
 }
 
 .wcPanelTab {

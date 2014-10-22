@@ -69,23 +69,6 @@ $(document).ready(function() {
       }
     });
 
-    // // --------------------------------------------------------------------------------
-    // // Register the wiki panel, this uses the built in wcIFrame object to provide
-    // // a frame that links to wcDocker's wiki page.
-    // myDocker.registerPanelType('Wiki Panel', {
-    //   options: {
-    //     url: 'https://github.com/WebCabin/wcDocker/wiki',
-    //   },
-    //   onCreate: function(myPanel, options) {
-    //     var $scene = $('<div class="wcWide wcTall">');
-
-    //     myPanel.layout().addItem($scene);
-
-    //     var frame = new wcIFrame($scene, myPanel);
-    //     frame.openURL(options.url);
-    //   },
-    // });
-
     // --------------------------------------------------------------------------------
     // Register the control panel, this one has a few controls that allow you to change
     // dockers theme as well as layout configuration controls.
@@ -136,7 +119,8 @@ $(document).ready(function() {
 
           // The default theme requires no additional theme css file.
           if (_currentTheme !== 'Default') {
-            $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + _currentTheme + '.css"/>'));
+            var cacheBreak = (new Date()).getTime();
+            $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + _currentTheme + '.css?v=' + cacheBreak + '"/>'));
           }
 
           // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
@@ -208,7 +192,9 @@ $(document).ready(function() {
         // Here we can utilize the splitter used by wcDocker internally so that we may split up
         // a single panel.  Splitters can be nested, and new layouts can be created to fill
         // each side of the split.
-        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
+        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_VERTICAL);
+        splitter.scrollable(0, false, false);
+        splitter.scrollable(1, false, false);
 
         // Initialize this splitter with a layout in each pane.  This can be done manually, but
         // it is more convenient this way.
@@ -221,7 +207,7 @@ $(document).ready(function() {
         var $subScene = $('<div style="width:100%;height:100%;position:relative;">');
         splitter.pane(0).addItem($subScene);
 
-        var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION_VERTICAL);
+        var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
         subSplitter.initLayouts();
         subSplitter.pos(0.25);
 
@@ -250,160 +236,6 @@ $(document).ready(function() {
         myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
           splitter.orientation(data.isToggled);
           subSplitter.orientation(!data.isToggled);
-        });
-      }
-    });
-
-    // --------------------------------------------------------------------------------
-    // Register the reaction panel, demonstrates the event handler system.
-    myDocker.registerPanelType('Reaction Panel', {
-      faicon:'refresh',
-      onCreate: function(myPanel) {
-        myPanel.initSize(300, 300);
-        myPanel.layout().$table.css('padding', '10px');
-
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The reaction panel demonstrates how to receive built-in notifications for common events by using the event messaging system.</div>');
-        if (!_showingInfo) {
-          $infoText.hide();
-        }
-
-        // Setup a number of different text alerts that can be displayed based on certain events.
-        var $buttonInfo   = $('<div style="text-align:center">I react to the custom buttons above</div>');
-        var $buttonN      = $('<div style="text-align:center"><b>Happy button pressed!</b></div>');
-        var $buttonTtrue  = $('<div style="text-align:center"><b>Thumbs button is down!</b></div>');
-        var $buttonTfalse = $('<div style="text-align:center"><b>Thumbs button is up!</b></div>');
-        var buttonTimer;
-
-        var $attachInfo   = $('<div style="text-align:center">I react when docked</div>');
-        var $attached     = $('<div style="text-align:center"><b>I was just docked!</b></div>');
-        var $detachInfo   = $('<div style="text-align:center">I react when detached</div>');
-        var $detached     = $('<div style="text-align:center"><b>I was just detached!</b></div>');
-        var attachTimer;
-
-        var $moveInfo     = $('<div style="text-align:center">I react on move</div>');
-        var $moved        = $('<div style="text-align:center"><b>I was just moved!</b></div>');
-        var moveTimer;
-
-        var $resizeInfo   = $('<div style="text-align:center">I react on resize</div>');
-        var $resized      = $('<div style="text-align:center"><b>I was just resized!</b></div>');
-        var resizeTimer;
-
-        myPanel.layout().addItem($infoText, 0, 0);
-        myPanel.layout().addItem($buttonInfo, 0, 1);
-        myPanel.layout().addItem($detachInfo, 0, 2);
-        myPanel.layout().addItem($moveInfo, 0, 3);
-        myPanel.layout().addItem($resizeInfo, 0, 4);
-        myPanel.layout().addItem($('<div style="text-align:center">Lastly, if you can see my tab icon, it will only be spinning when my panel is visible</div>'), 0, 4);
-
-        // Add some custom buttons that will appear in the upper right corner of the panel.
-        myPanel.addButton('Thumbs Button', 'fa fa-thumbs-up', 'T', 'A toggle button', true, 'fa fa-thumbs-down');
-        myPanel.addButton('Happy Button', 'fa fa-smile-o', ':)', 'A normal button', false);
-
-        // React on custom button press.
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
-          if (buttonTimer) {
-            clearTimeout(buttonTimer);
-          }
-
-          if (data.name === 'Happy Button') {
-            // Show an alert when the smile face button is clicked.
-            this.layout().item(0, 1).empty();
-            this.layout().addItem($buttonN, 0, 1);
-
-            var self = this;
-            buttonTimer = setTimeout(function() {
-              self.layout().item(0, 1).empty();
-              self.layout().addItem($buttonInfo, 0, 1);
-              buttonTimer = 0;
-            }, 1000);
-          } else if (data.name === 'Thumbs Button') {
-            // Show an alert when the thumbs button is toggled.
-            this.layout().item(0, 1).empty();
-            this.layout().addItem((data.isToggled? $buttonTtrue: $buttonTfalse), 0, 1)
-
-            var self = this;
-            buttonTimer = setTimeout(function() {
-              self.layout().item(0, 1).empty();
-              self.layout().addItem($buttonInfo, 0, 1);
-              buttonTimer = 0;
-            }, 1000);
-          }
-        });
-
-        // React when this panel was floating and is now attached to a docking position.
-        myPanel.on(wcDocker.EVENT_ATTACHED, function() {
-          if (attachTimer) {
-            clearTimeout(attachTimer);
-          }
-
-          this.layout().item(0, 2).empty();
-          this.layout().addItem($attached, 0, 2);
-
-          var self = this;
-          attachTimer = setTimeout(function() {
-            self.layout().item(0, 2).empty();
-            self.layout().addItem($detachInfo, 0, 2);
-            attachTimer = 0;
-          }, 1000);
-        });
-
-        // React when this panel was docked and is now floating.
-        myPanel.on(wcDocker.EVENT_DETACHED, function() {
-          if (attachTimer) {
-            clearTimeout(attachTimer);
-          }
-
-          this.layout().item(0, 2).empty();
-          this.layout().addItem($detached, 0, 2);
-
-          var self = this;
-          attachTimer = setTimeout(function() {
-            self.layout().item(0, 2).empty();
-            self.layout().addItem($attachInfo, 0, 2);
-            attachTimer = 0;
-          }, 1000);
-        });
-
-        // React when this panel's top left position has changed.
-        myPanel.on(wcDocker.EVENT_MOVED, function() {
-          if (moveTimer) {
-            clearTimeout(moveTimer);
-          }
-
-          this.layout().item(0, 3).empty();
-          this.layout().addItem($moved, 0, 3);
-
-          var self = this;
-          moveTimer = setTimeout(function() {
-            self.layout().item(0, 3).empty();
-            self.layout().addItem($moveInfo, 0, 3);
-            moveTimer = 0;
-          }, 500);
-        });
-
-        // React on resizing.
-        myPanel.on(wcDocker.EVENT_RESIZED, function() {
-          if (resizeTimer) {
-            clearTimeout(resizeTimer);
-          }
-
-          this.layout().item(0, 4).empty();
-          this.layout().addItem($resized, 0, 4);
-
-          var self = this;
-          resizeTimer = setTimeout(function() {
-            self.layout().item(0, 4).empty();
-            self.layout().addItem($resizeInfo, 0, 4);
-            resizeTimer = 0;
-          }, 500);
-        });
-
-        myPanel.on(wcDocker.EVENT_VISIBILITY_CHANGED, function() {
-          if (this.isVisible()) {
-            this.faicon('refresh fa-spin');
-          } else {
-            this.faicon('refresh');
-          }
         });
       }
     });
@@ -573,7 +405,6 @@ $(document).ready(function() {
     var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, false, {w:500,h:-1});
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, widgetPanel);
     var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, widgetPanel);
-    // var reactionPanel = myDocker.addPanel('Reaction Panel', wcDocker.DOCK_STACKED, controlPanel);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
   }
