@@ -1,6 +1,6 @@
 .wcDocker {
   background-color: black;
-  color: black;
+  color: white;
 }
 
 .wcPanelBackground {
@@ -148,7 +148,7 @@
 }
 
 .context-menu-item.disabled {
-  color: #050505;
+  color: #888;
 }
 
 .context-menu-separator {
