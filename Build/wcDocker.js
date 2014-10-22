@@ -4119,9 +4119,12 @@ wcSplitter.prototype = {
   // Params:
   //    destroyPanes    If true, or omitted, both panes attached will be destroyed as well.
   destroy: function(destroyPanes) {
-    var index = this.docker()._splitterList.indexOf(this);
-    if (index > -1) {
-      this.docker()._splitterList.splice(index, 1);
+    var docker = this.docker();
+    if (docker) {
+      var index = this.docker()._splitterList.indexOf(this);
+      if (index > -1) {
+        this.docker()._splitterList.splice(index, 1);
+      }
     }
 
     if (typeof destroyPanes === 'undefined' || destroyPanes) {
@@ -4445,9 +4448,11 @@ wcSplitter.prototype = {
 
     if (this._pane[0]) {
       this._pane[0].__destroy();
+      this._pane[0] = null;
     }
     if (this._pane[1]) {
       this._pane[1].__destroy();
+      this._pane[1] = null;
     }
 
     this.__container(null);
