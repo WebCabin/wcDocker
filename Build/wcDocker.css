@@ -528,7 +528,7 @@ html, body {
   background-color: #999;
 }
 
-.wcButton.disabled, button:disabled {
+.wcButtonDisabled, .wcButton.disabled, button:disabled {
   border: 1px outset #666;
   background-color: #666;
   color: #555;

@@ -191,7 +191,7 @@
   background-color: #787878;
 }
 
-.wcButton.disabled, button:disabled {
+.wcButtonDisabled, .wcButton.disabled, button:disabled {
   border: 1px outset #494949;
   background-color: #494949;
   color: #333;
