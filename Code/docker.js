@@ -708,7 +708,7 @@ wcDocker.prototype = {
               name: 'Add Tab',
               faicon: 'columns',
               items: windowTypes,
-              disabled: !(!myFrame._isFloating || myFrame.panel().moveable()),
+              disabled: !(myFrame.panel()._titleVisible && (!myFrame._isFloating || self._modalList.indexOf(myFrame) === -1)),
               className: 'wcMenuCreatePanel',
             };
             items['sep' + separatorIndex++] = "---------";
