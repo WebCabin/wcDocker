@@ -66,7 +66,7 @@ HowToPanel.prototype = {
     var $background = $('<div style="width:100%;height:100%;background-color:black;opacity:0.2;">');
     this._layout.addItem($background, 0, 0);
 
-    var $credit = $('<div style="font-size:15px;">Code syntax highlighting brought to you by <a href="http://craig.is/" target="_blank"><b>Craig Campbell</b></a> and the <a href="http://craig.is/making/rainbows" target="_blank"><b>Rainbow</b></a> library!</div>');
+    var $credit = $('<div style="font-size:15px;min-width:550px;height:100%;">Code syntax highlighting brought to you by <a href="http://craig.is/" target="_blank"><b>Craig Campbell</b></a> and the <a href="http://craig.is/making/rainbows" target="_blank"><b>Rainbow</b></a> library!</div>');
     this._layout.addItem($credit, 0, 1);
 
     var $scene = $('<div style="position:absolute;top:10px;left:10px;right:10px;bottom:27px;border-bottom:1px solid black;">');
