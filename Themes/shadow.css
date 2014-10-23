@@ -172,31 +172,27 @@
 
 .wcButton, button {
   color: #CCC;
-  background-color: #555;
   border: 1px outset #555;
+  background-color: #555;
 }
 
 .wcButtonHover, .wcButton:hover, button:hover {
-  border: 1px outset #555;
+  border: 1px outset #666;
   background-color: #666;
 }
 
 .wcButtonActive, .wcButton:active, button:active {
-  border: 1px inset #555;
+  border: 1px inset #777;
   background-color: #777;
 }
 
 .wcButtonActive.wcButtonHover, .wcButton:hover.wcButtonActive, .wcButton:active.wcButtonHover, .wcButton:active:hover, button:active:hover {
-  border: 1px inset #555;
-  background-color: #999;
+  border: 1px inset #787878;
+  background-color: #787878;
 }
 
 .wcButton.disabled, button:disabled {
-  /*border: 2px solid black;*/
-  background-color: #111;
-  color: #555;
-}
-
-.wcButton:focus, button:focus {
-  outline: 0px;
+  border: 1px outset #494949;
+  background-color: #494949;
+  color: #333;
 }

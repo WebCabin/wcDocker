@@ -78,7 +78,7 @@ $(document).ready(function() {
         myPanel.initSize(500, 300);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The control panel demonstrates a few of the wcDocker-wide features available to you.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
+        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The control panel demonstrates a few of the wcDocker-wide features available to you.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
         
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
@@ -176,7 +176,7 @@ $(document).ready(function() {
         // myPanel.layout().showGrid(true);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.</div>');
+        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }
@@ -215,15 +215,15 @@ $(document).ready(function() {
         var $tabArea = $('<div style="width:100%;height:100%;position:relative;">');
         subSplitter.pane(1).addItem($tabArea);
         var tabFrame = new wcTabFrame($tabArea, myPanel);
-        tabFrame.addTab('Custom Tab 1').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
-        tabFrame.addTab('Custom Tab 2').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Each tab has its own layout, and can be configured however you wish.</div>'));
-        tabFrame.addTab('Custom Tab 3').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
-        tabFrame.addTab('Custom Tab 4').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
-        tabFrame.addTab('Custom Tab 5').addItem($('<div class="info" style="background-color:lightgray;margin:20px;">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
+        tabFrame.addTab('Custom Tab 1').addItem($('<div class="info" style="border:2px solid black;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
+        tabFrame.addTab('Custom Tab 2').addItem($('<div class="info" style="border:2px solid black;margin:20px;">Each tab has its own layout, and can be configured however you wish.</div>'));
+        tabFrame.addTab('Custom Tab 3').addItem($('<div class="info" style="border:2px solid black;margin:20px;">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
+        tabFrame.addTab('Custom Tab 4').addItem($('<div class="info" style="border:2px solid black;margin:20px;">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
+        tabFrame.addTab('Custom Tab 5').addItem($('<div class="info" style="border:2px solid black;margin:20px;">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
         tabFrame.closeable(3, true);
         tabFrame.faicon(0, 'gears')
 
-        splitter.pane(1).addItem($('<div class="info" style="background-color:lightgray;margin:20px;">The same splitter widget used to separate panels can also be used anywhere within a panel.  Each side of the splitter comes with its own layout.</div>'));
+        splitter.pane(1).addItem($('<div class="info" style="border:2px solid black;margin:20px;">The same splitter widget used to separate panels can also be used anywhere within a panel.  Each side of the splitter comes with its own layout.</div>'));
 
         // // Now create an IFrame widget and put it into the large split.
         // var $frameArea = $('<div style="width:100%;height:100%;position:relative;">');
@@ -248,7 +248,7 @@ $(document).ready(function() {
       onCreate: function(myPanel) {
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The chat panel demonstrates the use of the built-in event messaging system to broadcast information between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
+        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The chat panel demonstrates the use of the built-in event messaging system to broadcast information between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }
@@ -312,7 +312,7 @@ $(document).ready(function() {
       onCreate: function(myPanel) {
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="background-color:lightgray;margin-bottom:20px;">The batch panel demonstrates a speed comparison between adding layout items one at a time vs using the batching system.  The batching system avoids re-calculating elements each time a new one is added until the batch has been finished.  Use this if you are adding a large number of elements into the panel\'s layout.</div>');
+        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The batch panel demonstrates a speed comparison between adding layout items one at a time vs using the batching system.  The batching system avoids re-calculating elements each time a new one is added until the batch has been finished.  Use this if you are adding a large number of elements into the panel\'s layout.</div>');
         if (!_showingInfo) {
           $infoText.hide();
         }

@@ -178,20 +178,22 @@
 }
 
 .wcButtonHover, .wcButton:hover, button:hover {
-  border: 1px outset #A44;
+  border: 1px outset #B66;
   background-color: #B66;
 }
 
 .wcButtonActive, .wcButton:active, button:active {
-  border: 1px inset #A44;
+  border: 1px inset #B66;
   background-color: #B66;
 }
 
 .wcButtonActive.wcButtonHover, .wcButton:hover.wcButtonActive, .wcButton:active.wcButtonHover, .wcButton:active:hover, button:active:hover {
-  border: 1px inset #A44;
+  border: 1px inset #C88;
   background-color: #C88;
 }
 
 .wcButton.disabled, button:disabled {
+  border: 1px outset #933;
+  background-color: #933;
   color: #533;
 }

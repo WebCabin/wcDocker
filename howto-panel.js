@@ -63,10 +63,10 @@ HowToPanel.prototype = {
   __init: function() {
     this._layout.$table.css('padding', '10px');
 
-    var $background = $('<div style="width:100%;height:100%;background-color:white;opacity:0.50;">');
+    var $background = $('<div style="width:100%;height:100%;background-color:black;opacity:0.2;">');
     this._layout.addItem($background, 0, 0);
 
-    var $credit = $('<div style="font-size:15px;background-color:lightgray;">Code syntax highlighting brought to you by <a href="http://craig.is/" target="_blank"><b>Craig Campbell</b></a> and the <a href="http://craig.is/making/rainbows" target="_blank"><b>Rainbow</b></a> library!</div>');
+    var $credit = $('<div style="font-size:15px;">Code syntax highlighting brought to you by <a href="http://craig.is/" target="_blank"><b>Craig Campbell</b></a> and the <a href="http://craig.is/making/rainbows" target="_blank"><b>Rainbow</b></a> library!</div>');
     this._layout.addItem($credit, 0, 1);
 
     var $scene = $('<div style="position:absolute;top:10px;left:10px;right:10px;bottom:27px;border-bottom:1px solid black;">');
@@ -239,7 +239,7 @@ HowToPanel.prototype = {
       "\tThe widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.",
     ]);
 
-    var $scene = $('<div style="position:relative;width:100%;height:100%;">');
+    var $scene = $('<div style="position:relative;width:100%;height:100%;border-bottom:1px solid black;">');
     layout.addItem($scene, 0, this._layoutRow++);
     layout.finishBatch();
     layout.item(0, this._layoutRow-1).parent().css('height', '100%');
