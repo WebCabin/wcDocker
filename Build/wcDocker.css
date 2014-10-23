@@ -529,9 +529,9 @@ html, body {
 }
 
 .wcButtonDisabled, .wcButton.disabled, button:disabled {
-  border: 1px outset #666;
-  background-color: #666;
-  color: #555;
+  border: 1px outset #666 !important;
+  background-color: #666 !important;
+  color: #555 !important;
 }
 
 .wcButton:focus, button:focus {
