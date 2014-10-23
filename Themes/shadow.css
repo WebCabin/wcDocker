@@ -1,6 +1,6 @@
 .wcDocker {
   background-color: black;
-  color: white;
+  color: #AAA;
 }
 
 .wcPanelBackground {
@@ -136,55 +136,67 @@
   -webkit-box-shadow: inset 0 0 0 rgba(0,0,0,0.7);
 }
 
-.context-menu-list {
+.wcMenuList, .context-menu-list {
   border: 1px solid #111;
 }
 
-.context-menu-item {
+.wcMenuItem, .context-menu-item {
   background-color: #444;
 }
 
-.context-menu-item.hover {
+.wcMenuItemHover, .wcMenuItem:hover, .context-menu-item.hover {
   background-color: #666;
 }
 
-.context-menu-item.disabled {
-  color: #888;
+.wcMenuItem.disabled, .context-menu-item.disabled {
+  color: #333;
+  background-color: #444;
 }
 
-.context-menu-separator {
+.wcMenuSeparator, .context-menu-separator {
   border: 2px solid #444;
   background-color: #777;
 }
 
-input {
+.wcInput, input {
   color: #CCC;
-  background-color: #777;
+  background-color: #555;
   border: 1px solid black;
 }
 
-select {
+.wcSelect, select {
   color: #CCC;
-  background-color: #777;
+  background-color: #555;
   outline: 0px;
 }
 
-button {
+.wcButton, button {
   color: #CCC;
+  background-color: #555;
+  border: 1px outset #555;
+}
+
+.wcButtonHover, .wcButton:hover, button:hover {
+  border: 1px outset #555;
+  background-color: #666;
+}
+
+.wcButtonActive, .wcButton:active, button:active {
+  border: 1px inset #555;
   background-color: #777;
-  border: 1px outset #777;
 }
 
-button:active {
-  border: 1px inset #777;
+.wcButtonActive.wcButtonHover, .wcButton:hover.wcButtonActive, .wcButton:active.wcButtonHover, .wcButton:active:hover, button:active:hover {
+  border: 1px inset #555;
+  background-color: #999;
 }
 
-button:disabled {
+.wcButton.disabled, button:disabled {
   /*border: 2px solid black;*/
   background-color: #111;
   color: #555;
 }
 
-button:focus {
+.wcButton:focus, button:focus {
   outline: 0px;
 }
