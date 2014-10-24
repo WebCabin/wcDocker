@@ -3302,7 +3302,7 @@ wcFrame.prototype = {
     this.$tabLeft   = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
     this.$tabRight  = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
     this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-close"></span>X</div>');
-    this.$frame.append(this.$title);
+    // this.$frame.append(this.$title);
     this.$title.append(this.$tabScroll);
     this.$frame.append(this.$close);
 
@@ -3521,8 +3521,8 @@ wcFrame.prototype = {
     }
 
     if (titleVisible) {
+      this.$frame.prepend(this.$title);
       if (!this.$frame.parent()) {
-        this.$frame.prepend(this.$title);
         this.$center.css('top', '');
       }
     } else {
