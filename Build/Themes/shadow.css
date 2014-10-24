@@ -187,8 +187,8 @@
 }
 
 .wcButtonActive.wcButtonHover, .wcButton:hover.wcButtonActive, .wcButton:active.wcButtonHover, .wcButton:active:hover, button:active:hover {
-  border: 1px inset #787878;
-  background-color: #787878;
+  border: 1px inset #888;
+  background-color: #888;
 }
 
 .wcButtonDisabled, .wcButton.disabled, button:disabled {
