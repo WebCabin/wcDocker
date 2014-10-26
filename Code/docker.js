@@ -500,7 +500,7 @@ wcDocker.prototype = {
       var frame = this._frameList[i];
       for (var a = 0; a < frame._panelList.length; ++a) {
         var panel = frame._panelList[a];
-        if (panel._title === typeName) {
+        if (panel._type === typeName) {
           result.push(panel);
         }
       }
