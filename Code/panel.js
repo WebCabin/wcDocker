@@ -109,7 +109,12 @@ wcPanel.prototype = {
       } else {
         this._title = title;
       }
+
+      if (this._parent instanceof wcFrame) {
+        this._parent.__updateTabs();
+      }
     }
+
     return this._title;
   },
 
