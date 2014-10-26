@@ -2728,16 +2728,25 @@ wcPanel.prototype = {
   // Gets, or Sets the scroll position of the window (if it is scrollable).
   // Params:
   //    x, y      If supplied, sets the scroll position of the window.
+  //    duration  If setting a scroll position, you can supply a time duration
+  //              to animate the scroll (in milliseconds).
   // Returns:
   //    object    The scroll position of the window.
-  scroll: function(x, y) {
+  scroll: function(x, y, duration) {
     if (!this.$container) {
       return {x: 0, y: 0};
     }
 
     if (typeof x !== 'undefined') {
-      this.$container.parent().scrollLeft(x);
-      this.$container.parent().scrollTop(y);
+      if (duration) {
+        this.$container.parent().stop().animate({
+          scrollLeft: x,
+          scrollTop: y,
+        }, duration);
+      } else {
+        this.$container.parent().scrollLeft(x);
+        this.$container.parent().scrollTop(y);
+      }
     }
 
     return {
