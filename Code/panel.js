@@ -610,10 +610,10 @@ wcPanel.prototype = {
       if (value.indexOf('%', value.length - 1) !== -1) {
         return parseFloat(value)/100;
       } else if (value.indexOf('px', value.length - 2) !== -1) {
-        return parseInt(value) / size;
+        return parseFloat(value) / size;
       }
     }
-    return value;
+    return parseFloat(value);
   },
 
   // Converts a potential string value to a pixel value.
@@ -622,10 +622,10 @@ wcPanel.prototype = {
       if (value.indexOf('%', value.length - 1) !== -1) {
         return (parseFloat(value)/100) * size;
       } else if (value.indexOf('px', value.length - 2) !== -1) {
-        return parseInt(value);
+        return parseFloat(value);
       }
     }
-    return value;
+    return parseFloat(value);
   },
 
   // Retrieves the bounding rect for this widget.

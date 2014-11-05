@@ -2672,40 +2672,59 @@ wcPanel.prototype = {
 
   // Gets, or Sets the default position of the widget if it is floating.
   // Params:
-  //    x, y    If supplied, sets the position (percentage value from 0 to 1).
+  //    x, y    If supplied, sets the position of the floating panel.
+  //            Can be a pixel position, or a string with a 'px' or '%' suffix.
+  // Returns:
+  //            An object with the current percentage position is returned.
   initPos: function(x, y) {
-    if (typeof x === 'undefined') {
-      return {x: this._pos.x, y: this._pos.y};
+    if (typeof x !== 'undefined') {
+      this._pos.x = this.__stringToPercent(x, this.docker().$container.width());
+      this._pos.y = this.__stringToPercent(y, this.docker().$container.height());
     }
-    this._pos.x = x;
-    this._pos.y = y;
+
+    return {x: this._pos.x, y: this._pos.y};
   },
 
   // Gets, or Sets the desired size of the widget.
+  // Params:
+  //    x, y    If supplied, sets the desired initial size of the panel.
+  //            Can be a pixel position, or a string with a 'px' or '%' suffix.
+  // Returns:
+  //            An object with the current pixel size is returned.
   initSize: function(x, y) {
-    if (typeof x === 'undefined') {
-      return {x: this._size.x, y: this._size.y};
+    if (typeof x !== 'undefined') {
+      this._size.x = this.__stringToPixel(x, this.docker().$container.width());
+      this._size.y = this.__stringToPixel(y, this.docker().$container.height());
     }
-    this._size.x = x;
-    this._size.y = y;
+    return {x: this._size.x, y: this._size.y};
   },
 
   // Gets, or Sets the minimum size of the widget.
+  // Params:
+  //    x, y    If supplied, sets the desired minimum size of the panel.
+  //            Can be a pixel position, or a string with a 'px' or '%' suffix.
+  // Returns:
+  //            An object with the current minimum pixel size is returned.
   minSize: function(x, y) {
-    if (typeof x === 'undefined') {
-      return this._minSize;
+    if (typeof x !== 'undefined') {
+      this._minSize.x = this.__stringToPixel(x, this.docker().$container.width());
+      this._minSize.y = this.__stringToPixel(y, this.docker().$container.height());
     }
-    this._minSize.x = x;
-    this._minSize.y = y;
+    return this._minSize;
   },
 
   // Gets, or Sets the maximum size of the widget.
+  // Params:
+  //    x, y    If supplied, sets the desired maximum size of the panel.
+  //            Can be a pixel position, or a string with a 'px' or '%' suffix.
+  // Returns:
+  //            An object with the current maximum pixel size is returned.
   maxSize: function(x, y) {
-    if (typeof x === 'undefined') {
-      return this._maxSize;
+    if (typeof x !== 'undefined') {
+      this._maxSize.x = this.__stringToPixel(x, this.docker().$container.width());
+      this._maxSize.y = this.__stringToPixel(y, this.docker().$container.height());
     }
-    this._maxSize.x = x;
-    this._maxSize.y = y;
+    return this._maxSize;
   },
 
   // Sets the icon for the panel, shown in the panels tab widget.
@@ -3036,6 +3055,29 @@ wcPanel.prototype = {
     }
   },
 
+  // Converts a potential string value to a percentage.
+  __stringToPercent: function(value, size) {
+    if (typeof value === 'string') {
+      if (value.indexOf('%', value.length - 1) !== -1) {
+        return parseFloat(value)/100;
+      } else if (value.indexOf('px', value.length - 2) !== -1) {
+        return parseFloat(value) / size;
+      }
+    }
+    return parseFloat(value);
+  },
+
+  // Converts a potential string value to a pixel value.
+  __stringToPixel: function(value, size) {
+    if (typeof value === 'string') {
+      if (value.indexOf('%', value.length - 1) !== -1) {
+        return (parseFloat(value)/100) * size;
+      } else if (value.indexOf('px', value.length - 2) !== -1) {
+        return parseFloat(value);
+      }
+    }
+    return parseFloat(value);
+  },
 
   // Retrieves the bounding rect for this widget.
   __rect: function() {
