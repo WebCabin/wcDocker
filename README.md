@@ -7,7 +7,7 @@ View the API documentation here: [https://github.com/WebCabin/wcDocker/wiki](htt
 
 ### Features ###
 * Extremely responsive design!
-* Organization and duplicate panels at any time!
+* Organization and duplication of panels at any time!
 * Easily create your own themes!
 * Comprehensive API Documentation!
 * Easily save and restore your layout!
