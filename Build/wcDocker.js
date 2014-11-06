@@ -2678,8 +2678,14 @@ wcPanel.prototype = {
   //            An object with the current percentage position is returned.
   initPos: function(x, y) {
     if (typeof x !== 'undefined') {
-      this._pos.x = this.__stringToPercent(x, this.docker().$container.width());
-      this._pos.y = this.__stringToPercent(y, this.docker().$container.height());
+      var docker = this.docker();
+      if (docker) {
+        this._pos.x = this.__stringToPercent(x, docker.$container.width());
+        this._pos.y = this.__stringToPercent(y, docker.$container.height());
+      } else {
+        this._pos.x = x;
+        this._pos.y = y;
+      }
     }
 
     return {x: this._pos.x, y: this._pos.y};
@@ -2693,8 +2699,14 @@ wcPanel.prototype = {
   //            An object with the current pixel size is returned.
   initSize: function(x, y) {
     if (typeof x !== 'undefined') {
-      this._size.x = this.__stringToPixel(x, this.docker().$container.width());
-      this._size.y = this.__stringToPixel(y, this.docker().$container.height());
+      var docker = this.docker();
+      if (docker) {
+        this._size.x = this.__stringToPixel(x, docker.$container.width());
+        this._size.y = this.__stringToPixel(y, docker.$container.height());
+      } else {
+        this._size.x = x;
+        this._size.y = y;
+      }
     }
     return {x: this._size.x, y: this._size.y};
   },
@@ -2707,8 +2719,14 @@ wcPanel.prototype = {
   //            An object with the current minimum pixel size is returned.
   minSize: function(x, y) {
     if (typeof x !== 'undefined') {
-      this._minSize.x = this.__stringToPixel(x, this.docker().$container.width());
-      this._minSize.y = this.__stringToPixel(y, this.docker().$container.height());
+      var docker = this.docker();
+      if (docker) {
+        this._minSize.x = this.__stringToPixel(x, docker.$container.width());
+        this._minSize.y = this.__stringToPixel(y, docker.$container.height());
+      } else {
+        this._minSize.x = x;
+        this._minSize.y = y;
+      }
     }
     return this._minSize;
   },
@@ -2721,8 +2739,14 @@ wcPanel.prototype = {
   //            An object with the current maximum pixel size is returned.
   maxSize: function(x, y) {
     if (typeof x !== 'undefined') {
-      this._maxSize.x = this.__stringToPixel(x, this.docker().$container.width());
-      this._maxSize.y = this.__stringToPixel(y, this.docker().$container.height());
+      var docker = this.docker();
+      if (docker) {
+        this._maxSize.x = this.__stringToPixel(x, docker.$container.width());
+        this._maxSize.y = this.__stringToPixel(y, docker.$container.height());
+      } else {
+        this._maxSize.x = x;
+        this._maxSize.y = y;
+      }
     }
     return this._maxSize;
   },
