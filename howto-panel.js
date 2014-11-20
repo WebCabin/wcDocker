@@ -6,6 +6,7 @@ function HowToPanel(myPanel) {
   this._layoutRow = 0;
   this._tabFrame = null;
   this._widgetTabsFrame = null;
+  this._tipTabsFrame = null;
 
   this.__init();
 };
@@ -79,6 +80,7 @@ HowToPanel.prototype = {
     this.__constructWidgetTab(this._tabFrame.addTab('Widget Panel'));
     this.__constructChatTab(this._tabFrame.addTab('Chat Panel'));
     this.__constructBatchTab(this._tabFrame.addTab('Batch Panel'));
+    this.__constructTipTab(this._tabFrame.addTab('Tip Panel'));
   },
 
   // --------------------------------------------------------------------------------
@@ -300,6 +302,24 @@ HowToPanel.prototype = {
   },
 
   // --------------------------------------------------------------------------------
+  __constructTipTab: function(layout) {
+    this.__initTabLayout(layout);
+
+    this.text([
+      "\tThe tip panel demonstrates a variety of useful tips frequently asked about.",
+    ]);
+
+    var $scene = $('<div style="position:relative;width:100%;height:100%;border-bottom:1px solid black;">');
+    layout.addItem($scene, 0, this._layoutRow++);
+    layout.finishBatch();
+    layout.item(0, this._layoutRow-1).parent().css('height', '100%');
+
+    this._tipTabsFrame = new wcTabFrame($scene, this._panel);
+    this.__constructTipVisibilityTab(this._tipTabsFrame.addTab('Visibility'));
+    this.__constructTipSaveRestoreTab(this._tipTabsFrame.addTab('Save/Restore'));
+  },
+
+  // --------------------------------------------------------------------------------
   __constructPanelButtonTab: function(layout) {
     this.__initTabLayout(layout);
 
@@ -433,6 +453,54 @@ HowToPanel.prototype = {
       "\tAt any time, the 'window' object found within the iFrame can be retrieved by calling " + this.__wikiLink('wcIFrame', 'window') + ".",
       "",
       "\tMore attributes exist to give you more control over the iFrame, take a look at its " + this.__wikiLink('wcIFrame', '', 'API documentation') + " for more information.",
+    ]);
+
+    this.__finishTabLayout();
+  },
+
+  // --------------------------------------------------------------------------------
+  __constructTipVisibilityTab: function(layout) {
+    this.__initTabLayout(layout);
+
+    this.text([
+      "\tIt sometimes becomes necessary to know when a panel tab becomes visible, for this, there is the visibility changed event registered by the " + this.__wikiLink('wcPanel', 'on') + " function.",
+    ]);
+    this.code([
+      "myPanel.on(wcDocker.EVENT_VISIBILITY_CHANGED, function() {",
+      "\tif(myPanel.isVisible()) {",
+      "\t\t// This panel has just become visible.",
+      "\t}",
+      "});",
+    ]);
+
+    this.__finishTabLayout();
+  },
+
+  // --------------------------------------------------------------------------------
+  __constructTipSaveRestoreTab: function(layout) {
+    this.__initTabLayout(layout);
+
+    this.text([
+      "\tSometimes the contents of a panel may alter based on the actions of the user, and it may become necessary that the current state be restored at times.",
+      "\tThis can be done with the built in Save/Restore system for the layout.  Whenever the layout is saved, you can catch that event and inject your own data to be saved along with it.",
+    ]);
+    this.code([
+      "myPanel.on(wcDocker.EVENT_SAVE_LAYOUT, function(data) {",
+      "\t// Whenever the layout is being saved, this event will be triggered on all of your panels.",
+      "\t// From here, you can store any amount of data in the data variable for later.",
+      "\tdata.savedValue1 = value1;",
+      "\tdata.savedValue2 = value2;",
+      "});",
+    ]);
+    this.text([
+      "\tWhenever that layout configuration is being restored, you can also restore the contents of your panel based on the data you have previously stored.",
+    ]);
+    this.code([
+      "myPanel.on(wcDocker.EVENT_RESTORE_LAYOUT, function(data) {",
+      "\t// Whenever a previously saved layout is being restored, the data will be the same one you saved before",
+      "\tvalue1 = data.savedValue1;",
+      "\tvalue2 = data.savedValue2;",
+      "});",
     ]);
 
     this.__finishTabLayout();
