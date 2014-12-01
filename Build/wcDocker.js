@@ -130,6 +130,7 @@ wcDocker.DOCK_BOTTOM                = 'bottom';
 wcDocker.DOCK_STACKED               = 'stacked';
 
 // Internal events.
+wcDocker.EVENT_INIT                 = 'panelInit';
 wcDocker.EVENT_UPDATED              = 'panelUpdated';
 wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
 wcDocker.EVENT_BEGIN_DOCK           = 'panelBeginDock';
@@ -2466,6 +2467,7 @@ function wcPanel(type, options) {
   }
 
   this._panelObject = null;
+  this._initialized = false;
 
   this._type = type;
   this._title = type;
@@ -2977,6 +2979,11 @@ wcPanel.prototype = {
       this._parent.$frame.removeClass('wcHideOnResize');
     } else {
       this._parent.$frame.addClass('wcHideOnResize');
+    }
+
+    if (!this._initialized) {
+      this._initialized = true;
+      this.__trigger(wcDocker.EVENT_INIT);
     }
 
     this.__trigger(wcDocker.EVENT_UPDATED);

@@ -130,6 +130,7 @@ wcDocker.DOCK_BOTTOM                = 'bottom';
 wcDocker.DOCK_STACKED               = 'stacked';
 
 // Internal events.
+wcDocker.EVENT_INIT                 = 'panelInit';
 wcDocker.EVENT_UPDATED              = 'panelUpdated';
 wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
 wcDocker.EVENT_BEGIN_DOCK           = 'panelBeginDock';
