@@ -2751,6 +2751,22 @@ wcPanel.prototype = {
     return this._maxSize;
   },
 
+  // Retrieves the width of the panel contents.
+  width: function() {
+    if (this.$container) {
+      return this.$container.width();
+    }
+    return 0.0;
+  },
+
+  // Retrieves the height of the panel contents.
+  height: function() {
+    if (this.$container) {
+      return this.$container.height();
+    }
+    return 0.0;
+  },
+
   // Sets the icon for the panel, shown in the panels tab widget.
   // Must be a css class name that contains the image.
   icon: function(icon) {
