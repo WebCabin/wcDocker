@@ -317,6 +317,7 @@ HowToPanel.prototype = {
     this._tipTabsFrame = new wcTabFrame($scene, this._panel);
     this.__constructTipVisibilityTab(this._tipTabsFrame.addTab('Visibility'));
     this.__constructTipSaveRestoreTab(this._tipTabsFrame.addTab('Save/Restore'));
+    this.__constructTipOpenOrFocusPanelTab(this._tipTabsFrame.addTab('Open or Focus Panel'));
   },
 
   // --------------------------------------------------------------------------------
@@ -463,10 +464,13 @@ HowToPanel.prototype = {
     this.__initTabLayout(layout);
 
     this.text([
-      "\tIt sometimes becomes necessary to know when a panel tab becomes visible, for this, there is the visibility changed event registered by the " + this.__wikiLink('wcPanel', 'on') + " function.",
+      "\tIt sometimes becomes necessary to know when a panel tab has been selected, while there isn't a specific event you can catch for this, there is the visibility changed event which may serve your purpose.",
+      "\tThe visibility changed event triggers any time the visibility of the panel changes, either because its tab or another tab was just selected, or because a panel was moved to a new docking position.  You can register the visibility changed event by using the " + this.__wikiLink('wcPanel', 'on') + " function.",
     ]);
     this.code([
       "myPanel.on(wcDocker.EVENT_VISIBILITY_CHANGED, function() {",
+      "\t// Because this event gets triggered both when the panel becomes visible and loses visibility, ",
+      "\t// we need to check the current visible state so we know which one was just triggered.",
       "\tif(myPanel.isVisible()) {",
       "\t\t// This panel has just become visible.",
       "\t}",
@@ -501,6 +505,35 @@ HowToPanel.prototype = {
       "\tvalue1 = data.savedValue1;",
       "\tvalue2 = data.savedValue2;",
       "});",
+    ]);
+
+    this.__finishTabLayout();
+  },
+
+  // --------------------------------------------------------------------------------
+  __constructTipOpenOrFocusPanelTab: function(layout) {
+    this.__initTabLayout(layout);
+
+    this.text([
+      "\tOn occasion, an action performed in one panel may require another panel type to pop-up as a result.  If the target panel type isn't open, a new one should be created, but if one is open already, you may want to re-use it by bringing it back into focus for the user.",
+      "\tThis can be done in a number of steps.  First, check if any panels of the target type are already open by using " + this.__wikiLink('wcDocker', 'findPanels') + ".  It will return to you an array of all existing panels found.",
+    ]);
+    this.code([
+      "var foundPanels = myDocker.findPanels('targetPanelType');",
+    ]);
+    this.text([
+      "\tIf you found any panels already open, you can use " + this.__wikiLink('wcPanel', 'focus') + " to ensure that the panel is brought to the user's attention.  Otherwise, you you will need to create the panel yourself.  It is up to you as to where in the docking window you place this new panel.",
+    ]);
+    this.code([
+      "if (foundPanels.length > 0) {",
+      "\t// At least one panel of the target type is already open.",
+      "\tfoundPanels[0].focus(true);",
+      "} else {",
+      "\t// In this case, sourcePanel is the panel that the user was in right",
+      "\t// before their action triggered this other panel to appear.",
+      "\tvar newPanel = wcDocker.addPanel('targetPanelType', wcDocker.DOCK_RIGHT, sourcePanel);",
+      "\tnewPanel.focus(true);",
+      "}",
     ]);
 
     this.__finishTabLayout();
