@@ -17,6 +17,9 @@ View the API documentation here: [https://github.com/WebCabin/wcDocker/wiki](htt
 ****
 ### Change Log ###
 #### Version: Trunk ####
+- New event type wcDocker.EVENT_INIT.
+- Panel width and height can now be retrieved.
+- wcPanel functions initPos, initSize, minSize, and maxSize can now take a string value with a 'px' or '%' suffix.
 - Fixed issue with using normal CSS icons in the context menu.
 - Improved auto scrolling of tab items when clicked.
 - Created a new wcCustomTabs object for creating docker styled tab areas inside a panel.
