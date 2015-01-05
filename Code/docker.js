@@ -1372,16 +1372,18 @@ wcDocker.prototype = {
               }
             }
           }
-          var frame = panel._parent;
-          if (frame instanceof wcFrame) {
-            index = index + frame._panelList.length;
-          }
           panel = self.movePanel(self._draggingFrame.panel(), anchor.loc, panel, self._ghost.rect());
           panel._parent.panel(panel._parent._panelList.length-1, true);
           // Dragging the entire frame.
           if (!self._draggingFrameTab) {
-            while (self._draggingFrame.panel())
-            self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_STACKED, panel, self._ghost.rect());
+            while (self._draggingFrame.panel()) {
+              self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_STACKED, panel, self._ghost.rect());
+            }
+          } else {
+            var frame = panel._parent;
+            if (frame instanceof wcFrame) {
+              index = index + frame._panelList.length;
+            }
           }
 
           var frame = panel._parent;
