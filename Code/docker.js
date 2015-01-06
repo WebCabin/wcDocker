@@ -1578,7 +1578,8 @@ wcDocker.prototype = {
             var panel = new wcPanel(data.panelType, this._dockPanelTypeList[i].options);
             panel._parent = parent;
             panel.__container(this.$transition);
-            panel._panelObject = new this._dockPanelTypeList[i].options.onCreate(panel);
+            var options = (this._dockPanelTypeList[i].options && this._dockPanelTypeList[i].options.options) || {};
+            panel._panelObject = new this._dockPanelTypeList[i].options.onCreate(panel, options);
             panel.__container($container);
             break;
           }
