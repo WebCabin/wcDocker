@@ -770,7 +770,8 @@ wcDocker.prototype = {
             } else {
               if (myFrame && self._ghost) {
                 var anchor = self._ghost.anchor();
-                self.addPanel(key, anchor.loc, myFrame.panel(), self._ghost.rect());
+                var newPanel = self.addPanel(key, anchor.loc, myFrame.panel(), self._ghost.rect());
+                newPanel.focus();
               }
             }
           },
@@ -3727,11 +3728,9 @@ wcFrame.prototype = {
       }
 
       if (panel.closeable()) {
-        // this.$frame.append(this.$close);
         this.$close.show();
         buttonSize += this.$close.outerWidth();
       } else {
-        // this.$close.remove();
         this.$close.hide();
       }
 

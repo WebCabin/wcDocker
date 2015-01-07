@@ -552,11 +552,9 @@ wcFrame.prototype = {
       }
 
       if (panel.closeable()) {
-        // this.$frame.append(this.$close);
         this.$close.show();
         buttonSize += this.$close.outerWidth();
       } else {
-        // this.$close.remove();
         this.$close.hide();
       }
 
