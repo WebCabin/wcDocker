@@ -351,10 +351,8 @@ wcFrame.prototype = {
     };
     data.tab = this._curTab;
     data.panels = [];
-    if (!data.center) {
-      for (var i = 0; i < this._panelList.length; ++i) {
-        data.panels.push(this._panelList[i].__save());
-      }
+    for (var i = 0; i < this._panelList.length; ++i) {
+      data.panels.push(this._panelList[i].__save());
     }
     return data;
   },
