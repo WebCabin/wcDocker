@@ -3727,10 +3727,12 @@ wcFrame.prototype = {
       }
 
       if (panel.closeable()) {
-        this.$frame.append(this.$close);
+        // this.$frame.append(this.$close);
+        this.$close.show();
         buttonSize += this.$close.outerWidth();
       } else {
-        this.$close.remove();
+        // this.$close.remove();
+        this.$close.hide();
       }
 
       for (var i = 0; i < panel._buttonList.length; ++i) {
