@@ -209,6 +209,20 @@ wcDocker.prototype = {
     return true;
   },
 
+  // Retrieves a list of all currently registered panel types.
+  // Params:
+  //    includePrivate    If true, panels registered as private will
+  //                      also be included with this list.
+  panelTypes: function(includePrivate) {
+    var result = [];
+    for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
+      if (includePrivate || !this._dockPanelTypeList[i].options.isPrivate) {
+        result.push(this._dockPanelTypeList[i].name);
+      }
+    }
+    return result;
+  },
+
   // Add a new dock panel to the window of a given type.
   // Params:
   //    typeName      The type of panel to create.
