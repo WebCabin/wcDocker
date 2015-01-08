@@ -213,6 +213,9 @@ wcDocker.prototype = {
   // Params:
   //    includePrivate    If true, panels registered as private will
   //                      also be included with this list.
+  //
+  // Returns:
+  //    String[]          A list of panel type names.
   panelTypes: function(includePrivate) {
     var result = [];
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
@@ -221,6 +224,22 @@ wcDocker.prototype = {
       }
     }
     return result;
+  },
+
+  // Retrieves the options data associated with a given panel type when it was registered.
+  // Params:
+  //    typeName      The type of the panel.
+  //
+  // Returns:
+  //    Object        An object that represents the registered info of the panel type.
+  //    false         The panel type requested was not found.
+  panelTypeInfo: function(typeName) {
+    for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
+      if (this._dockPanelTypeList[i].name == typeName) {
+        return this._dockPanelTypeList[i].options;
+      }
+    }
+    return false;
   },
 
   // Add a new dock panel to the window of a given type.

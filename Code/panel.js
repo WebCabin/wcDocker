@@ -119,6 +119,11 @@ wcPanel.prototype = {
     return this._title;
   },
 
+  // Retrieves the registration info of the panel.
+  info: function() {
+    return this.docker().panelTypeInfo(this._type);
+  },
+
   // Retrieves the main widget container for this dock widget.
   layout: function() {
     return this._layout;
