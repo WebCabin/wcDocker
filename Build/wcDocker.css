@@ -125,6 +125,7 @@ html, body {
   text-align: center;
   /*margin-right: 3px;*/
   overflow: hidden;
+  z-index: 1;
 
   background-color: #555555;
 }
