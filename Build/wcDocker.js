@@ -1654,11 +1654,13 @@ wcDocker.prototype = {
       }
 
       if (rect) {
-        if (rect.x && rect.y) {
+        if (rect.hasOwnProperty('x') && rect.hasOwnProperty('y')) {
           frame.pos(rect.x + rect.w/2, rect.y + rect.h/2, true);
         }
-        frame._size.x = rect.w;
-        frame._size.y = rect.h;
+        frame._size = {
+          x: rect.w,
+          y: rect.h,
+        };
       }
       return;
     }
