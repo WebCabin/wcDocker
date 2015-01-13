@@ -33,12 +33,12 @@ html, body {
 }
 
 .wcModalBlocker {
-  position: absolute;
+  position: fixed;
   top: 0px;
   bottom: 0px;
   left: 0px;
   right: 0px;
-  z-index: 30;
+  z-index: -30;
 }
 
 .wcWide {
@@ -128,6 +128,10 @@ html, body {
   z-index: 1;
 
   background-color: #555555;
+}
+
+.wcFrameButton > div, .wcFrameMiniButton > div {
+  width: 100%;
 }
 
 .wcFrameMiniButton {

@@ -25,6 +25,7 @@ function wcFrame(container, parent, isFloating) {
   this.$corner4   = null;
 
   this.$shadower  = null;
+  this.$modalBlocker = null;
 
   this._canScrollTabs = false;
   this._tabScrollPos = 0;
@@ -232,7 +233,7 @@ wcFrame.prototype = {
     this.$center    = $('<div class="wcFrameCenter wcWide">');
     this.$tabLeft   = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
     this.$tabRight  = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
-    this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-close"></span>X</div>');
+    this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
     // this.$frame.append(this.$title);
     this.$title.append(this.$tabScroll);
     this.$frame.append(this.$close);
@@ -832,6 +833,10 @@ wcFrame.prototype = {
     }
 
     while (this._panelList.length) this._panelList.pop();
+    if (this.$modalBlocker) {
+      this.$modalBlocker.remove();
+      this.$modalBlocker = null;
+    }
     this.__container(null);
     this._parent = null;
   },

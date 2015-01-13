@@ -76,7 +76,6 @@ function wcDocker(container, options) {
   this.$container = $(container).addClass('wcDocker');
   this.$transition = $('<div class="wcDockerTransition"></div>');
   this.$container.append(this.$transition);
-  this.$modalBlocker = null;
 
   this._events = {};
 
@@ -313,11 +312,12 @@ wcDocker.prototype = {
         index = this._modalList.indexOf(parentFrame);
         if (index !== -1) {
           this._modalList.splice(index, 1);
+        }
 
-          if (!this._modalList.length && this.$modalBlocker) {
-            this.$modalBlocker.remove();
-            this.$modalBlocker = null;
-          }
+        if (this._modalList.length) {
+          this.__focus(this._modalList[this._modalList.length-1]);
+        } else if (this._floatingList.length) {
+          this.__focus(this._floatingList[this._floatingList.length-1]);
         }
 
         var parentSplitter = parentFrame._parent;
@@ -1005,8 +1005,11 @@ wcDocker.prototype = {
     });
 
     $('body').on('mousedown', '.wcModalBlocker', function(event) {
-      for (var i = 0; i < self._modalList.length; ++i) {
-        self._modalList[i].__focus(true);
+      // for (var i = 0; i < self._modalList.length; ++i) {
+      //   self._modalList[i].__focus(true);
+      // }
+      if (self._modalList.length) {
+        self._modalList[self._modalList.length-1].__focus(true);
       }
     });
 
@@ -1502,12 +1505,10 @@ wcDocker.prototype = {
   //    frame     The frame to focus.
   //    flash     Whether to flash the frame.
   __focus: function(frame, flash) {
+    var reorder = this._focusFrame != frame;
     if (this._focusFrame) {
       if (this._focusFrame._isFloating) {
         this._focusFrame.$frame.removeClass('wcFloatingFocus');
-        if (this._focusFrame !== frame) {
-          $('body').append(this._focusFrame.$frame);
-        }
       }
 
       this._focusFrame.__trigger(wcDocker.EVENT_LOST_FOCUS);
@@ -1518,6 +1519,10 @@ wcDocker.prototype = {
     if (this._focusFrame) {
       if (this._focusFrame._isFloating) {
         this._focusFrame.$frame.addClass('wcFloatingFocus');
+
+        if (reorder) {
+          $('body').append(this._focusFrame.$frame);
+        }
       }
       this._focusFrame.__focus(flash);
 
@@ -1642,12 +1647,9 @@ wcDocker.prototype = {
       frame.pos(panel._pos.x, panel._pos.y, false);
 
       if (location === wcDocker.DOCK_MODAL) {
-        if (!this.$modalBlocker) {
-          this.$modalBlocker = $('<div class="wcModalBlocker"></div>');
-          this.$container.append(this.$modalBlocker);
-        }
+        frame.$modalBlocker = $('<div class="wcModalBlocker"></div>');
+        frame.$frame.prepend(frame.$modalBlocker);
 
-        this.$modalBlocker.show();
         panel.moveable(false);
         frame.$frame.addClass('wcModal');
         this._modalList.push(frame);
@@ -3241,6 +3243,7 @@ function wcFrame(container, parent, isFloating) {
   this.$corner4   = null;
 
   this.$shadower  = null;
+  this.$modalBlocker = null;
 
   this._canScrollTabs = false;
   this._tabScrollPos = 0;
@@ -3448,7 +3451,7 @@ wcFrame.prototype = {
     this.$center    = $('<div class="wcFrameCenter wcWide">');
     this.$tabLeft   = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
     this.$tabRight  = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
-    this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-close"></span>X</div>');
+    this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
     // this.$frame.append(this.$title);
     this.$title.append(this.$tabScroll);
     this.$frame.append(this.$close);
@@ -4048,6 +4051,10 @@ wcFrame.prototype = {
     }
 
     while (this._panelList.length) this._panelList.pop();
+    if (this.$modalBlocker) {
+      this.$modalBlocker.remove();
+      this.$modalBlocker = null;
+    }
     this.__container(null);
     this._parent = null;
   },

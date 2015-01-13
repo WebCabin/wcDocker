@@ -12,9 +12,37 @@ $(document).ready(function() {
     var _savedLayout  = null;
     var _chatterIndex = 1;
 
+    // A common function that uses the 'Info Panel' to show a given block of text.
+    function showInfo(text) {
+      var infoPanel = myDocker.addPanel('Info Panel', wcDocker.DOCK_MODAL);
+      infoPanel.layout().$table.find('span').text(text);
+    }
+
+    // --------------------------------------------------------------------------------
+    // Register the info panel, this is a popup modal dialog panel that displays custom
+    // information about a given panel type.  Note that this panel is marked as
+    // 'isPrivate', which means the user will not get the option to create more of these.
+    myDocker.registerPanelType('Info Panel', {
+      isPrivate: true,
+      onCreate: function(myPanel) {
+        myPanel.initSize(400, 200);
+        var $infoText = $('<span class="info" style="position:absolute;top:0px;left:0px;right:0px;bottom:30px;margin:20px;"></span>');
+        var $buttonTray = $('<div style="position:absolute;left:0px;right:0px;bottom:0px;margin:20px;text-align:right;"></div>')
+        var $okButton = $('<button>OK</button>');
+        $buttonTray.append($okButton);
+
+        myPanel.layout().addItem($infoText);
+        myPanel.layout().addItem($buttonTray, 1, 0);
+
+        $okButton.click(function() {
+          myPanel.close();
+        });
+      },
+    });
+
     // --------------------------------------------------------------------------------
     // Register the top panel, this is the static panel at the top of the window
-    // that can not be moved or adjusted.  Note that this panel is also marked as
+    // that can not be moved or adjusted.  Note that this panel is marked as
     // 'isPrivate', which means the user will not get the option to create more of these.
     myDocker.registerPanelType('Top Panel', {
       isPrivate: true,
@@ -31,41 +59,13 @@ $(document).ready(function() {
         myPanel.moveable(false);
         myPanel.closeable(false);
 
-        // Toggle info button.
-        var $toggleInfoButton = $('<button class="toggleInfo" style="position:absolute;right:10px;top:10px;">Hide All Info Text</button>');
-        if (!_showingInfo) {
-          $infoText.hide();
-          $toggleInfoButton.text('Show All Info Text');
-        }
-
         var $header = $('<div style="text-align:center;"><strong>Welcome to the Web Cabin Docker!</strong></div>');
-        $header.append($toggleInfoButton);
 
         // Add some text information into the panel
         myPanel.layout().addItem($header, 0, 0);
         myPanel.layout().addItem($('<div style="text-align:center">Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 1);
         myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://github.com/WebCabin/wcDocker">https://github.com/WebCabin/wcDocker</a></div>'), 0, 2);
         myPanel.layout().addItem($('<div style="text-align:center">View the instructions and documentation here: <a href="https://github.com/WebCabin/wcDocker/wiki/Instructions">https://github.com/WebCabin/wcDocker/wiki/Instructions</a></div>'), 0, 3);
-
-
-        $toggleInfoButton.click(function() {
-          _showingInfo = !_showingInfo;
-          $('.info').each(function() {
-            if (_showingInfo) {
-              $(this).fadeIn();
-            } else {
-              $(this).fadeOut();
-            }
-          });
-
-          $('.toggleInfo').each(function() {
-            if (_showingInfo) {
-              $(this).text('Hide All Info Text');
-            } else {
-              $(this).text('Show All Info Text');
-            }
-          });
-        });
       }
     });
 
@@ -78,8 +78,6 @@ $(document).ready(function() {
         myPanel.initSize(500, 300);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The control panel demonstrates a few of the wcDocker-wide features available to you.  Try changing the theme or saving the current panel layout configuration and then restore it later.</div>');
-        
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
         var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
@@ -96,13 +94,12 @@ $(document).ready(function() {
         }
 
         myPanel.layout().startBatch();
-        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
-        myPanel.layout().addItem($themeLabel, 0, 2).css('text-align', 'right').css('width', '1%');
-        myPanel.layout().addItem($themeSelector, 1, 2).css('text-align', 'left');
+        myPanel.layout().addItem($themeLabel, 0, 1).css('text-align', 'right').css('width', '1%');
+        myPanel.layout().addItem($themeSelector, 1, 1).css('text-align', 'left');
 
-        myPanel.layout().addItem('<div style="height: 20px;"></div>', 0, 3, 2, 1);
-        myPanel.layout().addItem($saveButton, 0, 5, 2, 1);
-        myPanel.layout().addItem($loadButton, 0, 6, 2, 1);
+        myPanel.layout().addItem('<div style="height: 20px;"></div>', 0, 2, 2, 1);
+        myPanel.layout().addItem($saveButton, 0, 4, 2, 1);
+        myPanel.layout().addItem($loadButton, 0, 5, 2, 1);
         myPanel.layout().finishBatch();
 
         // Here we do some css table magic to make all other cells align to the top of the window.
@@ -163,6 +160,13 @@ $(document).ready(function() {
             myDocker.restore(_savedLayout);
           }
         });
+
+        // Create a panel button that shows information about this panel.
+        myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
+        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+          // Use the preivously defined common function to popup the Info Panel.
+          showInfo('The control panel demonstrates a few of the wcDocker-wide features available to you.  Try changing the theme or saving the current panel layout configuration and then restore it later.');
+        });
       }
     });
 
@@ -176,17 +180,11 @@ $(document).ready(function() {
         // myPanel.layout().showGrid(true);
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.</div>');
-        if (!_showingInfo) {
-          $infoText.hide();
-        }
-
         // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
         // to size it to the full size of the panel.
         var $scene = $('<div style="width:100%;height:100%;position:relative;">');
 
-        myPanel.layout().addItem($infoText, 0, 0);
-        myPanel.layout().addItem($scene, 0, 1).css('border', '1px solid black').parent().css('height', '100%');
+        myPanel.layout().addItem($scene, 0, 0).css('border', '1px solid black').parent().css('height', '100%');
 
 
         // Here we can utilize the splitter used by wcDocker internally so that we may split up
@@ -237,6 +235,13 @@ $(document).ready(function() {
           splitter.orientation(data.isToggled);
           subSplitter.orientation(!data.isToggled);
         });
+
+        // Create a panel button that shows information about this panel.
+        myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
+        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+          // Use the preivously defined common function to popup the Info Panel.
+          showInfo('The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.');
+        });
       }
     });
 
@@ -247,11 +252,6 @@ $(document).ready(function() {
       faicon: 'comment-o',
       onCreate: function(myPanel) {
         myPanel.layout().$table.css('padding', '10px');
-
-        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The chat panel demonstrates the use of the built-in event messaging system to broadcast information between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.</div>');
-        if (!_showingInfo) {
-          $infoText.hide();
-        }
 
         // Create our chat window.
         var $senderLabel    = $('<div style="white-space:nowrap;">Sender Name: </div>');
@@ -264,11 +264,10 @@ $(document).ready(function() {
         $chatContainer.find('td').first().append($chatEdit).css('width', '100%');
         $chatContainer.find('td').last().append($chatSend).css('width', '1%');
 
-        myPanel.layout().addItem($infoText, 0, 0, 2, 1);
-        myPanel.layout().addItem($senderLabel, 0, 1).css('width', '1%');
-        myPanel.layout().addItem($senderName, 1, 1).css('width', '100%');
-        var chatCell = myPanel.layout().addItem($chatArea, 0, 2, 2, 1);
-        myPanel.layout().addItem($chatContainer, 0, 3, 2, 1);
+        myPanel.layout().addItem($senderLabel, 0, 0).css('width', '1%');
+        myPanel.layout().addItem($senderName, 1, 0).css('width', '100%');
+        var chatCell = myPanel.layout().addItem($chatArea, 0, 1, 2, 1);
+        myPanel.layout().addItem($chatContainer, 0, 2, 2, 1);
 
         chatCell.parent().css('height', '100%');
 
@@ -301,6 +300,13 @@ $(document).ready(function() {
           var text = data.sender + ': ' + data.message + '\n';
           $chatArea.html($chatArea.html() + text);
         });
+
+        // Create a panel button that shows information about this panel.
+        myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
+        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+          // Use the preivously defined common function to popup the Info Panel.
+          showInfo('The chat panel demonstrates the use of the built-in event messaging system to broadcast information between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.');
+        });
       }
     });
 
@@ -312,27 +318,21 @@ $(document).ready(function() {
       onCreate: function(myPanel) {
         myPanel.layout().$table.css('padding', '10px');
 
-        var $infoText = $('<div class="info" style="border:2px solid black;margin-bottom:20px;">The batch panel demonstrates a speed comparison between adding layout items one at a time vs using the batching system.  The batching system avoids re-calculating elements each time a new one is added until the batch has been finished.  Use this if you are adding a large number of elements into the panel\'s layout.</div>');
-        if (!_showingInfo) {
-          $infoText.hide();
-        }
-
         var $clearItemsButton   = $('<button style="white-space:nowrap;">Clear Items</buttons>');
         var $normalAddButton    = $('<button style="white-space:nowrap;margin-left:10px;margin-right:10px;">Add Items Normally</button>');
         var $batchAddButton     = $('<button style="white-space:nowrap;">Add Items Batched</button>');
 
-        myPanel.layout().addItem($infoText, 0, 0, 3, 1);
-        myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
-        myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
-        myPanel.layout().addItem($batchAddButton, 2, 1);
+        myPanel.layout().addItem($clearItemsButton, 0, 0).css('text-align', 'right');
+        myPanel.layout().addItem($normalAddButton, 1, 0).css('width', '1%');
+        myPanel.layout().addItem($batchAddButton, 2, 0);
 
         // Here we do some css table magic to make all other cells align to the top of the window.
         // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-        myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
+        myPanel.layout().addItem('<div>', 0, 2).parent().css('height', '100%');
 
         var currentItemIndex = 0;
         function __addItems() {
-          myPanel.layout().item(0, currentItemIndex+3).css('height', '');
+          myPanel.layout().item(0, currentItemIndex+2).css('height', '');
 
           // Add a large number of items into the layout.
           var min = 0;
@@ -353,7 +353,7 @@ $(document).ready(function() {
                 break;
             }
             if ($item) {
-              myPanel.layout().addItem($item, 0, currentItemIndex+3, 3, 1).css('border-bottom', '2px solid black').css('padding-bottom', '5px').css('text-align', 'center');
+              myPanel.layout().addItem($item, 0, currentItemIndex+2, 3, 1).css('border-bottom', '2px solid black').css('padding-bottom', '5px').css('text-align', 'center');
             }
           }
         };
@@ -362,14 +362,13 @@ $(document).ready(function() {
           $('body').append($clearItemsButton).append($normalAddButton).append($batchAddButton);
           myPanel.layout().clear();
           myPanel.layout().$table.css('padding', '10px');
-          myPanel.layout().addItem($infoText, 0, 0, 3, 1);
-          myPanel.layout().addItem($clearItemsButton, 0, 1).css('text-align', 'right');
-          myPanel.layout().addItem($normalAddButton, 1, 1).css('width', '1%');
-          myPanel.layout().addItem($batchAddButton, 2, 1);
+          myPanel.layout().addItem($clearItemsButton, 0, 0).css('text-align', 'right');
+          myPanel.layout().addItem($normalAddButton, 1, 0).css('width', '1%');
+          myPanel.layout().addItem($batchAddButton, 2, 0);
 
           // Here we do some css table magic to make all other cells align to the top of the window.
           // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-          myPanel.layout().addItem('<div>', 0, 3).parent().css('height', '100%');
+          myPanel.layout().addItem('<div>', 0, 2).parent().css('height', '100%');
           currentItemIndex = 0;
         });
 
@@ -381,6 +380,13 @@ $(document).ready(function() {
           myPanel.layout().startBatch();
           __addItems();
           myPanel.layout().finishBatch();
+        });
+
+        // Create a panel button that shows information about this panel.
+        myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
+        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+          // Use the preivously defined common function to popup the Info Panel.
+          showInfo("The batch panel demonstrates a speed comparison between adding layout items one at a time vs using the batching system. The batching system avoids re-calculating elements each time a new one is added until the batch has been finished. Use this if you are adding a large number of elements into the panel's layout.");
         });
       }
     });
