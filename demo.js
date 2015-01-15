@@ -231,16 +231,18 @@ $(document).ready(function() {
 
         // Add a rotation panel button to change the orientation of the splitter.
         myPanel.addButton('View', 'fa fa-mail-reply', 'O', 'Switch between horizontal and vertical layout.', true, 'fa fa-mail-forward');
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
-          splitter.orientation(data.isToggled);
-          subSplitter.orientation(!data.isToggled);
-        });
 
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
+
         myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
-          // Use the preivously defined common function to popup the Info Panel.
-          showInfo('The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.');
+          if (data.name == 'View') {
+            splitter.orientation(data.isToggled);
+            subSplitter.orientation(!data.isToggled);
+          } else if (data.name == 'Info') {
+            // Use the preivously defined common function to popup the Info Panel.
+            showInfo('The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.');
+          }
         });
       }
     });
