@@ -3029,7 +3029,10 @@ wcPanel.prototype = {
 
     if (!this._initialized) {
       this._initialized = true;
-      this.__trigger(wcDocker.EVENT_INIT);
+      var self = this;
+      setTimeout(function() {
+        self.__trigger(wcDocker.EVENT_INIT);
+      }, 0);
     }
 
     this.__trigger(wcDocker.EVENT_UPDATED);
