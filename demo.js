@@ -15,7 +15,7 @@ $(document).ready(function() {
     // A common function that uses the 'Info Panel' to show a given block of text.
     function showInfo(text) {
       var infoPanel = myDocker.addPanel('Info Panel', wcDocker.DOCK_MODAL);
-      infoPanel.layout().$table.find('span').text(text);
+      infoPanel.layout().scene().find('span').text(text);
     }
 
     // --------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Top Panel', {
       isPrivate: true,
       onCreate: function(myPanel) {
-        myPanel.layout().$table.css('padding', '10px');
+        myPanel.layout().scene().css('padding', '10px');
 
         // Constrain the sizing of this window so the user can't resize it.
         myPanel.initSize(Infinity, 120);
@@ -76,7 +76,7 @@ $(document).ready(function() {
       faicon: 'gears',
       onCreate: function(myPanel) {
         myPanel.initSize(500, 300);
-        myPanel.layout().$table.css('padding', '10px');
+        myPanel.layout().scene().css('padding', '10px');
 
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
@@ -178,7 +178,7 @@ $(document).ready(function() {
       onCreate: function(myPanel) {
         myPanel.initSize(400, 400);
         // myPanel.layout().showGrid(true);
-        myPanel.layout().$table.css('padding', '10px');
+        myPanel.layout().scene().css('padding', '10px');
 
         // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
         // to size it to the full size of the panel.
@@ -253,7 +253,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Chat Panel', {
       faicon: 'comment-o',
       onCreate: function(myPanel) {
-        myPanel.layout().$table.css('padding', '10px');
+        myPanel.layout().scene().css('padding', '10px');
 
         // Create our chat window.
         var $senderLabel    = $('<div style="white-space:nowrap;">Sender Name: </div>');
@@ -318,7 +318,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Batch Panel', {
       faicon: 'cubes',
       onCreate: function(myPanel) {
-        myPanel.layout().$table.css('padding', '10px');
+        myPanel.layout().scene().css('padding', '10px');
 
         var $clearItemsButton   = $('<button style="white-space:nowrap;">Clear Items</buttons>');
         var $normalAddButton    = $('<button style="white-space:nowrap;margin-left:10px;margin-right:10px;">Add Items Normally</button>');
@@ -363,7 +363,7 @@ $(document).ready(function() {
         $clearItemsButton.click(function() {
           $('body').append($clearItemsButton).append($normalAddButton).append($batchAddButton);
           myPanel.layout().clear();
-          myPanel.layout().$table.css('padding', '10px');
+          myPanel.layout().scene().css('padding', '10px');
           myPanel.layout().addItem($clearItemsButton, 0, 0).css('text-align', 'right');
           myPanel.layout().addItem($normalAddButton, 1, 0).css('width', '1%');
           myPanel.layout().addItem($batchAddButton, 2, 0);

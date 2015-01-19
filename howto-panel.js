@@ -62,7 +62,7 @@ HowToPanel.prototype = {
 
   // --------------------------------------------------------------------------------
   __init: function() {
-    this._layout.$table.css('padding', '10px');
+    this._layout.scene().css('padding', '10px');
 
     var $background = $('<div style="width:100%;height:100%;background-color:black;opacity:0.2;">');
     this._layout.addItem($background, 0, 0);
@@ -92,9 +92,9 @@ HowToPanel.prototype = {
   },
 
   __initTabLayout: function(layout) {
-    layout.$table.css('border-left', '1px solid black');
-    layout.$table.css('border-right', '1px solid black');
-    layout.$table.css('padding', '10px');
+    layout.scene().css('border-left', '1px solid black');
+    layout.scene().css('border-right', '1px solid black');
+    layout.scene().css('padding', '10px');
     this._layoutRow = 0;
     this._currentLayout = layout;
 
