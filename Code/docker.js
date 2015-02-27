@@ -664,6 +664,7 @@ wcDocker.prototype = {
             }
             var icon = null;
             var faicon = null;
+            var label = type.name;
             if (type.options) {
               if (type.options.faicon) {
                 faicon = type.options.faicon;
@@ -671,9 +672,12 @@ wcDocker.prototype = {
               if (type.options.icon) {
                 icon = type.options.icon;
               }
+              if (type.options.title) {
+                label = type.options.title;
+              }
             }
             windowTypes[type.name] = {
-              name: type.name,
+              name: label,
               icon: icon,
               faicon: faicon,
               className: 'wcMenuCreatePanel',

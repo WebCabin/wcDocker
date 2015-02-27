@@ -20,6 +20,9 @@ function wcPanel(type, options) {
   this._type = type;
   this._title = type;
   this._titleVisible = true;
+  if (options.title) {
+    this.title(options.title);
+  }
 
   this._layout = null;
 
