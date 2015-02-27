@@ -664,6 +664,7 @@ wcDocker.prototype = {
             }
             var icon = null;
             var faicon = null;
+            var label = type.name;
             if (type.options) {
               if (type.options.faicon) {
                 faicon = type.options.faicon;
@@ -671,9 +672,12 @@ wcDocker.prototype = {
               if (type.options.icon) {
                 icon = type.options.icon;
               }
+              if (type.options.title) {
+                label = type.options.title;
+              }
             }
             windowTypes[type.name] = {
-              name: type.name,
+              name: label,
               icon: icon,
               faicon: faicon,
               className: 'wcMenuCreatePanel',
@@ -1214,7 +1218,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel().layout().$table[0] == this) {
+        if (self._frameList[i].panel().layout().scene()[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);
@@ -2513,6 +2517,9 @@ function wcPanel(type, options) {
   this._type = type;
   this._title = type;
   this._titleVisible = true;
+  if (options.title) {
+    this.title(options.title);
+  }
 
   this._layout = null;
 
@@ -3099,7 +3106,7 @@ wcPanel.prototype = {
     var data = {};
     data.type = 'wcPanel';
     data.panelType = this._type;
-    data.title = this._title;
+    // data.title = this._title;
     // data.minSize = {
     //   x: this._minSize.x,
     //   y: this._minSize.y,
@@ -3122,7 +3129,7 @@ wcPanel.prototype = {
 
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
-    this._title = data.title;
+    // this._title = data.title;
     // this._minSize.x = data.minSize.x;
     // this._minSize.y = data.minSize.y;
     // this._maxSize.x = data.maxSize.x;
