@@ -76,7 +76,20 @@ concat({
   dest: '../Build/wcDocker.css',
 });
 
+concat({
+  src: [
+    '../Code/skeleton.css',
+  ],
+  dest: '../Build/wcDockerSkeleton.css',
+});
+
 // Move the un-minified version to the build folder.
+concat({
+  src: [
+    '../Themes/default.css',
+  ],
+  dest: '../Build/Themes/default.css',
+});
 concat({
   src: [
     '../Themes/bigRed.css',
