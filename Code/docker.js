@@ -1308,7 +1308,6 @@ wcDocker.prototype = {
           y: event.clientY,
         };
         self._draggingSplitter.__moveBar(mouse);
-        self._draggingSplitter.__update();
       } else if (self._draggingFrameSizer) {
         var mouse = {
           x: event.clientX,
