@@ -79,6 +79,8 @@ function wcDocker(container, options) {
 
   this._events = {};
 
+  this._placeholderPanel = null;
+
   this._root = null;
   this._frameList = [];
   this._floatingList = [];
@@ -151,6 +153,8 @@ wcDocker.EVENT_SAVE_LAYOUT          = 'layoutSave';
 wcDocker.EVENT_RESTORE_LAYOUT       = 'layoutRestore';
 wcDocker.EVENT_CUSTOM_TAB_CHANGED   = 'customTabChanged';
 wcDocker.EVENT_CUSTOM_TAB_CLOSED    = 'customTabClosed';
+
+wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
 
 // Used for the splitter bar orientation.
 wcDocker.ORIENTATION_VERTICAL       = false;
@@ -272,6 +276,14 @@ wcDocker.prototype = {
           this.__addPanelAlone(panel, location, targetPanel, rect);
         }
 
+        if (this._placeholderPanel && panel.moveable() &&
+            location !== wcDocker.DOCK_FLOAT &&
+            location !== wcDocker.DOCK_MODAL) {
+          if (this.removePanel(this._placeholderPanel)) {
+            this._placeholderPanel = null;
+          }
+        }
+
         this.__update();
         return panel;
       }
@@ -291,9 +303,7 @@ wcDocker.prototype = {
     }
 
     // Do not remove if this is the last moveable panel.
-    if (this.__isLastPanel(panel)) {
-      return false;
-    }
+    var lastPanel = this.__isLastPanel(panel);
 
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
@@ -301,6 +311,13 @@ wcDocker.prototype = {
 
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.removePanel(panel)) {
+        // If this is the last frame, create a dummy panel to take up
+        // the space until another one is created.
+        if (lastPanel) {
+          this.__addPlaceholder(parentFrame);
+          return true;
+        }
+
         var index = this._floatingList.indexOf(parentFrame);
         if (index !== -1) {
           this._floatingList.splice(index, 1);
@@ -390,9 +407,7 @@ wcDocker.prototype = {
   //    wcPanel       The panel that was created.
   //    false         The panel type does not exist.
   movePanel: function(panel, location, targetPanel, rect) {
-    if (this.__isLastPanel(panel)) {
-      return panel;
-    }
+    var lastPanel = this.__isLastPanel(panel);
 
     var $elem = panel.$container;
     if (panel._parent instanceof wcFrame) {
@@ -434,62 +449,68 @@ wcDocker.prototype = {
       
       // If no more panels remain in this frame, remove the frame.
       if (parentFrame._panelList.length === 0) {
-        var index = this._floatingList.indexOf(parentFrame);
-        if (index !== -1) {
-          this._floatingList.splice(index, 1);
-        }
-        index = this._frameList.indexOf(parentFrame);
-        if (index !== -1) {
-          this._frameList.splice(index, 1);
-        }
-
-        var parentSplitter = parentFrame._parent;
-        if (parentSplitter instanceof wcSplitter) {
-          parentSplitter.__removeChild(parentFrame);
-
-          var other;
-          if (parentSplitter.pane(0)) {
-            other = parentSplitter.pane(0);
-            parentSplitter._pane[0] = null;
-          } else {
-            other = parentSplitter.pane(1);
-            parentSplitter._pane[1] = null;
-          }
-
-          // Keep the item in a hidden transition container so as to not
-          // destroy any event handlers that may be on it.
-          other.__container(this.$transition);
-          other._parent = null;
-
-          index = this._splitterList.indexOf(parentSplitter);
+        // If this is the last frame, create a dummy panel to take up
+        // the space until another one is created.
+        if (lastPanel) {
+          this.__addPlaceholder(parentFrame);
+        } else {
+          var index = this._floatingList.indexOf(parentFrame);
           if (index !== -1) {
-            this._splitterList.splice(index, 1);
+            this._floatingList.splice(index, 1);
+          }
+          index = this._frameList.indexOf(parentFrame);
+          if (index !== -1) {
+            this._frameList.splice(index, 1);
           }
 
-          var parent = parentSplitter._parent;
-          parentContainer = parentSplitter.__container();
-          parentSplitter.__destroy();
+          var parentSplitter = parentFrame._parent;
+          if (parentSplitter instanceof wcSplitter) {
+            parentSplitter.__removeChild(parentFrame);
 
-          if (parent instanceof wcSplitter) {
-            parent.__removeChild(parentSplitter);
-            if (!parent.pane(0)) {
-              parent.pane(0, other);
+            var other;
+            if (parentSplitter.pane(0)) {
+              other = parentSplitter.pane(0);
+              parentSplitter._pane[0] = null;
             } else {
-              parent.pane(1, other);
+              other = parentSplitter.pane(1);
+              parentSplitter._pane[1] = null;
             }
-          } else if (parent === this) {
-            this._root = other;
-            other._parent = this;
-            other.__container(parentContainer);
+
+            // Keep the item in a hidden transition container so as to not
+            // destroy any event handlers that may be on it.
+            other.__container(this.$transition);
+            other._parent = null;
+
+            index = this._splitterList.indexOf(parentSplitter);
+            if (index !== -1) {
+              this._splitterList.splice(index, 1);
+            }
+
+            var parent = parentSplitter._parent;
+            parentContainer = parentSplitter.__container();
+            parentSplitter.__destroy();
+
+            if (parent instanceof wcSplitter) {
+              parent.__removeChild(parentSplitter);
+              if (!parent.pane(0)) {
+                parent.pane(0, other);
+              } else {
+                parent.pane(1, other);
+              }
+            } else if (parent === this) {
+              this._root = other;
+              other._parent = this;
+              other.__container(parentContainer);
+            }
+            this.__update();
           }
-          this.__update();
-        }
 
-        if (this._focusFrame === parentFrame) {
-          this._focusFrame = null;
-        }
+          if (this._focusFrame === parentFrame) {
+            this._focusFrame = null;
+          }
 
-        parentFrame.__destroy();
+          parentFrame.__destroy();
+        }
       }
     }
 
@@ -498,6 +519,11 @@ wcDocker.prototype = {
       this.__addPanelGrouped(panel, location, targetPanel);
     } else {
       this.__addPanelAlone(panel, location, targetPanel, rect);
+    }
+
+    if (targetPanel == this._placeholderPanel) {
+      this.removePanel(this._placeholderPanel);
+      this._placeholderPanel = null;
     }
 
     var frame = panel._parent;
@@ -730,13 +756,13 @@ wcDocker.prototype = {
             items['Close Panel'] = {
               name: 'Close Tab',
               faicon: 'close',
-              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
+              disabled: !myFrame.panel().closeable(),
             };
             if (!myFrame._isFloating) {
               items['Detach Panel'] = {
                 name: 'Detach Tab',
                 faicon: 'level-down',
-                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+                disabled: !myFrame.panel().moveable(),
               };
             }
 
@@ -759,13 +785,13 @@ wcDocker.prototype = {
             items['Close Panel'] = {
               name: 'Close Panel',
               faicon: 'close',
-              disabled: !myFrame.panel().closeable() || self.__isLastPanel(myFrame.panel()),
+              disabled: !myFrame.panel().closeable(),
             };
             if (!myFrame._isFloating) {
               items['Detach Panel'] = {
                 name: 'Detach Panel',
                 faicon: 'level-down',
-                disabled: !myFrame.panel().moveable() || self.__isLastPanel(myFrame.panel()),
+                disabled: !myFrame.panel().moveable(),
               };
             }
 
@@ -1469,6 +1495,8 @@ wcDocker.prototype = {
         }
       }
     });
+
+    this.__addPlaceholder();
   },
 
   // Updates the sizing of all panels inside this window.
@@ -1805,12 +1833,15 @@ wcDocker.prototype = {
   //    parentPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelGrouped: function(panel, location, parentPanel) {
-    if (parentPanel) {
+    if (parentPanel instanceof wcPanel) {
       var frame = parentPanel._parent;
       if (frame instanceof wcFrame) {
         frame.addPanel(panel);
         return;
       }
+    } else if (parentPanel instanceof wcFrame) {
+      parentPanel.addPanel(panel);
+      return;
     }
 
     // Floating windows need no placement.
@@ -1862,5 +1893,28 @@ wcDocker.prototype = {
       // If we did not manage to find a place for this panel, last resort is to put it in its own frame.
       this.__addPanelAlone(panel, location);
     }
+  },
+
+  // Adds the placeholder panel as needed
+  __addPlaceholder: function(targetPanel) {
+    if (this._placeholderPanel) {
+      console.log('WARNING: wcDocker creating placeholder panel when one already exists');
+    }
+    this._placeholderPanel = new wcPanel(wcDocker.PANEL_PLACEHOLDER_NAME, {});
+    this._placeholderPanel._isPlaceholder = true;
+    this._placeholderPanel._parent = this;
+    this._placeholderPanel.__container(this.$transition);
+    this._placeholderPanel._panelObject = new function(myPanel) {
+      myPanel.title(false);
+      myPanel.closeable(false);
+    }(this._placeholderPanel);
+
+    if (targetPanel) {
+      this.__addPanelGrouped(this._placeholderPanel, wcDocker.DOCK_STACKED, targetPanel);
+    } else {
+      this.__addPanelAlone(this._placeholderPanel, wcDocker.DOCK_TOP);
+    }
+
+    this.__update();
   },
 };

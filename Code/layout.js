@@ -306,6 +306,20 @@ wcLayout.prototype = {
       return false;
     }
 
+    // Check for placeholder.
+    if (this._parent instanceof wcPanel && this._parent._isPlaceholder) {
+      ghost.anchor(mouse, {
+        x: offset.left,
+        y: offset.top,
+        w: width,
+        h: height,
+        loc: wcDocker.DOCK_TOP,
+        item: this,
+        self: false,
+      });
+      return true;
+    }
+
     if (width < height) {
       // Top docking.
       if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&

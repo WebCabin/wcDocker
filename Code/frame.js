@@ -382,11 +382,6 @@ wcFrame.prototype = {
   __updateTabs: function(autoFocus) {
     this.$tabScroll.empty();
 
-    // Move all tabbed panels to a temporary element to preserve event handlers on them.
-    // var $tempCenter = $('<div>');
-    // this.$frame.append($tempCenter);
-    // this.$center.children().appendTo($tempCenter);
-
     var visibilityChanged = [];
     var tabPositions = [];
     var totalWidth = 0;
@@ -415,7 +410,6 @@ wcFrame.prototype = {
         this.$title.addClass('wcNotMoveable');
       }
 
-      // 
       if (!panel._titleVisible) {
         titleVisible = false;
       }
