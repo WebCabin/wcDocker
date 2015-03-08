@@ -762,7 +762,7 @@ wcDocker.prototype = {
               items['Detach Panel'] = {
                 name: 'Detach Tab',
                 faicon: 'level-down',
-                disabled: !myFrame.panel().moveable(),
+                disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder,
               };
             }
 
@@ -791,7 +791,7 @@ wcDocker.prototype = {
               items['Detach Panel'] = {
                 name: 'Detach Panel',
                 faicon: 'level-down',
-                disabled: !myFrame.panel().moveable(),
+                disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder,
               };
             }
 
@@ -803,12 +803,6 @@ wcDocker.prototype = {
               items: windowTypes,
               disabled: !(!myFrame._isFloating && myFrame.panel().moveable()),
               className: 'wcMenuCreatePanel',
-            };
-            items['sep' + separatorIndex++] = "---------";
-
-            items['Flash Panel'] = {
-              name: 'Flash Panel',
-              faicon: 'lightbulb-o',
             };
           }
 
