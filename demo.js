@@ -259,7 +259,7 @@ $(document).ready(function() {
         var $senderLabel    = $('<div style="white-space:nowrap;">Sender Name: </div>');
         var $senderName     = $('<input type="text" style="width:100%;padding:0px;" placeholder="Sender name here" value="Chatter' + _chatterIndex++ + '"/>');
 
-        var $chatArea       = $('<textarea style="width:100%;height:100%;padding:0px;margin-top:10px;border:0px;"></textarea>');
+        var $chatArea       = $('<textarea style="width:100%;height:100%;padding:0px;margin-top:10px;border:0px;" readonly></textarea>');
         var $chatEdit       = $('<input type="text" style="width:100%;padding:0px;" placeholder="Type a message here!"/>');
         var $chatSend       = $('<button>Send</button>');
         var $chatContainer  = $('<table style="width:100%;"><tr><td></td><td></td></tr></table>');
