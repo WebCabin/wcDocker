@@ -109,5 +109,6 @@ uglifyJS('../Build/wcDocker.js', '../Build/wcDocker.min.js');
 uglifyCSS('../Build/wcDocker.css', '../Build/wcDocker.min.css');
 uglifyCSS('../Build/wcDockerSkeleton.css', '../Build/wcDockerSkeleton.min.css');
 
+uglifyCSS('../Themes/default.css', '../Build/Themes/default.min.css');
 uglifyCSS('../Themes/bigRed.css', '../Build/Themes/bigRed.min.css');
 uglifyCSS('../Themes/shadow.css', '../Build/Themes/shadow.min.css');
