@@ -17,6 +17,11 @@ View the API documentation here: [https://github.com/WebCabin/wcDocker/wiki](htt
 ****
 ### Change Log ###
 #### Version: Trunk ####
+
+#### Version: 2.2.0 ####
+- Separated the default theme out of wcDocker.css (now use wcDockerSkeleton.css with Themes/default.css).
+- Added wcDocker.panelTypeInfo() and wcPanel.info() that will retrieve the registration data of a panel.
+- Added wcDocker.panelTypes() to retrieve a list of all registered panel types.
 - New event type wcDocker.EVENT_INIT.
 - Panel width and height can now be retrieved.
 - wcPanel functions initPos, initSize, minSize, and maxSize can now take a string value with a 'px' or '%' suffix.
