@@ -4,10 +4,12 @@
 $(document).ready(function() {
   // --------------------------------------------------------------------------------
   // Create an instance of our docker window and assign it to the document.
-  var myDocker = new wcDocker('.dockerContainer');
+  var myDocker = new wcDocker('.dockerContainer', {
+    allowDrawers: true
+  });
   if (myDocker) {
 
-    var _currentTheme = 'Default';
+    var _currentTheme = 'default';
     var _showingInfo  = true;
     var _savedLayout  = null;
     var _chatterIndex = 1;
@@ -84,6 +86,7 @@ $(document).ready(function() {
         $themeSelector.append('<option value="Default">Default</option>');
         $themeSelector.append('<option value="bigRed">Big Red</option>');
         $themeSelector.append('<option value="shadow">Shadow</option>');
+        $themeSelector.append('<option value="ideDark">ideDark</option>');
         $themeSelector.val(_currentTheme);
 
         // Pre-configured layout configurations.
@@ -109,16 +112,7 @@ $(document).ready(function() {
         // Bind an event to catch when the theme has been changed.
         $themeSelector.change(function() {
           _currentTheme = $themeSelector.find('option:selected').val();
-
-          // To load a theme, you just need to create a new 'link' element that includes the theme css file.
-          // First we remove any already existing theme, so they don't conflict.
-          $('#theme').remove();
-
-          // The default theme requires no additional theme css file.
-          if (_currentTheme !== 'Default') {
-            var cacheBreak = (new Date()).getTime();
-            $('head').append($('<link id="theme" rel="stylesheet" type="text/css" href="Themes/' + _currentTheme + '.css?v=' + cacheBreak + '"/>'));
-          }
+          myPanel.docker().theme(_currentTheme);
 
           // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
           $('.themeSelector').each(function() {
@@ -192,7 +186,7 @@ $(document).ready(function() {
         // each side of the split.
         var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_VERTICAL);
         splitter.scrollable(0, false, false);
-        splitter.scrollable(1, false, false);
+        splitter.scrollable(1, true, true);
 
         // Initialize this splitter with a layout in each pane.  This can be done manually, but
         // it is more convenient this way.
@@ -407,10 +401,12 @@ $(document).ready(function() {
     // by creating the center panel and work your way outwards in all directions.
     var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK_BOTTOM);
 
-    var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, null, {h: -1, w:400});
+    var drawers = myDocker.addDrawers();
+
+    var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, drawers[0], {h: -1, w:400});
     var bottomChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_BOTTOM, topChatPanel);
 
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, false, {w:500,h:-1});
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, drawers[1], {w:500,h:-1});
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, widgetPanel);
     var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, widgetPanel);
 

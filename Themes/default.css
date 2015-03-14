@@ -98,6 +98,11 @@
   background-color: gray;
 }
 
+.wcDrawerSplitterBar {
+  border: 2px outset #444;
+  background-color: #222;
+}
+
 .wcGhost {
   background-color: #444444;
   border: 0px;

@@ -3,6 +3,10 @@
   color: #AAA;
 }
 
+.wcDrawer {
+  background-color: #444;
+}
+
 .wcPanelBackground {
   background-color: #444;
 }
@@ -76,6 +80,11 @@
 .wcSplitterBar {
   border: 1px solid black;
   background-color: black;
+}
+
+.wcDrawerSplitterBar {
+  border: 2px outset #252525;
+  background-color: #252525;
 }
 
 .wcPanelTab {

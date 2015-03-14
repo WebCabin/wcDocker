@@ -74,12 +74,19 @@
   background-color: #411;
 }
 
+.wcDrawerSplitterBar {
+  border: 2px outset #211;
+  background-color: #211;
+}
+
 .wcSplitterBarV {
-  border-left: 1px solid #822;
+  border-left-style: solid;
+  border-left-color: #822;
 }
 
 .wcSplitterBarH {
-  border-top: 1px solid #822;
+  border-top-style: solid;
+  border-top-color: #822;
 }
 
 .wcPanelTab {

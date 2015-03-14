@@ -366,17 +366,18 @@ wcSplitter.prototype = {
 
       oldSize.push(this.$pane[0].width());
       oldSize.push(this.$pane[1].width());
+      var barSize = this.$bar.width() / 2;
 
       // Bar is top to bottom
-      this.$bar.css('left', size+2);
+      this.$bar.css('left', size+2-barSize);
       this.$bar.css('top', '0px');
       this.$bar.css('height', height-2);
-      this.$pane[0].css('width', size+2);
+      this.$pane[0].css('width', size+2-barSize);
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
       this.$pane[1].css('right', '0px');
-      this.$pane[1].css('width', width - size - 6);
+      this.$pane[1].css('width', width-size-6-barSize);
     } else {
       var size = height * this._pos;
 
@@ -389,17 +390,18 @@ wcSplitter.prototype = {
 
       oldSize.push(this.$pane[0].height());
       oldSize.push(this.$pane[1].height());
+      var barSize = this.$bar.height() / 2;
 
       // Bar is left to right
-      this.$bar.css('top', size+2);
+      this.$bar.css('top', size+2-barSize);
       this.$bar.css('left', '0px');
       this.$bar.css('width', width-2);
-      this.$pane[0].css('height', size+2);
+      this.$pane[0].css('height', size+2-barSize);
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
-      this.$pane[1].css('height', height - size - 6);
+      this.$pane[1].css('height', height-size-6-barSize);
     }
 
     if (opt_fromOrientation !== undefined) {

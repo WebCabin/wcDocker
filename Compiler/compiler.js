@@ -63,6 +63,7 @@ concat({
     '../Code/panel.js',
     '../Code/frame.js',
     '../Code/splitter.js',
+    '../Code/drawer.js',
     '../Code/tabframe.js',
     '../Code/iframe.js',
   ],
@@ -74,13 +75,6 @@ concat({
     '../Code/style.css',
   ],
   dest: '../Build/wcDocker.css',
-});
-
-concat({
-  src: [
-    '../Code/skeleton.css',
-  ],
-  dest: '../Build/wcDockerSkeleton.css',
 });
 
 // Move the un-minified version to the build folder.
@@ -107,7 +101,6 @@ concat({
 // Now minify them. 
 uglifyJS('../Build/wcDocker.js', '../Build/wcDocker.min.js');
 uglifyCSS('../Build/wcDocker.css', '../Build/wcDocker.min.css');
-uglifyCSS('../Build/wcDockerSkeleton.css', '../Build/wcDockerSkeleton.min.css');
 
 uglifyCSS('../Themes/default.css', '../Build/Themes/default.min.css');
 uglifyCSS('../Themes/bigRed.css', '../Build/Themes/bigRed.min.css');
