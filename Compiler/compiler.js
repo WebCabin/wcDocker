@@ -96,6 +96,12 @@ concat({
   ],
   dest: '../Build/Themes/shadow.css',
 });
+concat({
+  src: [
+    '../Themes/ideDark.css',
+  ],
+  dest: '../Build/Themes/ideDark.css',
+});
 
 
 // Now minify them. 
@@ -105,3 +111,4 @@ uglifyCSS('../Build/wcDocker.css', '../Build/wcDocker.min.css');
 uglifyCSS('../Themes/default.css', '../Build/Themes/default.min.css');
 uglifyCSS('../Themes/bigRed.css', '../Build/Themes/bigRed.min.css');
 uglifyCSS('../Themes/shadow.css', '../Build/Themes/shadow.min.css');
+uglifyCSS('../Themes/ideDark.css', '../Build/Themes/ideDark.min.css');
