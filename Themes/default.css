@@ -23,7 +23,16 @@
   opacity: 0.8;
 }
 
-/* Default Theme */
+.wcDrawerLeft, .wcDrawerRight {
+  border-top: 2px dashed #656565;
+  border-bottom: 2px dashed #656565;
+}
+
+.wcDrawerTop, .wcDrawerBottom {
+  border-left: 2px dashed #656565;
+  border-right: 2px dashed #656565;
+}
+
 .wcPanelBackground {
   background-color: gray;
 }
@@ -99,8 +108,18 @@
 }
 
 .wcDrawerSplitterBar {
-  border: 2px outset #444;
-  background-color: #222;
+  border: 2px outset #555;
+  background-color: #444;
+  width: 10px;
+  height: 10px;
+}
+
+.wcDrawerSplitterBar:hover {
+  background-color: #666;
+}
+
+.wcDrawerSplitterBar:active {
+  background-color: #888;
 }
 
 .wcGhost {

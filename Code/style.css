@@ -60,8 +60,11 @@ html, body {
 }
 
 .wcDrawer {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
 }
 
 .wcFrame {
@@ -245,6 +248,10 @@ html, body {
   height: 2px;
   width: 100%;
   cursor: ns-resize;
+}
+
+.wcDrawerSplitterBar {
+  cursor: pointer;
 }
 
 .wcLayoutPane {

@@ -263,7 +263,6 @@ wcLayout.prototype = {
     var height = $elem.height();
     var offset = $elem.offset();
     var top = $elem.find('.wcFrameTitle').height();
-    // var top = this.$table.offset().top - offset.top;
     if (!title) {
       top = 0;
     }
@@ -273,8 +272,8 @@ wcLayout.prototype = {
       if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left,
-          y: offset.top,
+          x: offset.left-2,
+          y: offset.top-2,
           w: width,
           h: top-2,
           loc: wcDocker.DOCK_STACKED,
@@ -290,8 +289,8 @@ wcLayout.prototype = {
       if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left,
-          y: offset.top,
+          x: offset.left-2,
+          y: offset.top-2,
           w: width,
           h: top-2,
           loc: wcDocker.DOCK_STACKED,
@@ -309,8 +308,8 @@ wcLayout.prototype = {
     // Check for placeholder.
     if (this._parent instanceof wcPanel && this._parent._isPlaceholder) {
       ghost.anchor(mouse, {
-        x: offset.left,
-        y: offset.top,
+        x: offset.left-2,
+        y: offset.top-2,
         w: width,
         h: height,
         loc: wcDocker.DOCK_TOP,
@@ -325,8 +324,8 @@ wcLayout.prototype = {
       if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left,
-          y: offset.top,
+          x: offset.left-2,
+          y: offset.top-2,
           w: width,
           h: height*0.5,
           loc: wcDocker.DOCK_TOP,
@@ -340,8 +339,8 @@ wcLayout.prototype = {
       if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left,
-          y: offset.top + (height - height*0.5),
+          x: offset.left-2,
+          y: offset.top + (height - height*0.5)-2,
           w: width,
           h: height*0.5,
           loc: wcDocker.DOCK_BOTTOM,
@@ -356,8 +355,8 @@ wcLayout.prototype = {
     if (mouse.y >= offset.top && mouse.y <= offset.top + height) {
       if (mouse.x >= offset.left && mouse.x <= offset.left + width*0.25) {
         ghost.anchor(mouse, {
-          x: offset.left,
-          y: offset.top,
+          x: offset.left-2,
+          y: offset.top-2,
           w: width*0.5,
           h: height,
           loc: wcDocker.DOCK_LEFT,
@@ -370,8 +369,8 @@ wcLayout.prototype = {
       // Right side docking
       if (mouse.x >= offset.left + width*0.75 && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left + width*0.5,
-          y: offset.top,
+          x: offset.left + width*0.5-2,
+          y: offset.top-2,
           w: width*0.5,
           h: height,
           loc: wcDocker.DOCK_RIGHT,
@@ -387,8 +386,8 @@ wcLayout.prototype = {
       if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left,
-          y: offset.top,
+          x: offset.left-2,
+          y: offset.top-2,
           w: width,
           h: height*0.5,
           loc: wcDocker.DOCK_TOP,
@@ -402,8 +401,8 @@ wcLayout.prototype = {
       if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
-          x: offset.left,
-          y: offset.top + (height - height*0.5),
+          x: offset.left-2,
+          y: offset.top + (height - height*0.5)-2,
           w: width,
           h: height*0.5,
           loc: wcDocker.DOCK_BOTTOM,

@@ -401,14 +401,15 @@ $(document).ready(function() {
     // by creating the center panel and work your way outwards in all directions.
     var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK_BOTTOM);
 
-    var drawers = myDocker.addDrawers();
+    var drawers = myDocker.addDrawers([wcDocker.DOCK_BOTTOM, wcDocker.DOCK_LEFT, wcDocker.DOCK_RIGHT]);
 
-    var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, drawers[0], {h: -1, w:400});
+    var topChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_LEFT, drawers[1], {h: -1, w:400});
     var bottomChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_BOTTOM, topChatPanel);
 
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, drawers[1], {w:500,h:-1});
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, widgetPanel);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, drawers[2], {w:500,h:-1});
     var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_TOP, widgetPanel);
+
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, drawers[0]);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
   }

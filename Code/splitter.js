@@ -10,6 +10,8 @@ function wcSplitter(container, parent, orientation) {
   this.$pane = [];
   this.$bar = null;
   this._pos = 0.5;
+  this._posTarget = 0.5;
+  this._pixelPos = -1;
   this._findBestPos = false;
 
   this._boundEvents = [];
@@ -140,18 +142,51 @@ wcSplitter.prototype = {
   //    value         If supplied, assigns a new splitter percentage (0-1).
   // Returns:
   //    number        The current position.
-  pos: function(value, opt_update) {
-    if (typeof value === 'undefined') {
-      return this._pos;
-    }
-    this._pos = value;
-    this.__update(opt_update);
+  pos: function(value) {
+    if (typeof value !== 'undefined') {
+      this._pos = this._posTarget = value;
+      this.__update();
 
-    if (this._parent instanceof wcPanel) {
-      this._parent.__trigger(wcDocker.EVENT_UPDATED);
+      if (this._parent instanceof wcPanel) {
+        this._parent.__trigger(wcDocker.EVENT_UPDATED);
+      }
     }
 
-    return this._pos;
+    return this._posTarget;
+  },
+
+  // Animates to a given splitter position.
+  // Params:
+  //    value       Assigns the target splitter percentage (0-1).
+  //    callback    Callback function to call when finished.
+  animPos: function(value, callback) {
+    this._posTarget = value;
+    var self = this;
+    this.$bar.queue(function(next) {
+      var anim = setInterval(function() {
+        if (self._pos > self._posTarget) {
+          self._pos -= (self._pos - self._posTarget) / 3;
+          if (self._pos <= self._posTarget + 0.01) {
+            self._pos = self._posTarget;
+          }
+        }
+
+        if (self._pos < self._posTarget) {
+          self._pos += (self._posTarget - self._pos) / 3;
+          if (self._pos >= self._posTarget - 0.01) {
+            self._pos = self._posTarget;
+          }
+        }
+
+        self.__update();
+        if (self._pos == self._posTarget) {
+          callback && callback();
+          next();
+          clearInterval(anim);
+        }
+      });
+    });
+    this.$bar.dequeue();
   },
 
   // Sets, or Gets the widget at a given pane
@@ -268,10 +303,9 @@ wcSplitter.prototype = {
   },
 
   // Updates the size of the splitter.
-  __update: function(opt_fromOrientation, opt_fromPane, opt_oldSize) {
-
-    var width = this.$container.width();
-    var height = this.$container.height();
+  __update: function(opt_dontMove) {
+    var width = this.$container.outerWidth();
+    var height = this.$container.outerHeight();
 
     var minSize = this.__minPos();
     var maxSize = this.__maxPos();
@@ -329,88 +363,71 @@ wcSplitter.prototype = {
       }
     }
 
-    if (opt_fromOrientation === this._orientation) {
-      var pos = opt_oldSize * this._pos;
-      var size = -1;
-      switch (opt_fromOrientation) {
-        case wcDocker.ORIENTATION_HORIZONTAL:
-          size = width;
-          break;
-        case wcDocker.ORIENTATION_VERTICAL:
-          size = height;
-          break;
-        default: break;
-      }
-
-      if (size > -1) {
-        if (opt_fromPane) {
-          pos = opt_oldSize - pos;
-        }
-        this._pos = pos / size;
-        if (opt_fromPane) {
-          this._pos = 1.0 - this._pos;
-        }
-      }
-    }
-
-    var oldSize = [];
     if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
-      var size = width * this._pos;
+      var barSize = this.$bar.outerWidth() / 2;
+      var barBorder = parseInt(this.$bar.css('border-top')) + parseInt(this.$bar.css('border-bottom'));
+      if (opt_dontMove) {
+        var offset = this._pixelPos - (this.$container.offset().left + parseInt(this.$container.css('border-left'))) - this.$bar.outerWidth()/2;
+        this._pos = offset / (width - this.$bar.outerWidth());
+      }
 
+      this._pos = Math.min(Math.max(this._pos, 0), 1);
+      var size = (width - this.$bar.outerWidth()) * this._pos + barSize;
       if (minSize) {
-        size = Math.max(minSize.x, size);
+        size = Math.max(minSize.x - barSize, size);
       }
       if (maxSize) {
-        size = Math.min(maxSize.x, size);
+        size = Math.min(maxSize.x + barSize, size);
       }
 
-      oldSize.push(this.$pane[0].width());
-      oldSize.push(this.$pane[1].width());
-      var barSize = this.$bar.width() / 2;
-
       // Bar is top to bottom
-      this.$bar.css('left', size+2-barSize);
+      this.$bar.css('left', size-barSize-parseInt(this.$container.css('border-left')));
       this.$bar.css('top', '0px');
-      this.$bar.css('height', height-2);
-      this.$pane[0].css('width', size+2-barSize);
+      this.$bar.css('height', height-barBorder);
+      this.$pane[0].css('width', size-barSize);
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
       this.$pane[1].css('right', '0px');
-      this.$pane[1].css('width', width-size-6-barSize);
-    } else {
-      var size = height * this._pos;
+      this.$pane[1].css('width', width-size-barSize-parseInt(this.$container.css('border-left')));
 
+      this._pixelPos = this.$bar.offset().left + barSize;
+    } else {
+      var barSize = this.$bar.outerHeight() / 2;
+      var barBorder = parseInt(this.$bar.css('border-left')) + parseInt(this.$bar.css('border-right'));
+      if (opt_dontMove) {
+        var offset = this._pixelPos - (this.$container.offset().top + parseInt(this.$container.css('border-top'))) - this.$bar.outerHeight()/2;
+        this._pos = offset / (height - this.$bar.outerHeight());
+      }
+
+      this._pos = Math.min(Math.max(this._pos, 0), 1);
+      var size = (height - this.$bar.outerHeight()) * this._pos + barSize;
       if (minSize) {
-        size = Math.max(minSize.y, size);
+        size = Math.max(minSize.y - barSize, size);
       }
       if (maxSize) {
-        size = Math.min(maxSize.y, size);
+        size = Math.min(maxSize.y + barSize, size);
       }
 
-      oldSize.push(this.$pane[0].height());
-      oldSize.push(this.$pane[1].height());
-      var barSize = this.$bar.height() / 2;
-
       // Bar is left to right
-      this.$bar.css('top', size+2-barSize);
+      this.$bar.css('top', size-barSize-parseInt(this.$container.css('border-top')));
       this.$bar.css('left', '0px');
-      this.$bar.css('width', width-2);
-      this.$pane[0].css('height', size+2-barSize);
+      this.$bar.css('width', width-barBorder);
+      this.$pane[0].css('height', size-barSize);
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
-      this.$pane[1].css('height', height-size-6-barSize);
+      this.$pane[1].css('height', height-size-barSize-parseInt(this.$container.css('border-top')));
+     
+      this._pixelPos = this.$bar.offset().top + barSize;
     }
 
-    if (opt_fromOrientation !== undefined) {
-      this._pane[0] && this._pane[0].__update(this._orientation, 0, oldSize[0]);
-      this._pane[1] && this._pane[1].__update(this._orientation, 1, oldSize[1]);
-    } else {
-      this._pane[0] && this._pane[0].__update();
-      this._pane[1] && this._pane[1].__update();
+    if (opt_dontMove === undefined) {
+      opt_dontMove = true;
     }
+    this._pane[0] && this._pane[0].__update(opt_dontMove);
+    this._pane[1] && this._pane[1].__update(opt_dontMove);
   },
 
   // Saves the current panel configuration into a meta
@@ -419,6 +436,7 @@ wcSplitter.prototype = {
     var data = {};
     data.type       = 'wcSplitter';
     data.horizontal = this._orientation;
+    data.isDrawer   = this.$bar.hasClass('wcDrawerSplitterBar');
     data.pane0      = this._pane[0]? this._pane[0].__save(): null;
     data.pane1      = this._pane[1]? this._pane[1].__save(): null;
     data.pos        = this._pos;
@@ -428,6 +446,9 @@ wcSplitter.prototype = {
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
     this._pos  = data.pos;
+    if (data.isDrawer) {
+      this.$bar.addClass('wcDrawerSplitterBar');
+    }
     if (data.pane0) {
       this._pane[0] = docker.__create(data.pane0, this, this.$pane[0]);
       this._pane[0].__restore(data.pane0, docker);
@@ -448,24 +469,25 @@ wcSplitter.prototype = {
   // Params:
   //    mouse       The mouse offset position.
   __moveBar: function(mouse) {
-    var width = this.$container.width();
-    var height = this.$container.height();
     var offset = this.$container.offset();
-
     mouse.x -= offset.left;
     mouse.y -= offset.top;
 
-    if (this._orientation) {
-      this.pos((mouse.x-3) / width, 2);
+    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+      var width = this.$container.outerWidth() - this.$bar.outerWidth();
+      mouse.x += 1 - parseInt(this.$container.css('border-left')) - (this.$bar.outerWidth()/2);
+      this.pos(mouse.x / width);
     } else {
-      this.pos((mouse.y-3) / height, 2);
+      var height = this.$container.outerHeight() - this.$bar.outerHeight();
+      mouse.y += 1 - parseInt(this.$container.css('border-top')) - (this.$bar.outerHeight()/2);
+      this.pos(mouse.y / height);
     }
   },
 
   // Gets the minimum position of the splitter divider.
   __minPos: function() {
-    var width = this.$container.width();
-    var height = this.$container.height();
+    var width = this.$container.outerWidth();
+    var height = this.$container.outerHeight();
 
     var minSize;
     if (this._pane[0] && typeof this._pane[0].minSize === 'function') {
@@ -491,8 +513,8 @@ wcSplitter.prototype = {
 
   // Gets the maximum position of the splitter divider.
   __maxPos: function() {
-    var width = this.$container.width();
-    var height = this.$container.height();
+    var width = this.$container.outerWidth();
+    var height = this.$container.outerHeight();
 
     var maxSize;
     if (this._pane[0] && typeof this._pane[0].maxSize === 'function') {

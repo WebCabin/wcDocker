@@ -220,6 +220,15 @@ wcFrame.prototype = {
     return false;
   },
 
+  // Gets whether this frame is inside a drawer.
+  isInDrawer: function() {
+    var parent = this._parent;
+    while (!(parent instanceof wcDrawer || parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent instanceof wcDrawer;
+  },
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
