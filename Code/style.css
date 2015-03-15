@@ -122,6 +122,14 @@ html, body {
   position: relative;
 }
 
+.wcFrameButtonBar {
+  position: absolute;
+  right: 0px;
+  min-width: 1000px;
+  width: auto !important;
+  width: 1000px;
+}
+
 .wcFrameButton, .wcFrameMiniButton {
   width: 13px;
   height: 13px;

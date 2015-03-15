@@ -38,7 +38,8 @@ HowToPanel.prototype = {
       }
     }
 
-    this._currentLayout.addItem('<pre><code data-language="javascript">' + code + '</code></pre>', 0, this._layoutRow++);
+    var $wrap = $('<pre><code data-language="javascript">' + code + '</code></pre>');
+    this._currentLayout.addItem($wrap, 0, this._layoutRow++);
   },
 
   // --------------------------------------------------------------------------------
@@ -81,6 +82,13 @@ HowToPanel.prototype = {
     this.__constructChatTab(this._tabFrame.addTab('Chat Panel'));
     this.__constructBatchTab(this._tabFrame.addTab('Batch Panel'));
     this.__constructTipTab(this._tabFrame.addTab('Tip Panel'));
+
+    this._panel.on(wcDocker.EVENT_RESTORE_LAYOUT, this.__layoutRestored.bind(this));
+  },
+
+  // --------------------------------------------------------------------------------
+  __layoutRestored: function() {
+    Rainbow.color();
   },
 
   // --------------------------------------------------------------------------------

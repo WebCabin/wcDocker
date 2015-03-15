@@ -403,12 +403,12 @@ $(document).ready(function() {
 
     var drawers = myDocker.addDrawers([wcDocker.DOCK_LEFT, wcDocker.DOCK_RIGHT, wcDocker.DOCK_BOTTOM]);
 
-    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, drawers[0], {h: -1, w:400});
-    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, drawers[1], {h: -1, w:200});
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_STACKED, rightChatPanel);
-
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_RIGHT, drawers[2], {w:-1,h:500});
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_LEFT, drawers[2], {w:-1,h:500});
+    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, drawers[0]);
+    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, drawers[1]);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_STACKED, rightChatPanel);
+    
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, drawers[2]);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_LEFT, drawers[2]);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
   }

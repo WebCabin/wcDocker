@@ -85,6 +85,18 @@
 .wcDrawerSplitterBar {
   border: 2px outset #252525;
   background-color: #252525;
+  width: 10px;
+  height: 10px;
+}
+
+.wcDrawerSplitterBar:hover {
+  border: 2px outset #333;
+  background-color: #333;
+}
+
+.wcDrawerSplitterBar:active {
+  border: 2px outset #555;
+  background-color: #555;
 }
 
 .wcPanelTab {

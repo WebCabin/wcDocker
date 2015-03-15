@@ -23,6 +23,7 @@ function wcFrame(container, parent, isFloating) {
   this.$corner2   = null;
   this.$corner3   = null;
   this.$corner4   = null;
+  this.$buttonBar = null;
 
   this.$shadower  = null;
   this.$modalBlocker = null;
@@ -243,9 +244,11 @@ wcFrame.prototype = {
     this.$tabLeft   = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
     this.$tabRight  = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
     this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
+    this.$buttonBar = $('<div class="wcFrameButtonBar"></div>');
     // this.$frame.append(this.$title);
     this.$title.append(this.$tabScroll);
-    this.$frame.append(this.$close);
+    this.$frame.append(this.$buttonBar);
+    this.$buttonBar.append(this.$close);
 
     if (this._isFloating) {
       this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');
@@ -503,8 +506,8 @@ wcFrame.prototype = {
       this._canScrollTabs = false;
       if (totalWidth > this.$title.width() - buttonSize) {
         this._canScrollTabs = titleVisible;
-        this.$frame.append(this.$tabRight);
-        this.$frame.append(this.$tabLeft);
+        this.$buttonBar.append(this.$tabRight);
+        this.$buttonBar.append(this.$tabLeft);
         var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
         // If we are beyond our scroll limit, clamp it.
         if (this._tabScrollPos > scrollLimit) {
@@ -583,13 +586,13 @@ wcFrame.prototype = {
         }
 
         this._buttonList.push($button);
-        this.$frame.append($button);
+        this.$buttonBar.append($button);
         buttonSize += $button.outerWidth();
       }
 
       if (this._canScrollTabs) {
-        this.$frame.append(this.$tabRight);
-        this.$frame.append(this.$tabLeft);
+        this.$buttonBar.append(this.$tabRight);
+        this.$buttonBar.append(this.$tabLeft);
 
         buttonSize += this.$tabRight.outerWidth() + this.$tabLeft.outerWidth();
       }

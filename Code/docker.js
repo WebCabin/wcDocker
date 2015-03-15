@@ -102,7 +102,7 @@ function wcDocker(container, options) {
   this._draggingCustomTabFrame = null;
   this._ghost = null;
   this._menuTimer = 0;
-  this._movedSplitter = false;
+  this._mouseOrigin = {x: 0, y: 0};
 
   this._resizeData = {
     time: -1,
@@ -1185,6 +1185,12 @@ wcDocker.prototype = {
       }
     });
 
+    // A catch all on mouse down to record the mouse origin position.
+    $('body').on('mousedown', function(event) {
+      self._mouseOrigin.x = event.clientX;
+      self._mouseOrigin.y = event.clientY;
+    });
+
     $('body').on('mousedown', '.wcModalBlocker', function(event) {
       // for (var i = 0; i < self._modalList.length; ++i) {
       //   self._modalList[i].__focus(true);
@@ -1289,7 +1295,7 @@ wcDocker.prototype = {
     // Clicking on the splitter used for a drawer panel will toggle its expanded state.
     $('body').on('click', '.wcDrawerSplitterBar', function() {
       self.$container.removeClass('wcDisableSelection');
-      if (!self._movedSplitter) {
+      if (Math.max(Math.abs(self._mouseOrigin.x - event.clientX), Math.abs(self._mouseOrigin.y - event.clientY)) < 1) {
         for (var i = 0; i < self._drawerList.length; ++i) {
           var drawer = self._drawerList[i];
           if (drawer._parent.$bar[0] === this) {
@@ -1333,7 +1339,6 @@ wcDocker.prototype = {
           self._draggingSplitter = self._splitterList[i];
           self._draggingSplitter.$pane[0].addClass('wcResizing');
           self._draggingSplitter.$pane[1].addClass('wcResizing');
-          self._movedSplitter = false;
           break;
         }
       }
@@ -1480,7 +1485,6 @@ wcDocker.prototype = {
           y: event.clientY,
         };
         self._draggingSplitter.__moveBar(mouse);
-        self._movedSplitter = true;
       } else if (self._draggingFrameSizer) {
         var mouse = {
           x: event.clientX,
