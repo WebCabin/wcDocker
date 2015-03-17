@@ -48,6 +48,7 @@ html,body {
 .wcDrawerLeft .wcDrawer, .wcDrawerRight .wcDrawer,
 .wcDrawerTop .wcDrawer, .wcDrawerBottom .wcDrawer {
   border: 10px dashed #252525;
+  background-color: black;
 }
 
 .wcDrawerLeft .wcDrawer {
