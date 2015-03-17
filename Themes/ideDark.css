@@ -47,7 +47,7 @@ html,body {
 
 .wcDrawerLeft .wcDrawer, .wcDrawerRight .wcDrawer,
 .wcDrawerTop .wcDrawer, .wcDrawerBottom .wcDrawer {
-  border: 2px dashed darkgray;
+  border: 10px dashed #252525;
 }
 
 .wcDrawerLeft .wcDrawer {
@@ -78,24 +78,6 @@ html,body {
 .wcDrawerOuterBar:active {
   border: 2px outset gray;
   background-color: gray;
-}
-
-.wcDrawerLeft, .wcDrawerRight,
-.wcDrawerTop, .wcDrawerBottom {
-  border: 2px dashed #252525;
-}
-
-.wcDrawerLeft {
-  border-left: 0;
-}
-.wcDrawerRight {
-  border-right: 0;
-}
-.wcDrawerTop {
-  border-top: 0;
-}
-.wcDrawerBottom {
-  border-bottom: 0;
 }
 
 .wcFrame {
