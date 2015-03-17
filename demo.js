@@ -401,14 +401,16 @@ $(document).ready(function() {
     // by creating the center panel and work your way outwards in all directions.
     var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK_BOTTOM);
 
-    var drawers = myDocker.addDrawers([wcDocker.DOCK_LEFT, wcDocker.DOCK_RIGHT, wcDocker.DOCK_BOTTOM]);
+    var leftDrawer = myDocker.addDrawer(wcDocker.DOCK_LEFT);
+    var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK_BOTTOM);
+    var rightDrawer = myDocker.addDrawer(wcDocker.DOCK_RIGHT);
 
-    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, drawers[0]);
-    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, drawers[1]);
+    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, leftDrawer);
+    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, rightDrawer);
     var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_STACKED, rightChatPanel);
     
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, drawers[2]);
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_LEFT, drawers[2]);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, bottomDrawer);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_LEFT, bottomDrawer);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
   }
