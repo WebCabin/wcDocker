@@ -3973,8 +3973,6 @@ wcFrame.prototype = {
         this.$buttonBar.append(this.$tabLeft);
         buttonSize += this.$tabRight.outerWidth();
         buttonSize += this.$tabLeft.outerWidth();
-        this.$buttonBar.css('min-width', buttonSize);
-        this.$buttonBar.css('width', buttonSize);
 
         var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
         // If we are beyond our scroll limit, clamp it.
