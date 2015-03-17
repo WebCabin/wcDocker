@@ -402,8 +402,8 @@ $(document).ready(function() {
     var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK_BOTTOM);
 
     var leftDrawer = myDocker.addDrawer(wcDocker.DOCK_LEFT);
-    var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK_BOTTOM);
     var rightDrawer = myDocker.addDrawer(wcDocker.DOCK_RIGHT);
+    var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK_BOTTOM);
 
     var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, leftDrawer);
     var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, rightDrawer);
