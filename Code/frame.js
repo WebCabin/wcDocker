@@ -508,6 +508,11 @@ wcFrame.prototype = {
         this._canScrollTabs = titleVisible;
         this.$buttonBar.append(this.$tabRight);
         this.$buttonBar.append(this.$tabLeft);
+        buttonSize += this.$tabRight.outerWidth();
+        buttonSize += this.$tabLeft.outerWidth();
+        this.$buttonBar.css('min-width', buttonSize);
+        this.$buttonBar.css('width', buttonSize);
+
         var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
         // If we are beyond our scroll limit, clamp it.
         if (this._tabScrollPos > scrollLimit) {
@@ -602,6 +607,9 @@ wcFrame.prototype = {
       this.$center.scrollLeft(panel._scroll.x);
       this.$center.scrollTop(panel._scroll.y);
     }
+
+    this.$buttonBar.css('min-width', buttonSize);
+    this.$buttonBar.css('width', buttonSize);
     return buttonSize;
   },
 

@@ -374,10 +374,10 @@ wcSplitter.prototype = {
       this._pos = Math.min(Math.max(this._pos, 0), 1);
       var size = (width - this.$bar.outerWidth()) * this._pos + barSize;
       if (minSize) {
-        size = Math.max(minSize.x - barSize, size);
+        size = Math.max(minSize.x, size);
       }
       if (maxSize) {
-        size = Math.min(maxSize.x + barSize, size);
+        size = Math.min(maxSize.x, size);
       }
 
       // Bar is top to bottom
@@ -403,10 +403,10 @@ wcSplitter.prototype = {
       this._pos = Math.min(Math.max(this._pos, 0), 1);
       var size = (height - this.$bar.outerHeight()) * this._pos + barSize;
       if (minSize) {
-        size = Math.max(minSize.y - barSize, size);
+        size = Math.max(minSize.y, size);
       }
       if (maxSize) {
-        size = Math.min(maxSize.y + barSize, size);
+        size = Math.min(maxSize.y, size);
       }
 
       // Bar is left to right
@@ -503,11 +503,22 @@ wcSplitter.prototype = {
       maxSize = {x:width,y:height};
     }
 
+    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+      var barSize = this.$bar.outerWidth()/2;
+      minSize.x += barSize;
+      width -= barSize;
+    } else {
+      var barSize = this.$bar.outerHeight()/2;
+      minSize.y += barSize;
+      height -= barSize;
+    }
+
     maxSize.x = width  - Math.min(maxSize.x, width);
     maxSize.y = height - Math.min(maxSize.y, height);
 
     minSize.x = Math.max(minSize.x, maxSize.x);
     minSize.y = Math.max(minSize.y, maxSize.y);
+
     return minSize;
   },
 
@@ -528,6 +539,16 @@ wcSplitter.prototype = {
       minSize = this._pane[1].minSize();
     } else {
       minSize = {x:50,y:50};
+    }
+
+    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+      var barSize = this.$bar.outerWidth()/2;
+      maxSize.x += barSize;
+      width -= barSize;
+    } else {
+      var barSize = this.$bar.outerHeight()/2;
+      maxSize.y += barSize;
+      height -= barSize;
     }
 
     minSize.x = width  - minSize.x;

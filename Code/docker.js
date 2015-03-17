@@ -201,6 +201,14 @@ wcDocker.prototype = {
       var self = this;
       $link[0].onload = function() {
         self.__update();
+
+        // Special update to fix the size of collapsed drawers
+        // in case the theme has changed it.
+        for (var i = 0; i < self._drawerList.length; ++i) {
+          if (!self._drawerList[i].isExpanded()) {
+            self._drawerList[i]._parent.__update(false);
+          }
+        }
       }
 
       $('head').append($link);
@@ -1212,12 +1220,12 @@ wcDocker.prototype = {
     });
 
     // Close button on frames should destroy those panels.
-    $('body').on('mousedown', '.wcFrame > .wcFrameButton', function() {
+    $('body').on('mousedown', '.wcFrame > .wcFrameButtonBar > .wcFrameButton', function() {
       self.$container.addClass('wcDisableSelection');
     });
 
     // Clicking on a panel frame button.
-    $('body').on('click', '.wcFrame > .wcFrameButton', function() {
+    $('body').on('click', '.wcFrame > .wcFrameButtonBar > .wcFrameButton', function() {
       self.$container.removeClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
@@ -1293,17 +1301,17 @@ wcDocker.prototype = {
     });
 
     // Clicking on the splitter used for a drawer panel will toggle its expanded state.
-    $('body').on('click', '.wcDrawerSplitterBar', function() {
+    $('body').on('click', '.wcDrawerOuterBar', function() {
       self.$container.removeClass('wcDisableSelection');
-      if (Math.max(Math.abs(self._mouseOrigin.x - event.clientX), Math.abs(self._mouseOrigin.y - event.clientY)) < 1) {
+      // if (Math.max(Math.abs(self._mouseOrigin.x - event.clientX), Math.abs(self._mouseOrigin.y - event.clientY)) < 1) {
         for (var i = 0; i < self._drawerList.length; ++i) {
           var drawer = self._drawerList[i];
-          if (drawer._parent.$bar[0] === this) {
+          if (drawer.$bar[0] === this) {
             drawer.toggle();
             return;
           }
         }
-      }
+      // }
     });
 
     // Middle mouse button on a panel tab to close it.

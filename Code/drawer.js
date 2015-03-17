@@ -2,15 +2,18 @@
   A docker container for carrying its own arrangement of docked panels as a slide out drawer.
 */
 function wcDrawer(container, parent, position) {
-  this.$container = $(container);
-  this.$drawer    = null;
-  this._position  = position;
-  this._parent    = parent;
-  this._root      = null;
-  this._size      = 0.5;
-  this._expanded  = true;
-  this._sliding   = false;
-  this._horizontal= this._position === wcDocker.DOCK_LEFT || this._position === wcDocker.DOCK_RIGHT;
+  this.$container   = $(container);
+  this.$drawerFrame = null;
+  this.$drawer      = null;
+  this.$bar         = null;
+  this._position    = position;
+  this._parent      = parent;
+  this._root        = null;
+  this._size        = 0.5;
+  this._closeSize   = 0;
+  this._expanded    = true;
+  this._sliding     = false;
+  this._horizontal  = this._position === wcDocker.DOCK_LEFT || this._position === wcDocker.DOCK_RIGHT;
 
   this.__init();
 }
@@ -68,6 +71,10 @@ wcDrawer.prototype = {
     expanded? this.expand(): this.collapse();
   },
 
+  isExpanded: function() {
+    return this._expanded;
+  },
+
   minSize: function() {
     if (this._expanded) {
       if (this._root && typeof this._root.minSize === 'function') {
@@ -76,7 +83,7 @@ wcDrawer.prototype = {
         return {x: 100, y: 100};
       }
     }
-    return {x: 0, y: 0};
+    return {x: this._closeSize, y: this._closeSize};
   },
 
   maxSize: function() {
@@ -91,8 +98,8 @@ wcDrawer.prototype = {
       }
     }
     return {
-      x: (this._horizontal?  0: Infinity),
-      y: (!this._horizontal? 0: Infinity)
+      x: (this._horizontal?  this._closeSize: Infinity),
+      y: (!this._horizontal? this._closeSize: Infinity)
     };
   },
 
@@ -100,30 +107,52 @@ wcDrawer.prototype = {
 // Private Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
   __init: function() {
+    this.$drawerFrame = $('<div class="wcDrawerFrame"></div>');
     this.$drawer = $('<div class="wcDrawer"></div>');
+    this.$bar = $('<div class="wcDrawerOuterBar"></div>');
 
-    switch (this._position) {
-      case wcDocker.DOCK_LEFT:
-        this.$drawer.addClass('wcDrawerLeft');
-        break;
-      case wcDocker.DOCK_RIGHT:
-        this.$drawer.addClass('wcDrawerRight');
-        break;
-      case wcDocker.DOCK_TOP:
-        this.$drawer.addClass('wcDrawerTop');
-        break;
-      case wcDocker.DOCK_BOTTOM:
-        this.$drawer.addClass('wcDrawerBottom');
-        break;
-    }
-
+    this.$drawerFrame.append(this.$bar);
+    this.$drawerFrame.append(this.$drawer);
     this.__container(this.$container);
+
+    this.__adjustSize();
   },
 
   // Updates the size of the drawer.
   __update: function(opt_dontMove) {
+    this.__adjustSize();
     if (this._root) {
       this._root.__update(opt_dontMove);
+    }
+  },
+
+  // Adjusts the size of the drawer based on css
+  __adjustSize: function() {
+    switch (this._position) {
+      case wcDocker.DOCK_LEFT:
+        this.$drawerFrame.addClass('wcDrawerLeft');
+        var size = this.$bar.css('left', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
+        this.$drawer.css('left', size);
+        this._closeSize = size;
+        break;
+      case wcDocker.DOCK_RIGHT:
+        this.$drawerFrame.addClass('wcDrawerRight');
+        var size = this.$bar.css('right', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
+        this.$drawer.css('right', size);
+        this._closeSize = size;
+        break;
+      case wcDocker.DOCK_TOP:
+        this.$drawerFrame.addClass('wcDrawerTop');
+        var size = this.$bar.css('top', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
+        this.$drawer.css('top', size);
+        this._closeSize = size;
+        break;
+      case wcDocker.DOCK_BOTTOM:
+        this.$drawerFrame.addClass('wcDrawerBottom');
+        var size = this.$bar.css('bottom', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
+        this.$drawer.css('bottom', size);
+        this._closeSize = size;
+        break;
     }
   },
 
@@ -132,8 +161,8 @@ wcDrawer.prototype = {
   //    mouse     The current mouse position.
   //    ghost     The ghost object.
   __checkAnchorDrop: function(mouse, same, ghost, canSplit) {
-    var width = this.$drawer.width();
-    var height = this.$drawer.height();
+    var width = this.$drawer.outerWidth();
+    var height = this.$drawer.outerHeight();
     var offset = this.$drawer.offset();
 
     if (!this._root && mouse.y >= offset.top && mouse.y <= offset.top + height &&
@@ -213,9 +242,9 @@ wcDrawer.prototype = {
 
     this.$container = $container;
     if (this.$container) {
-      this.$container.append(this.$drawer);
+      this.$container.append(this.$drawerFrame);
     } else {
-      this.$drawer.remove();
+      this.$drawerFrame.remove();
     }
     return this.$container;
   },

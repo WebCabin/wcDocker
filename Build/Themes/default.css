@@ -23,14 +23,37 @@
   opacity: 0.8;
 }
 
-.wcDrawerLeft, .wcDrawerRight {
-  border-top: 2px dashed #656565;
-  border-bottom: 2px dashed #656565;
+.wcDrawerLeft, .wcDrawerRight,
+.wcDrawerTop, .wcDrawerBottom {
+  border: 2px dashed #656565;
 }
 
-.wcDrawerTop, .wcDrawerBottom {
-  border-left: 2px dashed #656565;
-  border-right: 2px dashed #656565;
+.wcDrawerLeft {
+  border-left: 0;
+}
+.wcDrawerRight {
+  border-right: 0;
+}
+.wcDrawerTop {
+  border-top: 0;
+}
+.wcDrawerBottom {
+  border-bottom: 0;
+}
+
+.wcDrawerOuterBar {
+  border: 2px outset #555;
+  background-color: #444;
+  width: 10px;
+  height: 10px;
+}
+
+.wcDrawerOuterBar:hover {
+  background-color: #666;
+}
+
+.wcDrawerOuterBar:active {
+  background-color: #888;
 }
 
 .wcPanelBackground {
@@ -105,21 +128,6 @@
 .wcSplitterBar {
   border: 1px outset darkgray;
   background-color: gray;
-}
-
-.wcDrawerSplitterBar {
-  border: 2px outset #555;
-  background-color: #444;
-  width: 10px;
-  height: 10px;
-}
-
-.wcDrawerSplitterBar:hover {
-  background-color: #666;
-}
-
-.wcDrawerSplitterBar:active {
-  background-color: #888;
 }
 
 .wcGhost {

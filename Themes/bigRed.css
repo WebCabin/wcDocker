@@ -2,6 +2,39 @@
   background-color: #A55;
 }
 
+.wcDrawerLeft, .wcDrawerRight,
+.wcDrawerTop, .wcDrawerBottom {
+  border: 2px dashed #633;
+}
+
+.wcDrawerLeft {
+  border-left: 0;
+}
+.wcDrawerRight {
+  border-right: 0;
+}
+.wcDrawerTop {
+  border-top: 0;
+}
+.wcDrawerBottom {
+  border-bottom: 0;
+}
+
+.wcDrawerOuterBar {
+  border: 2px outset #633;
+  background-color: #422;
+  width: 10px;
+  height: 10px;
+}
+
+.wcDrawerOuterBar:hover {
+  background-color: #822;
+}
+
+.wcDrawerOuterBar:active {
+  background-color: #A55;
+}
+
 .wcPanelBackground {
   background-color: #A55;
 }
@@ -72,21 +105,6 @@
 .wcSplitterBar {
   border: 1px solid #411;
   background-color: #411;
-}
-
-.wcDrawerSplitterBar {
-  border: 2px outset #633;
-  background-color: #422;
-  width: 10px;
-  height: 10px;
-}
-
-.wcDrawerSplitterBar:hover {
-  background-color: #822;
-}
-
-.wcDrawerSplitterBar:active {
-  background-color: #A55;
 }
 
 .wcSplitterBarV {

@@ -83,7 +83,7 @@ $(document).ready(function() {
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
         var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
-        $themeSelector.append('<option value="Default">Default</option>');
+        $themeSelector.append('<option value="default">Default</option>');
         $themeSelector.append('<option value="bigRed">Big Red</option>');
         $themeSelector.append('<option value="shadow">Shadow</option>');
         $themeSelector.append('<option value="ideDark">ideDark</option>');

@@ -59,12 +59,17 @@ html, body {
   opacity: 0;
 }
 
-.wcDrawer {
+.wcDrawer, .wcDrawerFrame {
   position: absolute;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
+}
+
+.wcDrawerOuterBar {
+  position: absolute;
+  z-index: 3;
 }
 
 .wcFrame {
@@ -125,9 +130,7 @@ html, body {
 .wcFrameButtonBar {
   position: absolute;
   right: 0px;
-  min-width: 1000px;
   width: auto !important;
-  width: 1000px;
 }
 
 .wcFrameButton, .wcFrameMiniButton {
@@ -256,10 +259,6 @@ html, body {
   height: 2px;
   width: 100%;
   cursor: ns-resize;
-}
-
-.wcDrawerSplitterBar {
-  cursor: pointer;
 }
 
 .wcLayoutPane {

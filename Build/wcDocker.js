@@ -201,6 +201,14 @@ wcDocker.prototype = {
       var self = this;
       $link[0].onload = function() {
         self.__update();
+
+        // Special update to fix the size of collapsed drawers
+        // in case the theme has changed it.
+        for (var i = 0; i < self._drawerList.length; ++i) {
+          if (!self._drawerList[i].isExpanded()) {
+            self._drawerList[i]._parent.__update(false);
+          }
+        }
       }
 
       $('head').append($link);
@@ -1212,12 +1220,12 @@ wcDocker.prototype = {
     });
 
     // Close button on frames should destroy those panels.
-    $('body').on('mousedown', '.wcFrame > .wcFrameButton', function() {
+    $('body').on('mousedown', '.wcFrame > .wcFrameButtonBar > .wcFrameButton', function() {
       self.$container.addClass('wcDisableSelection');
     });
 
     // Clicking on a panel frame button.
-    $('body').on('click', '.wcFrame > .wcFrameButton', function() {
+    $('body').on('click', '.wcFrame > .wcFrameButtonBar > .wcFrameButton', function() {
       self.$container.removeClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
@@ -1293,17 +1301,17 @@ wcDocker.prototype = {
     });
 
     // Clicking on the splitter used for a drawer panel will toggle its expanded state.
-    $('body').on('click', '.wcDrawerSplitterBar', function() {
+    $('body').on('click', '.wcDrawerOuterBar', function() {
       self.$container.removeClass('wcDisableSelection');
-      if (Math.max(Math.abs(self._mouseOrigin.x - event.clientX), Math.abs(self._mouseOrigin.y - event.clientY)) < 1) {
+      // if (Math.max(Math.abs(self._mouseOrigin.x - event.clientX), Math.abs(self._mouseOrigin.y - event.clientY)) < 1) {
         for (var i = 0; i < self._drawerList.length; ++i) {
           var drawer = self._drawerList[i];
-          if (drawer._parent.$bar[0] === this) {
+          if (drawer.$bar[0] === this) {
             drawer.toggle();
             return;
           }
         }
-      }
+      // }
     });
 
     // Middle mouse button on a panel tab to close it.
@@ -2536,8 +2544,8 @@ wcLayout.prototype = {
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
   __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
-    var width = $elem.width();
-    var height = $elem.height();
+    var width = $elem.outerWidth();
+    var height = $elem.outerHeight();
     var offset = $elem.offset();
     var top = $elem.find('.wcFrameTitle').height();
     if (!title) {
@@ -3963,6 +3971,11 @@ wcFrame.prototype = {
         this._canScrollTabs = titleVisible;
         this.$buttonBar.append(this.$tabRight);
         this.$buttonBar.append(this.$tabLeft);
+        buttonSize += this.$tabRight.outerWidth();
+        buttonSize += this.$tabLeft.outerWidth();
+        this.$buttonBar.css('min-width', buttonSize);
+        this.$buttonBar.css('width', buttonSize);
+
         var scrollLimit = totalWidth - (this.$title.width() - buttonSize)/2;
         // If we are beyond our scroll limit, clamp it.
         if (this._tabScrollPos > scrollLimit) {
@@ -4057,6 +4070,9 @@ wcFrame.prototype = {
       this.$center.scrollLeft(panel._scroll.x);
       this.$center.scrollTop(panel._scroll.y);
     }
+
+    this.$buttonBar.css('min-width', buttonSize);
+    this.$buttonBar.css('width', buttonSize);
     return buttonSize;
   },
 
@@ -4678,10 +4694,10 @@ wcSplitter.prototype = {
       this._pos = Math.min(Math.max(this._pos, 0), 1);
       var size = (width - this.$bar.outerWidth()) * this._pos + barSize;
       if (minSize) {
-        size = Math.max(minSize.x - barSize, size);
+        size = Math.max(minSize.x, size);
       }
       if (maxSize) {
-        size = Math.min(maxSize.x + barSize, size);
+        size = Math.min(maxSize.x, size);
       }
 
       // Bar is top to bottom
@@ -4707,10 +4723,10 @@ wcSplitter.prototype = {
       this._pos = Math.min(Math.max(this._pos, 0), 1);
       var size = (height - this.$bar.outerHeight()) * this._pos + barSize;
       if (minSize) {
-        size = Math.max(minSize.y - barSize, size);
+        size = Math.max(minSize.y, size);
       }
       if (maxSize) {
-        size = Math.min(maxSize.y + barSize, size);
+        size = Math.min(maxSize.y, size);
       }
 
       // Bar is left to right
@@ -4807,11 +4823,22 @@ wcSplitter.prototype = {
       maxSize = {x:width,y:height};
     }
 
+    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+      var barSize = this.$bar.outerWidth()/2;
+      minSize.x += barSize;
+      width -= barSize;
+    } else {
+      var barSize = this.$bar.outerHeight()/2;
+      minSize.y += barSize;
+      height -= barSize;
+    }
+
     maxSize.x = width  - Math.min(maxSize.x, width);
     maxSize.y = height - Math.min(maxSize.y, height);
 
     minSize.x = Math.max(minSize.x, maxSize.x);
     minSize.y = Math.max(minSize.y, maxSize.y);
+
     return minSize;
   },
 
@@ -4832,6 +4859,16 @@ wcSplitter.prototype = {
       minSize = this._pane[1].minSize();
     } else {
       minSize = {x:50,y:50};
+    }
+
+    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+      var barSize = this.$bar.outerWidth()/2;
+      maxSize.x += barSize;
+      width -= barSize;
+    } else {
+      var barSize = this.$bar.outerHeight()/2;
+      maxSize.y += barSize;
+      height -= barSize;
     }
 
     minSize.x = width  - minSize.x;
@@ -4910,15 +4947,18 @@ wcSplitter.prototype = {
   A docker container for carrying its own arrangement of docked panels as a slide out drawer.
 */
 function wcDrawer(container, parent, position) {
-  this.$container = $(container);
-  this.$drawer    = null;
-  this._position  = position;
-  this._parent    = parent;
-  this._root      = null;
-  this._size      = 0.5;
-  this._expanded  = true;
-  this._sliding   = false;
-  this._horizontal= this._position === wcDocker.DOCK_LEFT || this._position === wcDocker.DOCK_RIGHT;
+  this.$container   = $(container);
+  this.$drawerFrame = null;
+  this.$drawer      = null;
+  this.$bar         = null;
+  this._position    = position;
+  this._parent      = parent;
+  this._root        = null;
+  this._size        = 0.5;
+  this._closeSize   = 0;
+  this._expanded    = true;
+  this._sliding     = false;
+  this._horizontal  = this._position === wcDocker.DOCK_LEFT || this._position === wcDocker.DOCK_RIGHT;
 
   this.__init();
 }
@@ -4976,6 +5016,10 @@ wcDrawer.prototype = {
     expanded? this.expand(): this.collapse();
   },
 
+  isExpanded: function() {
+    return this._expanded;
+  },
+
   minSize: function() {
     if (this._expanded) {
       if (this._root && typeof this._root.minSize === 'function') {
@@ -4984,7 +5028,7 @@ wcDrawer.prototype = {
         return {x: 100, y: 100};
       }
     }
-    return {x: 0, y: 0};
+    return {x: this._closeSize, y: this._closeSize};
   },
 
   maxSize: function() {
@@ -4999,8 +5043,8 @@ wcDrawer.prototype = {
       }
     }
     return {
-      x: (this._horizontal?  0: Infinity),
-      y: (!this._horizontal? 0: Infinity)
+      x: (this._horizontal?  this._closeSize: Infinity),
+      y: (!this._horizontal? this._closeSize: Infinity)
     };
   },
 
@@ -5008,30 +5052,52 @@ wcDrawer.prototype = {
 // Private Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
   __init: function() {
+    this.$drawerFrame = $('<div class="wcDrawerFrame"></div>');
     this.$drawer = $('<div class="wcDrawer"></div>');
+    this.$bar = $('<div class="wcDrawerOuterBar"></div>');
 
-    switch (this._position) {
-      case wcDocker.DOCK_LEFT:
-        this.$drawer.addClass('wcDrawerLeft');
-        break;
-      case wcDocker.DOCK_RIGHT:
-        this.$drawer.addClass('wcDrawerRight');
-        break;
-      case wcDocker.DOCK_TOP:
-        this.$drawer.addClass('wcDrawerTop');
-        break;
-      case wcDocker.DOCK_BOTTOM:
-        this.$drawer.addClass('wcDrawerBottom');
-        break;
-    }
-
+    this.$drawerFrame.append(this.$bar);
+    this.$drawerFrame.append(this.$drawer);
     this.__container(this.$container);
+
+    this.__adjustSize();
   },
 
   // Updates the size of the drawer.
   __update: function(opt_dontMove) {
+    this.__adjustSize();
     if (this._root) {
       this._root.__update(opt_dontMove);
+    }
+  },
+
+  // Adjusts the size of the drawer based on css
+  __adjustSize: function() {
+    switch (this._position) {
+      case wcDocker.DOCK_LEFT:
+        this.$drawerFrame.addClass('wcDrawerLeft');
+        var size = this.$bar.css('left', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
+        this.$drawer.css('left', size);
+        this._closeSize = size;
+        break;
+      case wcDocker.DOCK_RIGHT:
+        this.$drawerFrame.addClass('wcDrawerRight');
+        var size = this.$bar.css('right', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
+        this.$drawer.css('right', size);
+        this._closeSize = size;
+        break;
+      case wcDocker.DOCK_TOP:
+        this.$drawerFrame.addClass('wcDrawerTop');
+        var size = this.$bar.css('top', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
+        this.$drawer.css('top', size);
+        this._closeSize = size;
+        break;
+      case wcDocker.DOCK_BOTTOM:
+        this.$drawerFrame.addClass('wcDrawerBottom');
+        var size = this.$bar.css('bottom', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
+        this.$drawer.css('bottom', size);
+        this._closeSize = size;
+        break;
     }
   },
 
@@ -5040,8 +5106,8 @@ wcDrawer.prototype = {
   //    mouse     The current mouse position.
   //    ghost     The ghost object.
   __checkAnchorDrop: function(mouse, same, ghost, canSplit) {
-    var width = this.$drawer.width();
-    var height = this.$drawer.height();
+    var width = this.$drawer.outerWidth();
+    var height = this.$drawer.outerHeight();
     var offset = this.$drawer.offset();
 
     if (!this._root && mouse.y >= offset.top && mouse.y <= offset.top + height &&
@@ -5121,9 +5187,9 @@ wcDrawer.prototype = {
 
     this.$container = $container;
     if (this.$container) {
-      this.$container.append(this.$drawer);
+      this.$container.append(this.$drawerFrame);
     } else {
-      this.$drawer.remove();
+      this.$drawerFrame.remove();
     }
     return this.$container;
   },

@@ -259,8 +259,8 @@ wcLayout.prototype = {
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
   __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
-    var width = $elem.width();
-    var height = $elem.height();
+    var width = $elem.outerWidth();
+    var height = $elem.outerHeight();
     var offset = $elem.offset();
     var top = $elem.find('.wcFrameTitle').height();
     if (!title) {
