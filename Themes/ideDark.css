@@ -45,21 +45,21 @@ html,body {
     position: relative;
 }
 
-.wcDrawerLeft, .wcDrawerRight,
-.wcDrawerTop, .wcDrawerBottom {
+.wcDrawerLeft .wcDrawer, .wcDrawerRight .wcDrawer,
+.wcDrawerTop .wcDrawer, .wcDrawerBottom .wcDrawer {
   border: 2px dashed darkgray;
 }
 
-.wcDrawerLeft {
+.wcDrawerLeft .wcDrawer {
   border-left: 0;
 }
-.wcDrawerRight {
+.wcDrawerRight .wcDrawer {
   border-right: 0;
 }
-.wcDrawerTop {
+.wcDrawerTop .wcDrawer {
   border-top: 0;
 }
-.wcDrawerBottom {
+.wcDrawerBottom .wcDrawer {
   border-bottom: 0;
 }
 
