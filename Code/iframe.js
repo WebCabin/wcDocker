@@ -191,20 +191,20 @@ wcIFrame.prototype = {
 
   // --------------------------------------------------------------------------------
   __init: function() {
-    this._boundEvents.push({event: wcDocker.EVENT_VISIBILITY_CHANGED, handler: this.onVisibilityChanged.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_BEGIN_DOCK,         handler: this.onBeginDock.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_END_DOCK,           handler: this.onEndDock.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_MOVE_STARTED,       handler: this.onMoveStarted.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_RESIZE_STARTED,     handler: this.onMoveStarted.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_MOVE_ENDED,         handler: this.onMoveFinished.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_RESIZE_ENDED,       handler: this.onMoveFinished.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_MOVED,              handler: this.onMoved.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_RESIZED,            handler: this.onMoved.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_ATTACHED,           handler: this.onAttached.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_DETACHED,           handler: this.onDetached.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_GAIN_FOCUS,         handler: this.onGainFocus.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_LOST_FOCUS,         handler: this.onLostFocus.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_CLOSED,             handler: this.onClosed.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.onVisibilityChanged.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK,         handler: this.onBeginDock.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.END_DOCK,           handler: this.onEndDock.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.MOVE_STARTED,       handler: this.onMoveStarted.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.RESIZE_STARTED,     handler: this.onMoveStarted.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.MOVE_ENDED,         handler: this.onMoveFinished.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.RESIZE_ENDED,       handler: this.onMoveFinished.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.MOVED,              handler: this.onMoved.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.RESIZED,            handler: this.onMoved.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.ATTACHED,           handler: this.onAttached.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.DETACHED,           handler: this.onDetached.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS,         handler: this.onGainFocus.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS,         handler: this.onLostFocus.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.CLOSED,             handler: this.onClosed.bind(this)});
 
     for (var i = 0; i < this._boundEvents.length; ++i) {
       this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);

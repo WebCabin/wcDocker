@@ -454,7 +454,7 @@ wcPanel.prototype = {
 
   // Registers an event.
   // Params:
-  //    eventType     The event type, as defined by wcDocker.EVENT_...
+  //    eventType     The event type, as defined by wcDocker.EVENT....
   //    handler       A handler function to be called for the event.
   //                  Params:
   //                    panel   The panel invoking the event.
@@ -541,11 +541,11 @@ wcPanel.prototype = {
       this._initialized = true;
       var self = this;
       setTimeout(function() {
-        self.__trigger(wcDocker.EVENT_INIT);
+        self.__trigger(wcDocker.EVENT.INIT);
       }, 0);
     }
 
-    this.__trigger(wcDocker.EVENT_UPDATED);
+    this.__trigger(wcDocker.EVENT.UPDATED);
 
     var width   = this.$container.width();
     var height  = this.$container.height();
@@ -557,9 +557,9 @@ wcPanel.prototype = {
       if (!this._resizeData.timeout) {
         this._resizeData.timeout = true;
         setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
-        this.__trigger(wcDocker.EVENT_RESIZE_STARTED);
+        this.__trigger(wcDocker.EVENT.RESIZE_STARTED);
       }
-      this.__trigger(wcDocker.EVENT_RESIZED);
+      this.__trigger(wcDocker.EVENT.RESIZED);
     }
 
     var offset  = this.$container.offset();
@@ -571,9 +571,9 @@ wcPanel.prototype = {
       if (!this._moveData.timeout) {
         this._moveData.timeout = true;
         setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
-        this.__trigger(wcDocker.EVENT_MOVE_STARTED);
+        this.__trigger(wcDocker.EVENT.MOVE_STARTED);
       }
-      this.__trigger(wcDocker.EVENT_MOVED);
+      this.__trigger(wcDocker.EVENT.MOVED);
     }
   },
 
@@ -582,7 +582,7 @@ wcPanel.prototype = {
       setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
     } else {
       this._resizeData.timeout = false;
-      this.__trigger(wcDocker.EVENT_RESIZE_ENDED);
+      this.__trigger(wcDocker.EVENT.RESIZE_ENDED);
     }
   },
 
@@ -591,7 +591,7 @@ wcPanel.prototype = {
       setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
     } else {
       this._moveData.timeout = false;
-      this.__trigger(wcDocker.EVENT_MOVE_ENDED);
+      this.__trigger(wcDocker.EVENT.MOVE_ENDED);
     }
   },
 
@@ -599,7 +599,7 @@ wcPanel.prototype = {
     if (this._isVisible !== inView) {
       this._isVisible = inView;
 
-      this.__trigger(wcDocker.EVENT_VISIBILITY_CHANGED);
+      this.__trigger(wcDocker.EVENT.VISIBILITY_CHANGED);
     }
   },
 
@@ -626,7 +626,7 @@ wcPanel.prototype = {
     // data.closeable = this._closeable;
     // data.resizeVisible = this.resizeVisible();
     data.customData = {};
-    this.__trigger(wcDocker.EVENT_SAVE_LAYOUT, data.customData);
+    this.__trigger(wcDocker.EVENT.SAVE_LAYOUT, data.customData);
     return data;
   },
 
@@ -642,7 +642,7 @@ wcPanel.prototype = {
     // this._moveable = data.moveable;
     // this._closeable = data.closeable;
     // this.resizeVisible(data.resizeVisible)
-    this.__trigger(wcDocker.EVENT_RESTORE_LAYOUT, data.customData);
+    this.__trigger(wcDocker.EVENT.RESTORE_LAYOUT, data.customData);
   },
 
   // Triggers an event of a given type onto this current panel.

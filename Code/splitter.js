@@ -148,7 +148,7 @@ wcSplitter.prototype = {
       this.__update();
 
       if (this._parent instanceof wcPanel) {
-        this._parent.__trigger(wcDocker.EVENT_UPDATED);
+        this._parent.__trigger(wcDocker.EVENT.UPDATED);
       }
     }
 
@@ -293,8 +293,8 @@ wcSplitter.prototype = {
     this.__container(this.$container);
 
     if (this._parent instanceof wcPanel) {
-      this._boundEvents.push({event: wcDocker.EVENT_UPDATED, handler: this.onUpdate.bind(this)});
-      this._boundEvents.push({event: wcDocker.EVENT_CLOSED,  handler: this.onClosed.bind(this)});
+      this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.onUpdate.bind(this)});
+      this._boundEvents.push({event: wcDocker.EVENT.CLOSED,  handler: this.onClosed.bind(this)});
 
       for (var i = 0; i < this._boundEvents.length; ++i) {
         this._parent.on(this._boundEvents[i].event, this._boundEvents[i].handler);
@@ -363,7 +363,7 @@ wcSplitter.prototype = {
       }
     }
 
-    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+    if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var barSize = this.$bar.outerWidth() / 2;
       var barBorder = parseInt(this.$bar.css('border-top')) + parseInt(this.$bar.css('border-bottom'));
       if (opt_dontMove) {
@@ -473,7 +473,7 @@ wcSplitter.prototype = {
     mouse.x -= offset.left;
     mouse.y -= offset.top;
 
-    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+    if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var width = this.$container.outerWidth() - this.$bar.outerWidth();
       mouse.x += 1 - parseInt(this.$container.css('border-left')) - (this.$bar.outerWidth()/2);
       this.pos(mouse.x / width);
@@ -503,7 +503,7 @@ wcSplitter.prototype = {
       maxSize = {x:width,y:height};
     }
 
-    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+    if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var barSize = this.$bar.outerWidth()/2;
       minSize.x += barSize;
       width -= barSize;
@@ -541,7 +541,7 @@ wcSplitter.prototype = {
       minSize = {x:50,y:50};
     }
 
-    if (this._orientation === wcDocker.ORIENTATION_HORIZONTAL) {
+    if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var barSize = this.$bar.outerWidth()/2;
       maxSize.x += barSize;
       width -= barSize;

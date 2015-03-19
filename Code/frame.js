@@ -1,13 +1,25 @@
-/*
-  The frame is a container for a panel, and can contain multiple panels inside it, each appearing
-  as a tabbed item.  All docking panels have a frame, but the frame can change any time the panel
-  is moved.
-*/
+/**
+ * The frame is a [panel]{@link wcPanel} container.
+ * Each panel appears as a tabbed item inside a frame.
+ * @class
+ * 
+ * @param {external:jQuery~selector|external:jQuery~Object} container - A container element for this frame.
+ * @param {wcSplitter|wcDocker} parent                                - The frames parent object.
+ * @param {Boolean} isFloating                                        - If true, the frame will be a floating window.
+ */
 function wcFrame(container, parent, isFloating) {
+  /**
+   * The container that holds the frame.
+   * @member {external:jQuery~Object}
+   */
   this.$container = $(container);
   this._parent = parent;
   this._isFloating = isFloating;
 
+  /**
+   * The outer frame element.
+   * @member {external:jQuery~Object}
+   */
   this.$frame     = null;
   this.$title     = null;
   this.$tabScroll = null;
@@ -70,11 +82,15 @@ wcFrame.prototype = {
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Gets, or Sets the position of the frame.
-  // Params:
-  //    x, y    If supplied, assigns the new position.
-  //    pixels  If true, the coordinates given will be treated as a
-  //            pixel position rather than a percentage.
+  /**
+   * Gets, or Sets the position of the frame.
+   *
+   * @param {Number} [x]        - If supplied, assigns a new horizontal position.
+   * @param {Number} [y]        - If supplied, assigns a new vertical position.
+   * @param {Boolean} [pixels]  - If true, the coordinates passed in will be treated as a pixel position rather than a percentage.
+   *
+   * @returns {wcDocker~Coordinate} - The current position of the frame. If the pixel parameter was true, the position will be in pixels.
+   */
   pos: function(x, y, pixels) {
     var width = this.$container.width();
     var height = this.$container.height();
@@ -96,7 +112,11 @@ wcFrame.prototype = {
     }
   },
 
-  // Gets the desired size of the panel.
+  /**
+   * Gets the initially desired size of the panel.
+   *
+   * @returns {wcDocker~Coordinate} - The initially desired size.
+   */
   initSize: function() {
     var size = {
       x: -1,
@@ -118,7 +138,11 @@ wcFrame.prototype = {
     return size;
   },
 
-  // Gets the minimum size of the panel.
+  /**
+   * Gets the minimum size of the frame.
+   *
+   * @returns {wcDocker~Coordinate} - The minimum size of the frame.
+   */
   minSize: function() {
     var size = {
       x: 0,
@@ -132,7 +156,11 @@ wcFrame.prototype = {
     return size;
   },
 
-  // Gets the minimum size of the panel.
+  /**
+   * Gets the maximum size of the frame.
+   *
+   * @returns {wcDocker~Coordinate} - The maximum size of the frame.
+   */
   maxSize: function() {
     var size = {
       x: Infinity,
@@ -146,10 +174,12 @@ wcFrame.prototype = {
     return size;
   },
 
-  // Adds a given panel as a new tab item.
-  // Params:
-  //    panel    The panel to add.
-  //    index     An optional index to insert the tab at.
+  /**
+   * Adds a given panel as a new tab item to the frame.
+   *
+   * @param {wcPanel} panel   - The panel to add.
+   * @param {Number} [index]  - Insert index.
+   */
   addPanel: function(panel, index) {
     var found = this._panelList.indexOf(panel);
     if (found !== -1) {
@@ -170,11 +200,13 @@ wcFrame.prototype = {
     this.__updateTabs();
   },
 
-  // Removes a given panel from the tab item.
-  // Params:
-  //    panel       The panel to remove.
-  // Returns:
-  //    bool        Returns whether or not any panels still remain.
+  /**
+   * Removes a given panel from the frame.
+   *
+   * @param {wcPanel} panel - The panel to remove.
+   *
+   * @returns {Boolean} - True if any panels still remain after the removal.
+   */
   removePanel: function(panel) {
     for (var i = 0; i < this._panelList.length; ++i) {
       if (this._panelList[i] === panel) {
@@ -198,11 +230,13 @@ wcFrame.prototype = {
     return this._panelList.length > 0;
   },
 
-  // Gets, or Sets the currently visible panel.
-  // Params:
-  //    tabIndex      If supplied, sets the current tab.
-  // Returns:
-  //    wcPanel       The currently visible panel.
+  /**
+   * Gets, or Sets the currently visible panel.
+   *
+   * @param {Number} [tabIndex] - If supplied, sets the current panel index.
+   *
+   * @returns {wcPanel} - The currently visible panel.
+   */
   panel: function(tabIndex, autoFocus) {
     if (typeof tabIndex !== 'undefined') {
       if (tabIndex > -1 && tabIndex < this._panelList.length) {
@@ -617,7 +651,7 @@ wcFrame.prototype = {
     panel._scroll.x = this.$center.scrollLeft();
     panel._scroll.y = this.$center.scrollTop();
 
-    panel.__trigger(wcDocker.EVENT_SCROLLED);
+    panel.__trigger(wcDocker.EVENT.SCROLLED);
   },
 
   // Brings the frame into focus.

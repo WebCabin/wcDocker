@@ -22,7 +22,7 @@ View the API documentation here: [https://github.com/WebCabin/wcDocker/wiki](htt
 - Separated the default theme out of wcDocker.css (now use wcDockerSkeleton.css with Themes/default.css).
 - Added wcDocker.panelTypeInfo() and wcPanel.info() that will retrieve the registration data of a panel.
 - Added wcDocker.panelTypes() to retrieve a list of all registered panel types.
-- New event type wcDocker.EVENT_INIT.
+- New event type wcDocker.EVENT.INIT.
 - Panel width and height can now be retrieved.
 - wcPanel functions initPos, initSize, minSize, and maxSize can now take a string value with a 'px' or '%' suffix.
 - Fixed issue with using normal CSS icons in the context menu.
@@ -39,10 +39,10 @@ View the API documentation here: [https://github.com/WebCabin/wcDocker/wiki](htt
 - Improved performance of panel resizing.
 - wcPanel.focus() now actually sets itself as the current active tab.
 - wcDocker.registerPanelType() has a new option {limit: Number} that limits the total number of copies for this panel.
-- New event type wcDocker.EVENT_VISIBILITY_CHANGED, triggered whenever the panel gains or loses visibility.  Use wcPanel.isVisible() to retrieve the current state.
+- New event type wcDocker.EVENT.VISIBILITY_CHANGED, triggered whenever the panel gains or loses visibility.  Use wcPanel.isVisible() to retrieve the current state.
 - Reduced DOM changes during tab change and resize.
-- New event types wcDocker.EVENT_BEGIN_DOCK and wcDocker.EVENT_END_DOCK that trigger whenever the user is dragging a panel to a new location.
-- New event types wcDocker.EVENT_GAIN_FOCUS and wcDocker.EVENT_LOST_FOCUS that trigger whenever a panel is brought it and out of focus.
+- New event types wcDocker.EVENT.BEGIN_DOCK and wcDocker.EVENT.END_DOCK that trigger whenever the user is dragging a panel to a new location.
+- New event types wcDocker.EVENT.GAIN_FOCUS and wcDocker.EVENT.LOST_FOCUS that trigger whenever a panel is brought it and out of focus.
 - Floating panels no longer change size whenever a new panel is added to it as a tab.
 
 #### Version: 2.0.0 ####
@@ -137,19 +137,19 @@ myPanel.minSize(100, 100);
 Now, once you have registered your panel types, if they are not private, the user will be able to create those panels whenever they wish.  However, it is also recommended that you initialize the window with a starting layout in order to give your users something to see at the beginning.
 ```
 #!javascript
-myDocker.addPanel('Registered type name', wcDocker.DOCK_LEFT, optionalTargetPanel, optionalRect);
+myDocker.addPanel('Registered type name', wcDocker.DOCK.LEFT, optionalTargetPanel, optionalRect);
 ```
 The first parameter is the name of the panel type you have previously registered.
 The second parameter is an enumerated value that determines the location where this window will be docked
 (or try to dock), it can be one of the following:  
 
-wcDocker.DOCK_MODAL    = Make a floating window that blocks all access to panels below it until closed.  
-wcDocker.DOCK_FLOAT    = Make a floating window that is not docked.  
-wcDocker.DOCK_LEFT     = Dock it to the left side of the central or target panel.  
-wcDocker.DOCK_RIGHT    = Dock it to the right side of the central or target panel.  
-wcDocker.DOCK_TOP      = Dock it to the top of the central or target panel.  
-wcDocker.DOCK_BOTTOM   = Dock it on the bottom of the central or target panel.  
-wcDocker.DOCK_STACKED  = Dock the new panel stacked (tabbed) with another existing panel.  
+wcDocker.DOCK.MODAL    = Make a floating window that blocks all access to panels below it until closed.  
+wcDocker.DOCK.FLOAT    = Make a floating window that is not docked.  
+wcDocker.DOCK.LEFT     = Dock it to the left side of the central or target panel.  
+wcDocker.DOCK.RIGHT    = Dock it to the right side of the central or target panel.  
+wcDocker.DOCK.TOP      = Dock it to the top of the central or target panel.  
+wcDocker.DOCK.BOTTOM   = Dock it on the bottom of the central or target panel.  
+wcDocker.DOCK.STACKED  = Dock the new panel stacked (tabbed) with another existing panel.  
 
 The fourth parameter is optional, normally panels will dock in relation to the entire docker container. However, by supplying a specific panel instead, your new panel will be docked in relation to that target.
 The fifth, and final, parameter is also optional and consists of a data object with custom options.  These options are then passed into the constructor object of the panel when it is created.

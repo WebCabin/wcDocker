@@ -64,14 +64,94 @@ if (!Array.prototype.indexOf)
   };
 }
 
-/*
-  The main window instance.  This manages all of the docking panels and user input.
-  There should only be one instance of this, although it is not enforced.
+/**
+ * jQuery library.
+ * @external jQuery
+ * @see http://jquery.com/
+ */
 
-  options allows overriding default options for docker. The current fields are:
-    allowContextMenu: boolean (default true) - Create the right click menu for adding/removing panels.
-    hideOnResize: boolean (default false) - If true, panels will hide their content as they are being resized.
-*/
+/**
+ * A jQuery selector string.
+ *
+ * @typedef {String} external:jQuery~selector
+ * @see http://api.jquery.com/category/selectors/
+ */
+
+/**
+ * A jQuery object.
+ *
+ * @typedef {Object} external:jQuery~Object
+ * @see https://learn.jquery.com/using-jquery-core/jquery-object/
+
+/**
+ * jQuery contextMenu library.
+ * @external contextMenu
+ * @extends jQuery
+ * @see http://medialize.github.io/jQuery-contextMenu/docs.html/
+ */
+
+/**
+ * A jQuery contextMenu item object.
+ *
+ * @typedef {Object} external:contextMenu~item
+ * @property {String} name                   - The name of the menu item.
+ * @property {external:contextMenu~onSelect} callback - A callback handler when this option has been selected.
+ */
+
+/**
+ * A callback handler when a menu option has been selected.
+ *
+ * @callback external:contextMenu~onSelect
+ * @param {String} key              - The triggered menu key.
+ * @param {Object} opts             - Menu event object.
+ * @param {wcPanel|Boolean} panel   - The target panel, if one exists.
+ */
+
+
+/**
+ * A rectangle structure.
+ *
+ * @typedef {Object} wcDocker~Rect
+ * @property {Number} x - X coordinate of the rectangle.
+ * @property {Number} y - Y coordinate of the rectangle.
+ * @property {Number} w - Width of the rectangle.
+ * @property {Number} h - Height of the rectangle.
+ */
+
+/**
+ * A coordinate structure.
+ *
+ * @typedef {Object} wcDocker~Coordinate
+ * @property {Number} x - X coordinate.
+ * @property {Number} y - Y coordinate.
+ */
+
+/**
+ * A function or an object constructor for the panel.
+ *
+ * @callback wcPanel~onCreate
+ * @param {wcPanel} panel - The panel being constructed.
+ * @param {Object} [options] - An options object provided via options.options paramter for {@link wcDocker.registerPanelType}.
+ */
+
+/**
+ * An event handler callback.
+ *
+ * @callback wcDocker~onEvent
+ * @param {wcPanel|NULL} panel - The panel invoking the event, or NULL if global.
+ * @param {Object} [data] - A data object passed by the invoker.
+ */
+
+
+/**
+ * The main docker instance.  This manages all of the docking panels and user input.
+ * There should only be one instance of this, although it is not enforced.
+ * @class
+ * 
+ * @param {Object} [options] - Options for constructing the instance.
+ * @param {Boolean} [options.allowContextMenu=true] - Overrides the default right click menu with ones that interact with docker.
+ * @param {Boolean} [options.hideOnResize=false] - If true, panels will hide their contents as they are being resized.
+ */
 function wcDocker(container, options) {
   this.$container = $(container).addClass('wcDocker');
   this.$transition = $('<div class="wcDockerTransition"></div>');
@@ -125,56 +205,112 @@ function wcDocker(container, options) {
   this.__init();
 };
 
-// Docking positions.
-wcDocker.DOCK_MODAL                 = 'modal';
-wcDocker.DOCK_FLOAT                 = 'float';
-wcDocker.DOCK_TOP                   = 'top';
-wcDocker.DOCK_LEFT                  = 'left';
-wcDocker.DOCK_RIGHT                 = 'right';
-wcDocker.DOCK_BOTTOM                = 'bottom';
-wcDocker.DOCK_STACKED               = 'stacked';
+/**
+ * Enumerated Docking positions.
+ * @readonly
+ * @version 3.0.0
+ * @enum {String}
+ */
+wcDocker.DOCK = {
+  /** A floating panel that blocks input until closed */
+  MODAL                 : 'modal',
+  /** A floating panel */
+  FLOAT                 : 'float',
+  /** Docks to the top of a target or window */
+  TOP                   : 'top',
+  /** Docks to the left of a target or window */
+  LEFT                  : 'left',
+  /** Docks to the right of a target or window */
+  RIGHT                 : 'right',
+  /** Docks to the bottom of a target or window */
+  BOTTOM                : 'bottom',
+  /** Docks as another tabbed item along with the target */
+  STACKED               : 'stacked'
+};
 
-// Internal events.
-wcDocker.EVENT_INIT                 = 'panelInit';
-wcDocker.EVENT_UPDATED              = 'panelUpdated';
-wcDocker.EVENT_VISIBILITY_CHANGED   = 'panelVisibilityChanged';
-wcDocker.EVENT_BEGIN_DOCK           = 'panelBeginDock';
-wcDocker.EVENT_END_DOCK             = 'panelEndDock';
-wcDocker.EVENT_GAIN_FOCUS           = 'panelGainFocus';
-wcDocker.EVENT_LOST_FOCUS           = 'panelLostFocus';
-wcDocker.EVENT_CLOSED               = 'panelClosed';
-wcDocker.EVENT_BUTTON               = 'panelButton';
-wcDocker.EVENT_ATTACHED             = 'panelAttached';
-wcDocker.EVENT_DETACHED             = 'panelDetached';
-wcDocker.EVENT_MOVE_STARTED         = 'panelMoveStarted';
-wcDocker.EVENT_MOVE_ENDED           = 'panelMoveEnded';
-wcDocker.EVENT_MOVED                = 'panelMoved';
-wcDocker.EVENT_RESIZE_STARTED       = 'panelResizeStarted';
-wcDocker.EVENT_RESIZE_ENDED         = 'panelResizeEnded';
-wcDocker.EVENT_RESIZED              = 'panelResized';
-wcDocker.EVENT_SCROLLED             = 'panelScrolled';
-wcDocker.EVENT_SAVE_LAYOUT          = 'layoutSave';
-wcDocker.EVENT_RESTORE_LAYOUT       = 'layoutRestore';
-wcDocker.EVENT_CUSTOM_TAB_CHANGED   = 'customTabChanged';
-wcDocker.EVENT_CUSTOM_TAB_CLOSED    = 'customTabClosed';
+/**
+ * Enumerated Internal events
+ * @readonly
+ * @version 3.0.0
+ * @enum {String}
+ */
+wcDocker.EVENT = {
+  /** When the panel is initialized */ 
+  INIT                 : 'panelInit',
+  /** When the panel is updated */
+  UPDATED              : 'panelUpdated',
+  /** When the panel has changed its visibility */
+  VISIBILITY_CHANGED   : 'panelVisibilityChanged',
+  /** When the user begins moving this panel from its current docked position */
+  BEGIN_DOCK           : 'panelBeginDock',
+  /** When the user finishes moving this panel */
+  END_DOCK             : 'panelEndDock',
+  /** When the user brings this panel into focus */
+  GAIN_FOCUS           : 'panelGainFocus',
+  /** When the user leaves focus on this panel */
+  LOST_FOCUS           : 'panelLostFocus',
+  /** When the panel is being closed */
+  CLOSED               : 'panelClosed',
+  /** When a custom button is clicked, See {@link wcDocker#addButton} */
+  BUTTON               : 'panelButton',
+  /** When the panel has moved from floating to a docked position */
+  ATTACHED             : 'panelAttached',
+  /** When the panel has moved from a docked position to floating */
+  DETACHED             : 'panelDetached',
+  /** When the user has started moving the panel (top-left coordinates changed) */
+  MOVE_STARTED         : 'panelMoveStarted',
+  /** When the user has finished moving the panel */
+  MOVE_ENDED           : 'panelMoveEnded',
+  /** When the top-left coordinates of the panel has changed */
+  MOVED                : 'panelMoved',
+  /** When the user has started resizing the panel (width or height changed) */
+  RESIZE_STARTED       : 'panelResizeStarted',
+  /** When the user has finished resizing the panel */
+  RESIZE_ENDED         : 'panelResizeEnded',
+  /** When the panels width or height has changed */
+  RESIZED              : 'panelResized',
+  /** When the contents of the panel has been scrolled */
+  SCROLLED             : 'panelScrolled',
+  /** When the layout is being saved, See {@link wcDocker#save} */
+  SAVE_LAYOUT          : 'layoutSave',
+  /** When the layout is being restored, See {@link wcDocker#restore} */
+  RESTORE_LAYOUT       : 'layoutRestore',
+  /** When the current tab on a custom tab widget associated with this panel has changed, See {@link wcTabFrame} */
+  CUSTOM_TAB_CHANGED   : 'customTabChanged',
+  /** When a tab has been closed on a custom tab widget associated with this panel, See {@link wcTabFrame} */
+  CUSTOM_TAB_CLOSED    : 'customTabClosed'
+};
 
+/**
+ * The name of the placeholder panel.
+ * @constant {String}
+ */
 wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
 
-// Used for the splitter bar orientation.
-wcDocker.ORIENTATION_VERTICAL       = false;
-wcDocker.ORIENTATION_HORIZONTAL     = true;
+/**
+ * Used for the splitter bar orientation.
+ * @readonly
+ * @version 3.0.0
+ * @enum {Boolean}
+ */
+wcDocker.ORIENTATION = {
+  VERTICAL       : false,
+  HORIZONTAL     : true
+};
 
 wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Gets, or Sets the path where all theme files can be found.
-  // "Themes" is the default folder path.
-  // Params:
-  //    path          The path where all themes can be found.
-  //                  If omitted, the path will not change.
-  // Returns:
-  //    String        The current path to the themes.
+
+  /**
+   * Gets, or Sets the path where all theme files can be found.
+   * "Themes" is the default folder path.
+   *
+   * @param {String} path - If supplied, will set the path where all themes can be found.
+   *
+   * @returns {String} - The currently assigned path.
+   */
   themePath: function(path) {
     if (path !== undefined) {
       this._themePath = path;
@@ -182,14 +318,13 @@ wcDocker.prototype = {
     return this._themePath;
   },
 
-  // Gets, or Sets the current theme used by wcDocker.
-  // Params:
-  //    themeName     The name of the theme to set active.
-  //                  See wcDocker.setThemePath() to set the folder
-  //                  location where these themes can be found.
-  //                  If omitted, the theme will not change.
-  // Returns:
-  //    String        The currently active theme.
+  /**
+   * Gets, or Sets the current theme used by docker.
+   *
+   * @param {String} themeName - If supplied, will activate the theme; See {@link wcDocker#themePath}.
+   *
+   * @returns {String} - The currently active theme.
+   */
   theme: function(themeName) {
     if (themeName !== undefined) {
       $('#wcTheme').remove();
@@ -217,20 +352,22 @@ wcDocker.prototype = {
     return this._theme;
   },
 
-  // Registers a new docking panel type to be used later.
-  // Params:
-  //    name          The name for this new type.
-  //    options       An optional object that defines various options
-  //                  to initialize the panel with.
-  //    createFunc    The function that populates the contents of
-  //                  a newly created dock panel of this type.
-  //                  Params:
-  //                    panel      The dock panel to populate.
-  //    isPrivate     If true, this type will not appear to the user
-  //                  as a window type to create.
-  // Returns:
-  //    true        The new type has been added successfully.
-  //    false       Failure, the type name already exists.
+  /**
+   * Registers a new docking panel type to be used later.
+   * @version 3.0.0
+   *
+   * @param {String} name                       - The name identifier for the new panel type.
+   * @param {Object} options                    - Options for the panel type.
+   * @param {wcPanel~onCreate} options.onCreate - A function or an object constructor for the panel.
+   * @param {String} [options.icon]             - A CSS class name to draw an icon in the panels tab widget.
+   * @param {String} [options.faicon]           - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
+   * @param {String|Boolean} [options.title]    - Assign a custom name to the panels tab. A false value will hide the tab entirely.
+   * @param {Boolean} [options.isPrivate]       - If true, the user will not be able to create this panel type.
+   * @param {Number} [options.limit]            - Enforces a limited number of this panel type from being created by the user.
+   * @param {Object} [options.options]          - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
+   *
+   * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
+   */
   registerPanelType: function(name, optionsOrCreateFunc, isPrivate) {
 
     var options = optionsOrCreateFunc;
@@ -264,13 +401,13 @@ wcDocker.prototype = {
     return true;
   },
 
-  // Retrieves a list of all currently registered panel types.
-  // Params:
-  //    includePrivate    If true, panels registered as private will
-  //                      also be included with this list.
-  //
-  // Returns:
-  //    String[]          A list of panel type names.
+  /**
+   * Retrieves a list of all currently registered panel types.
+   *
+   * @param {Boolean} includePrivate - If true, panels registered as private will also be included with this list.
+   *
+   * @returns {String[]} - A list of panel type names.
+   */
   panelTypes: function(includePrivate) {
     var result = [];
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
@@ -281,13 +418,13 @@ wcDocker.prototype = {
     return result;
   },
 
-  // Retrieves the options data associated with a given panel type when it was registered.
-  // Params:
-  //    typeName      The type of the panel.
-  //
-  // Returns:
-  //    Object        An object that represents the registered info of the panel type.
-  //    false         The panel type requested was not found.
+  /**
+   * Retrieves the options data associated with a given panel type when it was registered.
+   *
+   * @param {String} typeName - The name identifier of the panel.
+   *
+   * @returns {Object|Boolean} - Registered options of the panel type, or false if the panel was not found.
+   */
   panelTypeInfo: function(typeName) {
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name == typeName) {
@@ -297,21 +434,16 @@ wcDocker.prototype = {
     return false;
   },
 
-  // Add a new dock panel to the window of a given type.
-  // Params:
-  //    typeName      The type of panel to create.
-  //    location      The docking location of the new panel,
-  //                  as defined by wcDocker.DOCK_ values.
-  //    targetPanel   An optional target panel, providing one will cause
-  //                  the docking location to be relative to this panel.
-  //                  Must be supplied when using wcDocker.DOCK_STACKED.
-  //    rect          An object with an x, y position, and a w, h size
-  //                  used to influence the starting position and size
-  //                  of a floating or modal panel.
-  //                  
-  // Returns:
-  //    wcPanel       The panel that was created.
-  //    false         The panel type does not exist.
+  /**
+   * Add a new docked panel to the docker instance.
+   *
+   * @param {String} typeName         - The name identifier of the panel to create.
+   * @param {wcDocker.DOCK} location  - The docking location to place this panel.
+   * @param {wcPanel} [targetPanel]   - A target panel to dock relative to.
+   * @param {wcDocker~Rect} [rect]    - A rectangle that defines the desired bounds of the panel. Note: Actual placement and size will vary depending on docked position.
+   *
+   * @returns {wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
+   */
   addPanel: function(typeName, location, targetPanel, rect) {
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
@@ -322,15 +454,15 @@ wcDocker.prototype = {
         var options = (panelType.options && panelType.options.options) || {};
         panel._panelObject = new panelType.options.onCreate(panel, options);
 
-        if (location === wcDocker.DOCK_STACKED) {
+        if (location === wcDocker.DOCK.STACKED) {
           this.__addPanelGrouped(panel, targetPanel);
         } else {
           this.__addPanelAlone(panel, location, targetPanel, rect);
         }
 
         if (this._placeholderPanel && panel.moveable() &&
-            location !== wcDocker.DOCK_FLOAT &&
-            location !== wcDocker.DOCK_MODAL) {
+            location !== wcDocker.DOCK.FLOAT &&
+            location !== wcDocker.DOCK.MODAL) {
           if (this.removePanel(this._placeholderPanel)) {
             this._placeholderPanel = null;
           }
@@ -343,12 +475,13 @@ wcDocker.prototype = {
     return false;
   },
 
-  // Removes a dock panel from the window.
-  // Params:
-  //    panel        The panel to remove.
-  // Returns:
-  //    true          The panel was removed.
-  //    false         There was a problem.
+  /**
+   * Removes a docked panel from the window.
+   *
+   * @param {wcPanel} panel - The panel to remove.
+   *
+   * @returns {Boolean} - Success or failure.
+   */
   removePanel: function(panel) {
     if (!panel) {
       return false;
@@ -359,7 +492,7 @@ wcDocker.prototype = {
 
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
-      panel.__trigger(wcDocker.EVENT_CLOSED);
+      panel.__trigger(wcDocker.EVENT.CLOSED);
 
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.removePanel(panel)) {
@@ -450,20 +583,16 @@ wcDocker.prototype = {
     return false;
   },
 
-  // Moves a docking panel from its current location to another.
-  // Params:
-  //    panel         The panel to move.
-  //    location      The docking location of the new panel,
-  //                  as defined by wcDocker.DOCK_ values.
-  //    targetPanel   An optional target panel, providing one will cause
-  //                  the docking location to be relative to this panel.
-  //                  Must be supplied when using wcDocker.DOCK_STACKED.
-  //    rect          An object with an x, y position, and a w, h size
-  //                  used to influence the starting position and size
-  //                  of a floating or modal panel.
-  // Returns:
-  //    wcPanel       The panel that was created.
-  //    false         The panel type does not exist.
+  /**
+   * Moves a docking panel from its current location to another.
+   *
+   * @param {wcPanel} panel           - The panel to move.
+   * @param {wcDocker.DOCK} location  - The new docking location of the panel.
+   * @param {wcPanel} [targetPanel]   - A target panel to dock relative to.
+   * @param {wcDocker~Rect} [rect]    - A rectangle that defines the desired bounds of the panel. Note: Actual placement and size will vary depending on docked position.
+   *
+   * @returns {wcPanel|Boolean} - The panel that was created, or false on failure.
+   */
   movePanel: function(panel, location, targetPanel, rect) {
     var lastPanel = this.__isLastPanel(panel);
 
@@ -479,9 +608,6 @@ wcDocker.prototype = {
     var floating = false;
     if (parentFrame instanceof wcFrame) {
       floating = parentFrame._isFloating;
-    }
-
-    if (parentFrame instanceof wcFrame) {
       // Remove the panel from the frame.
       for (var i = 0; i < parentFrame._panelList.length; ++i) {
         if (parentFrame._panelList[i] === panel) {
@@ -579,7 +705,7 @@ wcDocker.prototype = {
     }
 
     panel.initSize(width, height);
-    if (location === wcDocker.DOCK_STACKED) {
+    if (location === wcDocker.DOCK.STACKED) {
       this.__addPanelGrouped(panel, targetPanel);
     } else {
       this.__addPanelAlone(panel, location, targetPanel, rect);
@@ -602,22 +728,24 @@ wcDocker.prototype = {
     if (frame instanceof wcFrame) {
       if (floating !== frame._isFloating) {
         if (frame._isFloating) {
-          panel.__trigger(wcDocker.EVENT_DETACHED);
+          panel.__trigger(wcDocker.EVENT.DETACHED);
         } else {
-          panel.__trigger(wcDocker.EVENT_ATTACHED);
+          panel.__trigger(wcDocker.EVENT.ATTACHED);
         }
       }
     }
 
-    panel.__trigger(wcDocker.EVENT_MOVED);
+    panel.__trigger(wcDocker.EVENT.MOVED);
     return panel;
   },
 
-  // Finds all instances of a given panel type.
-  // Params:
-  //    typeName    The type of panel.
-  // Returns:
-  //    [wcPanel]   A list of all panels of the given type.
+  /**
+   * Finds all instances of a given panel type.
+   *
+   * @param {String} typeName - The name identifier for the panel.
+   *
+   * @returns {wcPanel[]} - A list of all panels found of the given type.
+   */
   findPanels: function(typeName) {
     var result = [];
     for (var i = 0; i < this._frameList.length; ++i) {
@@ -633,30 +761,16 @@ wcDocker.prototype = {
     return result;
   },
 
-  // Automatically adds collapsible drawers to the sides and bottom of your
-  // docking container. Drawers will appear on the outside of all currently
-  // docked panels. This should be used after you have finished laying out
-  // the main panels but before you dock any static panels at the top such
-  // as file or tool bar.
-  addDrawers: function(opt_positions) {
-    if (opt_positions === undefined) {
-      opt_positions = [wcDocker.DOCK_LEFT, wcDocker.DOCK_RIGHT, wcDocker.DOCK_BOTTOM];
-    }
-
-    for (var i = 0; i < opt_positions.length; ++i) {
-      this.addDrawer(opt_positions[i]);
-    }
-    return this._drawerList;
-  },
-
-  // Adds a collapsible drawer to a given side of the docking window.
-  // Drawers will appear on the outside of all currently docked panels.
-  // This should be used after you have finished laying out the main panels
-  // but before you dock any static panels at the top such as file or tool bar.
-  // Params:
-  //    location    The docking location to place this drawer, see wcDocker.DOCK_*
-  // Returns:
-  //    wcDrawer    The drawer object created.
+  /**
+   * Adds a collapsible drawer container to a given position of the docking window.
+   * Drawer containers will appear on the outside of all currently docked panels.
+   * This should be used after you have finished laying out the main panels
+   * but before you dock any static panels at the top such as file or tool bar.
+   *
+   * @param {wcDocker~DOCK} location - The docking location to place this drawer.
+   *
+   * @returns {wcDrawer} The drawer object that was created.
+   */
   addDrawer: function(location) {
     var drawer = new wcDrawer(this.$transition, this, location);
     this._drawerList.push(drawer);
@@ -665,7 +779,7 @@ wcDocker.prototype = {
       this._root = drawer;
       drawer.__container(this.$container);
     } else {
-      var splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+      var splitter = new wcSplitter(this.$container, this, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
       if (splitter) {
         drawer._parent = splitter;
         splitter.$bar.addClass('wcDrawerSplitterBar');
@@ -676,7 +790,7 @@ wcDocker.prototype = {
           y: this.$container.height(),
         };
 
-        if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
+        if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
           splitter.pane(0, drawer);
           splitter.pane(1, this._root);
         } else {
@@ -685,16 +799,16 @@ wcDocker.prototype = {
         }
 
         switch (location) {
-          case wcDocker.DOCK_LEFT:
+          case wcDocker.DOCK.LEFT:
             splitter.pos(size.x/4 / size.x);
             break;
-          case wcDocker.DOCK_RIGHT:
+          case wcDocker.DOCK.RIGHT:
             splitter.pos(1.0 - (size.x/4 / size.x));
             break;
-          case wcDocker.DOCK_TOP:
+          case wcDocker.DOCK.TOP:
             splitter.pos(size.y/4 / size.y);
             break;
-          case wcDocker.DOCK_BOTTOM:
+          case wcDocker.DOCK.BOTTOM:
             splitter.pos(1.0 - (size.y/4 / size.y));
             break;
         }
@@ -706,20 +820,23 @@ wcDocker.prototype = {
     return drawer;
   },
 
-  // Retrieves the list of all drawers.
+  /**
+   * Retrieves the list of all drawer containers.
+   *
+   * @returns {wcDrawer[]} - The list of currently active drawer containers.
+   */
   drawers: function() {
     return this._drawerList;
   },
 
-  // Registers an event.
-  // Params:
-  //    eventType     The event type, as defined by wcDocker.EVENT_...
-  //    handler       A handler function to be called for the event.
-  //                  Params:
-  //                    panel   The panel invoking the event.
-  // Returns:
-  //    true          The event was added.
-  //    false         The event failed to add.
+  /**
+   * Registers a global [event]{@link wcDocker.EVENT}.
+   *
+   * @param {wcDocker.EVENT} eventType - The event type.
+   * @param {wcDocker~onEvent} handler - A handler function to be called for the event.
+   *
+   * @returns {Boolean} Success or failure that the event has been registered.
+   */
   on: function(eventType, handler) {
     if (!eventType) {
       return false;
@@ -737,11 +854,12 @@ wcDocker.prototype = {
     return true;
   },
 
-  // Unregisters an event.
-  // Params:
-  //    eventType     The event type to remove, if omitted, all events are removed.
-  //    handler       The handler function to remove, if omitted, all events of
-  //                  the above type are removed.
+  /**
+   * Unregisters a global [event]{@link wcDocker.EVENT}.
+   *
+   * @param {wcDocker.EVENT} eventType    - The event type.
+   * @param {wcDocker~onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
+   */
   off: function(eventType, handler) {
     if (typeof eventType === 'undefined') {
       this._events = {};
@@ -762,10 +880,12 @@ wcDocker.prototype = {
     }
   },
 
-  // Trigger an event on all panels.
-  // Params:
-  //    eventName   The name of the event.
-  //    data        A custom data parameter to pass to all handlers.
+  /**
+   * Trigger an [event]{@link wcDocker.EVENT} on all panels.
+   *
+   * @param {String} eventName  - The name of the event to trigger.
+   * @param {Object} [data]     - A custom data object to be passed along with the event.
+   */
   trigger: function(eventName, data) {
     if (!eventName) {
       return false;
@@ -782,22 +902,17 @@ wcDocker.prototype = {
     this.__trigger(eventName, data);
   },
 
-  // Assigns a basic context menu to a selector element.  The context
-  // Menu is a simple list of options, no nesting or special options.
-  //
-  // If you wish to use a more complex context menu, you can use
-  // $.contextMenu directly, see
-  // http://medialize.github.io/jQuery-contextMenu/docs.html
-  // for more information.
-  // Params:
-  //    selector              A JQuery selector string that designates the
-  //                          elements who use this menu.
-  //    itemListOrBuildFunc   An array with each context menu item in it, each item
-  //                          is an object {name:string, callback:function(key, opts, panel)}.
-  //                          This can also be a function that dynamically builds and
-  //                          returns the item list, parameters given are the $trigger object
-  //                          of the menu and the menu event object.
-  //    includeDefault        If true, all default panel menu options will also be shown.
+  /**
+   * Assigns a basic context menu to a selector element.  The context
+   * Menu is a simple list of options, no nesting or special options.
+   *
+   * If you wish to use a more complex context menu, you can use
+   * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
+   *
+   * @param {external:jQuery~selector} selector                               - A selector string that designates the elements who use this menu.
+   * @param {external:contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
+   * @param {Boolean} includeDefault                                          - If true, all default menu options will be included.
+   */
   basicMenu: function(selector, itemListOrBuildFunc, includeDefault) {
     var self = this;
     $.contextMenu({
@@ -980,7 +1095,7 @@ wcDocker.prototype = {
                 myFrame.panel().close();
               }, 10);
             } else if (key === 'Detach Panel') {
-              self.movePanel(myFrame.panel(), wcDocker.DOCK_FLOAT, false);
+              self.movePanel(myFrame.panel(), wcDocker.DOCK.FLOAT, false);
             } else if (key === 'Flash Panel') {
               self.__focus(myFrame, true);
             } else {
@@ -1058,9 +1173,11 @@ wcDocker.prototype = {
     });
   },
 
-  // Bypasses the next context menu event.
-  // Use this during a mouse up event in which you do not want the
-  // context menu to appear.
+  /**
+   * Bypasses the next context menu event.
+   * Use this during a mouse up event in which you do not want the
+   * context menu to appear when it normally would have.
+   */
   bypassMenu: function() {
     if (this._menuTimer) {
       clearTimeout(this._menuTimer);
@@ -1081,8 +1198,12 @@ wcDocker.prototype = {
     }, 0);
   },
 
-  // Saves the current panel configuration into a meta
-  // string that can be used later to restore it.
+  /**
+   * Saves the current panel configuration into a serialized
+   * string that can be used later to restore it.
+   *
+   * @returns {String} - A serialized string that describes the current panel configuration.
+   */
   save: function() {
     var data = {};
 
@@ -1101,7 +1222,11 @@ wcDocker.prototype = {
     });
   },
 
-  // Restores a previously saved configuration.
+  /**
+   * Restores a previously saved configuration.
+   *
+   * @param {String} dataString - A previously saved serialized string, See {@link wcDocker.save}.
+   */
   restore: function(dataString) {
     var data = JSON.parse(dataString, function(key, value) {
       if (value === 'Infinity') {
@@ -1123,7 +1248,9 @@ wcDocker.prototype = {
     this.__update(false);
   },
 
-  // Clears out all panels.
+  /**
+   * Clears all contents from the docker instance.
+   */
   clear: function() {
     this._root = null;
 
@@ -1266,7 +1393,7 @@ wcDocker.prototype = {
 
             var panel = frame.panel();
             panel.buttonState(result.name, result.isToggled);
-            panel.__trigger(wcDocker.EVENT_BUTTON, result);
+            panel.__trigger(wcDocker.EVENT.BUTTON, result);
             return;
           }
         }
@@ -1393,7 +1520,7 @@ wcDocker.prototype = {
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
             self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
-            self.trigger(wcDocker.EVENT_BEGIN_DOCK);
+            self.trigger(wcDocker.EVENT.BEGIN_DOCK);
           }
           break;
         }
@@ -1584,11 +1711,11 @@ wcDocker.prototype = {
           };
 
           if (self._draggingFrameTab || !self.__isLastFrame(self._draggingFrame)) {
-            var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_FLOAT);
+            var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.FLOAT);
             // Dragging the entire frame.
             if (!self._draggingFrameTab) {
               while (self._draggingFrame.panel())
-              self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_STACKED, panel);
+              self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.STACKED, panel);
             }
 
             var frame = panel._parent;
@@ -1635,7 +1762,7 @@ wcDocker.prototype = {
           // Dragging the entire frame.
           if (!self._draggingFrameTab) {
             while (self._draggingFrame.panel()) {
-              self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK_STACKED, panel, self._ghost.rect());
+              self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.STACKED, panel, self._ghost.rect());
             }
           } else {
             var frame = panel._parent;
@@ -1652,7 +1779,7 @@ wcDocker.prototype = {
         self._ghost.destroy();
         self._ghost = null;
 
-        self.trigger(wcDocker.EVENT_END_DOCK);
+        self.trigger(wcDocker.EVENT.END_DOCK);
       }
 
       if ( self._draggingSplitter ) { 
@@ -1708,9 +1835,9 @@ wcDocker.prototype = {
     if (!this._resizeData.timeout) {
       this._resizeData.timeout = true;
       setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
-      this.__trigger(wcDocker.EVENT_RESIZE_STARTED);
+      this.__trigger(wcDocker.EVENT.RESIZE_STARTED);
     }
-    this.__trigger(wcDocker.EVENT_RESIZED);
+    this.__trigger(wcDocker.EVENT.RESIZED);
     this.__update();
   },
 
@@ -1720,7 +1847,7 @@ wcDocker.prototype = {
       setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
     } else {
       this._resizeData.timeout = false;
-      this.__trigger(wcDocker.EVENT_RESIZE_ENDED);
+      this.__trigger(wcDocker.EVENT.RESIZE_ENDED);
     }
   },
 
@@ -1735,7 +1862,7 @@ wcDocker.prototype = {
         this._focusFrame.$frame.removeClass('wcFloatingFocus');
       }
 
-      this._focusFrame.__trigger(wcDocker.EVENT_LOST_FOCUS);
+      this._focusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
       this._focusFrame = null;
     }
 
@@ -1750,7 +1877,7 @@ wcDocker.prototype = {
       }
       this._focusFrame.__focus(flash);
 
-      this._focusFrame.__trigger(wcDocker.EVENT_GAIN_FOCUS);
+      this._focusFrame.__trigger(wcDocker.EVENT.GAIN_FOCUS);
     }
   },
 
@@ -1878,7 +2005,7 @@ wcDocker.prototype = {
     }
 
     // If we did not manage to find a place for this panel, last resort is to put it in its own frame.
-    this.__addPanelAlone(panel, wcDocker.DOCK_LEFT, parentPanel, null);
+    this.__addPanelAlone(panel, wcDocker.DOCK.LEFT, parentPanel, null);
   },
 
   // Creates a new frame for the panel and then attaches it
@@ -1890,7 +2017,7 @@ wcDocker.prototype = {
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, parentPanel, rect) {
     // Floating windows need no placement.
-    if (location === wcDocker.DOCK_FLOAT || location === wcDocker.DOCK_MODAL) {
+    if (location === wcDocker.DOCK.FLOAT || location === wcDocker.DOCK.MODAL) {
       var frame = new wcFrame(this.$container, this, true);
       this._frameList.push(frame);
       this._floatingList.push(frame);
@@ -1898,7 +2025,7 @@ wcDocker.prototype = {
       frame.addPanel(panel);
       frame.pos(panel._pos.x, panel._pos.y, false);
 
-      if (location === wcDocker.DOCK_MODAL) {
+      if (location === wcDocker.DOCK.MODAL) {
         frame.$modalBlocker = $('<div class="wcModalBlocker"></div>');
         frame.$frame.prepend(frame.$modalBlocker);
 
@@ -1932,12 +2059,12 @@ wcDocker.prototype = {
             y: -1,
           };
           if (left === parentFrame) {
-            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
             parentSplitter.pane(0, splitter);
             size.x = parentSplitter.$pane[0].width();
             size.y = parentSplitter.$pane[0].height();
           } else {
-            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
             parentSplitter.pane(1, splitter);
             size.x = parentSplitter.$pane[1].width();
             size.y = parentSplitter.$pane[1].height();
@@ -1948,7 +2075,7 @@ wcDocker.prototype = {
             splitter.scrollable(1, false, false);
             frame = new wcFrame(this.$transition, splitter, false);
             this._frameList.push(frame);
-            if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
+            if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
               splitter.pane(0, frame);
               splitter.pane(1, parentFrame);
             } else {
@@ -1972,16 +2099,16 @@ wcDocker.prototype = {
               }
 
               switch (location) {
-                case wcDocker.DOCK_LEFT:
+                case wcDocker.DOCK.LEFT:
                   splitter.pos(rect.w / size.x);
                   break;
-                case wcDocker.DOCK_RIGHT:
+                case wcDocker.DOCK.RIGHT:
                   splitter.pos(1.0 - (rect.w / size.x));
                   break;
-                case wcDocker.DOCK_TOP:
+                case wcDocker.DOCK.TOP:
                   splitter.pos(rect.h / size.y);
                   break;
-                case wcDocker.DOCK_BOTTOM:
+                case wcDocker.DOCK.BOTTOM:
                   splitter.pos(1.0 - (rect.h / size.y));
                   break;
               }
@@ -2012,7 +2139,7 @@ wcDocker.prototype = {
       parent._root = frame;
       frame.__container($container);
     } else {
-      var splitter = new wcSplitter($container, parent, location !== wcDocker.DOCK_BOTTOM && location !== wcDocker.DOCK_TOP);
+      var splitter = new wcSplitter($container, parent, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
       if (splitter) {
         frame._parent = splitter;
         splitter.scrollable(0, false, false);
@@ -2022,7 +2149,7 @@ wcDocker.prototype = {
           y: $container.height(),
         };
 
-        if (location === wcDocker.DOCK_LEFT || location === wcDocker.DOCK_TOP) {
+        if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
           splitter.pane(0, frame);
           splitter.pane(1, parent._root);
         } else {
@@ -2041,16 +2168,16 @@ wcDocker.prototype = {
           }
 
           switch (location) {
-            case wcDocker.DOCK_LEFT:
+            case wcDocker.DOCK.LEFT:
               splitter.pos(rect.w / size.x);
               break;
-            case wcDocker.DOCK_RIGHT:
+            case wcDocker.DOCK.RIGHT:
               splitter.pos(1.0 - (rect.w / size.x));
               break;
-            case wcDocker.DOCK_TOP:
+            case wcDocker.DOCK.TOP:
               splitter.pos(rect.h / size.y);
               break;
-            case wcDocker.DOCK_BOTTOM:
+            case wcDocker.DOCK.BOTTOM:
               splitter.pos(1.0 - (rect.h / size.y));
               break;
           }
@@ -2080,7 +2207,7 @@ wcDocker.prototype = {
     if (targetPanel) {
       this.__addPanelGrouped(this._placeholderPanel, targetPanel);
     } else {
-      this.__addPanelAlone(this._placeholderPanel, wcDocker.DOCK_TOP);
+      this.__addPanelAlone(this._placeholderPanel, wcDocker.DOCK.TOP);
     }
 
     this.__update();

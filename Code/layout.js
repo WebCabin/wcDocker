@@ -276,7 +276,7 @@ wcLayout.prototype = {
           y: offset.top-2,
           w: width,
           h: top-2,
-          loc: wcDocker.DOCK_STACKED,
+          loc: wcDocker.DOCK.STACKED,
           item: this,
           self: true,
         });
@@ -293,7 +293,7 @@ wcLayout.prototype = {
           y: offset.top-2,
           w: width,
           h: top-2,
-          loc: wcDocker.DOCK_STACKED,
+          loc: wcDocker.DOCK.STACKED,
           item: this,
           self: false,
         });
@@ -312,7 +312,7 @@ wcLayout.prototype = {
         y: offset.top-2,
         w: width,
         h: height,
-        loc: wcDocker.DOCK_TOP,
+        loc: wcDocker.DOCK.TOP,
         item: this,
         self: false,
       });
@@ -328,7 +328,7 @@ wcLayout.prototype = {
           y: offset.top-2,
           w: width,
           h: height*0.5,
-          loc: wcDocker.DOCK_TOP,
+          loc: wcDocker.DOCK.TOP,
           item: this,
           self: false,
         });
@@ -343,7 +343,7 @@ wcLayout.prototype = {
           y: offset.top + (height - height*0.5)-2,
           w: width,
           h: height*0.5,
-          loc: wcDocker.DOCK_BOTTOM,
+          loc: wcDocker.DOCK.BOTTOM,
           item: this,
           self: false,
         });
@@ -359,7 +359,7 @@ wcLayout.prototype = {
           y: offset.top-2,
           w: width*0.5,
           h: height,
-          loc: wcDocker.DOCK_LEFT,
+          loc: wcDocker.DOCK.LEFT,
           item: this,
           self: false,
         });
@@ -373,7 +373,7 @@ wcLayout.prototype = {
           y: offset.top-2,
           w: width*0.5,
           h: height,
-          loc: wcDocker.DOCK_RIGHT,
+          loc: wcDocker.DOCK.RIGHT,
           item: this,
           self: false,
         });
@@ -390,7 +390,7 @@ wcLayout.prototype = {
           y: offset.top-2,
           w: width,
           h: height*0.5,
-          loc: wcDocker.DOCK_TOP,
+          loc: wcDocker.DOCK.TOP,
           item: this,
           self: false,
         });
@@ -405,7 +405,7 @@ wcLayout.prototype = {
           y: offset.top + (height - height*0.5)-2,
           w: width,
           h: height*0.5,
-          loc: wcDocker.DOCK_BOTTOM,
+          loc: wcDocker.DOCK.BOTTOM,
           item: this,
           self: false,
         });

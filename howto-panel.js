@@ -83,7 +83,7 @@ HowToPanel.prototype = {
     this.__constructBatchTab(this._tabFrame.addTab('Batch Panel'));
     this.__constructTipTab(this._tabFrame.addTab('Tip Panel'));
 
-    this._panel.on(wcDocker.EVENT_RESTORE_LAYOUT, this.__layoutRestored.bind(this));
+    this._panel.on(wcDocker.EVENT.RESTORE_LAYOUT, this.__layoutRestored.bind(this));
   },
 
   // --------------------------------------------------------------------------------
@@ -178,18 +178,18 @@ HowToPanel.prototype = {
     ]);
     this.text("\tNow, once you have registered your panel types, if they are not private, the user will be able to create those panels whenever they wish.  However, it is also recommended that you initialize the window with a starting layout in order to give your users something to see at the beginning.");
     this.code([
-      "myDocker.addPanel('Registered type name', wcDocker.DOCK_LEFT, optionalTargetPanel, optionalRect);",
+      "myDocker.addPanel('Registered type name', wcDocker.DOCK.LEFT, optionalTargetPanel, optionalRect);",
     ]);
     this.text([
       "\tThe first parameter is the name of the panel type you have previously registered.<br>The second parameter is an enumerated value that determines the location where this window will be docked (or try to dock), it can be one of the following:",
       "",
-      this.__wikiLink('wcDocker', 'DOCK_MODAL', 'wcDocker.DOCK_MODAL') + " = Make a floating window that blocks all access to panels below it until closed.",
-      this.__wikiLink('wcDocker', 'DOCK_FLOAT', 'wcDocker.DOCK_FLOAT') + " = Make a floating window that is not docked.",
-      this.__wikiLink('wcDocker', 'DOCK_LEFT', 'wcDocker.DOCK_LEFT') + " = Dock it to the left side of the central or target panel.",
-      this.__wikiLink('wcDocker', 'DOCK_RIGHT', 'wcDocker.DOCK_RIGHT') + " = Dock it to the right side of the central or target panel.",
-      this.__wikiLink('wcDocker', 'DOCK_TOP', 'wcDocker.DOCK_TOP') + " = Dock it to the top of the central or target panel.",
-      this.__wikiLink('wcDocker', 'DOCK_BOTTOM', 'wcDocker.DOCK_BOTTOM') + " = Dock it on the bottom of the central or target panel.",
-      this.__wikiLink('wcDocker', 'DOCK_STACKED', 'wcDocker.DOCK_STACKED') + " = Dock the new panel stacked (tabbed) with another existing panel.",
+      this.__wikiLink('wcDocker', 'DOCK_MODAL', 'wcDocker.DOCK.MODAL') + " = Make a floating window that blocks all access to panels below it until closed.",
+      this.__wikiLink('wcDocker', 'DOCK_FLOAT', 'wcDocker.DOCK.FLOAT') + " = Make a floating window that is not docked.",
+      this.__wikiLink('wcDocker', 'DOCK_LEFT', 'wcDocker.DOCK.LEFT') + " = Dock it to the left side of the central or target panel.",
+      this.__wikiLink('wcDocker', 'DOCK_RIGHT', 'wcDocker.DOCK.RIGHT') + " = Dock it to the right side of the central or target panel.",
+      this.__wikiLink('wcDocker', 'DOCK_TOP', 'wcDocker.DOCK.TOP') + " = Dock it to the top of the central or target panel.",
+      this.__wikiLink('wcDocker', 'DOCK_BOTTOM', 'wcDocker.DOCK.BOTTOM') + " = Dock it on the bottom of the central or target panel.",
+      this.__wikiLink('wcDocker', 'DOCK_STACKED', 'wcDocker.DOCK.STACKED') + " = Dock the new panel stacked (tabbed) with another existing panel.",
     ]);
     this.text([
       "The fourth parameter is optional, normally panels will dock in relation to the entire docker container. However, by supplying a specific panel instead, your new panel will be docked in relation to that target.",
@@ -226,14 +226,14 @@ HowToPanel.prototype = {
       "myDocker.restore(savedLayout);",
     ]);
     this.text([
-      "\tAdditionally, any panel can receieve the " + this.__wikiLink('wcDocker', 'EVENT_SAVE_LAYOUT', 'wcDocker.EVENT_SAVE_LAYOUT') + " and " + this.__wikiLink('wcDocker', 'EVENT_RESTORE_LAYOUT', 'wcDocker.EVENT_RESTORE_LAYOUT') + " events to save and restore additional information for that panel."
+      "\tAdditionally, any panel can receieve the " + this.__wikiLink('wcDocker', 'EVENT_SAVE_LAYOUT', 'wcDocker.EVENT.SAVE_LAYOUT') + " and " + this.__wikiLink('wcDocker', 'EVENT_RESTORE_LAYOUT', 'wcDocker.EVENT.RESTORE_LAYOUT') + " events to save and restore additional information for that panel."
     ]);
     this.code([
-      "myPanel.on(wcDocker.EVENT_SAVE_LAYOUT, function(data) {",
+      "myPanel.on(wcDocker.EVENT.SAVE_LAYOUT, function(data) {",
       "\tdata.someValue = somePanelValueToSave;",
       "});",
       "",
-      "myPanel.on(wcDocker.EVENT_RESTORE_LAYOUT, function(data) {",
+      "myPanel.on(wcDocker.EVENT.RESTORE_LAYOUT, function(data) {",
       "\tsomePanelValueToRestore = data.someValue;",
       "});",
     ]);
@@ -349,9 +349,9 @@ HowToPanel.prototype = {
       "\tPanel buttons can be added and removed at any time.  To remove a button, use the " + this.__wikiLink('wcPanel', 'removeButton') + " function.",
     ]);
     this.code("myPanel.removeButton('Some ID Name');");
-    this.text("\tAny time a panel button has been clicked on, you can catch the notification from the " + this.__wikiLink('wcDocker', 'EVENT_BUTTON', 'wcDocker.EVENT_BUTTON') + " event.");
+    this.text("\tAny time a panel button has been clicked on, you can catch the notification from the " + this.__wikiLink('wcDocker', 'EVENT_BUTTON', 'wcDocker.EVENT.BUTTON') + " event.");
     this.code([
-      "myPanel.on(wcDocker.EVENT_BUTTON, function(data) {",
+      "myPanel.on(wcDocker.EVENT.BUTTON, function(data) {",
       "\t// In case we have multiple panel buttons, we can check the name of the button.",
       "\tif (data.name === 'Some ID Name') {",
       "\t\tvar toggled = data.isToggled;",
@@ -385,7 +385,7 @@ HowToPanel.prototype = {
       "myLayout.addItem($container);"
     ]);
     this.text("\tConstruct a new " + this.__wikiLink('wcSplitter', '', 'wcSplitter') + " and initialize it with the containing element, the owner panel, and an initial orientation.");
-    this.code("var splitter = new wcSplitter($container, myPanel, wcDocker.ORIENTATION_HORIZONTAL);");
+    this.code("var splitter = new wcSplitter($container, myPanel, wcDocker.ORIENTATION.HORIZONTAL);");
     this.text("\tWhen using the splitter widget inside your panel, it is necessary to initialize the two layouts that will be contained on each side of the split.");
     this.code("splitter.initLayouts();");
     this.text("\tWe can also provide an initial split position by giving it a percentage value from 0 to 1.  The smaller the percentage, the smaller the layout on the left or top will be.");
@@ -400,7 +400,7 @@ HowToPanel.prototype = {
       "",
       "\tAt any time, calling the " + this.__wikiLink('wcSplitter', 'orientation') + " function can be used to change it's orientation.",
     ]);
-    this.code("splitter.orientation(wcDocker.ORIENTATION_VERTICAL);");
+    this.code("splitter.orientation(wcDocker.ORIENTATION.VERTICAL);");
     this.text("\tMore attributes exist to give you more control over the splitter, take a look at its " + this.__wikiLink('wcSplitter', '', 'API documentation') + " for more information.");
 
     this.__finishTabLayout();
@@ -476,7 +476,7 @@ HowToPanel.prototype = {
       "\tThe visibility changed event triggers any time the visibility of the panel changes, either because its tab or another tab was just selected, or because a panel was moved to a new docking position.  You can register the visibility changed event by using the " + this.__wikiLink('wcPanel', 'on') + " function.",
     ]);
     this.code([
-      "myPanel.on(wcDocker.EVENT_VISIBILITY_CHANGED, function() {",
+      "myPanel.on(wcDocker.EVENT.VISIBILITY_CHANGED, function() {",
       "\t// Because this event gets triggered both when the panel becomes visible and loses visibility, ",
       "\t// we need to check the current visible state so we know which one was just triggered.",
       "\tif(myPanel.isVisible()) {",
@@ -497,7 +497,7 @@ HowToPanel.prototype = {
       "\tThis can be done with the built in Save/Restore system for the layout.  Whenever the layout is saved, you can catch that event and inject your own data to be saved along with it.",
     ]);
     this.code([
-      "myPanel.on(wcDocker.EVENT_SAVE_LAYOUT, function(data) {",
+      "myPanel.on(wcDocker.EVENT.SAVE_LAYOUT, function(data) {",
       "\t// Whenever the layout is being saved, this event will be triggered on all of your panels.",
       "\t// From here, you can store any amount of data in the data variable for later.",
       "\tdata.savedValue1 = value1;",
@@ -508,7 +508,7 @@ HowToPanel.prototype = {
       "\tWhenever that layout configuration is being restored, you can also restore the contents of your panel based on the data you have previously stored.",
     ]);
     this.code([
-      "myPanel.on(wcDocker.EVENT_RESTORE_LAYOUT, function(data) {",
+      "myPanel.on(wcDocker.EVENT.RESTORE_LAYOUT, function(data) {",
       "\t// Whenever a previously saved layout is being restored, the data will be the same one you saved before",
       "\tvalue1 = data.savedValue1;",
       "\tvalue2 = data.savedValue2;",
@@ -539,7 +539,7 @@ HowToPanel.prototype = {
       "} else {",
       "\t// In this case, sourcePanel is the panel that the user was in right",
       "\t// before their action triggered this other panel to appear.",
-      "\tvar newPanel = wcDocker.addPanel('targetPanelType', wcDocker.DOCK_RIGHT, sourcePanel);",
+      "\tvar newPanel = wcDocker.addPanel('targetPanelType', wcDocker.DOCK.RIGHT, sourcePanel);",
       "\tnewPanel.focus(true);",
       "}",
     ]);

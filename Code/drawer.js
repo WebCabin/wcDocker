@@ -13,7 +13,7 @@ function wcDrawer(container, parent, position) {
   this._closeSize   = 0;
   this._expanded    = true;
   this._sliding     = false;
-  this._horizontal  = this._position === wcDocker.DOCK_LEFT || this._position === wcDocker.DOCK_RIGHT;
+  this._horizontal  = this._position === wcDocker.DOCK.LEFT || this._position === wcDocker.DOCK.RIGHT;
 
   this.__init();
 }
@@ -35,12 +35,12 @@ wcDrawer.prototype = {
       }
 
       switch (this._position) {
-        case wcDocker.DOCK_TOP:
-        case wcDocker.DOCK_LEFT:
+        case wcDocker.DOCK.TOP:
+        case wcDocker.DOCK.LEFT:
           this._parent.animPos(0, fin);
           break;
-        case wcDocker.DOCK_RIGHT:
-        case wcDocker.DOCK_BOTTOM:
+        case wcDocker.DOCK.RIGHT:
+        case wcDocker.DOCK.BOTTOM:
           this._parent.animPos(1, fin);
           break;
       }
@@ -129,25 +129,25 @@ wcDrawer.prototype = {
   // Adjusts the size of the drawer based on css
   __adjustSize: function() {
     switch (this._position) {
-      case wcDocker.DOCK_LEFT:
+      case wcDocker.DOCK.LEFT:
         this.$drawerFrame.addClass('wcDrawerLeft');
         var size = this.$bar.css('left', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
         this.$drawer.css('left', size);
         this._closeSize = size;
         break;
-      case wcDocker.DOCK_RIGHT:
+      case wcDocker.DOCK.RIGHT:
         this.$drawerFrame.addClass('wcDrawerRight');
         var size = this.$bar.css('right', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
         this.$drawer.css('right', size);
         this._closeSize = size;
         break;
-      case wcDocker.DOCK_TOP:
+      case wcDocker.DOCK.TOP:
         this.$drawerFrame.addClass('wcDrawerTop');
         var size = this.$bar.css('top', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
         this.$drawer.css('top', size);
         this._closeSize = size;
         break;
-      case wcDocker.DOCK_BOTTOM:
+      case wcDocker.DOCK.BOTTOM:
         this.$drawerFrame.addClass('wcDrawerBottom');
         var size = this.$bar.css('bottom', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
         this.$drawer.css('bottom', size);
@@ -172,7 +172,7 @@ wcDrawer.prototype = {
         y: offset.top-2,
         w: width,
         h: height,
-        loc: wcDocker.DOCK_STACKED,
+        loc: wcDocker.DOCK.STACKED,
         item: this,
         self: false,
       });

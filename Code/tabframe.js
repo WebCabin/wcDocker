@@ -100,7 +100,7 @@ wcTabFrame.prototype = {
       }
 
       this.__updateTabs();
-      this._parent.__trigger(wcDocker.EVENT_CUSTOM_TAB_CLOSED, {obj: this, name: name, index: index});
+      this._parent.__trigger(wcDocker.EVENT.CUSTOM_TAB_CLOSED, {obj: this, name: name, index: index});
       return true;
     }
     return false;
@@ -122,7 +122,7 @@ wcTabFrame.prototype = {
         this.__updateTabs(autoFocus);
 
         var name = this._layoutList[this._curTab].name;
-        this._parent.__trigger(wcDocker.EVENT_CUSTOM_TAB_CHANGED, {obj: this, name: name, index: index});
+        this._parent.__trigger(wcDocker.EVENT.CUSTOM_TAB_CHANGED, {obj: this, name: name, index: index});
       }
     }
 
@@ -316,8 +316,8 @@ wcTabFrame.prototype = {
 
     this.__container(this.$container);
 
-    this._boundEvents.push({event: wcDocker.EVENT_UPDATED, handler: this.onUpdate.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT_CLOSED,  handler: this.onClosed.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.onUpdate.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.CLOSED,  handler: this.onClosed.bind(this)});
 
     for (var i = 0; i < this._boundEvents.length; ++i) {
       this._parent.on(this._boundEvents[i].event, this._boundEvents[i].handler);

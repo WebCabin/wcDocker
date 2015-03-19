@@ -16,7 +16,7 @@ $(document).ready(function() {
 
     // A common function that uses the 'Info Panel' to show a given block of text.
     function showInfo(text) {
-      var infoPanel = myDocker.addPanel('Info Panel', wcDocker.DOCK_MODAL);
+      var infoPanel = myDocker.addPanel('Info Panel', wcDocker.DOCK.MODAL);
       infoPanel.layout().scene().find('span').text(text);
     }
 
@@ -157,7 +157,7 @@ $(document).ready(function() {
 
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+        myPanel.on(wcDocker.EVENT.BUTTON, function(data) {
           // Use the preivously defined common function to popup the Info Panel.
           showInfo('The control panel demonstrates a few of the wcDocker-wide features available to you.  Try changing the theme or saving the current panel layout configuration and then restore it later.');
         });
@@ -184,7 +184,7 @@ $(document).ready(function() {
         // Here we can utilize the splitter used by wcDocker internally so that we may split up
         // a single panel.  Splitters can be nested, and new layouts can be created to fill
         // each side of the split.
-        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION_VERTICAL);
+        var splitter = new wcSplitter($scene, myPanel, wcDocker.ORIENTATION.VERTICAL);
         splitter.scrollable(0, false, false);
         splitter.scrollable(1, true, true);
 
@@ -199,7 +199,7 @@ $(document).ready(function() {
         var $subScene = $('<div style="width:100%;height:100%;position:relative;">');
         splitter.pane(0).addItem($subScene);
 
-        var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION_HORIZONTAL);
+        var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
         subSplitter.initLayouts();
         subSplitter.pos(0.25);
 
@@ -229,7 +229,7 @@ $(document).ready(function() {
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
 
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+        myPanel.on(wcDocker.EVENT.BUTTON, function(data) {
           if (data.name == 'View') {
             splitter.orientation(data.isToggled);
             subSplitter.orientation(!data.isToggled);
@@ -299,7 +299,7 @@ $(document).ready(function() {
 
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+        myPanel.on(wcDocker.EVENT.BUTTON, function(data) {
           // Use the preivously defined common function to popup the Info Panel.
           showInfo('The chat panel demonstrates the use of the built-in event messaging system to broadcast information between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.');
         });
@@ -380,7 +380,7 @@ $(document).ready(function() {
 
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
-        myPanel.on(wcDocker.EVENT_BUTTON, function(data) {
+        myPanel.on(wcDocker.EVENT.BUTTON, function(data) {
           // Use the preivously defined common function to popup the Info Panel.
           showInfo("The batch panel demonstrates a speed comparison between adding layout items one at a time vs using the batching system. The batching system avoids re-calculating elements each time a new one is added until the batch has been finished. Use this if you are adding a large number of elements into the panel's layout.");
         });
@@ -399,19 +399,19 @@ $(document).ready(function() {
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK_BOTTOM);
+    var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK.BOTTOM);
 
-    var leftDrawer = myDocker.addDrawer(wcDocker.DOCK_LEFT);
-    var rightDrawer = myDocker.addDrawer(wcDocker.DOCK_RIGHT);
-    var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK_BOTTOM);
+    var leftDrawer = myDocker.addDrawer(wcDocker.DOCK.LEFT);
+    var rightDrawer = myDocker.addDrawer(wcDocker.DOCK.RIGHT);
+    var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK.BOTTOM);
 
-    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, leftDrawer);
-    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK_STACKED, rightDrawer);
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK_STACKED, rightChatPanel);
+    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK.STACKED, leftDrawer);
+    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK.STACKED, rightDrawer);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.STACKED, rightChatPanel);
     
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK_RIGHT, bottomDrawer);
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK_LEFT, bottomDrawer);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.RIGHT, bottomDrawer);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.LEFT, bottomDrawer);
 
-    myDocker.addPanel('Top Panel', wcDocker.DOCK_TOP);
+    myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
   }
 });
