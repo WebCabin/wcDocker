@@ -33,13 +33,11 @@ function wcSplitter(container, parent, orientation) {
   this.docker()._splitterList.push(this);
 };
 
-
 /**
  * A callback function that is called when an action is finished.
  *
- * @callback onFinished
+ * @callback wcSplitter~onFinished
  */
-
 
 wcSplitter.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

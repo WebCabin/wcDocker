@@ -14,7 +14,7 @@
         "footer": "",
         "copyright": "",
         "navType": "vertical",
-        "theme": "paper",
+        "theme": "cerulean",
         "linenums": true,
         "collapseSymbols": false,
         "inverseNav": true,

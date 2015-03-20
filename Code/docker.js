@@ -152,7 +152,7 @@ if (!Array.prototype.indexOf)
 /**
  * A function or an object constructor for the panel.
  *
- * @callback wcPanel~onCreate
+ * @callback wcDocker~onCreatePanel
  * @param {wcPanel} panel - The panel being constructed.
  * @param {Object} [options] - An options object provided via options.options paramter for {@link wcDocker.registerPanelType}.
  */
@@ -164,7 +164,6 @@ if (!Array.prototype.indexOf)
  * @param {wcPanel|NULL} panel - The panel invoking the event, or NULL if global.
  * @param {Object} [data] - A data object passed by the invoker.
  */
-
 
 /**
  * @class
@@ -377,15 +376,15 @@ wcDocker.prototype = {
    * Registers a new docking panel type to be used later.
    * @version 3.0.0
    *
-   * @param {String} name                       - The name identifier for the new panel type.
-   * @param {Object} options                    - Options for the panel type.
-   * @param {wcPanel~onCreate} options.onCreate - A function or an object constructor for the panel.
-   * @param {String} [options.icon]             - A CSS class name to draw an icon in the panels tab widget.
-   * @param {String} [options.faicon]           - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
-   * @param {String|Boolean} [options.title]    - Assign a custom name to the panels tab. A false value will hide the tab entirely.
-   * @param {Boolean} [options.isPrivate]       - If true, the user will not be able to create this panel type.
-   * @param {Number} [options.limit]            - Enforces a limited number of this panel type from being created by the user.
-   * @param {Object} [options.options]          - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
+   * @param {String} name                             - The name identifier for the new panel type.
+   * @param {Object} options                          - Options for the panel type.
+   * @param {wcDocker~onCreatePanel} options.onCreate - A function or an object constructor for the panel.
+   * @param {String} [options.icon]                   - A CSS class name to draw an icon in the panels tab widget.
+   * @param {String} [options.faicon]                 - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
+   * @param {String|Boolean} [options.title]          - Assign a custom name to the panels tab. A false value will hide the tab entirely.
+   * @param {Boolean} [options.isPrivate]             - If true, the user will not be able to create this panel type.
+   * @param {Number} [options.limit]                  - Enforces a limited number of this panel type from being created by the user.
+   * @param {Object} [options.options]                - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
    *
    * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
    */
