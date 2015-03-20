@@ -1,3 +1,14 @@
+/**
+ * @class
+ * A docker container for carrying its own arrangement of docked panels as a slide out drawer.
+ * <b>Use {@link wcDocker#addDrawer} and {@link wcDocker#removeDrawer} to manage drawers, 
+ * this <u>should never be constructed directly by the user.</u></b>
+ * 
+ * @constructor
+ * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this drawer.
+ * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
+ * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
+ */
 /*
   A docker container for carrying its own arrangement of docked panels as a slide out drawer.
 */
@@ -22,7 +33,10 @@ wcDrawer.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Collapses the drawer to its respective side wall.
+
+  /**
+   * Collapses the drawer to its respective side wall.
+   */
   collapse: function() {
     if (this._expanded) {
       this._size = this._parent.pos();
@@ -47,7 +61,9 @@ wcDrawer.prototype = {
     }
   },
 
-  // Expands the drawer.
+  /**
+   * Expands the drawer.
+   */
   expand: function() {
     if (!this._expanded) {
       this._expanded = true;
@@ -59,10 +75,12 @@ wcDrawer.prototype = {
     }
   },
 
-  // Toggles whether the drawer is collapsed or expanded.
-  // Params:
-  //    expanded    Optional set the current state expanded (true) or collapsed (false)
-  //                if omitted, will toggle the current state.
+  /**
+   * Toggles the expansion and collapse of the drawer.
+   *
+   * @param {Boolean} [expanded] - If supplied, sets the expansion state of the drawer.
+   *                               If ommited, the state is toggled.
+   */
   toggle: function(expanded) {
     if (expanded === undefined) {
       expanded = !this._expanded;
@@ -71,10 +89,20 @@ wcDrawer.prototype = {
     expanded? this.expand(): this.collapse();
   },
 
+  /**
+   * Gets whether the drawer is expanded.
+   *
+   * @returns {Boolean} - The current expanded state.
+   */
   isExpanded: function() {
     return this._expanded;
   },
 
+  /** 
+   * The minimum size constraint for the drawer area.
+   *
+   * @returns {wcDocker~Size} - The minimum size.
+   */
   minSize: function() {
     if (this._expanded) {
       if (this._root && typeof this._root.minSize === 'function') {
@@ -86,6 +114,11 @@ wcDrawer.prototype = {
     return {x: this._closeSize, y: this._closeSize};
   },
 
+  /**
+   * The maximum size constraint for the drawer area.
+   *
+   * @returns {wcDocker~Size} - The maximum size.
+   */
   maxSize: function() {
     if (this._expanded || this._sliding) {
       if (this._root && typeof this._root.maxSize === 'function') {

@@ -1,5 +1,11 @@
-/*
-  Splits an area in two, dividing it with a resize splitter bar
+/**
+ * @class
+ * Splits an area in two, dividing it with a resize-able splitter bar.
+ *
+ * @constructor
+ * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this splitter.
+ * @param {wcLayout|wcSplitter|wcDocker} parent   - The splitter's parent object.
+ * @param {wcDocker.ORIENTATION} orientation      - The orientation of the splitter bar.
 */
 function wcSplitter(container, parent, orientation) {
   this.$container = $(container);
@@ -7,6 +13,12 @@ function wcSplitter(container, parent, orientation) {
   this._orientation = orientation;
 
   this._pane = [false, false];
+  /**
+   * An array of two elements representing each side of the splitter.
+   * Index 0 is always either top or left depending on [orientation]{@link wcDocker.ORIENTATION}.
+   * @member
+   * @type {external:jQuery~Object[]}
+   */
   this.$pane = [];
   this.$bar = null;
   this._pos = 0.5;
@@ -21,12 +33,23 @@ function wcSplitter(container, parent, orientation) {
   this.docker()._splitterList.push(this);
 };
 
+
+/**
+ * A callback function that is called when an action is finished.
+ *
+ * @callback onFinished
+ */
+
+
 wcSplitter.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Initializes the splitter with its own layouts.
+  /**
+   * Initializes the two [panes]{@link wcSplitter#$pane} of the splitter with its own [layouts]{@link wcLayout}.
+   * This should be used to initialize the splitter when creating one for use inside your panel.
+   */
   initLayouts: function() {
     var layout0 = new wcLayout(this.$pane[0], this);
     var layout1 = new wcLayout(this.$pane[1], this);
@@ -34,7 +57,11 @@ wcSplitter.prototype = {
     this.pane(1, layout1);
   },
 
-  // Finds the main Docker window.
+  /**
+   * Retrieves the main [docker]{@link wcDocker} object.
+   *
+   * @returns {wcDocker} - The top level docker object.
+   */
   docker: function() {
     var parent = this._parent;
     while (parent && !(parent instanceof wcDocker)) {
@@ -43,14 +70,18 @@ wcSplitter.prototype = {
     return parent;
   },
 
-  // Gets, or Sets the orientation of the splitter.
-  orientation: function(value) {
-    if (typeof value === 'undefined') {
+  /**
+   * Gets, or Sets the orientation of the splitter.
+   *
+   * @param {wcDocker.ORIENTATION} orientation - The new orientation of the splitter.
+   */
+  orientation: function(orientation) {
+    if (typeof orientation === 'undefined') {
       return this._orientation;
     }
 
-    if (this._orientation != value) {
-      this._orientation = value;
+    if (this._orientation != orientation) {
+      this._orientation = orientation;
 
       if (this._orientation) {
         this.$pane[0].removeClass('wcWide').addClass('wcTall');
@@ -69,7 +100,11 @@ wcSplitter.prototype = {
     }
   },
 
-  // Gets the minimum size of the widget.
+  /**
+   * Gets the minimum size constraint of the outer splitter area.
+   *
+   * @returns {wcDocker~Size} The minimum size.
+   */
   minSize: function() {
     var minSize1;
     var minSize2;
@@ -103,7 +138,11 @@ wcSplitter.prototype = {
     return false;
   },
 
-  // Gets the minimum size of the widget.
+  /**
+   * Gets the maximum size constraint of the outer splitter area.
+   *
+   * @returns {wcDocker~Size} - The maximum size.
+   */
   maxSize: function() {
     var maxSize1;
     var maxSize2;
@@ -137,11 +176,13 @@ wcSplitter.prototype = {
     return false;
   },
 
-  // Get, or Set a splitter position.
-  // Params:
-  //    value         If supplied, assigns a new splitter percentage (0-1).
-  // Returns:
-  //    number        The current position.
+  /**
+   * Get, or Set the current splitter position.
+   *
+   * @param {Number} [value] - If supplied, assigns a new splitter position. Value must be a percentage value between 0 and 1.
+   *
+   * @returns {Number} - The current position.
+   */
   pos: function(value) {
     if (typeof value !== 'undefined') {
       this._pos = this._posTarget = value;
@@ -155,10 +196,12 @@ wcSplitter.prototype = {
     return this._posTarget;
   },
 
-  // Animates to a given splitter position.
-  // Params:
-  //    value       Assigns the target splitter percentage (0-1).
-  //    callback    Callback function to call when finished.
+  /**
+   * Animates to a given splitter position.
+   *
+   * @param {Number} value - Assigns the target splitter position. Value must be a percentage between 0 and 1.
+   * @param {wcSplitter~onFinished} - A finished event handler.
+   */
   animPos: function(value, callback) {
     this._posTarget = value;
     var self = this;
@@ -189,14 +232,14 @@ wcSplitter.prototype = {
     this.$bar.dequeue();
   },
 
-  // Sets, or Gets the widget at a given pane
-  // Params:
-  //    index       The pane index, only 0 or 1 are valid.
-  //    item        If supplied, assigns the item to the pane.
-  // Returns:
-  //    wcPanel     The panel that exists in the pane.
-  //    wcSplitter  
-  //    false       If no pane exists.
+  /**
+   * Gets, or Sets the element associated with a pane.
+   *
+   * @param {Number} index - The index of the pane, only 0 and 1 are valid.
+   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   *
+   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   */
   pane: function(index, item) {
     if (index >= 0 && index < 2) {
       if (typeof item === 'undefined') {
@@ -221,12 +264,16 @@ wcSplitter.prototype = {
     return false;
   },
 
-  // Toggles whether a pane can contain scroll bars.
-  // By default, scrolling is enabled.
-  // Params:
-  //    index     The pane index, only 0 or 1 are valid.
-  //    x         Whether to allow scrolling in the horizontal direction.
-  //    y         Whether to allow scrolling in the vertical direction.
+  /**
+   * Gets, or Sets whether a pane can be scrolled via scroll bars.
+   * By default, scrolling is enabled in both directions.
+   *
+   * @param {Number} index - The index of the pane, only 0 and 1 are valid.
+   * @param {Boolean} [x] - Whether to allow scrolling in the horizontal direction.
+   * @param {Boolean} [y] - Whether to allow scrolling in the vertical direction.
+   *
+   * @returns {wcDocker~Scrollable} - The current scroll state for each direction.
+   */
   scrollable: function(index, x, y) {
     if (typeof x !== 'undefined') {
       this.$pane[index].toggleClass('wcScrollableX', x);
@@ -241,9 +288,11 @@ wcSplitter.prototype = {
     };
   },
 
-  // Destroys the splitter.
-  // Params:
-  //    destroyPanes    If true, or omitted, both panes attached will be destroyed as well.
+  /**
+   * Destroys the splitter.
+   *
+   * @param {Boolean} [destroyPanes=true] - If true, both panes attached will be destroyed as well. Use false if you plan to continue using the objects assigned to each pane, or make sure to remove them first before destruction.
+   */
   destroy: function(destroyPanes) {
     var docker = this.docker();
     if (docker) {
@@ -260,12 +309,16 @@ wcSplitter.prototype = {
     }
   },
 
-  // Reaction to the panels update event.
+  /** 
+   * Reaction event to the panels update event.
+   */
   onUpdate: function() {
     this.__update();
   },
 
-  // Reaction to the panels close event.
+  /**
+   * Reaction event to the panels close event.
+   */
   onClosed: function() {
     this.destroy();
   },

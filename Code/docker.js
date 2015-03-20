@@ -65,7 +65,14 @@ if (!Array.prototype.indexOf)
 }
 
 /**
- * jQuery library.
+ * A Document Object Model Element used by HTML.
+ * @external DOM-Element
+ * @see http://www.w3schools.com/jsref/dom_obj_all.asp
+ */
+
+/**
+ * jQuery library. Part of the listed dependencies.
+ *
  * @external jQuery
  * @see http://jquery.com/
  */
@@ -82,10 +89,12 @@ if (!Array.prototype.indexOf)
  *
  * @typedef {Object} external:jQuery~Object
  * @see https://learn.jquery.com/using-jquery-core/jquery-object/
+ */
 
 /**
- * jQuery contextMenu library.
- * @external contextMenu
+ * jQuery contextMenu library. Part of the listed dependencies.
+ *
+ * @typedef {Object} external:jQuery#contextMenu
  * @extends jQuery
  * @see http://medialize.github.io/jQuery-contextMenu/docs.html/
  */
@@ -93,7 +102,7 @@ if (!Array.prototype.indexOf)
 /**
  * A jQuery contextMenu item object.
  *
- * @typedef {Object} external:contextMenu~item
+ * @typedef {Object} external:jQuery#contextMenu~item
  * @property {String} name                   - The name of the menu item.
  * @property {external:contextMenu~onSelect} callback - A callback handler when this option has been selected.
  */
@@ -101,7 +110,7 @@ if (!Array.prototype.indexOf)
 /**
  * A callback handler when a menu option has been selected.
  *
- * @callback external:contextMenu~onSelect
+ * @callback external:jQuery#contextMenu~onSelect
  * @param {String} key              - The triggered menu key.
  * @param {Object} opts             - Menu event object.
  * @param {wcPanel|Boolean} panel   - The target panel, if one exists.
@@ -127,6 +136,20 @@ if (!Array.prototype.indexOf)
  */
 
 /**
+ * A 2D size structure.
+ *
+ * @typedef {Object} wcDocker~Size
+ * @property {Number} x - Width.
+ * @property {Number} y - Height.
+ */
+
+/**
+ * @typedef {Object} wcDocker~Scrollable
+ * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
+ * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
+ */
+
+/**
  * A function or an object constructor for the panel.
  *
  * @callback wcPanel~onCreate
@@ -144,10 +167,11 @@ if (!Array.prototype.indexOf)
 
 
 /**
+ * @class
  * The main docker instance.  This manages all of the docking panels and user input.
  * There should only be one instance of this, although it is not enforced.
- * @class
  * 
+ * @constructor
  * @param {Object} [options] - Options for constructing the instance.
  * @param {Boolean} [options.allowContextMenu=true] - Overrides the default right click menu with ones that interact with docker.
  * @param {Boolean} [options.hideOnResize=false] - If true, panels will hide their contents as they are being resized.
@@ -207,7 +231,6 @@ function wcDocker(container, options) {
 
 /**
  * Enumerated Docking positions.
- * @readonly
  * @version 3.0.0
  * @enum {String}
  */
@@ -230,7 +253,6 @@ wcDocker.DOCK = {
 
 /**
  * Enumerated Internal events
- * @readonly
  * @version 3.0.0
  * @enum {String}
  */
@@ -289,7 +311,6 @@ wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
 
 /**
  * Used for the splitter bar orientation.
- * @readonly
  * @version 3.0.0
  * @enum {Boolean}
  */
@@ -910,7 +931,7 @@ wcDocker.prototype = {
    * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
    *
    * @param {external:jQuery~selector} selector                               - A selector string that designates the elements who use this menu.
-   * @param {external:contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
+   * @param {external:jQuery#contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
    * @param {Boolean} includeDefault                                          - If true, all default menu options will be included.
    */
   basicMenu: function(selector, itemListOrBuildFunc, includeDefault) {

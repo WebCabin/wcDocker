@@ -1,12 +1,30 @@
-/*
-  Handles the contents of a panel.
-*/
+/**
+ * @class
+ * A gridded layout for arranging elements on a panel.
+ * <b>[Panels]{@link wcPanel}, [splitters]{@link wcSplitter}, and [tab frames]{@link wcTabFrame}
+ * initialize their own layouts, <u>this should never be constructed directly by the user</u></b>
+ *
+ * @constructor
+ * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this layout.
+ * @param {wcLayout|wcSplitter|wcDocker} parent   - The layout's parent object.
+ */
 function wcLayout(container, parent) {
+  /**
+   * The outer container element of the panel.
+   *
+   * @member {external:jQuery~Object}
+   */
   this.$container = $(container);
   this._parent = parent;
 
   this._batchProcess = false;
   this._grid = [];
+
+  /**
+   * The table DOM element for the layout.
+   *
+   * @member {external:jQuery~Object}
+   */
   this.$table = null;
 
   this.__init();
@@ -17,16 +35,17 @@ wcLayout.prototype = {
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Adds an item into the layout, expanding the grid
-  // size if necessary.
-  // Params:
-  //    item        The DOM element to add.
-  //    x, y        The grid coordinates to place the item.
-  //    w, h        If supplied, will stretch the item among
-  //                multiple grid elements.
-  // Returns:
-  //    <td>        On success, returns the jquery <td> dom element.
-  //    false       A failure happened, most likely cells could not be merged.
+  /**
+   * Adds an item into the layout, expanding the grid size if necessary.
+   *
+   * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} item - A DOM element to add.
+   * @param {Number} [x=0] - The horizontal grid position to place the element.
+   * @param {Number} [y=0] - The vertical grid position to place the element.
+   * @param {Number} [w=1] - The number of horizontal cells this item will take within the grid.
+   * @param {Number} [h=1] - The number of vertical cells this item will take within the grid.
+   *
+   * @returns {external:jQuery~Object|Boolean} The table data element of the cell that contains the item, or false if there was a problem.
+   */
   addItem: function(item, x, y, w, h) {
     if (typeof x === 'undefined' || x < 0) {
       x = 0;
@@ -52,27 +71,33 @@ wcLayout.prototype = {
     return this._grid[y][x].$el;
   },
 
-  // Retrieves the table item at a given grid position, if it exists.
-  // Note, if an element spans multiple cells, only the top-left
-  // cell will retrieve the item.
-  // Params:
-  //    x, y        The grid position.
-  // Return:
-  //    <td>        On success, returns the found jquery <td> dom element.
-  //    null        If no element was found.
+  /**
+   * Retrieves the table data element at a given grid position, if it exists.
+   * Note, if an item spans multiple cells, only the top-left most
+   * cell will actually contain the table cell element.
+   *
+   * @param {Number} x - The horizontal grid position.
+   * @param {Number} y - The vertical grid position.
+   *
+   * @returns {external:jQuery~Object|Boolean} - The table data element of
+   * the cell, or false if none was found.
+   */
   item: function(x, y) {
     if (y >= this._grid.length) {
-      return null;
+      return false;
     }
 
     if (x >= this._grid[y].length) {
-      return null;
+      return false;
     }
 
     return this._grid[y][x].$el;
   },
 
-  // Clears the layout.
+  /**
+   * Clears the contents of the layout and squashes all rows
+   * and columns from the grid.
+   */
   clear: function() {
     var showGrid = this.showGrid();
     var spacing = this.gridSpacing();
@@ -88,24 +113,30 @@ wcLayout.prototype = {
     this._grid = [];
   },
 
-  // Begins a batch operation.  Basically it refrains from constructing
-  // the layout grid, which causes a reflow, on each item added.  Instead,
-  // The grid is only generated at the end once FinishBatch() is called.
+  /**
+   * Begins a batch operation.  Basically it refrains from constructing
+   * the layout grid, which causes a reflow, on each item added.  Instead,
+   * The grid is only generated at the end once {@link wcLayout#finishBatch} is called.
+   */
   startBatch: function() {
     this._batchProcess = true;
   },
 
-  // Ends a batch operation. See startBatch() for information.
+  /**
+   * Ends a batch operation. See {@link wcLayout#startBatch} for more information.
+   */
   finishBatch: function() {
     this._batchProcess = false;
     this.__resizeGrid(0, 0);
   },
 
-  // Gets, or Sets the visible status of the layout grid.
-  // Params:
-  //    enabled     If supplied, will set the grid shown or hidden.
-  // Returns:
-  //    bool        The current visibility of the grid.
+  /**
+   * Gets, or Sets whether the layout grid cells should draw an outline.
+   *
+   * @param {Boolean} [enabled] - If supplied, will set the grid cell border visibility.
+   *
+   * @returns {Boolean} - The current visibility state of the grid cells.
+   */
   showGrid: function(enabled) {
     if (typeof enabled !== 'undefined') {
       this.$table.toggleClass('wcLayoutGrid', enabled);
@@ -114,12 +145,13 @@ wcLayout.prototype = {
     return this.$table.hasClass('wcLayoutGrid');
   },
 
-  // Version 1.0.1
-  // Gets, or Sets the spacing between cell borders.
-  // Params:
-  //    size      If supplied, sets the pixel size of the border spacing.
-  // Returns:
-  //    int       The current border spacing size.
+  /**
+   * Gets, or Sets the spacing between cell borders.
+   *
+   * @param {Number} [size] - If supplied, sets the pixel size of the spacing between cells.
+   *
+   * @returns {Number} - The current cell spacing in pixels.
+   */
   gridSpacing: function(size) {
     if (typeof size !== 'undefined') {
       this.$table.css('border-spacing', size + 'px');
@@ -128,12 +160,13 @@ wcLayout.prototype = {
     return parseInt(this.$table.css('border-spacing'));
   },
 
-  // Version 1.0.1
-  // Gets, or Sets whether the table rows alternate in color.
-  // Params:
-  //    enabled     If supplied, will set whether the grid alternates in color.
-  // Returns:
-  //    bool        Whether the grid alternates in color.
+  /**
+   * Gets, or Sets whether the table rows alternate in color based on the theme.
+   *
+   * @params {Boolean} [enabled] - If supplied, will set whether the grid alternates in color.
+   *
+   * @returns {Boolean} - Whether the grid alternates in color.
+   */
   gridAlternate: function(enabled) {
     if (typeof enabled !== 'undefined') {
       this.$table.toggleClass('wcLayoutGridAlternate', enabled);
@@ -142,8 +175,12 @@ wcLayout.prototype = {
     return this.$table.hasClass('wcLayoutGridAlternate');
   },
 
-  // Retrieves the main scene DOM element.
+  /**
+   * Retrieves the main scene DOM element.
+   * @deprecated please use [wcLayout.$table]{@link wcLayout#$table} directly.
+   */
   scene: function() {
+    console.log('wcLayout.scene() has been deprecated, please use wcLayout.$table instead.');
     return this.$table;
   },
 

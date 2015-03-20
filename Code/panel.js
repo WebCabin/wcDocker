@@ -1,8 +1,20 @@
-/*
-  The public interface for the docking panel, it contains a layout that can be filled with custom
-  elements and a number of convenience functions for use.
+/**
+ * @class
+ * The public interface for the docking panel, it contains a number of convenience
+ * functions and a [layout]{@link wcLayout} that can be filled with a custom arrangement
+ * of elements. <b>Use {@link wcDocker#addPanel}, {@link wcDocker#removePanel}, and
+ * {@link wcDocker#movePanel} to manage panels, <u>this should never be constructed directly
+ * by the user.</u></b>
+ *
+ * @param {String} type - The name identifier for the panel.
+ * @param {Object} [options] - An options object passed from registration of the panel.
 */
 function wcPanel(type, options) {
+  /**
+   * The outer container element of the panel.
+   *
+   * @member {external:jQuery~Object}
+   */
   this.$container = null;
   this._parent = null;
   this.$icon = null;

@@ -1,11 +1,13 @@
 /**
+ * @class
  * The frame is a [panel]{@link wcPanel} container.
  * Each panel appears as a tabbed item inside a frame.
- * @class
- * 
- * @param {external:jQuery~selector|external:jQuery~Object} container - A container element for this frame.
- * @param {wcSplitter|wcDocker} parent                                - The frames parent object.
- * @param {Boolean} isFloating                                        - If true, the frame will be a floating window.
+ * <b>Handled internally by [wcDocker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
+ *
+ * @constructor
+ * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this frame.
+ * @param {wcSplitter|wcDocker} parent  - The frames parent object.
+ * @param {Boolean} isFloating          - If true, the frame will be a floating window.
  */
 function wcFrame(container, parent, isFloating) {
   /**
@@ -115,7 +117,7 @@ wcFrame.prototype = {
   /**
    * Gets the initially desired size of the panel.
    *
-   * @returns {wcDocker~Coordinate} - The initially desired size.
+   * @returns {wcDocker~Size} - The initially desired size.
    */
   initSize: function() {
     var size = {
@@ -141,7 +143,7 @@ wcFrame.prototype = {
   /**
    * Gets the minimum size of the frame.
    *
-   * @returns {wcDocker~Coordinate} - The minimum size of the frame.
+   * @returns {wcDocker~Size} - The minimum size of the frame.
    */
   minSize: function() {
     var size = {
@@ -159,7 +161,7 @@ wcFrame.prototype = {
   /**
    * Gets the maximum size of the frame.
    *
-   * @returns {wcDocker~Coordinate} - The maximum size of the frame.
+   * @returns {wcDocker~Size} - The maximum size of the frame.
    */
   maxSize: function() {
     var size = {
