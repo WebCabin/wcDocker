@@ -16,8 +16,8 @@ $(document).ready(function() {
 
     // A common function that uses the 'Info Panel' to show a given block of text.
     function showInfo(text) {
-      var infoPanel = myDocker.addPanel('Info Panel', wcDocker.DOCK.MODAL);
-      infoPanel.layout().scene().find('span').text(text);
+      var infoPanel = myDocker.addPanel('Info Panel', wcDocker.DOCK.MODAL, null);
+      infoPanel.layout().$table.find('span').text(text);
     }
 
     // --------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Top Panel', {
       isPrivate: true,
       onCreate: function(myPanel) {
-        myPanel.layout().scene().css('padding', '10px');
+        myPanel.layout().$table.css('padding', '10px');
 
         // Constrain the sizing of this window so the user can't resize it.
         myPanel.initSize(Infinity, 120);
@@ -65,9 +65,9 @@ $(document).ready(function() {
 
         // Add some text information into the panel
         myPanel.layout().addItem($header, 0, 0);
-        myPanel.layout().addItem($('<div style="text-align:center">Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 1);
-        myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://github.com/WebCabin/wcDocker">https://github.com/WebCabin/wcDocker</a></div>'), 0, 2);
-        myPanel.layout().addItem($('<div style="text-align:center">View the API documentation here: <a href="http://docker.api.webcabin.org/">http://docker.api.webcabin.org/</a></div>'), 0, 3);
+        myPanel.layout().addItem($('<div style="text-align:center">Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT License</a>.</div>'), 0, 1);
+        myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://github.com/WebCabin/wcDocker" target="_blank">https://github.com/WebCabin/wcDocker</a></div>'), 0, 2);
+        myPanel.layout().addItem($('<div style="text-align:center">View the API documentation here: <a href="http://docker.api.webcabin.org/" target="_blank">http://docker.api.webcabin.org/</a></div>'), 0, 3);
       }
     });
 
@@ -78,7 +78,7 @@ $(document).ready(function() {
       faicon: 'gears',
       onCreate: function(myPanel) {
         myPanel.initSize(500, 300);
-        myPanel.layout().scene().css('padding', '10px');
+        myPanel.layout().$table.css('padding', '10px');
 
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
@@ -172,7 +172,7 @@ $(document).ready(function() {
       onCreate: function(myPanel) {
         myPanel.initSize(400, 400);
         // myPanel.layout().showGrid(true);
-        myPanel.layout().scene().css('padding', '10px');
+        myPanel.layout().$table.css('padding', '10px');
 
         // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
         // to size it to the full size of the panel.
@@ -247,7 +247,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Chat Panel', {
       faicon: 'comment-o',
       onCreate: function(myPanel) {
-        myPanel.layout().scene().css('padding', '10px');
+        myPanel.layout().$table.css('padding', '10px');
 
         // Create our chat window.
         var $senderLabel    = $('<div style="white-space:nowrap;">Sender Name: </div>');
@@ -312,7 +312,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Batch Panel', {
       faicon: 'cubes',
       onCreate: function(myPanel) {
-        myPanel.layout().scene().css('padding', '10px');
+        myPanel.layout().$table.css('padding', '10px');
 
         var $clearItemsButton   = $('<button style="white-space:nowrap;">Clear Items</buttons>');
         var $normalAddButton    = $('<button style="white-space:nowrap;margin-left:10px;margin-right:10px;">Add Items Normally</button>');
@@ -357,7 +357,7 @@ $(document).ready(function() {
         $clearItemsButton.click(function() {
           $('body').append($clearItemsButton).append($normalAddButton).append($batchAddButton);
           myPanel.layout().clear();
-          myPanel.layout().scene().css('padding', '10px');
+          myPanel.layout().$table.css('padding', '10px');
           myPanel.layout().addItem($clearItemsButton, 0, 0).css('text-align', 'right');
           myPanel.layout().addItem($normalAddButton, 1, 0).css('width', '1%');
           myPanel.layout().addItem($batchAddButton, 2, 0);
@@ -393,25 +393,38 @@ $(document).ready(function() {
     myDocker.registerPanelType('How-To Panel', {
       faicon: 'graduation-cap',
       onCreate: HowToPanel,
+      isPrivate: true
+    });
+
+    // --------------------------------------------------------------------------------
+    // Register the tutorial panel that links a frame to our API tutorial documentation.
+    myDocker.registerPanelType('Tutorial Panel', {
+      faicon: 'graduation-cap',
+      onCreate: function(myPanel) {
+        var $container = $('<div style="width:100%;height:100%;"></div>');
+        myPanel.layout().addItem($container);
+        var iFrame = new wcIFrame($container, myPanel);
+        iFrame.openURL('http://docker.api.webcabin.org/tutorial-1.0-getting-started.html');
+      }
     });
 
     // --------------------------------------------------------------------------------
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var howToPanel = myDocker.addPanel('How-To Panel', wcDocker.DOCK.BOTTOM);
+    var howToPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.BOTTOM);
 
-    var leftDrawer = myDocker.addDrawer(wcDocker.DOCK.LEFT);
-    var rightDrawer = myDocker.addDrawer(wcDocker.DOCK.RIGHT);
-    var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK.BOTTOM);
+    // var leftDrawer = myDocker.addDrawer(wcDocker.DOCK.LEFT);
+    // var rightDrawer = myDocker.addDrawer(wcDocker.DOCK.RIGHT);
+    // var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK.BOTTOM);
 
-    var leftChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK.STACKED, leftDrawer);
-    var rightChatPanel = myDocker.addPanel('Chat Panel', wcDocker.DOCK.STACKED, rightDrawer);
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.STACKED, rightChatPanel);
-    
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.RIGHT, bottomDrawer);
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.LEFT, bottomDrawer);
+    var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.LEFT, null, {w:'25%', h:'100%'});
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.RIGHT);
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
+
+    var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, chatPanel1);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.STACKED, widgetPanel);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.BOTTOM, widgetPanel);
   }
 });

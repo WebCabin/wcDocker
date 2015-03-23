@@ -8,9 +8,9 @@
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.darkly.css">
 
 </head>
 
@@ -74,7 +74,7 @@
 </header>
 
 <article>
-    <h3>Splitter Widget</h3><p>The <a href="wcSplitter.html"><code>wcSplitter</code></a> widget separates two elements by a moveable bar, either vertically or horizontally. It is the same one used by <a href="wcDocker.html"><code>wcDocker</code></a> to organize the layout of all docked panels.</p>
+    <h3>Splitter Widget</h3><p>The <a href="wcSplitter.html">wcSplitter</a> widget separates two elements by a moveable bar, either vertically or horizontally. It is the same one used by <a href="wcDocker.html">wcDocker</a> to organize the layout of all docked panels.</p>
 <p>To use it, you will need an element that will contain it. This element should be added to your layout and will mark the size and location of the splitter area.<br><strong>Note:</strong> The containing element must be positioned either absolutely or relatively in CSS.</p>
 <pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;position:relative;width:100%;height:100%;&quot;>&lt;/div>');
 myPanel.layout().addItem($container);
@@ -87,10 +87,10 @@ var rightLayout = splitter.right();
 
 // Vertical splitters have a pane on the top and bottom.
 var topLayout = splitter.top();
-var rightLayout = splitter.bottom();</code></pre><p>Once you have the <a href="wcLayout.html"><code>layout</code></a> of the pane you want, you can add items to it like you would any panel.</p>
-<pre class="prettyprint source"><code>leftLayout.addItem(domNode);</code></pre><p>The orientation of a splitter can also be changed at any time by using the <a href="wcSplitter.html#orientation"><code>wcSplitter.orientation</code></a> function.</p>
+var rightLayout = splitter.bottom();</code></pre><p>Once you have the <a href="wcLayout.html">layout</a> of the pane you want, you can add items to it like you would any panel.</p>
+<pre class="prettyprint source"><code>leftLayout.addItem(domNode);</code></pre><p>The orientation of a splitter can also be changed at any time by using the <a href="wcSplitter.html#orientation">wcSplitter.orientation</a> function.</p>
 <hr>
-<h3>Tab Widget</h3><p>The <a href="wcTabFrame.html"><code>wcTabFrame</code></a> widget allows you to separate multiple 'pages' of content into tabbed items, much like how panels become stacked.</p>
+<h3>Tab Widget</h3><p>The <a href="wcTabFrame.html">wcTabFrame</a> widget allows you to separate multiple 'pages' of content into tabbed items, much like how panels become stacked.</p>
 <p>To use it, you will need an element that will contain it. This element should be added to your layout and will mark the size and location of the tabbed area.</p>
 <pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;width:100%;height:100%;&quot;>&lt;/div>');
 myPanel.layout().addItem($container);
@@ -98,7 +98,7 @@ myPanel.layout().addItem($container);
 var tabFrame = new wcTabFrame($container, myPanel);</code></pre><p>Of course, you'll want to add tabs to your tabbed frame and fill them with content...</p>
 <pre class="prettyprint source"><code>var tabLayout = tabFrame.addTab('First Tab');
 tabLayout.addItem(domNode);</code></pre><hr>
-<h3>iFrame Widget</h3><p>The <a href="wcIFrame.html"><code>wcIFrame</code></a> widget makes it easier to include an iFrame element into your panel.
+<h3>iFrame Widget</h3><p>The <a href="wcIFrame.html">wcIFrame</a> widget makes it easier to include an iFrame element into your panel.
 Because an iFrame's contents is cleared whenever it is moved in the DOM heirarchy
 (and changing a panels docking position causes DOM movement), special care must
 be taken when using them.</p>
@@ -110,7 +110,7 @@ myPanel.layout().addItem($container);
 var iFrame = new wcIFrame($container, myPanel);</code></pre><p>And fill its contents...</p>
 <pre class="prettyprint source"><code>iFrame.openURL('http://www.example.com');
 // Or...
-iFrame.openHTML('&lt;span>Hello World!&lt;/span>');</code></pre><p>Or for some even more control, you can access the window object within the frame <a href="wcIFrame.html#window"><code>directly</code></a>.</p>
+iFrame.openHTML('&lt;span>Hello World!&lt;/span>');</code></pre><p>Or for some even more control, you can access the window object within the frame <a href="wcIFrame.html#window">directly</a>.</p>
 <pre class="prettyprint source"><code>var frameWindow = iFrame.window();</code></pre>
 </article>
 

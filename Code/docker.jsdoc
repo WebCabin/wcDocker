@@ -2,10 +2,10 @@
  * A rectangle structure.
  *
  * @typedef {Object} wcDocker~Rect
- * @property {Number} x - X coordinate of the rectangle.
- * @property {Number} y - Y coordinate of the rectangle.
- * @property {Number} w - Width of the rectangle.
- * @property {Number} h - Height of the rectangle.
+ * @property {Number|String} [x] - X coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [y] - Y coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [w] - Width of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [h] - Height of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
  */
 
 /**

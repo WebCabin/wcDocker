@@ -297,7 +297,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._pos.x = this.__stringToPercent(x, docker.$container.width());
+        this._pos.x = docker.__stringToPercent(x, docker.$container.width());
       } else {
         this._pos.x = x;
       }
@@ -305,7 +305,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._pos.y = this.__stringToPercent(y, docker.$container.height());
+        this._pos.y = docker.__stringToPercent(y, docker.$container.height());
       } else {
         this._pos.y = y;
       }
@@ -326,7 +326,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._size.x = this.__stringToPixel(x, docker.$container.width());
+        this._size.x = docker.__stringToPixel(x, docker.$container.width());
       } else {
         this._size.x = x;
       }
@@ -334,7 +334,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._size.y = this.__stringToPixel(y, docker.$container.height());
+        this._size.y = docker.__stringToPixel(y, docker.$container.height());
       } else {
         this._size.y = y;
       }
@@ -354,7 +354,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._minSize.x = this.__stringToPixel(x, docker.$container.width());
+        this._minSize.x = docker.__stringToPixel(x, docker.$container.width());
       } else {
         this._minSize.x = x;
       }
@@ -362,7 +362,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._minSize.y = this.__stringToPixel(y, docker.$container.height());
+        this._minSize.y = docker.__stringToPixel(y, docker.$container.height());
       } else {
         this._minSize.y = y;
       }
@@ -382,7 +382,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._maxSize.x = this.__stringToPixel(x, docker.$container.width());
+        this._maxSize.x = docker.__stringToPixel(x, docker.$container.width());
       } else {
         this._maxSize.x = x;
       }
@@ -390,7 +390,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._maxSize.y = this.__stringToPixel(y, docker.$container.height());
+        this._maxSize.y = docker.__stringToPixel(y, docker.$container.height());
       } else {
         this._maxSize.y = y;
       }
@@ -782,30 +782,6 @@ wcPanel.prototype = {
         this._events[eventType][i].call(this, data);
       }
     }
-  },
-
-  // Converts a potential string value to a percentage.
-  __stringToPercent: function(value, size) {
-    if (typeof value === 'string') {
-      if (value.indexOf('%', value.length - 1) !== -1) {
-        return parseFloat(value)/100;
-      } else if (value.indexOf('px', value.length - 2) !== -1) {
-        return parseFloat(value) / size;
-      }
-    }
-    return parseFloat(value);
-  },
-
-  // Converts a potential string value to a pixel value.
-  __stringToPixel: function(value, size) {
-    if (typeof value === 'string') {
-      if (value.indexOf('%', value.length - 1) !== -1) {
-        return (parseFloat(value)/100) * size;
-      } else if (value.indexOf('px', value.length - 2) !== -1) {
-        return parseFloat(value);
-      }
-    }
-    return parseFloat(value);
   },
 
   // Retrieves the bounding rect for this widget.

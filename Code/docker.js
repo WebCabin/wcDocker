@@ -217,7 +217,9 @@ wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
  * @enum {Boolean}
  */
 wcDocker.ORIENTATION = {
+  /** Top and Bottom panes */
   VERTICAL       : false,
+  /** Left and Right panes */
   HORIZONTAL     : true
 };
 
@@ -1476,7 +1478,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel().layout().scene()[0] == this) {
+        if (self._frameList[i].panel().layout().$table[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);
@@ -1939,6 +1941,26 @@ wcDocker.prototype = {
   //    parentPanel  An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, parentPanel, rect) {
+    if (rect) {
+      var width = this.$container.width();
+      var height = this.$container.height();
+
+      if (rect.hasOwnProperty('x')) {
+        rect.x = this.__stringToPixel(rect.x, width);
+      }
+      if (rect.hasOwnProperty('y')) {
+        rect.y = this.__stringToPixel(rect.y, height);
+      }
+      if (!rect.hasOwnProperty('w')) {
+        rect.w = panel.initSize().x;
+      }
+      if (!rect.hasOwnProperty('h')) {
+        rect.h = panel.initSize().y;
+      }
+      rect.w = this.__stringToPixel(rect.w, width);
+      rect.h = this.__stringToPixel(rect.h, height);
+    }
+
     // Floating windows need no placement.
     if (location === wcDocker.DOCK.FLOAT || location === wcDocker.DOCK.MODAL) {
       var frame = new wcFrame(this.$container, this, true);
@@ -1958,9 +1980,14 @@ wcDocker.prototype = {
       }
 
       if (rect) {
-        if (rect.hasOwnProperty('x') && rect.hasOwnProperty('y')) {
-          frame.pos(rect.x + rect.w/2, rect.y + rect.h/2, true);
+        var pos = frame.pos(undefined, undefined, true);
+        if (rect.hasOwnProperty('x')) {
+          pos.x = rect.x + rect.w/2;
         }
+        if (rect.hasOwnProperty('y')) {
+          pos.y = rect.y + rect.h/2;
+        }
+        frame.pos(pos.x, pos.y, true);
         frame._size = {
           x: rect.w,
           y: rect.h,
@@ -2135,4 +2162,29 @@ wcDocker.prototype = {
 
     this.__update();
   },
+
+  // Converts a potential string value to a percentage.
+  __stringToPercent: function(value, size) {
+    if (typeof value === 'string') {
+      if (value.indexOf('%', value.length - 1) !== -1) {
+        return parseFloat(value)/100;
+      } else if (value.indexOf('px', value.length - 2) !== -1) {
+        return parseFloat(value) / size;
+      }
+    }
+    return parseFloat(value);
+  },
+
+  // Converts a potential string value to a pixel value.
+  __stringToPixel: function(value, size) {
+    if (typeof value === 'string') {
+      if (value.indexOf('%', value.length - 1) !== -1) {
+        return (parseFloat(value)/100) * size;
+      } else if (value.indexOf('px', value.length - 2) !== -1) {
+        return parseFloat(value);
+      }
+    }
+    return parseFloat(value);
+  },
+
 };

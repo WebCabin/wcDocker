@@ -8,9 +8,9 @@
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.darkly.css">
 
 </head>
 
@@ -74,7 +74,7 @@
 </header>
 
 <article>
-    <h3>Themes</h3><p>Assigning a theme to use with <a href="wcDocker.html"><code>wcDocker</code></a> is as simple as calling a function.</p>
+    <h3>Themes</h3><p>Assigning a theme to use with <a href="wcDocker.html">wcDocker</a> is as simple as calling a function.</p>
 <pre class="prettyprint source"><code>myDocker.theme('shadow');</code></pre><p>In this case, <code>shadow</code> is the name of a theme <code>shadow.css</code> found in the themes folder.</p>
 <hr>
 <h3>Event System</h3><p>The event system is critical for communication between your panels.  Often times you will need this to ensure all your panels integrate properly and intuitively.</p>
@@ -87,13 +87,13 @@
     showProperties(object);
   }
 });</code></pre><p>Once an object is selected in the other panel, it can trigger an event to notify any panels who care</p>
-<pre class="prettyprint source"><code>otherPanel.trigger('object selected', selectedObject);</code></pre><p>All events are broadcast to all panels (including itself and docker) who have registered for the named event and will receive it. See <a href="wcDocker.html#on"><code>wcDocker.on</code></a> and <a href="wcDocker.html#trigger"><code>wcDocker.trigger</code></a> for further details.</p>
+<pre class="prettyprint source"><code>otherPanel.trigger('object selected', selectedObject);</code></pre><p>All events are broadcast to all panels (including itself and docker) who have registered for the named event and will receive it. See <a href="wcDocker.html#on">wcDocker.on</a> and <a href="wcDocker.html#trigger">wcDocker.trigger</a> for further details.</p>
 <hr>
-<h3>Saving/Restoring Layout Configurations</h3><p>Entire layout configurations can be saved and restored using <a href="wcDocker.html"><code>wcDocker</code></a>.</p>
+<h3>Saving/Restoring Layout Configurations</h3><p>Entire layout configurations can be saved and restored using <a href="wcDocker.html">wcDocker</a>.</p>
 <pre class="prettyprint source"><code>var savedLayout = myDocker.save();
 
 // Any time you wish to restore a previously saved layout.
-myDocker.restore(savedLayout);</code></pre><p>The saved layout data returned from <a href="wcDocker.html#save"><code>wcDocker.save</code></a> is a simple string, so it can be saved in cookies or wherever you wish for later use!</p>
+myDocker.restore(savedLayout);</code></pre><p>The saved layout data returned from <a href="wcDocker.html#save">wcDocker.save</a> is a simple string, so it can be saved in cookies or wherever you wish for later use!</p>
 <p>Additionally, any panel can register event callbacks if they need to save and restore any custom attributes into the layout configuration.</p>
 <pre class="prettyprint source"><code>myPanel.on(wcDocker.EVENT.SAVE_LAYOUT, function(data) {
   // Save a custom attribute into the layout configuration data
@@ -104,14 +104,14 @@ myPanel.on(wcDocker.EVENT.RESTORE_LAYOUT, function(data) {
   // When a layout is being restored, you can retrieve those custom values if they exist.
   somePanelValueToRestore = data.someValue;
 });</code></pre><hr>
-<h3>Batch Layout</h3><p>Adding elements into the <a href="wcLayout.html"><code>wcLayout</code></a> is not a problem in most cases, except when you need to add them in large quantities. Every time an item is added into the layout it causes the document to re-calculate and render. To improve performance, the layout can be put into a batch mode process, where it will queue all additions and add them all in a single operation.</p>
+<h3>Batch Layout</h3><p>Adding elements into the <a href="wcLayout.html">wcLayout</a> is not a problem in most cases, except when you need to add them in large quantities. Every time an item is added into the layout it causes the document to re-calculate and render. To improve performance, the layout can be put into a batch mode process, where it will queue all additions and add them all in a single operation.</p>
 <pre class="prettyprint source"><code>myPanel.layout().startBatch();
 for (var i = 0; i &lt; 1000; ++i) {
   myPanel.layout().addItem($('div'), 0, i);
 }
 myPanel.layout().finishBatch();</code></pre><hr>
 <h3>Custom Panel Buttons</h3><p>All panels can contain their own custom buttons which appear in the upper right corner of the frame (where the title bar and close button are).</p>
-<p>To add a new button, use the <a href="wcPanel.html#addButton"><code>wcPanel.addButton</code></a> function.</p>
+<p>To add a new button, use the <a href="wcPanel.html#addButton">wcPanel.addButton</a> function.</p>
 <pre class="prettyprint source"><code>myPanel.addButton('Some ID Name', 'normalStateClass', 'B', 'Tooltip text', true, 'toggledStateClass');</code></pre><p>Also, you can register an event to receive notifications whenever any custom button has been pressed.</p>
 <pre class="prettyprint source"><code>myPanel.on(wcDocker.EVENT.BUTTON, function(button) {
   // In case we have multiple custom panel buttons, we can check the name of the activated button
@@ -124,7 +124,7 @@ myPanel.layout().finishBatch();</code></pre><hr>
     }
   }
 });</code></pre><hr>
-<h3>Popup or Modal Panels</h3><p>Popup windows are a part of almost any application, and with <a href="wcDocker.html"><code>wcDocker</code></a>, it is a very simple process.  In this case, any panel can become a popup by creating them and setting them to a floating (or detached) state.</p>
+<h3>Popup or Modal Panels</h3><p>Popup windows are a part of almost any application, and with <a href="wcDocker.html">wcDocker</a>, it is a very simple process.  In this case, any panel can become a popup by creating them and setting them to a floating (or detached) state.</p>
 <pre class="prettyprint source"><code>myDocker.addPanel('popup', wcDocker.DOCK.FLOAT);</code></pre><p>And if you want to block all other input until the user closes or acknowledges the panel, you can set it to a modal state instead.</p>
 <pre class="prettyprint source"><code>myDocker.addPanel('popup', wcDocker.DOCK.MODAL);</code></pre><p>Just be careful that all modal panels can be closed somehow, or else you will permenantly block the application.</p>
 </article>
