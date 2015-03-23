@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Web Cabin Docker Source: docker.jsdoc</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
+	</div>
+	<div class="navbar-collapse">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="wcDocker.html#~event:onEvent">wcDocker~event:onEvent</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-advanced-operations.html">Advanced Operations</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+
+<div class="container">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+    		
+
+		<h1 class="page-title">Source: docker.jsdoc</h1>
+    
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">/**
+ * A rectangle structure.
+ *
+ * @typedef {Object} wcDocker~Rect
+ * @property {Number} x - X coordinate of the rectangle.
+ * @property {Number} y - Y coordinate of the rectangle.
+ * @property {Number} w - Width of the rectangle.
+ * @property {Number} h - Height of the rectangle.
+ */
+
+/**
+ * A coordinate structure.
+ *
+ * @typedef {Object} wcDocker~Coordinate
+ * @property {Number} x - X coordinate.
+ * @property {Number} y - Y coordinate.
+ */
+
+/**
+ * A 2D size structure.
+ *
+ * @typedef {Object} wcDocker~Size
+ * @property {Number} x - Width.
+ * @property {Number} y - Height.
+ */
+
+/**
+ * @typedef {Object} wcDocker~Scrollable
+ * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
+ * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
+ */
+
+/**
+ * Options object for registering new panel types.
+ * 
+ * @typedef wcDocker~registerOptions
+ * @property {wcDocker~onCreatePanel} options.onCreate   - A function or an object constructor for the panel.
+ * @property {String} [options.icon]                   - A CSS class name to draw an icon in the panels tab widget.
+ * @property {String} [options.faicon]                 - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
+ * @property {String|Boolean} [options.title]          - Assign a custom name to the panels tab. A false value will hide the tab entirely.
+ * @property {Boolean} [options.isPrivate]             - If true, the user will not be able to create this panel type.
+ * @property {Number} [options.limit]                  - Enforces a limited number of this panel type from being created by the user.
+ * @property {wcPanel~options} [options.options]       - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
+ */
+
+
+
+
+
+ /**
+ * A function or an object constructor for the panel. This function is called using the 'new' operator.
+ *
+ * @callback wcDocker~onCreatePanel
+ * @param {wcPanel} panel - The panel being constructed.
+ * @param {wcPanel~options} [options] - An options object passed in from [wcDocker.registerPanelType]{@link wcDocker#registerPanelType}'s options.options parameter.
+ */
+
+/**
+ * An event handler callback. Each is registered to a event type using the [wcDocker.on]{@link wcDocker~on} or [wcPanel.on]{@link wcPanel~on} functions.
+ *
+ * @event wcDocker~onEvent
+ * @type {Function}
+ * @param {wcPanel|NULL} panel - The panel invoking the event, or NULL if global.
+ * @param {Object} [data] - A data object passed by the invoker.
+ */
+
+</pre>
+	</article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+
+<div class="row">
+	
+	<div class="col-md-12">
+	
+		<footer>
+		
+		
+		<span class="jsdoc-message">
+			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
+			on 2015-03-23 using the <a
+			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
+		</span>
+		</footer>
+	</div>
+</div>
+<div style="height:1000px;"></div>
+
+<!--<script src="scripts/sunlight.js"></script>-->
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/bootstrap-dropdown.js"></script>
+<script src="scripts/toc.js"></script>
+
+<script>
+$( function () {
+	// $( "[id*='$']" ).each( function () {
+	// 	var $this = $( this );
+
+	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	// } );
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
+
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			// return $( heading ).attr( "id" ) || ( prefix + i );
+			return ( prefix + i );
+		},
+		selectors   : "h1,h2,h3,h4",
+		showAndHide : false,
+		scrollTo    : "100px"
+	} );
+
+	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+	// $( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			lang = "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+</body>
+</html>

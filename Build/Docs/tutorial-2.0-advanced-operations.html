@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Web Cabin Docker tutorialAdvanced Operations</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
+	</div>
+	<div class="navbar-collapse">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="wcDocker.html#~event:onEvent">wcDocker~event:onEvent</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-advanced-operations.html">Advanced Operations</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+
+<div class="container">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+    		<section class="tutorial-section">
+
+<header>
+    
+
+    <h2>Advanced Operations</h2>
+</header>
+
+<article>
+    <h3>Themes</h3><p>Assigning a theme to use with <a href="wcDocker.html"><code>wcDocker</code></a> is as simple as calling a function.</p>
+<pre class="prettyprint source"><code>myDocker.theme('shadow');</code></pre><p>In this case, <code>shadow</code> is the name of a theme <code>shadow.css</code> found in the themes folder.</p>
+<hr>
+<h3>Event System</h3><p>The event system is critical for communication between your panels.  Often times you will need this to ensure all your panels integrate properly and intuitively.</p>
+<p>For example: One panel may be dedicated to showing the properties of an object, while another panel may be responsible for displaying and allowing the user to select an object.  If communication did not exist between the two panels, when an object is selected, the property panel would never know to show its properties.</p>
+<p>First our property panel has to be listening for the event, in this case we have named one 'object selected' (It can be any string).</p>
+<pre class="prettyprint source"><code>propertyPanel.on('object selected', function(object) {
+  // Registered event handler for the 'object selected' event
+  // Here, we do something to the object that was just selected.
+  if (object) {
+    showProperties(object);
+  }
+});</code></pre><p>Once an object is selected in the other panel, it can trigger an event to notify any panels who care</p>
+<pre class="prettyprint source"><code>otherPanel.trigger('object selected', selectedObject);</code></pre><p>All events are broadcast to all panels (including itself and docker) who have registered for the named event and will receive it. See <a href="wcDocker.html#on"><code>wcDocker.on</code></a> and <a href="wcDocker.html#trigger"><code>wcDocker.trigger</code></a> for further details.</p>
+<hr>
+<h3>Saving/Restoring Layout Configurations</h3><p>Entire layout configurations can be saved and restored using <a href="wcDocker.html"><code>wcDocker</code></a>.</p>
+<pre class="prettyprint source"><code>var savedLayout = myDocker.save();
+
+// Any time you wish to restore a previously saved layout.
+myDocker.restore(savedLayout);</code></pre><p>The saved layout data returned from <a href="wcDocker.html#save"><code>wcDocker.save</code></a> is a simple string, so it can be saved in cookies or wherever you wish for later use!</p>
+<p>Additionally, any panel can register event callbacks if they need to save and restore any custom attributes into the layout configuration.</p>
+<pre class="prettyprint source"><code>myPanel.on(wcDocker.EVENT.SAVE_LAYOUT, function(data) {
+  // Save a custom attribute into the layout configuration data
+  data.someValue = somePanelValueToSave;
+});
+
+myPanel.on(wcDocker.EVENT.RESTORE_LAYOUT, function(data) {
+  // When a layout is being restored, you can retrieve those custom values if they exist.
+  somePanelValueToRestore = data.someValue;
+});</code></pre><hr>
+<h3>Batch Layout</h3><p>Adding elements into the <a href="wcLayout.html"><code>wcLayout</code></a> is not a problem in most cases, except when you need to add them in large quantities. Every time an item is added into the layout it causes the document to re-calculate and render. To improve performance, the layout can be put into a batch mode process, where it will queue all additions and add them all in a single operation.</p>
+<pre class="prettyprint source"><code>myPanel.layout().startBatch();
+for (var i = 0; i &lt; 1000; ++i) {
+  myPanel.layout().addItem($('div'), 0, i);
+}
+myPanel.layout().finishBatch();</code></pre><hr>
+<h3>Custom Panel Buttons</h3><p>All panels can contain their own custom buttons which appear in the upper right corner of the frame (where the title bar and close button are).</p>
+<p>To add a new button, use the <a href="wcPanel.html#addButton"><code>wcPanel.addButton</code></a> function.</p>
+<pre class="prettyprint source"><code>myPanel.addButton('Some ID Name', 'normalStateClass', 'B', 'Tooltip text', true, 'toggledStateClass');</code></pre><p>Also, you can register an event to receive notifications whenever any custom button has been pressed.</p>
+<pre class="prettyprint source"><code>myPanel.on(wcDocker.EVENT.BUTTON, function(button) {
+  // In case we have multiple custom panel buttons, we can check the name of the activated button
+  if (button.name === 'Some ID Name') {
+    var toggled = button.isToggled;
+    if (toggled) {
+      // The button has been clicked, and its current state is depressed.
+    } else {
+      // The button has been clicked, and its current state is normal.
+    }
+  }
+});</code></pre><hr>
+<h3>Popup or Modal Panels</h3><p>Popup windows are a part of almost any application, and with <a href="wcDocker.html"><code>wcDocker</code></a>, it is a very simple process.  In this case, any panel can become a popup by creating them and setting them to a floating (or detached) state.</p>
+<pre class="prettyprint source"><code>myDocker.addPanel('popup', wcDocker.DOCK.FLOAT);</code></pre><p>And if you want to block all other input until the user closes or acknowledges the panel, you can set it to a modal state instead.</p>
+<pre class="prettyprint source"><code>myDocker.addPanel('popup', wcDocker.DOCK.MODAL);</code></pre><p>Just be careful that all modal panels can be closed somehow, or else you will permenantly block the application.</p>
+</article>
+
+</section>
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3"></div>
+		</div>
+	
+
+</div>
+
+<div class="row">
+	
+	<div class="col-md-8">
+	
+		<footer>
+		
+		
+		<span class="jsdoc-message">
+			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
+			on 2015-03-23 using the <a
+			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
+		</span>
+		</footer>
+	</div>
+</div>
+<div style="height:1000px;"></div>
+
+<!--<script src="scripts/sunlight.js"></script>-->
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/bootstrap-dropdown.js"></script>
+<script src="scripts/toc.js"></script>
+
+<script>
+$( function () {
+	// $( "[id*='$']" ).each( function () {
+	// 	var $this = $( this );
+
+	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	// } );
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
+
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			// return $( heading ).attr( "id" ) || ( prefix + i );
+			return ( prefix + i );
+		},
+		selectors   : "h1,h2,h3,h4",
+		showAndHide : false,
+		scrollTo    : "100px"
+	} );
+
+	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+	// $( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			lang = "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+</body>
+</html>

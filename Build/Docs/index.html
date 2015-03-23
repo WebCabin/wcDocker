@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Web Cabin Docker Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
+	</div>
+	<div class="navbar-collapse">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="wcDocker.html#~event:onEvent">wcDocker~event:onEvent</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-advanced-operations.html">Advanced Operations</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+
+<div class="container">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+    		
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><h3>What is wcDocker?</h3><p>wcDocker (Web Cabin Docker) is a page layout framework that allows users to organize an array-able list of panel types in almost any configuration. Panels can be docked beside other panels, floating on their own, resized, moved, duplicated, and removed at will by the user. It is a powerful library for use as an IDE or a visual data management interface.</p>
+<p>Try the demo here:  <a href="http://docker.webcabin.org/">http://docker.webcabin.org/</a><br>View the API documentation here: <a href="http://docker.api.webcabin.org/">http://docker.api.webcabin.org/</a></p>
+<hr>
+<h3>Features</h3><ul>
+<li>Extremely responsive design!</li>
+<li>Organization and duplication of panels at any time!</li>
+<li>Easily create your own themes!</li>
+<li>Comprehensive API Documentation!</li>
+<li>Easily save and restore your layout!</li>
+<li>Compatible with all major browsers, including IE8.</li>
+<li>Completely free!</li>
+</ul>
+<hr>
+<h3>Getting Started</h3><p>See the <a href="http://docker.api.webcabin.org/tutorial-1.0-getting-started.html">Getting Started</a> tutorial.</p>
+<hr>
+<h3>Change Log</h3><h4>Version: 3.0.0</h4><ul>
+<li><strong>WARNING: Before upgrading to this version from 2.2.0, some significant changes are required in your code!</strong><ul>
+<li>You no longer link with the theme's stylesheet directly.</li>
+<li>If your themes are not found in the &quot;Themes/&quot; folder, you will need to assign the correct path when you construct your wcDocker instance.<pre class="prettyprint source"><code>new wcDocker(domNode, {themePath: 'New/theme/folder'});</code></pre></li>
+<li>Changing the theme can now be done via the wcDocker.theme() function.</li>
+</ul>
+</li>
+<li>Collapsable drawers! You can now attach collapsable drawer containers to your docker window on any side(s). Drawer containers contain any number of drawers (as tabbed items) that can each contain their own panel layout and expand or collapse from view.</li>
+</ul>
+<h4>Version: 2.2.0</h4><ul>
+<li>Separated the default theme out of wcDocker.css (now use wcDockerSkeleton.css with Themes/default.css).</li>
+<li>Added wcDocker.panelTypeInfo() and wcPanel.info() that will retrieve the registration data of a panel.</li>
+<li>Added wcDocker.panelTypes() to retrieve a list of all registered panel types.</li>
+<li>New event type wcDocker.EVENT.INIT.</li>
+<li>Panel width and height can now be retrieved.</li>
+<li>wcPanel functions initPos, initSize, minSize, and maxSize can now take a string value with a 'px' or '%' suffix.</li>
+<li>Fixed issue with using normal CSS icons in the context menu.</li>
+<li>Improved auto scrolling of tab items when clicked.</li>
+<li>Created a new wcCustomTabs object for creating docker styled tab areas inside a panel.</li>
+<li>Floating panels can now be modal.</li>
+<li>Create your own splitter widget within a panel.</li>
+<li>Create your own tabbed frame widget within a panel.</li>
+<li>Create your own iFrame widget within a panel.</li>
+</ul>
+<h4>Version: 2.1.0</h4><ul>
+<li>wcDocker now has Bower support for easy package management.</li>
+<li>wcSplitter is now usable inside a panel.</li>
+<li>Improved performance of panel resizing.</li>
+<li>wcPanel.focus() now actually sets itself as the current active tab.</li>
+<li>wcDocker.registerPanelType() has a new option {limit: Number} that limits the total number of copies for this panel.</li>
+<li>New event type wcDocker.EVENT.VISIBILITY_CHANGED, triggered whenever the panel gains or loses visibility.  Use wcPanel.isVisible() to retrieve the current state.</li>
+<li>Reduced DOM changes during tab change and resize.</li>
+<li>New event types wcDocker.EVENT.BEGIN_DOCK and wcDocker.EVENT.END_DOCK that trigger whenever the user is dragging a panel to a new location.</li>
+<li>New event types wcDocker.EVENT.GAIN_FOCUS and wcDocker.EVENT.LOST_FOCUS that trigger whenever a panel is brought it and out of focus.</li>
+<li>Floating panels no longer change size whenever a new panel is added to it as a tab.</li>
+</ul>
+<h4>Version: 2.0.0</h4><ul>
+<li>Layout grid can now have a spacing size.</li>
+<li>Layout grid can now be set to alternating row color.</li>
+<li>wcLayout.item() added to retrieve an already existing item in the layout.</li>
+<li>wcDocker can now send and receive events.</li>
+<li>wcLayout can now batch large numbers of elements added without page refreshing between each.</li>
+<li>wcPanel can now contain custom buttons that appear within the title bar.</li>
+<li>wcDocker.basicMenu() now has an option to include the default menu options along with your custom ones.</li>
+<li>wcDocker.basicMenu() can now accept a dynamic callback function that returns custom menu's at the time of the event.</li>
+<li>New events added for resize start, resize end, move start, and move end.</li>
+<li>Panels can now be set to hide their contents whenever they are resized.</li>
+<li>wcDocker constructor now takes an options object.</li>
+<li>wcDocker now has an option to disable the default context menu.</li>
+<li>Panel tabs are now scrollable.</li>
+<li>Icons are now supported using regular CSS or the Font-Awesome library <a href="http://fortawesome.github.io/Font-Awesome/">http://fortawesome.github.io/Font-Awesome/</a>.</li>
+<li>wcDocker.registerPanelType() can now take an options object instead of just a single callback.</li>
+<li>Fixed layout save/restore.</li>
+<li>Fixed layout clear not actually removing elements.</li>
+<li>Fixed compatibility with IE8.</li>
+<li>Fixed tabs disappearing when the panel is too small to fit them.</li>
+</ul>
+<hr>
+<h3>Dependencies</h3><ul>
+<li>JQuery Library version 1.11.1 <a href="http://jquery.com/">http://jquery.com/</a></li>
+<li>JQuery ContextMenu Library <a href="https://github.com/medialize/jQuery-contextMenu">https://github.com/medialize/jQuery-contextMenu</a></li>
+<li>Font-Awesome <a href="http://fortawesome.github.io/Font-Awesome/">http://fortawesome.github.io/Font-Awesome/</a></li>
+</ul>
+<hr>
+<h3>License</h3><p><a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p>
+<p>&copy; 2014-2014 Jeff Houde (<a href="mailto:lochemage@gmail.com">lochemage@gmail.com</a>)</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<hr>
+<h3>Suggestions/Comments?</h3><p>Please feel free to contact me, Jeff Houde (<a href="mailto:lochemage@gmail.com">lochemage@gmail.com</a>), for any information or to give feedback and suggestions.  Also, if you are a web programmer, and believe you can help, please let me know!</p>
+<p>Thank you</p></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3"></div>
+		</div>
+	
+
+</div>
+
+<div class="row">
+	
+	<div class="col-md-8">
+	
+		<footer>
+		
+		
+		<span class="jsdoc-message">
+			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
+			on 2015-03-23 using the <a
+			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
+		</span>
+		</footer>
+	</div>
+</div>
+<div style="height:1000px;"></div>
+
+<!--<script src="scripts/sunlight.js"></script>-->
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/bootstrap-dropdown.js"></script>
+<script src="scripts/toc.js"></script>
+
+<script>
+$( function () {
+	// $( "[id*='$']" ).each( function () {
+	// 	var $this = $( this );
+
+	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	// } );
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
+
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			// return $( heading ).attr( "id" ) || ( prefix + i );
+			return ( prefix + i );
+		},
+		selectors   : "h1,h2,h3,h4",
+		showAndHide : false,
+		scrollTo    : "100px"
+	} );
+
+	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+	// $( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			lang = "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+</body>
+</html>
