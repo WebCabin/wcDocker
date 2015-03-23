@@ -1,9 +1,11 @@
 /**
  * @class
- * Splits an area in two, dividing it with a resize-able splitter bar.
+ * Splits an area in two, dividing it with a resize-able splitter bar. This is the same class
+ * used throughout [docker]{@link wcDocker} to organize the docking interface, but it can also
+ * be used inside a panel as a custom widget.
  *
  * @constructor
- * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this splitter.
+ * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this splitter.
  * @param {wcLayout|wcSplitter|wcDocker} parent   - The splitter's parent object.
  * @param {wcDocker.ORIENTATION} orientation      - The orientation of the splitter bar.
 */
@@ -56,7 +58,7 @@ wcSplitter.prototype = {
   },
 
   /**
-   * Retrieves the main [docker]{@link wcDocker} object.
+   * Retrieves the main [docker]{@link wcDocker} instance.
    *
    * @returns {wcDocker} - The top level docker object.
    */
@@ -263,6 +265,50 @@ wcSplitter.prototype = {
   },
 
   /**
+   * Gets, or Sets the element associated with the left side pane (for horizontal layouts).
+   *
+   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   *
+   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   */
+  left: function(item) {
+    this.pane(0, item);
+  },
+
+  /**
+   * Gets, or Sets the element associated with the right side pane (for horizontal layouts).
+   *
+   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   *
+   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   */
+  right: function(item) {
+    this.pane(1, item);
+  },
+
+  /**
+   * Gets, or Sets the element associated with the top pane (for vertical layouts).
+   *
+   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   *
+   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   */
+  top: function(item) {
+    this.pane(0, item);
+  },
+
+  /**
+   * Gets, or Sets the element associated with the bottom pane (for vertical layouts).
+   *
+   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   *
+   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   */
+  bottom: function(item) {
+    this.pane(1, item);
+  },
+
+  /**
    * Gets, or Sets whether a pane can be scrolled via scroll bars.
    * By default, scrolling is enabled in both directions.
    *
@@ -307,19 +353,6 @@ wcSplitter.prototype = {
     }
   },
 
-  /** 
-   * Reaction event to the panels update event.
-   */
-  onUpdate: function() {
-    this.__update();
-  },
-
-  /**
-   * Reaction event to the panels close event.
-   */
-  onClosed: function() {
-    this.destroy();
-  },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
@@ -344,8 +377,8 @@ wcSplitter.prototype = {
     this.__container(this.$container);
 
     if (this._parent instanceof wcPanel) {
-      this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.onUpdate.bind(this)});
-      this._boundEvents.push({event: wcDocker.EVENT.CLOSED,  handler: this.onClosed.bind(this)});
+      this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.__update.bind(this)});
+      this._boundEvents.push({event: wcDocker.EVENT.CLOSED,  handler: this.destroy.bind(this)});
 
       for (var i = 0; i < this._boundEvents.length; ++i) {
         this._parent.on(this._boundEvents[i].event, this._boundEvents[i].handler);

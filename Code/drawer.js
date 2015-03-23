@@ -1,11 +1,12 @@
 /**
  * @class
- * A docker container for carrying its own arrangement of docked panels as a slide out drawer.
- * <b>Use {@link wcDocker#addDrawer} and {@link wcDocker#removeDrawer} to manage drawers, 
- * this <u>should never be constructed directly by the user.</u></b>
+ * A collapsable container for carrying its own arrangement of panels.
  * 
  * @constructor
- * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this drawer.
+ * @description
+ * <b><i>PRIVATE</i> - Use [wcDocker.addDrawer]{@link wcDocker#addDrawer} and [wcDocker.removeDrawer]{@link wcDocker#removeDrawer} to manage drawers, 
+ * this <u>should never be constructed directly by the user.</u></b>
+ * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
  * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
  * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
  */

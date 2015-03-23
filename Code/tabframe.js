@@ -1,7 +1,17 @@
-/*
-  A tab widget container, to break up multiple elements into separate tabs.
-*/
+/**
+ * @class
+ * A tab widget container, useable inside a panel to break up multiple elements into separate tabbed pages.
+ *
+ * @constructor
+ * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
+ * @param {wcPanel} parent - The parent panel object for this widget.
+ */
 function wcTabFrame(container, parent) {
+  /**
+   * The outer container element of the widget.
+   *
+   * @member {external:jQuery~Object}
+   */
   this.$container = $(container);
   this._parent = parent;
 
@@ -31,7 +41,11 @@ wcTabFrame.prototype = {
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Finds the main Docker window.
+  /**
+   * Retrieves the main [docker]{@link wcDocker} instance.
+   *
+   * @returns {wcDocker} - The top level docker object.
+   */
   docker: function() {
     var parent = this._parent;
     while (parent && !(parent instanceof wcDocker)) {
@@ -40,17 +54,21 @@ wcTabFrame.prototype = {
     return parent;
   },
 
-  // Destroys the tab area.
+  /**
+   * Destroys the widget.
+   */
   destroy: function() {
     this.__destroy();
   },
 
-  // Adds a new tab item at a given index
-  // Params:
-  //    name      The name of the tab.
-  //    index     An optional index to insert the tab at.
-  // Returns:
-  //    wcLayout  The layout of the newly created tab.
+  /**
+   * Adds a new tabbed page into the widget.
+   *
+   * @param {String} name    - The name of the new tab page.
+   * @param {Number} [index] - If supplied, will insert the new tab page at the given tab index.
+   *
+   * @returns {wcLayout} - The layout of the newly created tab page.
+   */
   addTab: function(name, index) {
     var newLayout = new wcLayout('.wcDockerTransition', this._parent);
     newLayout.name = name;
@@ -80,11 +98,13 @@ wcTabFrame.prototype = {
     return newLayout;
   },
 
-  // Removes a tab item.
-  // Params:
-  //    index       The tab index to remove.
-  // Returns:
-  //    bool        Returns whether or not the tab was removed.
+  /**
+   * Removes a tab page from the widget.
+   *
+   * @param {Number} index - The tab page index to remove.
+   *
+   * @returns {Boolean} - Success or failure.
+   */
   removeTab: function(index) {
     if (index > -1 && index < this._layoutList.length) {
       var name = this._layoutList[index].name;
@@ -106,11 +126,13 @@ wcTabFrame.prototype = {
     return false;
   },
 
-  // Gets, or Sets the currently visible tab.
-  // Params:
-  //    index     If supplied, sets the current tab index.
-  // Returns:
-  //    number    The currently visible tab index.
+  /**
+   * Gets, or Sets the currently visible tab page.
+   *
+   * @param {Number} index - If supplied, sets the current tab page index.
+   *
+   * @returns {Number} - The index of the currently visible tab page.
+   */
   tab: function(index, autoFocus) {
     if (typeof index !== 'undefined') {
       if (index > -1 && index < this._layoutList.length) {
@@ -129,12 +151,13 @@ wcTabFrame.prototype = {
     return this._curTab;
   },
 
-  // Retrieves the layout for a given tab.
-  // Params:
-  //    index     The tab index.
-  // Returns:
-  //    wcLayout  The layout found.
-  //    false     The layout was not found.
+  /**
+   * Retrieves the layout for a given tab page.
+   *
+   * @param {Number} index - The tab page index to retrieve.
+   *
+   * @returns {wcLayout|Boolean} - The layout of the found tab page, or false.
+   */
   layout: function(index) {
     if (index > -1 && index < this._layoutList.length) {
       return this._layoutList[index];
@@ -142,13 +165,14 @@ wcTabFrame.prototype = {
     return false;
   },
 
-  // Moves a tab from a given index to another index.
-  // Params:
-  //    fromIndex     The current tab index to move.
-  //    toIndex       The new index to move to.
-  // Returns:
-  //    element       The new element of the moved tab.
-  //    false         If an error occurred.
+  /**
+   * Moves a tab page from a given index to another index.
+   *
+   * @param {Number} fromIndex - The current tab page index to move from.
+   * @param {Number} toIndex   - The new tab page index to move to.
+   *
+   * @returns {external:jQuery~Object} - The new element of the moved tab, or false if an error occurred.
+   */
   moveTab: function(fromIndex, toIndex) {
     if (fromIndex >= 0 && fromIndex < this._layoutList.length &&
         toIndex >= 0 && toIndex < this._layoutList.length) {
@@ -167,11 +191,13 @@ wcTabFrame.prototype = {
     return false;
   },
 
-  // Gets, or Sets whether the tabs can be reordered by the user.
-  // Params:
-  //    moveable  If supplied, assigns whether tabs are moveable.
-  // Returns:
-  //    boolean   Whether tabs are currently moveable.
+  /**
+   * Gets, or Sets whether the tabs can be reordered by the user.
+   *
+   * @param {Boolean} [moveable] - If supplied, assigns whether tab pages can be reordered.
+   *
+   * @returns {Boolean} - Whether tab pages are currently moveable.
+   */
   moveable: function(moveable) {
     if (typeof moveable !== 'undefined') {
       this._moveable = moveable;
@@ -179,12 +205,14 @@ wcTabFrame.prototype = {
     return this._moveable;
   },
 
-  // Gets, or Sets whether a tab can be closed (removed) by the user.
-  // Params:
-  //    index     The index of the tab.
-  //    closeable If supplied, assigns whether the tab can be closed.
-  // Returns:
-  //    boolean   Whether the tab can be closed.
+  /**
+   * Gets, or Sets whether a tab can be closed (removed) by the user.
+   *
+   * @param {Number} index        - The index of the tab page.
+   * @param {Boolean} [closeable] - If supplied, assigns whether the tab page can be closed.
+   *
+   * @returns {Boolean} - Whether the tab page can be closed.
+   */
   closeable: function(index, closeable) {
     if (index > -1 && index < this._layoutList.length) {
       var layout = this._layoutList[index];
@@ -198,14 +226,15 @@ wcTabFrame.prototype = {
     return false;
   },
 
-  // Gets, or Sets whether a tab area is scrollable.
-  // Params:
-  //    index     The index of the tab.
-  //    x, y      If supplied, assigns whether the tab pane
-  //              is scrollable for each axis.
-  // Returns:
-  //    Object    An object with boolean values x and y
-  //              that tell whether each axis is scrollable.
+  /**
+   * Gets, or Sets whether a tab page area is scrollable.
+   *
+   * @param {Number} index  - The index of the tab page.
+   * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+   * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
+   *
+   * @returns {wcDocker~Scrollable} - The current scrollable status of the tab page.
+   */
   scrollable: function(index, x, y) {
     if (index > -1 && index < this._layoutList.length) {
       var layout = this._layoutList[index];
@@ -232,13 +261,15 @@ wcTabFrame.prototype = {
     return false;
   },
 
-  // Gets, or Sets whether overflow on a tab area is visible.
-  // Params:
-  //    index     The index of the tab.
-  //    visible   If supplied, assigns whether overflow is visible.
-  //
-  // Returns:
-  //    boolean   The current overflow visibility.
+  /**
+   * Gets, or Sets whether overflow on a tab area is visible.
+   * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
+   *
+   * @param {Number} index        - The index of the tab page.
+   * @param {Boolean} [visible]   - If supplied, assigns whether overflow is visible.
+   *
+   * @returns {Boolean} - The current overflow visiblity status of the tab page.
+   */
   overflowVisible: function(index, visible) {
     if (index > -1 && index < this._layoutList.length) {
       var layout = this._layoutList[index];
@@ -252,10 +283,12 @@ wcTabFrame.prototype = {
     return false;
   },
 
-  // Sets the icon for a tab.
-  // Params:
-  //    index     The index of the tab to alter.
-  //    icon      A CSS class name that represents the icon.
+  /**
+   * Sets the icon for a tab item.
+   *
+   * @param {Number} index  - The index of the tab item.
+   * @param {String} icon   - A CSS class name that represents the icon.
+   */
   icon: function(index, icon) {
     if (index > -1 && index < this._layoutList.length) {
       var layout = this._layoutList[index];
@@ -269,10 +302,12 @@ wcTabFrame.prototype = {
     }
   },
 
-  // Sets the icon for a tab.
-  // Params:
-  //    index     The index of the tab to alter.
-  //    icon      A font-awesome icon name (without the 'fa fa-' prefix).
+  /**
+   * Sets the icon for a tab item using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
+   *
+   * @param {Number} index  - The index of the tab item.
+   * @param {String} icon   - A [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} icon name (without the 'fa fa-' prefix).
+   */
   faicon: function(index, icon) {
     if (index > -1 && index < this._layoutList.length) {
       var layout = this._layoutList[index];
@@ -284,16 +319,6 @@ wcTabFrame.prototype = {
       layout.$icon.removeClass();
       layout.$icon.addClass('fa fa-fw fa-' + icon);
     }
-  },
-
-  // Reaction to the panels update event.
-  onUpdate: function() {
-    this.__update();
-  },
-
-  // Reaction to the panels close event.
-  onClosed: function() {
-    this.destroy();
   },
 
 
@@ -316,8 +341,8 @@ wcTabFrame.prototype = {
 
     this.__container(this.$container);
 
-    this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.onUpdate.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.CLOSED,  handler: this.onClosed.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.__update.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.CLOSED,  handler: this.destroy.bind(this)});
 
     for (var i = 0; i < this._boundEvents.length; ++i) {
       this._parent.on(this._boundEvents[i].event, this._boundEvents[i].handler);

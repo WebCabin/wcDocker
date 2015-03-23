@@ -1,7 +1,7 @@
 /*!
  * Web Cabin Docker - Docking Layout Interface.
  *
- * Dependancies:
+ * Dependencies:
  *  JQuery 1.11.1
  *  JQuery-contextMenu 1.6.6
  *  font-awesome 4.2.0
@@ -65,113 +65,16 @@ if (!Array.prototype.indexOf)
 }
 
 /**
- * A Document Object Model Element used by HTML.
- * @external DOM-Element
- * @see http://www.w3schools.com/jsref/dom_obj_all.asp
- */
-
-/**
- * jQuery library. Part of the listed dependencies.
- *
- * @external jQuery
- * @see http://jquery.com/
- */
-
-/**
- * A jQuery selector string.
- *
- * @typedef {String} external:jQuery~selector
- * @see http://api.jquery.com/category/selectors/
- */
-
-/**
- * A jQuery object.
- *
- * @typedef {Object} external:jQuery~Object
- * @see https://learn.jquery.com/using-jquery-core/jquery-object/
- */
-
-/**
- * jQuery contextMenu library. Part of the listed dependencies.
- *
- * @typedef {Object} external:jQuery#contextMenu
- * @extends jQuery
- * @see http://medialize.github.io/jQuery-contextMenu/docs.html/
- */
-
-/**
- * A jQuery contextMenu item object.
- *
- * @typedef {Object} external:jQuery#contextMenu~item
- * @property {String} name                   - The name of the menu item.
- * @property {external:contextMenu~onSelect} callback - A callback handler when this option has been selected.
- */
-
-/**
- * A callback handler when a menu option has been selected.
- *
- * @callback external:jQuery#contextMenu~onSelect
- * @param {String} key              - The triggered menu key.
- * @param {Object} opts             - Menu event object.
- * @param {wcPanel|Boolean} panel   - The target panel, if one exists.
- */
-
-
-/**
- * A rectangle structure.
- *
- * @typedef {Object} wcDocker~Rect
- * @property {Number} x - X coordinate of the rectangle.
- * @property {Number} y - Y coordinate of the rectangle.
- * @property {Number} w - Width of the rectangle.
- * @property {Number} h - Height of the rectangle.
- */
-
-/**
- * A coordinate structure.
- *
- * @typedef {Object} wcDocker~Coordinate
- * @property {Number} x - X coordinate.
- * @property {Number} y - Y coordinate.
- */
-
-/**
- * A 2D size structure.
- *
- * @typedef {Object} wcDocker~Size
- * @property {Number} x - Width.
- * @property {Number} y - Height.
- */
-
-/**
- * @typedef {Object} wcDocker~Scrollable
- * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
- * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
- */
-
-/**
- * A function or an object constructor for the panel.
- *
- * @callback wcDocker~onCreatePanel
- * @param {wcPanel} panel - The panel being constructed.
- * @param {Object} [options] - An options object provided via options.options paramter for {@link wcDocker.registerPanelType}.
- */
-
-/**
- * An event handler callback.
- *
- * @callback wcDocker~onEvent
- * @param {wcPanel|NULL} panel - The panel invoking the event, or NULL if global.
- * @param {Object} [data] - A data object passed by the invoker.
- */
-
-/**
  * @class
  * The main docker instance.  This manages all of the docking panels and user input.
- * There should only be one instance of this, although it is not enforced.
+ * There should only be one instance of this, although it is not enforced.<br>
+ * See {@tutorial getting-started}
  * 
  * @constructor
+ * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element to store the contents of wcDocker.
  * @param {Object} [options] - Options for constructing the instance.
+ * @param {String} [options.themePath='Themes'] - A folder path where all docker theme files can be found.
+ * @param {String} [options.theme='default'] - The active docker theme.
  * @param {Boolean} [options.allowContextMenu=true] - Overrides the default right click menu with ones that interact with docker.
  * @param {Boolean} [options.hideOnResize=false] - If true, panels will hide their contents as they are being resized.
  */
@@ -179,9 +82,6 @@ function wcDocker(container, options) {
   this.$container = $(container).addClass('wcDocker');
   this.$transition = $('<div class="wcDockerTransition"></div>');
   this.$container.append(this.$transition);
-
-  this._themePath = 'Themes';
-  this._theme = null;
 
   this._events = {};
 
@@ -214,7 +114,10 @@ function wcDocker(container, options) {
   };
 
   this._defaultOptions = {
-    allowContextMenu: true
+    themePath: 'Themes',
+    theme: 'default',
+    allowContextMenu: true,
+    hideOnResize: false
   };
 
   this._options = {};
@@ -230,7 +133,7 @@ function wcDocker(container, options) {
 
 /**
  * Enumerated Docking positions.
- * @version 3.0.0
+ * @since 3.0.0
  * @enum {String}
  */
 wcDocker.DOCK = {
@@ -252,7 +155,7 @@ wcDocker.DOCK = {
 
 /**
  * Enumerated Internal events
- * @version 3.0.0
+ * @since 3.0.0
  * @enum {String}
  */
 wcDocker.EVENT = {
@@ -272,7 +175,7 @@ wcDocker.EVENT = {
   LOST_FOCUS           : 'panelLostFocus',
   /** When the panel is being closed */
   CLOSED               : 'panelClosed',
-  /** When a custom button is clicked, See {@link wcDocker#addButton} */
+  /** When a custom button is clicked, See [wcPanel.addButton]{@link wcPanel#addButton} */
   BUTTON               : 'panelButton',
   /** When the panel has moved from floating to a docked position */
   ATTACHED             : 'panelAttached',
@@ -292,9 +195,9 @@ wcDocker.EVENT = {
   RESIZED              : 'panelResized',
   /** When the contents of the panel has been scrolled */
   SCROLLED             : 'panelScrolled',
-  /** When the layout is being saved, See {@link wcDocker#save} */
+  /** When the layout is being saved, See [wcDocker.save]{@link wcDocker#save} */
   SAVE_LAYOUT          : 'layoutSave',
-  /** When the layout is being restored, See {@link wcDocker#restore} */
+  /** When the layout is being restored, See [wcDocker.restore]{@link wcDocker#restore} */
   RESTORE_LAYOUT       : 'layoutRestore',
   /** When the current tab on a custom tab widget associated with this panel has changed, See {@link wcTabFrame} */
   CUSTOM_TAB_CHANGED   : 'customTabChanged',
@@ -310,7 +213,7 @@ wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
 
 /**
  * Used for the splitter bar orientation.
- * @version 3.0.0
+ * @since 3.0.0
  * @enum {Boolean}
  */
 wcDocker.ORIENTATION = {
@@ -333,15 +236,15 @@ wcDocker.prototype = {
    */
   themePath: function(path) {
     if (path !== undefined) {
-      this._themePath = path;
+      this._options.themePath = path;
     }
-    return this._themePath;
+    return this._options.themePath;
   },
 
   /**
    * Gets, or Sets the current theme used by docker.
    *
-   * @param {String} themeName - If supplied, will activate the theme; See {@link wcDocker#themePath}.
+   * @param {String} themeName - If supplied, will activate a theme with the given name.
    *
    * @returns {String} - The currently active theme.
    */
@@ -350,8 +253,12 @@ wcDocker.prototype = {
       $('#wcTheme').remove();
       // The default theme requires no additional theme css file.
       var cacheBreak = (new Date()).getTime();
-      var $link = $('<link id="wcTheme" rel="stylesheet" type="text/css" href="' + this._themePath + '/' + themeName + '.css?v=' + cacheBreak + '"/>');
-      this._theme = themeName;
+      var ext = themeName.indexOf('.css');
+      if (ext > -1) {
+        themeName = themeName.substring(0, ext);
+      }
+      var $link = $('<link id="wcTheme" rel="stylesheet" type="text/css" href="' + this._options.themePath + '/' + themeName + '.css?v=' + cacheBreak + '"/>');
+      this._options.theme = themeName;
 
       var self = this;
       $link[0].onload = function() {
@@ -369,22 +276,16 @@ wcDocker.prototype = {
       $('head').append($link);
     }
 
-    return this._theme;
+    return this._options.theme;
   },
 
   /**
    * Registers a new docking panel type to be used later.
-   * @version 3.0.0
+   * @since 3.0.0
    *
-   * @param {String} name                             - The name identifier for the new panel type.
-   * @param {Object} options                          - Options for the panel type.
-   * @param {wcDocker~onCreatePanel} options.onCreate - A function or an object constructor for the panel.
-   * @param {String} [options.icon]                   - A CSS class name to draw an icon in the panels tab widget.
-   * @param {String} [options.faicon]                 - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
-   * @param {String|Boolean} [options.title]          - Assign a custom name to the panels tab. A false value will hide the tab entirely.
-   * @param {Boolean} [options.isPrivate]             - If true, the user will not be able to create this panel type.
-   * @param {Number} [options.limit]                  - Enforces a limited number of this panel type from being created by the user.
-   * @param {Object} [options.options]                - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
+   * @param {String} name                               - The name identifier for the new panel type.
+   * @param {wcDocker~registerOptions|wcDocker~onCreatePanel} options - Either an options object for describing the panel type or a <b>deprecated</b> constructor function for the panel.
+   * @param {Boolean} [isPrivate]                       - If true, the user will not be able to create this panel type. <b>This parameter is deprecated, please use {@link wcDocker~registerOptions} instead.
    *
    * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
    */
@@ -395,10 +296,12 @@ wcDocker.prototype = {
       options = {
         onCreate: optionsOrCreateFunc,
       };
+      console.log("Warning! Passing in the creation function directly to wcDocker.registerPanelType parameter 2 is now deprecated and will be removed in the next version!  Please use the preferred options object instead.");
     }
 
     if (typeof isPrivate != 'undefined') {
       options.isPrivate = isPrivate;
+      console.log("Warning! Passing in the isPrivate flag to wcDocker.registerPanelType parameter 3 is now deprecated and will be removed in the next version!  Please use the preferred options object instead.");
     }
 
     if ($.isEmptyObject(options)) {
@@ -443,7 +346,7 @@ wcDocker.prototype = {
    *
    * @param {String} typeName - The name identifier of the panel.
    *
-   * @returns {Object|Boolean} - Registered options of the panel type, or false if the panel was not found.
+   * @returns {wcDocker~registerOptions} - Registered options of the panel type, or false if the panel was not found.
    */
   panelTypeInfo: function(typeName) {
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
@@ -852,8 +755,8 @@ wcDocker.prototype = {
   /**
    * Registers a global [event]{@link wcDocker.EVENT}.
    *
-   * @param {wcDocker.EVENT} eventType - The event type.
-   * @param {wcDocker~onEvent} handler - A handler function to be called for the event.
+   * @param {wcDocker.EVENT} eventType        - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+   * @param {wcDocker~event:onEvent} handler  - A handler function to be called for the event.
    *
    * @returns {Boolean} Success or failure that the event has been registered.
    */
@@ -877,8 +780,8 @@ wcDocker.prototype = {
   /**
    * Unregisters a global [event]{@link wcDocker.EVENT}.
    *
-   * @param {wcDocker.EVENT} eventType    - The event type.
-   * @param {wcDocker~onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
+   * @param {wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+   * @param {wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
    */
   off: function(eventType, handler) {
     if (typeof eventType === 'undefined') {
@@ -902,9 +805,10 @@ wcDocker.prototype = {
 
   /**
    * Trigger an [event]{@link wcDocker.EVENT} on all panels.
+   * @fires wcDocker~event:onEvent
    *
-   * @param {String} eventName  - The name of the event to trigger.
-   * @param {Object} [data]     - A custom data object to be passed along with the event.
+   * @param {wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+   * @param {Object} [data]             - A custom data object to be passed along with the event.
    */
   trigger: function(eventName, data) {
     if (!eventName) {
@@ -1245,7 +1149,7 @@ wcDocker.prototype = {
   /**
    * Restores a previously saved configuration.
    *
-   * @param {String} dataString - A previously saved serialized string, See {@link wcDocker.save}.
+   * @param {String} dataString - A previously saved serialized string, See [wcDocker.save]{@link wcDocker#save}.
    */
   restore: function(dataString) {
     var data = JSON.parse(dataString, function(key, value) {
@@ -1305,6 +1209,8 @@ wcDocker.prototype = {
     if (this._options.allowContextMenu) {
       this.basicMenu('.wcFrame, .wcDrawer', [], true);
     }
+
+    this.theme(this._options.theme);
 
     var self = this;
     var contextTimer;
@@ -1837,9 +1743,6 @@ wcDocker.prototype = {
 
   // Updates the sizing of all panels inside this window.
   __update: function(opt_dontMove) {
-    if (!this._theme) {
-      this.theme('default');
-    }
     if (this._root) {
       this._root.__update(opt_dontMove);
     }

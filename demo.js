@@ -67,7 +67,7 @@ $(document).ready(function() {
         myPanel.layout().addItem($header, 0, 0);
         myPanel.layout().addItem($('<div style="text-align:center">Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</div>'), 0, 1);
         myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://github.com/WebCabin/wcDocker">https://github.com/WebCabin/wcDocker</a></div>'), 0, 2);
-        myPanel.layout().addItem($('<div style="text-align:center">View the instructions and documentation here: <a href="https://github.com/WebCabin/wcDocker/wiki/Instructions">https://github.com/WebCabin/wcDocker/wiki/Instructions</a></div>'), 0, 3);
+        myPanel.layout().addItem($('<div style="text-align:center">View the API documentation here: <a href="http://docker.api.webcabin.org/">http://docker.api.webcabin.org/</a></div>'), 0, 3);
       }
     });
 

@@ -1,11 +1,12 @@
 /**
  * @class
- * A gridded layout for arranging elements on a panel.
- * <b>[Panels]{@link wcPanel}, [splitters]{@link wcSplitter}, and [tab frames]{@link wcTabFrame}
- * initialize their own layouts, <u>this should never be constructed directly by the user</u></b>
+ * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+ * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
  *
  * @constructor
- * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this layout.
+ * @description
+ * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
+ * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
  * @param {wcLayout|wcSplitter|wcDocker} parent   - The layout's parent object.
  */
 function wcLayout(container, parent) {
@@ -38,7 +39,7 @@ wcLayout.prototype = {
   /**
    * Adds an item into the layout, expanding the grid size if necessary.
    *
-   * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} item - A DOM element to add.
+   * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
    * @param {Number} [x=0] - The horizontal grid position to place the element.
    * @param {Number} [y=0] - The vertical grid position to place the element.
    * @param {Number} [w=1] - The number of horizontal cells this item will take within the grid.
@@ -116,14 +117,14 @@ wcLayout.prototype = {
   /**
    * Begins a batch operation.  Basically it refrains from constructing
    * the layout grid, which causes a reflow, on each item added.  Instead,
-   * The grid is only generated at the end once {@link wcLayout#finishBatch} is called.
+   * The grid is only generated at the end once [wcLayout.finishBatch]{@link wcLayout#finishBatch} is called.
    */
   startBatch: function() {
     this._batchProcess = true;
   },
 
   /**
-   * Ends a batch operation. See {@link wcLayout#startBatch} for more information.
+   * Ends a batch operation. See [wcLayout.startBatch]{@link wcLayout#startBatch} for more information.
    */
   finishBatch: function() {
     this._batchProcess = false;

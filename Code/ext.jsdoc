@@ -1,0 +1,51 @@
+/**
+ * A Document Object Model Element used by HTML.
+ * @external domNode
+ * @see http://www.w3schools.com/jsref/dom_obj_all.asp
+ */
+
+/**
+ * jQuery library. Part of the listed dependencies.
+ *
+ * @external jQuery
+ * @see http://jquery.com/
+ */
+
+/**
+ * A jQuery selector string.
+ *
+ * @typedef {String} external:jQuery~selector
+ * @see http://api.jquery.com/category/selectors/
+ */
+
+/**
+ * A jQuery object.
+ *
+ * @typedef {Object} external:jQuery~Object
+ * @see https://learn.jquery.com/using-jquery-core/jquery-object/
+ */
+
+/**
+ * jQuery contextMenu library. Part of the listed dependencies.
+ *
+ * @typedef {Object} external:jQuery#contextMenu
+ * @extends jQuery
+ * @see http://medialize.github.io/jQuery-contextMenu/docs.html/
+ */
+
+/**
+ * A jQuery contextMenu item object.
+ *
+ * @typedef {Object} external:jQuery#contextMenu~item
+ * @property {String} name                   - The name of the menu item.
+ * @property {external:contextMenu~onSelect} callback - A callback handler when this option has been selected.
+ */
+
+/**
+ * A callback handler when a menu option has been selected.
+ *
+ * @callback external:jQuery#contextMenu~onSelect
+ * @param {String} key              - The triggered menu key.
+ * @param {Object} opts             - Menu event object.
+ * @param {wcPanel|Boolean} panel   - The target panel, if one exists.
+ */

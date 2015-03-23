@@ -2,10 +2,11 @@
  * @class
  * The frame is a [panel]{@link wcPanel} container.
  * Each panel appears as a tabbed item inside a frame.
- * <b>Handled internally by [wcDocker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
  *
  * @constructor
- * @param {external:jQuery~selector|external:jQuery~Object|external:DOM-Element} container - A container element for this frame.
+ * @description
+ * <b><i>PRIVATE<i> - Handled internally by [wcDocker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
+ * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this frame.
  * @param {wcSplitter|wcDocker} parent  - The frames parent object.
  * @param {Boolean} isFloating          - If true, the frame will be a floating window.
  */
