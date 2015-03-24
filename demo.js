@@ -49,25 +49,32 @@ $(document).ready(function() {
     myDocker.registerPanelType('Top Panel', {
       isPrivate: true,
       onCreate: function(myPanel) {
-        myPanel.layout().$table.css('padding', '10px');
+        // myPanel.layout().$table.css('padding', '5px');
 
         // Constrain the sizing of this window so the user can't resize it.
-        myPanel.initSize(Infinity, 120);
-        myPanel.minSize(100, 120);
-        myPanel.maxSize(Infinity, 120);
+        myPanel.initSize(Infinity, 75);
+        myPanel.minSize(100, 75);
+        myPanel.maxSize(Infinity, 75);
         myPanel.title(false);
 
         // Do not allow the user to move or remove this panel, this will remove the title bar completely from the frame.
         myPanel.moveable(false);
         myPanel.closeable(false);
+        myPanel.scrollable(false, false);
 
-        var $header = $('<div style="text-align:center;"><strong>Welcome to the Web Cabin Docker!</strong></div>');
+        var $header = $('<div><pre style="margin:5px;padding:5px;background-color:rgba(0,0,0,0.5);"><b style="font-size:20px;">Welcome to the Web Cabin Docker!</b><br>A powerful docking panel IDE that is <b>free</b> and <b>open source</b> under the <a style="color:#AAA" href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT License</a>!<br>Get the source here: <a style="color:#AAA" href="https://github.com/WebCabin/wcDocker">https://github.com/WebCabin/wcDocker</a></pre></div>');
+        var $version= $('<pre style="position:absolute;top:0px;right:0px;background-color:transparent;">Version (pre-release) 3.0.0</pre>');
+        var $b1     = $('<div style="position:absolute;top:28px;right:130px;"><img src="Code/ext/images/chrome.png"/></div>');
+        var $b2     = $('<div style="position:absolute;top:28px;right:90px;"><img src="Code/ext/images/firefox.png"/></div>');
+        var $b3     = $('<div style="position:absolute;top:28px;right:50px;"><img src="Code/ext/images/internet-explorer.png"/></div>');
+        var $b4     = $('<div style="position:absolute;top:28px;right:10px;"><img src="Code/ext/images/safari.png"/></div>');
+        $header.append($version);
+        $header.append($b1);
+        $header.append($b2);
+        $header.append($b3);
+        $header.append($b4);
 
-        // Add some text information into the panel
-        myPanel.layout().addItem($header, 0, 0);
-        myPanel.layout().addItem($('<div style="text-align:center">Web Cabin Docker is a docking panel layout interface written in JavaScript under the <a href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT License</a>.</div>'), 0, 1);
-        myPanel.layout().addItem($('<div style="text-align:center">View the source here: <a href="https://github.com/WebCabin/wcDocker" target="_blank">https://github.com/WebCabin/wcDocker</a></div>'), 0, 2);
-        myPanel.layout().addItem($('<div style="text-align:center">View the API documentation here: <a href="http://docker.api.webcabin.org/" target="_blank">http://docker.api.webcabin.org/</a></div>'), 0, 3);
+        myPanel.layout().addItem($header);
       }
     });
 
@@ -170,15 +177,11 @@ $(document).ready(function() {
       faicon: 'trophy',
       onCreate: function(myPanel) {
         myPanel.initSize(400, 400);
-        // myPanel.layout().showGrid(true);
-        myPanel.layout().$table.css('padding', '10px');
 
         // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
         // to size it to the full size of the panel.
-        var $scene = $('<div style="position:absolute;top:10px;left:10px;right:10px;bottom:10px;">');
-
-        myPanel.layout().addItem($scene, 0, 0).css('border', '1px solid black').parent().css('height', '100%');
-
+        var $scene = $('<div style="position:absolute;top:5px;left:5px;right:5px;bottom:5px;border:1px solid black;">');
+        myPanel.layout().addItem($scene);
 
         // Here we can utilize the splitter used by wcDocker internally so that we may split up
         // a single panel.  Splitters can be nested, and new layouts can be created to fill
@@ -387,23 +390,35 @@ $(document).ready(function() {
     });
 
     // ---------------------------------------------------------------------------
+    // Deprecated, we now have new documentation shown in the Tutorial Panel!
+    //
     // Register the instruction panel, explains the code used to initialize docker
     // as well as explains every panel type.
-    myDocker.registerPanelType('How-To Panel', {
-      faicon: 'graduation-cap',
-      onCreate: HowToPanel,
-      isPrivate: true
-    });
+    // myDocker.registerPanelType('How-To Panel', {
+    //   faicon: 'graduation-cap',
+    //   onCreate: HowToPanel,
+    //   isPrivate: true
+    // });
 
     // --------------------------------------------------------------------------------
     // Register the tutorial panel that links a frame to our API tutorial documentation.
     myDocker.registerPanelType('Tutorial Panel', {
       faicon: 'graduation-cap',
       onCreate: function(myPanel) {
-        var $container = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');
-        myPanel.layout().addItem($container);
+        var $title = $('<span>View the API documentation: <a style="color:#AAA" href="http://docker.api.webcabin.org/" target="_blank" style="background-color:rgba(255,255,255,0.3);">http://docker.api.webcabin.org/</a></span>');
+        myPanel.layout().addItem($title, 0, 0);
+        var $container = $('<div style="position:absolute;top:25px;left:0px;right:0px;bottom:0px;"></div>');
+        myPanel.layout().addItem($container, 0, 1).css('height', '100%');
+
         var iFrame = new wcIFrame($container, myPanel);
         iFrame.openURL('http://docker.api.webcabin.org/tutorial-1.0-getting-started.html');
+
+        // Create a panel button that shows information about this panel.
+        myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
+        myPanel.on(wcDocker.EVENT.BUTTON, function(data) {
+          // Use the preivously defined common function to popup the Info Panel.
+          showInfo("The tutorial panel shows the official API documentation page using a fully supported iFrame container widget.");
+        });
       }
     });
 
@@ -411,11 +426,12 @@ $(document).ready(function() {
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var howToPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.LEFT);
+    var tutorialPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.LEFT);
 
     var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h:'20%'});
     var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.RIGHT, null, {w:'25%'});
 
+    // TODO: Drawers are not fully functional yet, please wait for version 3.0.0 coming soon!
     // var leftDrawer = myDocker.addDrawer(wcDocker.DOCK.LEFT);
     // var rightDrawer = myDocker.addDrawer(wcDocker.DOCK.RIGHT);
     // var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK.BOTTOM);

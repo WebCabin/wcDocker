@@ -129,7 +129,7 @@ function wcDocker(container, options) {
 
 /**
  * Enumerated Docking positions.
- * @since 3.0.0
+ * @version 3.0.0
  * @enum {String}
  */
 wcDocker.DOCK = {
@@ -151,7 +151,7 @@ wcDocker.DOCK = {
 
 /**
  * Enumerated Internal events
- * @since 3.0.0
+ * @version 3.0.0
  * @enum {String}
  */
 wcDocker.EVENT = {
@@ -209,7 +209,7 @@ wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
 
 /**
  * Used for the splitter bar orientation.
- * @since 3.0.0
+ * @version 3.0.0
  * @enum {Boolean}
  */
 wcDocker.ORIENTATION = {
@@ -279,7 +279,7 @@ wcDocker.prototype = {
 
   /**
    * Registers a new docking panel type to be used later.
-   * @since 3.0.0
+   * @version 3.0.0
    *
    * @param {String} name                       - The name identifier for the new panel type.
    * @param {wcDocker~registerOptions} options  - An options object for describing the panel type.

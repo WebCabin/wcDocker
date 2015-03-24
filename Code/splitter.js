@@ -3,6 +3,7 @@
  * Splits an area in two, dividing it with a resize-able splitter bar. This is the same class
  * used throughout [docker]{@link wcDocker} to organize the docking interface, but it can also
  * be used inside a panel as a custom widget.
+ * <b>Note:</b> The container needs to be positioned in either absolute or relative coordinates in css.
  *
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this splitter.

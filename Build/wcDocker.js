@@ -129,7 +129,7 @@ function wcDocker(container, options) {
 
 /**
  * Enumerated Docking positions.
- * @since 3.0.0
+ * @version 3.0.0
  * @enum {String}
  */
 wcDocker.DOCK = {
@@ -151,7 +151,7 @@ wcDocker.DOCK = {
 
 /**
  * Enumerated Internal events
- * @since 3.0.0
+ * @version 3.0.0
  * @enum {String}
  */
 wcDocker.EVENT = {
@@ -209,7 +209,7 @@ wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
 
 /**
  * Used for the splitter bar orientation.
- * @since 3.0.0
+ * @version 3.0.0
  * @enum {Boolean}
  */
 wcDocker.ORIENTATION = {
@@ -279,11 +279,11 @@ wcDocker.prototype = {
 
   /**
    * Registers a new docking panel type to be used later.
-   * @since 3.0.0
+   * @version 3.0.0
    *
-   * @param {String} name                               - The name identifier for the new panel type.
-   * @param {wcDocker~registerOptions|wcDocker~onCreatePanel} options - Either an options object for describing the panel type or a <b>deprecated</b> constructor function for the panel.
-   * @param {Boolean} [isPrivate]                       - If true, the user will not be able to create this panel type. <b>This parameter is deprecated, please use {@link wcDocker~registerOptions} instead.
+   * @param {String} name                       - The name identifier for the new panel type.
+   * @param {wcDocker~registerOptions} options  - An options object for describing the panel type.
+   * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options]{@link wcDocker~registerOptions} instead.
    *
    * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
    */
@@ -3493,7 +3493,7 @@ wcPanel.prototype = {
   },
 
   /**
-   * Triggers an event of a given type to all panels, including itself.
+   * Triggers an [event]{@link wcDocker.EVENT} of a given type to all panels, including itself.
    *
    * @param {wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {Object} [data]             - A custom data object to pass into all handlers.
@@ -3703,7 +3703,7 @@ wcPanel.prototype = {
  *
  * @constructor
  * @description
- * <b><i>PRIVATE<i> - Handled internally by [wcDocker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
+ * <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this frame.
  * @param {wcSplitter|wcDocker} parent  - The frames parent object.
  * @param {Boolean} isFloating          - If true, the frame will be a floating window.
@@ -4593,6 +4593,7 @@ wcFrame.prototype = {
  * Splits an area in two, dividing it with a resize-able splitter bar. This is the same class
  * used throughout [docker]{@link wcDocker} to organize the docking interface, but it can also
  * be used inside a panel as a custom widget.
+ * <b>Note:</b> The container needs to be positioned in either absolute or relative coordinates in css.
  *
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this splitter.
@@ -5299,8 +5300,10 @@ wcSplitter.prototype = {
 };
 /**
  * @class
- * A collapsable container for carrying its own arrangement of panels.
+ * A collapsable container for carrying its own arrangement of panels.<br>
+ * <b>WARNING: The drawer system is still being developed, it is in very early stages right now and not all features are active! Please wait for the official 3.0.0 version to come out!</b>
  * 
+ * @version 3.0.0
  * @constructor
  * @description
  * <b><i>PRIVATE</i> - Use [wcDocker.addDrawer]{@link wcDocker#addDrawer} and [wcDocker.removeDrawer]{@link wcDocker#removeDrawer} to manage drawers, 

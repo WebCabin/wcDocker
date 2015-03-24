@@ -1,7 +1,9 @@
 /**
  * @class
- * A collapsable container for carrying its own arrangement of panels.
+ * A collapsable container for carrying its own arrangement of panels.<br>
+ * <b>WARNING: The drawer system is still being developed, it is in very early stages right now and not all features are active! Please wait for the official 3.0.0 version to come out!</b>
  * 
+ * @version 3.0.0
  * @constructor
  * @description
  * <b><i>PRIVATE</i> - Use [wcDocker.addDrawer]{@link wcDocker#addDrawer} and [wcDocker.removeDrawer]{@link wcDocker#removeDrawer} to manage drawers, 
