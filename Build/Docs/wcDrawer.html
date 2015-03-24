@@ -10,14 +10,14 @@
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.darkly.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
 
 </head>
 
 <body>
 
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container">
+<div class="container-fluid">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
 	</div>
@@ -58,11 +58,11 @@
 </div>
 
 
-<div class="container">
+<div class="container-fluid">
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
 	
 		<div id="main">
     		
@@ -88,7 +88,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="wcDrawer"> new <b>wcDrawer</b>(container, parent, position)
+    <h4 class="name" id="wcDrawer"> <toc>new </toc><toc><b>wcDrawer</b>(container, parent, position)</toc>
         
     </h4>
 
@@ -303,7 +303,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="collapse"> function <b>collapse</b>()
+    <h4 class="name" id="collapse"> function <toc><b>collapse</b>()</toc>
         
     </h4>
 
@@ -396,7 +396,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="expand"> function <b>expand</b>()
+    <h4 class="name" id="expand"> function <toc><b>expand</b>()</toc>
         
     </h4>
 
@@ -489,7 +489,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="isExpanded"> function <b>isExpanded</b>()
+    <h4 class="name" id="isExpanded"> function <toc><b>isExpanded</b>()</toc>
         
         >
         
@@ -601,7 +601,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="maxSize"> function <b>maxSize</b>()
+    <h4 class="name" id="maxSize"> function <toc><b>maxSize</b>()</toc>
         
         >
         
@@ -713,7 +713,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="minSize"> function <b>minSize</b>()
+    <h4 class="name" id="minSize"> function <toc><b>minSize</b>()</toc>
         
         >
         
@@ -825,7 +825,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="toggle"> function <b>toggle</b>(<span class="optional">expanded</span>)
+    <h4 class="name" id="toggle"> function <toc><b>toggle</b>(<span class="optional">expanded</span>)</toc>
         
     </h4>
 
@@ -995,7 +995,7 @@
 
 	
 		<div class="col-md-3">
-			<div id="toc" class="col-md-3"></div>
+			<div id="toc" class="col-xs-3 col-sm-3 col-md-3 small"></div>
 		</div>
 	
 
@@ -1003,7 +1003,7 @@
 
 <div class="row">
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8">
 	
 		<footer>
 		
@@ -1030,10 +1030,6 @@ $( function () {
 
 	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	// } );
-
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
-  });
 
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
@@ -1079,6 +1075,15 @@ $( function () {
 		showMenu : true,
 		enableDoclinks : true
 	} );
+
+	// $("a[name^='sunlight-1-line-']").each(function() {
+	// 	$(this).wrap('<div id="' + this.name + '" style="padding-top:65px;margin-top:-65px;display:inline-block;" class="sunlight-line-container"></div>');
+	// 	this.name = '';
+	// });
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
 } );
 </script>
 

@@ -96,7 +96,11 @@ jQuery.fn.toc.defaults = {
     return prefix+i;
   },
   headerText: function(i, heading, $heading) {
-    return $heading.text();
+    var result = '';
+    $heading.find('toc').each(function() {
+      result += $(this).text();
+    });
+    return result.replace(/\(([^)]+)\)/g, '(...)') || $heading.text();
   },
   itemClass: function(i, heading, $heading, prefix) {
     return prefix + '-' + $heading[0].tagName.toLowerCase();

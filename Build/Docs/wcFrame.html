@@ -10,14 +10,14 @@
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.darkly.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
 
 </head>
 
 <body>
 
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container">
+<div class="container-fluid">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
 	</div>
@@ -58,11 +58,11 @@
 </div>
 
 
-<div class="container">
+<div class="container-fluid">
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
 	
 		<div id="main">
     		
@@ -88,7 +88,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="wcFrame"> new <b>wcFrame</b>(container, parent, isFloating)
+    <h4 class="name" id="wcFrame"> <toc>new </toc><toc><b>wcFrame</b>(container, parent, isFloating)</toc>
         
     </h4>
 
@@ -303,7 +303,7 @@
 <dt class="name" id="$container">
     <h4>instance
         var
-        <b>$container</b>
+        <b><toc>$container</toc></b>
     </h4>
 
     
@@ -384,7 +384,7 @@
 <dt class="name" id="$frame">
     <h4>instance
         var
-        <b>$frame</b>
+        <b><toc>$frame</toc></b>
     </h4>
 
     
@@ -469,7 +469,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addPanel"> function <b>addPanel</b>(panel, <span class="optional">index</span>)
+    <h4 class="name" id="addPanel"> function <toc><b>addPanel</b>(panel, <span class="optional">index</span>)</toc>
         
     </h4>
 
@@ -654,7 +654,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="initSize"> function <b>initSize</b>()
+    <h4 class="name" id="initSize"> function <toc><b>initSize</b>()</toc>
         
         >
         
@@ -766,7 +766,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="maxSize"> function <b>maxSize</b>()
+    <h4 class="name" id="maxSize"> function <toc><b>maxSize</b>()</toc>
         
         >
         
@@ -878,7 +878,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="minSize"> function <b>minSize</b>()
+    <h4 class="name" id="minSize"> function <toc><b>minSize</b>()</toc>
         
         >
         
@@ -990,7 +990,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="panel"> function <b>panel</b>(<span class="optional">tabIndex</span>)
+    <h4 class="name" id="panel"> function <toc><b>panel</b>(<span class="optional">tabIndex</span>)</toc>
         
         >
         
@@ -1163,7 +1163,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="pos"> function <b>pos</b>(<span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">pixels</span>)
+    <h4 class="name" id="pos"> function <toc><b>pos</b>(<span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">pixels</span>)</toc>
         
         >
         
@@ -1402,7 +1402,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="removePanel"> function <b>removePanel</b>(panel)
+    <h4 class="name" id="removePanel"> function <toc><b>removePanel</b>(panel)</toc>
         
         >
         
@@ -1579,7 +1579,7 @@
 
 	
 		<div class="col-md-3">
-			<div id="toc" class="col-md-3"></div>
+			<div id="toc" class="col-xs-3 col-sm-3 col-md-3 small"></div>
 		</div>
 	
 
@@ -1587,7 +1587,7 @@
 
 <div class="row">
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8">
 	
 		<footer>
 		
@@ -1614,10 +1614,6 @@ $( function () {
 
 	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	// } );
-
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
-  });
 
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
@@ -1663,6 +1659,15 @@ $( function () {
 		showMenu : true,
 		enableDoclinks : true
 	} );
+
+	// $("a[name^='sunlight-1-line-']").each(function() {
+	// 	$(this).wrap('<div id="' + this.name + '" style="padding-top:65px;margin-top:-65px;display:inline-block;" class="sunlight-line-container"></div>');
+	// 	this.name = '';
+	// });
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
 } );
 </script>
 

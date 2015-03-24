@@ -10,14 +10,14 @@
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.darkly.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
 
 </head>
 
 <body>
 
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container">
+<div class="container-fluid">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
 	</div>
@@ -58,11 +58,11 @@
 </div>
 
 
-<div class="container">
+<div class="container-fluid">
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
 	
 		<div id="main">
     		
@@ -88,7 +88,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="wcLayout"> new <b>wcLayout</b>(container, parent)
+    <h4 class="name" id="wcLayout"> <toc>new </toc><toc><b>wcLayout</b>(container, parent)</toc>
         
     </h4>
 
@@ -283,7 +283,7 @@
 <dt class="name" id="$container">
     <h4>instance
         var
-        <b>$container</b>
+        <b><toc>$container</toc></b>
     </h4>
 
     
@@ -364,7 +364,7 @@
 <dt class="name" id="$table">
     <h4>instance
         var
-        <b>$table</b>
+        <b><toc>$table</toc></b>
     </h4>
 
     
@@ -449,7 +449,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addItem"> function <b>addItem</b>(item, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">w</span>, <span class="optional">h</span>)
+    <h4 class="name" id="addItem"> function <toc><b>addItem</b>(item, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">w</span>, <span class="optional">h</span>)</toc>
         
         >
         
@@ -794,7 +794,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="clear"> function <b>clear</b>()
+    <h4 class="name" id="clear"> function <toc><b>clear</b>()</toc>
         
     </h4>
 
@@ -887,7 +887,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="finishBatch"> function <b>finishBatch</b>()
+    <h4 class="name" id="finishBatch"> function <toc><b>finishBatch</b>()</toc>
         
     </h4>
 
@@ -980,7 +980,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="gridAlternate"> function <b>gridAlternate</b>()
+    <h4 class="name" id="gridAlternate"> function <toc><b>gridAlternate</b>()</toc>
         
         >
         
@@ -1092,7 +1092,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="gridSpacing"> function <b>gridSpacing</b>(<span class="optional">size</span>)
+    <h4 class="name" id="gridSpacing"> function <toc><b>gridSpacing</b>(<span class="optional">size</span>)</toc>
         
         >
         
@@ -1265,7 +1265,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="item"> function <b>item</b>(x, y)
+    <h4 class="name" id="item"> function <toc><b>item</b>(x, y)</toc>
         
         >
         
@@ -1455,7 +1455,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="scene"> function <b>scene</b>()
+    <h4 class="name" id="scene"> function <toc><b>scene</b>()</toc>
         
     </h4>
 
@@ -1557,7 +1557,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="showGrid"> function <b>showGrid</b>(<span class="optional">enabled</span>)
+    <h4 class="name" id="showGrid"> function <toc><b>showGrid</b>(<span class="optional">enabled</span>)</toc>
         
         >
         
@@ -1730,7 +1730,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="startBatch"> function <b>startBatch</b>()
+    <h4 class="name" id="startBatch"> function <toc><b>startBatch</b>()</toc>
         
     </h4>
 
@@ -1839,7 +1839,7 @@
 
 	
 		<div class="col-md-3">
-			<div id="toc" class="col-md-3"></div>
+			<div id="toc" class="col-xs-3 col-sm-3 col-md-3 small"></div>
 		</div>
 	
 
@@ -1847,7 +1847,7 @@
 
 <div class="row">
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8">
 	
 		<footer>
 		
@@ -1874,10 +1874,6 @@ $( function () {
 
 	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	// } );
-
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
-  });
 
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
@@ -1923,6 +1919,15 @@ $( function () {
 		showMenu : true,
 		enableDoclinks : true
 	} );
+
+	// $("a[name^='sunlight-1-line-']").each(function() {
+	// 	$(this).wrap('<div id="' + this.name + '" style="padding-top:65px;margin-top:-65px;display:inline-block;" class="sunlight-line-container"></div>');
+	// 	this.name = '';
+	// });
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
 } );
 </script>
 

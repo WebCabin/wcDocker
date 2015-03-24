@@ -10,14 +10,14 @@
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.darkly.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
 
 </head>
 
 <body>
 
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container">
+<div class="container-fluid">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
 	</div>
@@ -58,11 +58,11 @@
 </div>
 
 
-<div class="container">
+<div class="container-fluid">
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-10 col-md-offset-1">
 	
 		<div id="main">
     		
@@ -105,10 +105,20 @@
  */
 
 /**
+ * Options for a {@link wcDocker} instance.
+ * 
+ * @typedef {Object} wcDocker~Options
+ * @property {String} [themePath='Themes']     - A folder path where all docker theme files can be found.
+ * @property {String} [theme='default']        - The active docker theme.
+ * @property {Boolean} [allowContextMenu=true] - Overrides the default right click menu with ones that interact with docker.
+ * @property {Boolean} [hideOnResize=false]    - If true, panels will hide their contents as they are being resized.
+ */
+
+/**
  * Options object for registering new panel types.
  * 
  * @typedef wcDocker~registerOptions
- * @property {wcDocker~onCreatePanel} options.onCreate   - A function or an object constructor for the panel.
+ * @property {wcDocker~onCreatePanel} options.onCreate - A function or an object constructor for the panel.
  * @property {String} [options.icon]                   - A CSS class name to draw an icon in the panels tab widget.
  * @property {String} [options.faicon]                 - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
  * @property {String|Boolean} [options.title]          - Assign a custom name to the panels tab. A false value will hide the tab entirely.
@@ -185,10 +195,6 @@ $( function () {
 	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	// } );
 
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
-  });
-
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
 			// return $( heading ).attr( "id" ) || ( prefix + i );
@@ -233,6 +239,15 @@ $( function () {
 		showMenu : true,
 		enableDoclinks : true
 	} );
+
+	// $("a[name^='sunlight-1-line-']").each(function() {
+	// 	$(this).wrap('<div id="' + this.name + '" style="padding-top:65px;margin-top:-65px;display:inline-block;" class="sunlight-line-container"></div>');
+	// 	this.name = '';
+	// });
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
 } );
 </script>
 

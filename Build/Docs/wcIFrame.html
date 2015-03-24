@@ -10,14 +10,14 @@
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.darkly.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
 
 </head>
 
 <body>
 
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container">
+<div class="container-fluid">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html">Web Cabin Docker</a>
 	</div>
@@ -58,11 +58,11 @@
 </div>
 
 
-<div class="container">
+<div class="container-fluid">
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
 	
 		<div id="main">
     		
@@ -88,7 +88,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="wcIFrame"> new <b>wcIFrame</b>(container, parent)
+    <h4 class="name" id="wcIFrame"> <toc>new </toc><toc><b>wcIFrame</b>(container, parent)</toc>
         
     </h4>
 
@@ -279,7 +279,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="destroy"> function <b>destroy</b>()
+    <h4 class="name" id="destroy"> function <toc><b>destroy</b>()</toc>
         
     </h4>
 
@@ -372,7 +372,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="docker"> function <b>docker</b>()
+    <h4 class="name" id="docker"> function <toc><b>docker</b>()</toc>
         
         >
         
@@ -484,7 +484,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="hide"> function <b>hide</b>()
+    <h4 class="name" id="hide"> function <toc><b>hide</b>()</toc>
         
     </h4>
 
@@ -577,7 +577,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="openHTML"> function <b>openHTML</b>(html)
+    <h4 class="name" id="openHTML"> function <toc><b>openHTML</b>(html)</toc>
         
     </h4>
 
@@ -719,7 +719,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="openURL"> function <b>openURL</b>(url)
+    <h4 class="name" id="openURL"> function <toc><b>openURL</b>(url)</toc>
         
     </h4>
 
@@ -861,7 +861,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="show"> function <b>show</b>()
+    <h4 class="name" id="show"> function <toc><b>show</b>()</toc>
         
     </h4>
 
@@ -954,7 +954,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="window"> function <b>window</b>()
+    <h4 class="name" id="window"> function <toc><b>window</b>()</toc>
         
         >
         
@@ -1082,7 +1082,7 @@
 
 	
 		<div class="col-md-3">
-			<div id="toc" class="col-md-3"></div>
+			<div id="toc" class="col-xs-3 col-sm-3 col-md-3 small"></div>
 		</div>
 	
 
@@ -1090,7 +1090,7 @@
 
 <div class="row">
 	
-	<div class="col-md-8">
+	<div class="col-xs-8 col-sm-8 col-md-8">
 	
 		<footer>
 		
@@ -1117,10 +1117,6 @@ $( function () {
 
 	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	// } );
-
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
-  });
 
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
@@ -1166,6 +1162,15 @@ $( function () {
 		showMenu : true,
 		enableDoclinks : true
 	} );
+
+	// $("a[name^='sunlight-1-line-']").each(function() {
+	// 	$(this).wrap('<div id="' + this.name + '" style="padding-top:65px;margin-top:-65px;display:inline-block;" class="sunlight-line-container"></div>');
+	// 	this.name = '';
+	// });
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 65).css('margin-top', -65);
+  });
 } );
 </script>
 
