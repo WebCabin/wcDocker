@@ -72,11 +72,7 @@ if (!Array.prototype.indexOf)
  * 
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element to store the contents of wcDocker.
- * @param {Object} [options] - Options for constructing the instance.
- * @param {String} [options.themePath='Themes'] - A folder path where all docker theme files can be found.
- * @param {String} [options.theme='default'] - The active docker theme.
- * @param {Boolean} [options.allowContextMenu=true] - Overrides the default right click menu with ones that interact with docker.
- * @param {Boolean} [options.hideOnResize=false] - If true, panels will hide their contents as they are being resized.
+ * @param {wcDocker~Options} [options] - Options for constructing the instance.
  */
 function wcDocker(container, options) {
   this.$container = $(container).addClass('wcDocker');
@@ -217,7 +213,9 @@ wcDocker.PANEL_PLACEHOLDER_NAME     = '__wcDockerPlaceholderPanel';
  * @enum {Boolean}
  */
 wcDocker.ORIENTATION = {
+  /** Top and Bottom panes */
   VERTICAL       : false,
+  /** Left and Right panes */
   HORIZONTAL     : true
 };
 
@@ -1476,7 +1474,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel().layout().scene()[0] == this) {
+        if (self._frameList[i].panel().layout().$table[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);
@@ -1939,6 +1937,26 @@ wcDocker.prototype = {
   //    parentPanel  An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, parentPanel, rect) {
+    if (rect) {
+      var width = this.$container.width();
+      var height = this.$container.height();
+
+      if (rect.hasOwnProperty('x')) {
+        rect.x = this.__stringToPixel(rect.x, width);
+      }
+      if (rect.hasOwnProperty('y')) {
+        rect.y = this.__stringToPixel(rect.y, height);
+      }
+      if (!rect.hasOwnProperty('w')) {
+        rect.w = panel.initSize().x;
+      }
+      if (!rect.hasOwnProperty('h')) {
+        rect.h = panel.initSize().y;
+      }
+      rect.w = this.__stringToPixel(rect.w, width);
+      rect.h = this.__stringToPixel(rect.h, height);
+    }
+
     // Floating windows need no placement.
     if (location === wcDocker.DOCK.FLOAT || location === wcDocker.DOCK.MODAL) {
       var frame = new wcFrame(this.$container, this, true);
@@ -1958,9 +1976,14 @@ wcDocker.prototype = {
       }
 
       if (rect) {
-        if (rect.hasOwnProperty('x') && rect.hasOwnProperty('y')) {
-          frame.pos(rect.x + rect.w/2, rect.y + rect.h/2, true);
+        var pos = frame.pos(undefined, undefined, true);
+        if (rect.hasOwnProperty('x')) {
+          pos.x = rect.x + rect.w/2;
         }
+        if (rect.hasOwnProperty('y')) {
+          pos.y = rect.y + rect.h/2;
+        }
+        frame.pos(pos.x, pos.y, true);
         frame._size = {
           x: rect.w,
           y: rect.h,
@@ -2135,6 +2158,31 @@ wcDocker.prototype = {
 
     this.__update();
   },
+
+  // Converts a potential string value to a percentage.
+  __stringToPercent: function(value, size) {
+    if (typeof value === 'string') {
+      if (value.indexOf('%', value.length - 1) !== -1) {
+        return parseFloat(value)/100;
+      } else if (value.indexOf('px', value.length - 2) !== -1) {
+        return parseFloat(value) / size;
+      }
+    }
+    return parseFloat(value);
+  },
+
+  // Converts a potential string value to a pixel value.
+  __stringToPixel: function(value, size) {
+    if (typeof value === 'string') {
+      if (value.indexOf('%', value.length - 1) !== -1) {
+        return (parseFloat(value)/100) * size;
+      } else if (value.indexOf('px', value.length - 2) !== -1) {
+        return parseFloat(value);
+      }
+    }
+    return parseFloat(value);
+  },
+
 };
 
 /*
@@ -3117,7 +3165,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._pos.x = this.__stringToPercent(x, docker.$container.width());
+        this._pos.x = docker.__stringToPercent(x, docker.$container.width());
       } else {
         this._pos.x = x;
       }
@@ -3125,7 +3173,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._pos.y = this.__stringToPercent(y, docker.$container.height());
+        this._pos.y = docker.__stringToPercent(y, docker.$container.height());
       } else {
         this._pos.y = y;
       }
@@ -3146,7 +3194,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._size.x = this.__stringToPixel(x, docker.$container.width());
+        this._size.x = docker.__stringToPixel(x, docker.$container.width());
       } else {
         this._size.x = x;
       }
@@ -3154,7 +3202,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._size.y = this.__stringToPixel(y, docker.$container.height());
+        this._size.y = docker.__stringToPixel(y, docker.$container.height());
       } else {
         this._size.y = y;
       }
@@ -3174,7 +3222,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._minSize.x = this.__stringToPixel(x, docker.$container.width());
+        this._minSize.x = docker.__stringToPixel(x, docker.$container.width());
       } else {
         this._minSize.x = x;
       }
@@ -3182,7 +3230,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._minSize.y = this.__stringToPixel(y, docker.$container.height());
+        this._minSize.y = docker.__stringToPixel(y, docker.$container.height());
       } else {
         this._minSize.y = y;
       }
@@ -3202,7 +3250,7 @@ wcPanel.prototype = {
     if (typeof x !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._maxSize.x = this.__stringToPixel(x, docker.$container.width());
+        this._maxSize.x = docker.__stringToPixel(x, docker.$container.width());
       } else {
         this._maxSize.x = x;
       }
@@ -3210,7 +3258,7 @@ wcPanel.prototype = {
     if (typeof y !== 'undefined') {
       var docker = this.docker();
       if (docker) {
-        this._maxSize.y = this.__stringToPixel(y, docker.$container.height());
+        this._maxSize.y = docker.__stringToPixel(y, docker.$container.height());
       } else {
         this._maxSize.y = y;
       }
@@ -3602,30 +3650,6 @@ wcPanel.prototype = {
         this._events[eventType][i].call(this, data);
       }
     }
-  },
-
-  // Converts a potential string value to a percentage.
-  __stringToPercent: function(value, size) {
-    if (typeof value === 'string') {
-      if (value.indexOf('%', value.length - 1) !== -1) {
-        return parseFloat(value)/100;
-      } else if (value.indexOf('px', value.length - 2) !== -1) {
-        return parseFloat(value) / size;
-      }
-    }
-    return parseFloat(value);
-  },
-
-  // Converts a potential string value to a pixel value.
-  __stringToPixel: function(value, size) {
-    if (typeof value === 'string') {
-      if (value.indexOf('%', value.length - 1) !== -1) {
-        return (parseFloat(value)/100) * size;
-      } else if (value.indexOf('px', value.length - 2) !== -1) {
-        return parseFloat(value);
-      }
-    }
-    return parseFloat(value);
   },
 
   // Retrieves the bounding rect for this widget.
@@ -5015,9 +5039,9 @@ wcSplitter.prototype = {
 
     if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var barSize = this.$bar.outerWidth() / 2;
-      var barBorder = parseInt(this.$bar.css('border-top')) + parseInt(this.$bar.css('border-bottom'));
+      var barBorder = parseInt(this.$bar.css('border-top-width')) + parseInt(this.$bar.css('border-bottom-width'));
       if (opt_dontMove) {
-        var offset = this._pixelPos - (this.$container.offset().left + parseInt(this.$container.css('border-left'))) - this.$bar.outerWidth()/2;
+        var offset = this._pixelPos - (this.$container.offset().left + parseInt(this.$container.css('border-left-width'))) - this.$bar.outerWidth()/2;
         this._pos = offset / (width - this.$bar.outerWidth());
       }
 
@@ -5039,14 +5063,14 @@ wcSplitter.prototype = {
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
       this.$pane[1].css('right', '0px');
-      this.$pane[1].css('width', width-size-barSize-parseInt(this.$container.css('border-left'))*2);
+      this.$pane[1].css('width', width-size-barSize-parseInt(this.$container.css('border-left-width'))*2);
 
       this._pixelPos = this.$bar.offset().left + barSize;
     } else {
       var barSize = this.$bar.outerHeight() / 2;
-      var barBorder = parseInt(this.$bar.css('border-left')) + parseInt(this.$bar.css('border-right'));
+      var barBorder = parseInt(this.$bar.css('border-left-width')) + parseInt(this.$bar.css('border-right-width'));
       if (opt_dontMove) {
-        var offset = this._pixelPos - (this.$container.offset().top + parseInt(this.$container.css('border-top'))) - this.$bar.outerHeight()/2;
+        var offset = this._pixelPos - (this.$container.offset().top + parseInt(this.$container.css('border-top-width'))) - this.$bar.outerHeight()/2;
         this._pos = offset / (height - this.$bar.outerHeight());
       }
 
@@ -5068,7 +5092,7 @@ wcSplitter.prototype = {
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
-      this.$pane[1].css('height', height-size-barSize-parseInt(this.$container.css('border-top'))*2);
+      this.$pane[1].css('height', height-size-barSize-parseInt(this.$container.css('border-top-width'))*2);
      
       this._pixelPos = this.$bar.offset().top + barSize;
     }
@@ -5125,11 +5149,11 @@ wcSplitter.prototype = {
 
     if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var width = this.$container.outerWidth() - this.$bar.outerWidth();
-      mouse.x += 1 - parseInt(this.$container.css('border-left')) - (this.$bar.outerWidth()/2);
+      mouse.x += 1 - parseInt(this.$container.css('border-left-width')) - (this.$bar.outerWidth()/2);
       this.pos(mouse.x / width);
     } else {
       var height = this.$container.outerHeight() - this.$bar.outerHeight();
-      mouse.y += 1 - parseInt(this.$container.css('border-top')) - (this.$bar.outerHeight()/2);
+      mouse.y += 1 - parseInt(this.$container.css('border-top-width')) - (this.$bar.outerHeight()/2);
       this.pos(mouse.y / height);
     }
   },
@@ -6307,6 +6331,13 @@ wcIFrame.prototype = {
     }
   },
 
+  __focusFix: function() {
+    // Fixes a bug where the frame stops responding to mouse wheel after
+    // it has been assigned and unassigned pointer-events: none in css.
+    this.$frame.css('left', parseInt(this.$frame.css('left'))+1);
+    this.$frame.css('left', parseInt(this.$frame.css('left'))-1);
+  },
+
   __onVisibilityChanged: function() {
     this.__updateFrame();
   },
@@ -6320,12 +6351,12 @@ wcIFrame.prototype = {
   __onEndDock: function() {
     if (this.$frame && this._hasFocus) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.__focusFix();
     }
   },
 
   __onMoveStarted: function() {
     if (this.$frame) {
-      // Hide the frame while it is moving.
       this.$frame.addClass('wcIFrameMoving');
     }
   },
@@ -6333,6 +6364,7 @@ wcIFrame.prototype = {
   __onMoveFinished: function() {
     if (this.$frame) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.__focusFix();
     }
   },
 

@@ -71,7 +71,7 @@ HowToPanel.prototype = {
     var $credit = $('<div style="font-size:15px;min-width:550px;height:100%;">Code syntax highlighting brought to you by <a href="http://craig.is/" target="_blank"><b>Craig Campbell</b></a> and the <a href="http://craig.is/making/rainbows" target="_blank"><b>Rainbow</b></a> library!</div>');
     this._layout.addItem($credit, 0, 1);
 
-    var $scene = $('<div style="position:absolute;top:10px;left:10px;right:10px;bottom:27px;border-bottom:1px solid black;">');
+    var $scene = $('<div style="position:absolute;top:10px;left:10px;right:10px;bottom:27px;border-bottom-width:1px solid black;">');
     this._layout.addItem($scene, 0, 0).parent().css('height', '100%');
 
     this._tabFrame = new wcTabFrame($scene, this._panel);
@@ -100,8 +100,8 @@ HowToPanel.prototype = {
   },
 
   __initTabLayout: function(layout) {
-    layout.$table.css('border-left', '1px solid black');
-    layout.$table.css('border-right', '1px solid black');
+    layout.$table.css('border-left-width', '1px solid black');
+    layout.$table.css('border-right-width', '1px solid black');
     layout.$table.css('padding', '10px');
     this._layoutRow = 0;
     this._currentLayout = layout;
@@ -249,7 +249,7 @@ HowToPanel.prototype = {
       "\tThe widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.",
     ]);
 
-    var $scene = $('<div style="position:relative;width:100%;height:100%;border-bottom:1px solid black;">');
+    var $scene = $('<div style="position:relative;width:100%;height:100%;border-bottom-width:1px solid black;">');
     layout.addItem($scene, 0, this._layoutRow++);
     layout.finishBatch();
     layout.item(0, this._layoutRow-1).parent().css('height', '100%');
@@ -317,7 +317,7 @@ HowToPanel.prototype = {
       "\tThe tip panel demonstrates a variety of useful tips frequently asked about.",
     ]);
 
-    var $scene = $('<div style="position:relative;width:100%;height:100%;border-bottom:1px solid black;">');
+    var $scene = $('<div style="position:relative;width:100%;height:100%;border-bottom-width:1px solid black;">');
     layout.addItem($scene, 0, this._layoutRow++);
     layout.finishBatch();
     layout.item(0, this._layoutRow-1).parent().css('height', '100%');

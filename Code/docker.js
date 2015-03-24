@@ -72,11 +72,7 @@ if (!Array.prototype.indexOf)
  * 
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element to store the contents of wcDocker.
- * @param {Object} [options] - Options for constructing the instance.
- * @param {String} [options.themePath='Themes'] - A folder path where all docker theme files can be found.
- * @param {String} [options.theme='default'] - The active docker theme.
- * @param {Boolean} [options.allowContextMenu=true] - Overrides the default right click menu with ones that interact with docker.
- * @param {Boolean} [options.hideOnResize=false] - If true, panels will hide their contents as they are being resized.
+ * @param {wcDocker~Options} [options] - Options for constructing the instance.
  */
 function wcDocker(container, options) {
   this.$container = $(container).addClass('wcDocker');

@@ -176,7 +176,7 @@ $(document).ready(function() {
 
         // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
         // to size it to the full size of the panel.
-        var $scene = $('<div style="width:100%;height:100%;position:relative;">');
+        var $scene = $('<div style="position:absolute;top:10px;left:10px;right:10px;bottom:10px;">');
 
         myPanel.layout().addItem($scene, 0, 0).css('border', '1px solid black').parent().css('height', '100%');
 
@@ -196,7 +196,7 @@ $(document).ready(function() {
         splitter.pos(0.5);
 
         // Now create a second, nested, splitter to go inside the existing one.
-        var $subScene = $('<div style="width:100%;height:100%;position:relative;">');
+        var $subScene = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;">');
         splitter.pane(0).addItem($subScene);
 
         var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
@@ -204,7 +204,7 @@ $(document).ready(function() {
         subSplitter.pos(0.25);
 
         // Now create a tab widget and put that into one of the sub splits.
-        var $tabArea = $('<div style="width:100%;height:100%;position:relative;">');
+        var $tabArea = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;">');
         subSplitter.pane(1).addItem($tabArea);
         var tabFrame = new wcTabFrame($tabArea, myPanel);
         tabFrame.addTab('Custom Tab 1').addItem($('<div class="info" style="border:2px solid black;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
@@ -218,7 +218,7 @@ $(document).ready(function() {
         splitter.pane(1).addItem($('<div class="info" style="border:2px solid black;margin:20px;">The same splitter widget used to separate panels can also be used anywhere within a panel.  Each side of the splitter comes with its own layout.</div>'));
 
         // // Now create an IFrame widget and put it into the large split.
-        // var $frameArea = $('<div style="width:100%;height:100%;position:relative;">');
+        // var $frameArea = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;">');
         // splitter.pane(1).addItem($frameArea);
         // var iFrame = new wcIFrame($frameArea, myPanel);
         // iFrame.openURL('http://webcabin.org/');
@@ -401,7 +401,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Tutorial Panel', {
       faicon: 'graduation-cap',
       onCreate: function(myPanel) {
-        var $container = $('<div style="width:100%;height:100%;"></div>');
+        var $container = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');
         myPanel.layout().addItem($container);
         var iFrame = new wcIFrame($container, myPanel);
         iFrame.openURL('http://docker.api.webcabin.org/tutorial-1.0-getting-started.html');
@@ -412,19 +412,19 @@ $(document).ready(function() {
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    var howToPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.BOTTOM);
+    var howToPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.LEFT);
+
+    var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h:'20%'});
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.RIGHT, null, {w:'25%'});
 
     // var leftDrawer = myDocker.addDrawer(wcDocker.DOCK.LEFT);
     // var rightDrawer = myDocker.addDrawer(wcDocker.DOCK.RIGHT);
     // var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK.BOTTOM);
 
-    var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.LEFT, null, {w:'25%', h:'100%'});
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.RIGHT);
-
     myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
-
-    var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, chatPanel1);
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.STACKED, widgetPanel);
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.BOTTOM, widgetPanel);
+    
+    var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.RIGHT, chatPanel1);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
   }
 });

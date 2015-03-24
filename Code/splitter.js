@@ -449,9 +449,9 @@ wcSplitter.prototype = {
 
     if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var barSize = this.$bar.outerWidth() / 2;
-      var barBorder = parseInt(this.$bar.css('border-top')) + parseInt(this.$bar.css('border-bottom'));
+      var barBorder = parseInt(this.$bar.css('border-top-width')) + parseInt(this.$bar.css('border-bottom-width'));
       if (opt_dontMove) {
-        var offset = this._pixelPos - (this.$container.offset().left + parseInt(this.$container.css('border-left'))) - this.$bar.outerWidth()/2;
+        var offset = this._pixelPos - (this.$container.offset().left + parseInt(this.$container.css('border-left-width'))) - this.$bar.outerWidth()/2;
         this._pos = offset / (width - this.$bar.outerWidth());
       }
 
@@ -473,14 +473,14 @@ wcSplitter.prototype = {
       this.$pane[0].css('right', '');
       this.$pane[1].css('left',  '');
       this.$pane[1].css('right', '0px');
-      this.$pane[1].css('width', width-size-barSize-parseInt(this.$container.css('border-left'))*2);
+      this.$pane[1].css('width', width-size-barSize-parseInt(this.$container.css('border-left-width'))*2);
 
       this._pixelPos = this.$bar.offset().left + barSize;
     } else {
       var barSize = this.$bar.outerHeight() / 2;
-      var barBorder = parseInt(this.$bar.css('border-left')) + parseInt(this.$bar.css('border-right'));
+      var barBorder = parseInt(this.$bar.css('border-left-width')) + parseInt(this.$bar.css('border-right-width'));
       if (opt_dontMove) {
-        var offset = this._pixelPos - (this.$container.offset().top + parseInt(this.$container.css('border-top'))) - this.$bar.outerHeight()/2;
+        var offset = this._pixelPos - (this.$container.offset().top + parseInt(this.$container.css('border-top-width'))) - this.$bar.outerHeight()/2;
         this._pos = offset / (height - this.$bar.outerHeight());
       }
 
@@ -502,7 +502,7 @@ wcSplitter.prototype = {
       this.$pane[0].css('bottom', '');
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
-      this.$pane[1].css('height', height-size-barSize-parseInt(this.$container.css('border-top'))*2);
+      this.$pane[1].css('height', height-size-barSize-parseInt(this.$container.css('border-top-width'))*2);
      
       this._pixelPos = this.$bar.offset().top + barSize;
     }
@@ -559,11 +559,11 @@ wcSplitter.prototype = {
 
     if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var width = this.$container.outerWidth() - this.$bar.outerWidth();
-      mouse.x += 1 - parseInt(this.$container.css('border-left')) - (this.$bar.outerWidth()/2);
+      mouse.x += 1 - parseInt(this.$container.css('border-left-width')) - (this.$bar.outerWidth()/2);
       this.pos(mouse.x / width);
     } else {
       var height = this.$container.outerHeight() - this.$bar.outerHeight();
-      mouse.y += 1 - parseInt(this.$container.css('border-top')) - (this.$bar.outerHeight()/2);
+      mouse.y += 1 - parseInt(this.$container.css('border-top-width')) - (this.$bar.outerHeight()/2);
       this.pos(mouse.y / height);
     }
   },

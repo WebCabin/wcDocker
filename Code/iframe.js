@@ -179,6 +179,13 @@ wcIFrame.prototype = {
     }
   },
 
+  __focusFix: function() {
+    // Fixes a bug where the frame stops responding to mouse wheel after
+    // it has been assigned and unassigned pointer-events: none in css.
+    this.$frame.css('left', parseInt(this.$frame.css('left'))+1);
+    this.$frame.css('left', parseInt(this.$frame.css('left'))-1);
+  },
+
   __onVisibilityChanged: function() {
     this.__updateFrame();
   },
@@ -192,12 +199,12 @@ wcIFrame.prototype = {
   __onEndDock: function() {
     if (this.$frame && this._hasFocus) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.__focusFix();
     }
   },
 
   __onMoveStarted: function() {
     if (this.$frame) {
-      // Hide the frame while it is moving.
       this.$frame.addClass('wcIFrameMoving');
     }
   },
@@ -205,6 +212,7 @@ wcIFrame.prototype = {
   __onMoveFinished: function() {
     if (this.$frame) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.__focusFix();
     }
   },
 
