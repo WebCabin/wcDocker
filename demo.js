@@ -62,7 +62,7 @@ $(document).ready(function() {
         myPanel.closeable(false);
         myPanel.scrollable(false, false);
 
-        var $header = $('<div><pre style="margin:5px;padding:5px;background-color:rgba(0,0,0,0.5);"><b style="font-size:20px;">Welcome to the Web Cabin Docker!</b><br>A powerful docking panel IDE that is <b>free</b> and <b>open source</b> under the <a style="color:#AAA" href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT License</a>!<br>Get the source here: <a style="color:#AAA" href="https://github.com/WebCabin/wcDocker">https://github.com/WebCabin/wcDocker</a></pre></div>');
+        var $header = $('<div><pre style="margin:5px;padding:5px;background-color:rgba(0,0,0,0.5);"><b style="font-size:20px;">Welcome to the Web Cabin Docker!</b><br>A powerful docking panel IDE that is <b>free</b> and <b>open source</b> under the <a style="color:#AAA" href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT License</a>!<br>Get the source here: <a style="color:#AAA" href="https://github.com/WebCabin/wcDocker" target="_blank">https://github.com/WebCabin/wcDocker</a></pre></div>');
         var $version= $('<pre style="position:absolute;top:0px;right:0px;background-color:transparent;">Version (pre-release) 3.0.0</pre>');
         var $b1     = $('<div style="position:absolute;top:28px;right:130px;"><img src="Code/ext/images/chrome.png"/></div>');
         var $b2     = $('<div style="position:absolute;top:28px;right:90px;"><img src="Code/ext/images/firefox.png"/></div>');
