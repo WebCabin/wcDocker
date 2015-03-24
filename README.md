@@ -22,13 +22,12 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 ****
 ### Change Log ###
 #### Version: 3.0.0 ####
-- **WARNING: Before upgrading to this version from 2.2.0, some significant changes are required in your code!**
- - You no longer link with the theme's stylesheet directly.
- - If your themes are not found in the "Themes/" folder, you will need to assign the correct path when you construct your wcDocker instance.
+- **WARNING: Before upgrading to this version from 2.2.0, You will need to make the following changes in your implementation:**
+ - Themes are no longer linked directly to the page using the &lt;link&gt; tag, instead use wcDocker.theme().
+ - If your themes are not found in the "Themes" folder, you will need to assign the correct path when you construct your wcDocker instance.
  ```
  new wcDocker(domNode, {themePath: 'New/theme/folder'});
  ```
- - Changing the theme can now be done via the wcDocker.theme() function.
 - Collapsable drawers! You can now attach collapsable drawer containers to your docker window on any side(s). Drawer containers contain any number of drawers (as tabbed items) that can each contain their own panel layout and expand or collapse from view.
 
 #### Version: 2.2.0 ####

@@ -104,10 +104,9 @@
 <h3>Getting Started</h3><p>See the <a href="http://docker.api.webcabin.org/tutorial-1.0-getting-started.html">Getting Started</a> tutorial.</p>
 <hr>
 <h3>Change Log</h3><h4>Version: 3.0.0</h4><ul>
-<li><strong>WARNING: Before upgrading to this version from 2.2.0, some significant changes are required in your code!</strong><ul>
-<li>You no longer link with the theme's stylesheet directly.</li>
-<li>If your themes are not found in the &quot;Themes/&quot; folder, you will need to assign the correct path when you construct your wcDocker instance.<pre class="prettyprint source"><code>new wcDocker(domNode, {themePath: 'New/theme/folder'});</code></pre></li>
-<li>Changing the theme can now be done via the wcDocker.theme() function.</li>
+<li><strong>WARNING: Before upgrading to this version from 2.2.0, You will need to make the following changes in your implementation:</strong><ul>
+<li>Themes are no longer linked directly to the page using the &lt;link&gt; tag, instead use wcDocker.theme().</li>
+<li>If your themes are not found in the &quot;Themes&quot; folder, you will need to assign the correct path when you construct your wcDocker instance.<pre class="prettyprint source"><code>new wcDocker(domNode, {themePath: 'New/theme/folder'});</code></pre></li>
 </ul>
 </li>
 <li>Collapsable drawers! You can now attach collapsable drawer containers to your docker window on any side(s). Drawer containers contain any number of drawers (as tabbed items) that can each contain their own panel layout and expand or collapse from view.</li>
@@ -277,7 +276,7 @@ $( function () {
 	// });
 
   $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
+  	$(this).css('padding-top', 50).css('margin-top', -50);
   });
 } );
 </script>

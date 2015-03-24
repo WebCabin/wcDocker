@@ -99,13 +99,13 @@ bower install wcdocker</code></pre><p>Once installed, all of the source files wi
 <pre class="prettyprint source"><code>{@lang xml}&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;Build/wcDocker.min.css&quot;/>
 
 &lt;script src=&quot;Build/wcDocker.min.js&quot;>&lt;/script></code></pre><p><br></p>
-<p>Once the dependencies have been included, start by creating an instance of the main <a href="wcDocker.html">wcDocker</a> and assign it a <a href="external-domNode.html">DOM container</a> (this should be done after the document has finished loading). Typically this would be the document body element, but there is no restriction if you want to use a smaller area instead. Multiple <a href="wcDocker.html">wcDocker</a> can be used, however, that feature is not currently supported and may not work properly.</p>
+<p>Once the dependencies have been included, start by creating an instance of the main <a href="wcDocker.html">docker</a> and assign it a <a href="external-domNode.html">DOM container</a> (this should be done after the document has finished loading). Typically this would be the document body element, but there is no restriction if you want to use a smaller area instead. Multiple <a href="wcDocker.html">dockers</a> can be used, however, that feature is not currently supported and may not work properly.</p>
 <pre class="prettyprint source"><code>$(document).ready(function() {
   var myDocker = new wcDocker(document.body, {
     themePath: 'My/themes/folder'
   });
 });</code></pre><p><br></p>
-<p>Notice the themePath, if your <a href="wcDocker.html">wcDocker</a> themes are not in the default 'Themes' folder, you will need to tell docker about the new path or it will not be able to initialize the default theme.</p>
+<p>Notice the themePath, if your theme CSS files are not in the default 'Themes' folder, you will need to tell docker about the new path or it will not be able to initialize the default theme.</p>
 <p>Once the docker instance is made, you will need to <a href="wcDocker.html#registerPanelType">register</a> the panel types that will become the contents of your layout.  A <a href="wcPanel.html">panel</a> is an individual dockable window, generally designed to serve a single purpose.</p>
 <pre class="prettyprint source"><code>myDocker.registerPanelType('Some type name', {
   onCreate: function(myPanel, options) {...},
@@ -229,7 +229,7 @@ $( function () {
 	// });
 
   $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
+  	$(this).css('padding-top', 50).css('margin-top', -50);
   });
 } );
 </script>

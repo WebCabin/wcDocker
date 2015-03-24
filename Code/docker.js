@@ -281,9 +281,9 @@ wcDocker.prototype = {
    * Registers a new docking panel type to be used later.
    * @since 3.0.0
    *
-   * @param {String} name                               - The name identifier for the new panel type.
-   * @param {wcDocker~registerOptions|wcDocker~onCreatePanel} options - Either an options object for describing the panel type or a <b>deprecated</b> constructor function for the panel.
-   * @param {Boolean} [isPrivate]                       - If true, the user will not be able to create this panel type. <b>This parameter is deprecated, please use {@link wcDocker~registerOptions} instead.
+   * @param {String} name                       - The name identifier for the new panel type.
+   * @param {wcDocker~registerOptions} options  - An options object for describing the panel type.
+   * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options]{@link wcDocker~registerOptions} instead.
    *
    * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
    */

@@ -5,7 +5,7 @@
  *
  * @constructor
  * @description
- * <b><i>PRIVATE<i> - Handled internally by [wcDocker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
+ * <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this frame.
  * @param {wcSplitter|wcDocker} parent  - The frames parent object.
  * @param {Boolean} isFloating          - If true, the frame will be a floating window.

@@ -625,7 +625,7 @@ wcPanel.prototype = {
   },
 
   /**
-   * Triggers an event of a given type to all panels, including itself.
+   * Triggers an [event]{@link wcDocker.EVENT} of a given type to all panels, including itself.
    *
    * @param {wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {Object} [data]             - A custom data object to pass into all handlers.

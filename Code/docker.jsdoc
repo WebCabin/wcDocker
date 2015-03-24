@@ -31,7 +31,7 @@
  */
 
 /**
- * Options for a {@link wcDocker} instance.
+ * Options for a [docker]{@link wcDocker} instance.
  * 
  * @typedef {Object} wcDocker~Options
  * @property {String} [themePath='Themes']     - A folder path where all docker theme files can be found.

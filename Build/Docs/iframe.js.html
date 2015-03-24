@@ -253,6 +253,13 @@ wcIFrame.prototype = {
     }
   },
 
+  __focusFix: function() {
+    // Fixes a bug where the frame stops responding to mouse wheel after
+    // it has been assigned and unassigned pointer-events: none in css.
+    this.$frame.css('left', parseInt(this.$frame.css('left'))+1);
+    this.$frame.css('left', parseInt(this.$frame.css('left'))-1);
+  },
+
   __onVisibilityChanged: function() {
     this.__updateFrame();
   },
@@ -266,12 +273,12 @@ wcIFrame.prototype = {
   __onEndDock: function() {
     if (this.$frame &amp;&amp; this._hasFocus) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.__focusFix();
     }
   },
 
   __onMoveStarted: function() {
     if (this.$frame) {
-      // Hide the frame while it is moving.
       this.$frame.addClass('wcIFrameMoving');
     }
   },
@@ -279,6 +286,7 @@ wcIFrame.prototype = {
   __onMoveFinished: function() {
     if (this.$frame) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.__focusFix();
     }
   },
 
@@ -418,7 +426,7 @@ $( function () {
 	// });
 
   $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 65).css('margin-top', -65);
+  	$(this).css('padding-top', 50).css('margin-top', -50);
   });
 } );
 </script>
