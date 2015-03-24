@@ -6,7 +6,7 @@
  *  JQuery-contextMenu 1.6.6
  *  font-awesome 4.2.0
  *
- * Author: Jeff Houde (Lochemage@gmail.com)
+ * Author: Jeff Houde (lochemage@webcabin.org)
  * Web: http://docker.webcabin.org/
  *
  * Licensed under

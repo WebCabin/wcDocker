@@ -30,7 +30,7 @@ var header = '\
  *  JQuery-contextMenu 1.6.6\n\
  *  font-awesome 4.2.0\n\
  *\n\
- * Author: Jeff Houde (Lochemage@gmail.com)\n\
+ * Author: Jeff Houde (lochemage@webcabin.org)\n\
  * Web: http://docker.webcabin.org/\n\
  *\n\
  * Licensed under\n\
