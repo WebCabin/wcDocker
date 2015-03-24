@@ -119,7 +119,7 @@ HowToPanel.prototype = {
   __constructGeneralTab: function(layout) {
     this.__initTabLayout(layout);
 
-    this.text("<b>wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking panels. Panels can float on their own or be docked on any side of any other panel. All panels can be moved, resized, removed, and created at will by the user (unless otherwise restricted). This project is currently under development by Jeff Houde (<a href='mailto:lochemage@gmail.com' target='_blank'>lochemage@gmail.com</a>). wcDocker requires the JQuery library, currently developed using version 1.11.1 although earlier and 2.x.x versions should work as well.</b>");
+    this.text("<b>wcDocker (Web Cabin Docker) is a page layout framework that gives you dynamic docking panels. Panels can float on their own or be docked on any side of any other panel. All panels can be moved, resized, removed, and created at will by the user (unless otherwise restricted). This project is currently under development by Jeff Houde (<a href='mailto:lochemage@webcabin.org' target='_blank'>lochemage@webcabin.org</a>). wcDocker requires the JQuery library, currently developed using version 1.11.1 although earlier and 2.x.x versions should work as well.</b>");
     this.text("<b>For detailed information on the API, check out the <a href='https://github.com/WebCabin/wcDocker/wiki' target='_blank'>wiki</a>.</b>");
     this.text([
       "\tBegin by including the necessary dependencies.",
