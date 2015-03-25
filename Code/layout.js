@@ -100,10 +100,12 @@ wcLayout.prototype = {
 
     var self = this;
     /**
-     * The table item is an object that represents one cell in the layout table, it contains
-     * convenient methods for cell alteration and supports chaining. Its purpose is
-     * to remove the need to alter <tr> and <td> elements of the table directly.
+     * The table item is an object that represents one cell in the layout table, it contains 
+     * convenient methods for cell alteration and supports chaining. Its purpose is 
+     * to remove the need to alter &lt;tr&gt; and &lt;td&gt; elements of the table directly.
      * @version 3.0.0
+     *
+     * @example myPanel.addItem(domNode).css('text-align', 'right').css('border', '1px solid black').stretch('100%', '100%');
      *
      * @typedef wcLayout~tableItem
      * @property {wcLayout~tableItem_css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
