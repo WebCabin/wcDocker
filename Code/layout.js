@@ -93,10 +93,11 @@ wcLayout.prototype = {
 
     // Some cells are a merging of multiple cells. If this cell is
     // part of a merge for another cell, use that cell instead.
-    if (this._grid[y][x].x < 0 || this._grid[y][x].y < 0) {
-      x -= this._grid[y][x].x;
-      y -= this._grid[y][x].y;
-    }
+    // if (this._grid[y][x].x < 0 || this._grid[y][x].y < 0) {
+    //   var grid = this._grid[y][x];
+    //   x -= grid.x;
+    //   y -= grid.y;
+    // }
 
     var self = this;
     /**
@@ -114,7 +115,7 @@ wcLayout.prototype = {
      */
     var myItem = {
       $: self._grid[y][x].$el,
-      
+
       /**
        * <small><i>This function is found in {@link wcLayout~tableItem}.</small></i><br>
        * A wrapper for [jQuery's css]{@link http://api.jquery.com/css/} function.
@@ -128,11 +129,13 @@ wcLayout.prototype = {
        * @returns {wcLayout~tableItem|String} - Self, for chaining, unless the value parameter was omitted.
        */
       css: function(style, value) {
-        if (value === undefined) {
-          return self._grid[y][x].$el.css(style);
-        }
+        if (self._grid[y][x].$el) {
+          if (value === undefined) {
+            return self._grid[y][x].$el.css(style);
+          }
 
-        self._grid[y][x].$el.css(style, value);
+          self._grid[y][x].$el.css(style, value);
+        }
         return myItem;
       },
 
