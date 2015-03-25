@@ -45,7 +45,7 @@ wcLayout.prototype = {
    * @param {Number} [w=1] - The number of horizontal cells this item will take within the grid.
    * @param {Number} [h=1] - The number of vertical cells this item will take within the grid.
    *
-   * @returns {external:jQuery~Object|Boolean} The table data element of the cell that contains the item, or false if there was a problem.
+   * @returns {wcLayout~tableItem|Boolean} The table data element of the cell that contains the item, or false if there was a problem.
    */
   addItem: function(item, x, y, w, h) {
     if (typeof x === 'undefined' || x < 0) {
@@ -69,19 +69,18 @@ wcLayout.prototype = {
     }
 
     this._grid[y][x].$el.append($(item));
-    return this._grid[y][x].$el;
+    return this.item(x, y);
   },
 
   /**
-   * Retrieves the table data element at a given grid position, if it exists.
+   * Retrieves the table item at a given grid position, if it exists.
    * Note, if an item spans multiple cells, only the top-left most
-   * cell will actually contain the table cell element.
+   * cell will actually contain the table item.
    *
    * @param {Number} x - The horizontal grid position.
    * @param {Number} y - The vertical grid position.
    *
-   * @returns {external:jQuery~Object|Boolean} - The table data element of
-   * the cell, or false if none was found.
+   * @returns {wcLayout~tableItem|Boolean} - The table item, or false if none was found.
    */
   item: function(x, y) {
     if (y >= this._grid.length) {
@@ -92,7 +91,102 @@ wcLayout.prototype = {
       return false;
     }
 
-    return this._grid[y][x].$el;
+    // Some cells are a merging of multiple cells. If this cell is
+    // part of a merge for another cell, use that cell instead.
+    if (this._grid[y][x].x < 0 || this._grid[y][x].y < 0) {
+      x -= this._grid[y][x].x;
+      y -= this._grid[y][x].y;
+    }
+
+    var self = this;
+    /**
+     * The table item is an object that represents one cell in the layout table, it contains
+     * convenient methods for cell alteration and supports chaining. Its purpose is
+     * to remove the need to alter <tr> and <td> elements of the table directly.
+     * @version 3.0.0
+     *
+     * @typedef wcLayout~tableItem
+     * @property {wcLayout~tableItem_css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
+     * @property {wcLayout~tableItem_stretch} stretch - More reliable method for setting the table item width/height values.
+     */
+    var myItem = {
+      /**
+       * <small><i>This function is found in {@link wcLayout~tableItem}.</small></i><br>
+       * A wrapper for [jQuery's css]{@link http://api.jquery.com/css/} function.
+       * <b>Note:</b> It is recommended that you use [stretch]{@link wcLayout~tableItem_stretch} if you intend to alter width or height styles.
+       * @version 3.0.0
+       * 
+       * @function wcLayout~tableItem_css
+       * @param {String} style - The style attribute to alter.
+       * @param {String} [value] - The value of the attribute. If omitted, the current value of the attribute is returned instead of itself.
+       *
+       * @returns {wcLayout~tableItem|String} - Self, for chaining, unless the value parameter was omitted.
+       */
+      css: function(style, value) {
+        if (value === undefined) {
+          return self._grid[y][x].$el.css(style);
+        }
+
+        self._grid[y][x].$el.css(style, value);
+        return myItem;
+      },
+
+      /**
+       * <small><i>This function is found in {@link wcLayout~tableItem}.</small></i><br>
+       * Sets the stretch amount for the current table item. This is more reliable than
+       * assigning width and height style attributes directly on the table item.
+       * @version 3.0.0
+       *
+       * @function wcLayout~tableItem_stretch
+       * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
+       * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
+       *
+       * @returns {wcLayout~tableItem} - Self, for chaining.
+       */
+      stretch: function(width, height) {
+        self.itemStretch(x, y, width, height);
+        return myItem;
+      },
+    };
+    return myItem;
+  },
+
+  /**
+   * Sets the stretch amount for a given table item. This is more reliable than
+   * assigning width and height style attributes directly on the table item.
+   * @version 3.0.0
+   * 
+   * @param {Number} x - The horizontal grid position.
+   * @param {Number} y - The vertical grid position.
+   * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
+   * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
+   *
+   * @returns {Boolean} - Success or failure. A failure generally means your grid position was a merged grid cell.
+   */
+  itemStretch: function(x, y, sx, sy) {
+    var wasBatched = this._batchProcess;
+
+    this._batchProcess = true;
+    this.__resizeGrid(x, y);
+
+    var grid = this._grid[y][x];
+    if (grid.x < 0 || grid.y < 0) {
+      return false;
+    }
+
+    if (sx !== undefined) {
+      grid.sx = sx;
+    }
+    if (sy !== undefined) {
+      grid.sy = sy;
+    }
+
+    this._batchProcess = wasBatched;
+    if (!wasBatched) {
+      this.__resizeGrid(0, 0);
+    }
+
+    return true;
   },
 
   /**
@@ -177,11 +271,11 @@ wcLayout.prototype = {
   },
 
   /**
-   * Retrieves the main scene DOM element.
+   * Retrieves the table element.
    * @deprecated please use [wcLayout.$table]{@link wcLayout#$table} directly.
    */
   scene: function() {
-    console.log('wcLayout.scene() has been deprecated, please use wcLayout.$table instead.');
+    console.log('wcLayout.scene() has been deprecated, please use wcLayout.$table instead. This function will be removed in the next version.');
     return this.$table;
   },
 
@@ -208,7 +302,9 @@ wcLayout.prototype = {
   __resizeGrid: function(width, height) {
     for (var y = 0; y <= height; ++y) {
       if (this._grid.length <= y) {
-        this._grid.push([]);
+        var row = [];
+        row.$row = $('<tr>');
+        this._grid.push(row);
       }
 
       for (var x = 0; x <= width; ++x) {
@@ -217,6 +313,8 @@ wcLayout.prototype = {
             $el: $('<td>'),
             x: 0,
             y: 0,
+            sx: '',
+            sy: '',
           });
         }
       }
@@ -234,10 +332,12 @@ wcLayout.prototype = {
           var item = this._grid[y][x];
           if (item.$el) {
             if (!$row) {
-              $row = $('<tr>');
+              $row = this._grid[y].$row;
               $newBody.append($row);
             }
 
+            item.$el.css('width', item.sx);
+            item.$el.css('height', item.sy);
             $row.append(item.$el);
           }
         }

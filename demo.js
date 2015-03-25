@@ -103,7 +103,7 @@ $(document).ready(function() {
         }
 
         myPanel.layout().startBatch();
-        myPanel.layout().addItem($themeLabel, 0, 1).css('text-align', 'right').css('width', '1%');
+        myPanel.layout().addItem($themeLabel, 0, 1).css('text-align', 'right').stretch('1%', '');
         myPanel.layout().addItem($themeSelector, 1, 1).css('text-align', 'left');
 
         myPanel.layout().addItem('<div style="height: 20px;"></div>', 0, 2, 2, 1);
@@ -113,7 +113,7 @@ $(document).ready(function() {
 
         // Here we do some css table magic to make all other cells align to the top of the window.
         // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-        myPanel.layout().addItem('<div>', 0, 10, 2, 1).parent().css('height', '100%');
+        myPanel.layout().addItem('<div>', 0, 10, 2, 1).stretch('', '100%');
 
         // Bind an event to catch when the theme has been changed.
         $themeSelector.change(function() {
@@ -219,12 +219,6 @@ $(document).ready(function() {
 
         splitter.pane(1).addItem($('<div class="info" style="border:2px solid black;margin:20px;">The same splitter widget used to separate panels can also be used anywhere within a panel.  Each side of the splitter comes with its own layout.</div>'));
 
-        // // Now create an IFrame widget and put it into the large split.
-        // var $frameArea = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;">');
-        // splitter.pane(1).addItem($frameArea);
-        // var iFrame = new wcIFrame($frameArea, myPanel);
-        // iFrame.openURL('http://webcabin.org/');
-
         // Add a rotation panel button to change the orientation of the splitter.
         myPanel.addButton('View', 'fa fa-mail-reply', 'O', 'Switch between horizontal and vertical layout.', true, 'fa fa-mail-forward');
 
@@ -262,12 +256,10 @@ $(document).ready(function() {
         $chatContainer.find('td').first().append($chatEdit).css('width', '100%');
         $chatContainer.find('td').last().append($chatSend).css('width', '1%');
 
-        myPanel.layout().addItem($senderLabel, 0, 0).css('width', '1%');
-        myPanel.layout().addItem($senderName, 1, 0).css('width', '100%');
-        var chatCell = myPanel.layout().addItem($chatArea, 0, 1, 2, 1);
+        myPanel.layout().addItem($senderLabel, 0, 0).stretch('1%', '');
+        myPanel.layout().addItem($senderName, 1, 0).stretch('100%', '');
+        myPanel.layout().addItem($chatArea, 0, 1, 2, 1).stretch('', '100%');
         myPanel.layout().addItem($chatContainer, 0, 2, 2, 1);
-
-        chatCell.parent().css('height', '100%');
 
         // Send a chat message.
         function onChatSent() {
@@ -321,16 +313,16 @@ $(document).ready(function() {
         var $batchAddButton     = $('<button style="white-space:nowrap;">Add Items Batched</button>');
 
         myPanel.layout().addItem($clearItemsButton, 0, 0).css('text-align', 'right');
-        myPanel.layout().addItem($normalAddButton, 1, 0).css('width', '1%');
+        myPanel.layout().addItem($normalAddButton, 1, 0).stretch('1%', '');
         myPanel.layout().addItem($batchAddButton, 2, 0);
 
         // Here we do some css table magic to make all other cells align to the top of the window.
         // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-        myPanel.layout().addItem('<div>', 0, 2).parent().css('height', '100%');
+        myPanel.layout().addItem('<div>', 0, 2).stretch('', '100%');
 
         var currentItemIndex = 0;
         function __addItems() {
-          myPanel.layout().item(0, currentItemIndex+2).css('height', '');
+          myPanel.layout().item(0, currentItemIndex+2).stretch('', '');
 
           // Add a large number of items into the layout.
           var min = 0;
@@ -361,12 +353,12 @@ $(document).ready(function() {
           myPanel.layout().clear();
           myPanel.layout().$table.css('padding', '10px');
           myPanel.layout().addItem($clearItemsButton, 0, 0).css('text-align', 'right');
-          myPanel.layout().addItem($normalAddButton, 1, 0).css('width', '1%');
+          myPanel.layout().addItem($normalAddButton, 1, 0).stretch('1%', '');
           myPanel.layout().addItem($batchAddButton, 2, 0);
 
           // Here we do some css table magic to make all other cells align to the top of the window.
           // The returned element from addItem is always the <td> of the table, its' parent is the <tr>
-          myPanel.layout().addItem('<div>', 0, 2).parent().css('height', '100%');
+          myPanel.layout().addItem('<div>', 0, 2).stretch('', '100%');
           currentItemIndex = 0;
         });
 
@@ -405,10 +397,13 @@ $(document).ready(function() {
     myDocker.registerPanelType('Tutorial Panel', {
       faicon: 'graduation-cap',
       onCreate: function(myPanel) {
-        var $title = $('<span>View the API documentation: <a style="color:#AAA" href="http://docker.api.webcabin.org/" target="_blank" style="background-color:rgba(255,255,255,0.3);">http://docker.api.webcabin.org/</a></span>');
+        var $title = $('<small style="white-space:nowrap;">View the API documentation: </small>');
+        var $link  = $('<a href="http://docker.api.webcabin.org/" target="_blank"><input type="text" readonly style="width:99%;" value="http://docker.api.webcabin.org/"/></a>');
         myPanel.layout().addItem($title, 0, 0);
+        myPanel.layout().addItem($link, 1, 0).stretch('99%', '');
+
         var $container = $('<div style="position:absolute;top:25px;left:0px;right:0px;bottom:0px;"></div>');
-        myPanel.layout().addItem($container, 0, 1).css('height', '100%');
+        myPanel.layout().addItem($container, 0, 1, 2, 1).stretch('', '100%');
 
         var iFrame = new wcIFrame($container, myPanel);
         iFrame.openURL('http://docker.api.webcabin.org/tutorial-1.0-getting-started.html');
