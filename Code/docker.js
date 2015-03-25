@@ -1176,6 +1176,9 @@ wcDocker.prototype = {
   clear: function() {
     this._root = null;
 
+    // Make sure we notify all panels that they are closing.
+    this.trigger(wcDocker.EVENT.CLOSED);
+
     for (var i = 0; i < this._splitterList.length; ++i) {
       this._splitterList[i].__destroy();
     }
