@@ -64,7 +64,7 @@ $.fn.toc = function(options) {
 
       //build TOC item
       var a = $('<a/>')
-        .text(opts.headerText(i, heading, $h))
+        .html(opts.headerText(i, heading, $h))
         .attr('href', '#' + opts.anchorName(i, heading, opts.prefix))
         .bind('click', function(e) { 
           scrollTo(e);
@@ -98,7 +98,11 @@ jQuery.fn.toc.defaults = {
   headerText: function(i, heading, $heading) {
     var result = '';
     $heading.find('toc').each(function() {
-      result += $(this).text();
+      var txt = $(this).text();
+      if ($(this).hasClass('small')) {
+        txt = '<toc class="small"><i>' + txt + '</i></toc>';
+      }
+      result += txt;
     });
     return result.replace(/\(([^)]+)\)/g, '(...)') || $heading.text();
   },
