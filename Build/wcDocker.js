@@ -2486,25 +2486,30 @@ wcLayout.prototype = {
 
     var self = this;
     /**
-     * The table item is an object that represents one cell in the layout table, it contains
-     * convenient methods for cell alteration and supports chaining. Its purpose is
-     * to remove the need to alter <tr> and <td> elements of the table directly.
+     * The table item is an object that represents one cell in the layout table, it contains 
+     * convenient methods for cell alteration and supports chaining. Its purpose is 
+     * to remove the need to alter &lt;tr&gt; and &lt;td&gt; elements of the table directly.
      * @version 3.0.0
      *
+     * @example myPanel.addItem(domNode).css('text-align', 'right').css('border', '1px solid black').stretch('100%', '100%');
+     *
      * @typedef wcLayout~tableItem
-     * @property {wcLayout~tableItem_css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
-     * @property {wcLayout~tableItem_stretch} stretch - More reliable method for setting the table item width/height values.
+     * @property {jQuery~Object} $ - If you truely need the table cell [jQuery object]{@link jQuery~Object}, here it is.
+     * @property {wcLayout~css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
+     * @property {wcLayout~stretch} stretch - More reliable method for setting the table item width/height values.
      */
     var myItem = {
+      $: self._grid[y][x].$el,
+      
       /**
        * <small><i>This function is found in {@link wcLayout~tableItem}.</small></i><br>
        * A wrapper for [jQuery's css]{@link http://api.jquery.com/css/} function.
-       * <b>Note:</b> It is recommended that you use [stretch]{@link wcLayout~tableItem_stretch} if you intend to alter width or height styles.
+       * <b>Note:</b> It is recommended that you use [stretch]{@link wcLayout~stretch} if you intend to alter width or height styles.
        * @version 3.0.0
        * 
-       * @function wcLayout~tableItem_css
+       * @function wcLayout~css
        * @param {String} style - The style attribute to alter.
-       * @param {String} [value] - The value of the attribute. If omitted, the current value of the attribute is returned instead of itself.
+       * @param {String} [value] - The value of the attribute. If omitted, the current value of the attribute is returned instead of the [tableItem]{@link wcLayout~tableItem} instance.
        *
        * @returns {wcLayout~tableItem|String} - Self, for chaining, unless the value parameter was omitted.
        */
@@ -2523,7 +2528,7 @@ wcLayout.prototype = {
        * assigning width and height style attributes directly on the table item.
        * @version 3.0.0
        *
-       * @function wcLayout~tableItem_stretch
+       * @function wcLayout~stretch
        * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
        * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
        *
