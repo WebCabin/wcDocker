@@ -104,10 +104,26 @@
 <h3>Getting Started</h3><p>See the <a href="http://docker.api.webcabin.org/tutorial-1.0-getting-started.html">Getting Started</a> tutorial.</p>
 <hr>
 <h3>Change Log</h3><h4>Version: (pre-release) 3.0.0</h4><ul>
-<li><strong>WARNING: Before upgrading to this version from 2.2.0, You will need to make the following changes in your implementation:</strong><ul>
+<li><p><strong>WARNING: Before upgrading to this version from 2.2.0, You will need to make the following changes in your implementation:</strong></p>
+<ul>
 <li>Themes are no longer linked directly to the page using the &lt;link&gt; tag, instead use wcDocker.theme().</li>
 <li>If your themes are not found in the &quot;Themes&quot; folder, you will need to assign the correct path when you construct your wcDocker instance.<pre class="prettyprint source"><code>new wcDocker(domNode, {themePath: 'New/theme/folder'});</code></pre></li>
-<li>wcLayout's are slightly different, wcLayout.addItem() and wcLayout.item() no longer return a jQuery object. Instead, they return a <a href="http://docker.api.webcabin.org/wcLayout.html#~tableItem">layout table item</a> that can be used to make alterations to that cell.</li>
+<li><p>All wcDocker.DOCK, wcDocker.EVENT, and wcDocker.ORIENTATION enumerations have changed slightly, instead of each being one variable, they are broken into objects.</p>
+<pre class="prettyprint source"><code> // OLD format...
+ wcDocker.DOCK_LEFT;
+ wcDocker.EVENT_BUTTON;
+ wcDocker.ORIENTATION_HORIZONTAL;
+
+ // NEW format...
+ wcDocker.DOCK.LEFT;
+ wcDocker.EVENT.BUTTON;
+ wcDocker.ORIENTATION.HORIZONTAL;
+
+ // Notice how each used to be one variable name...
+ // Now they each are an object with the same enumeration inside 
+ // them, just replace the first '_' with a '.' and everything should work fine again!</code></pre></li>
+<li><p>wcLayout's are slightly different, wcLayout.addItem() and wcLayout.item() no longer return a jQuery object. Instead, they return a <a href="http://docker.api.webcabin.org/wcLayout.html#~tableItem">layout table item</a> that can be used to make alterations to that cell.</p>
+</li>
 <li>wcLayout.scene() function is now deprecated, please use wcLayout.$frame.</li>
 </ul>
 </li>

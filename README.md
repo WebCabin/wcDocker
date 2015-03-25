@@ -28,6 +28,24 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
  ```
  new wcDocker(domNode, {themePath: 'New/theme/folder'});
  ```
+ - All wcDocker.DOCK, wcDocker.EVENT, and wcDocker.ORIENTATION enumerations have changed slightly, instead of each being one variable, they are broken into objects.
+ 
+     ```
+     // OLD format...
+     wcDocker.DOCK_LEFT;
+     wcDocker.EVENT_BUTTON;
+     wcDocker.ORIENTATION_HORIZONTAL;
+     
+     // NEW format...
+     wcDocker.DOCK.LEFT;
+     wcDocker.EVENT.BUTTON;
+     wcDocker.ORIENTATION.HORIZONTAL;
+
+     // Notice how each used to be one variable name...
+     // Now they each are an object with the same enumeration inside 
+     // them, just replace the first '_' with a '.' and everything should work fine again!
+     ```
+
  - wcLayout's are slightly different, wcLayout.addItem() and wcLayout.item() no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
  - wcLayout.scene() function is now deprecated, please use wcLayout.$frame.
 - Collapsable drawers! You can now attach collapsable drawer containers to your docker window on any side(s). Drawer containers contain any number of drawers (as tabbed items) that can each contain their own panel layout and expand or collapse from view.
