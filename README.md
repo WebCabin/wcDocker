@@ -25,9 +25,9 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 - **WARNING: Before upgrading to this version from 2.2.0, You will need to make the following changes in your implementation:**
  - Themes are no longer linked directly to the page using the &lt;link&gt; tag, instead use wcDocker.theme().
  - If your themes are not found in the "Themes" folder, you will need to assign the correct path when you construct your wcDocker instance.
- ```
- new wcDocker(domNode, {themePath: 'New/theme/folder'});
- ```
+     ```
+     new wcDocker(domNode, {themePath: 'New/theme/folder'});
+     ```
  - All wcDocker.DOCK, wcDocker.EVENT, and wcDocker.ORIENTATION enumerations have changed slightly, instead of each being one variable, they are broken into objects.
  
      ```
