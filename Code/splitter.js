@@ -273,7 +273,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   left: function(item) {
-    this.pane(0, item);
+    return this.pane(0, item);
   },
 
   /**
@@ -284,7 +284,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   right: function(item) {
-    this.pane(1, item);
+    return this.pane(1, item);
   },
 
   /**
@@ -295,7 +295,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   top: function(item) {
-    this.pane(0, item);
+    return this.pane(0, item);
   },
 
   /**
@@ -306,7 +306,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   bottom: function(item) {
-    this.pane(1, item);
+    return this.pane(1, item);
   },
 
   /**
