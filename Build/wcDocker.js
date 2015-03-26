@@ -4974,7 +4974,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   left: function(item) {
-    this.pane(0, item);
+    return this.pane(0, item);
   },
 
   /**
@@ -4985,7 +4985,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   right: function(item) {
-    this.pane(1, item);
+    return this.pane(1, item);
   },
 
   /**
@@ -4996,7 +4996,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   top: function(item) {
-    this.pane(0, item);
+    return this.pane(0, item);
   },
 
   /**
@@ -5007,7 +5007,7 @@ wcSplitter.prototype = {
    * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   bottom: function(item) {
-    this.pane(1, item);
+    return this.pane(1, item);
   },
 
   /**
@@ -5205,7 +5205,7 @@ wcSplitter.prototype = {
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
       this.$pane[1].css('height', height-size-barSize-parseInt(this.$container.css('border-top-width'))*2);
-     
+
       this._pixelPos = this.$bar.offset().top + barSize;
     }
 
@@ -5381,7 +5381,7 @@ wcSplitter.prototype = {
     } else {
       return;
     }
- 
+
     if (child) {
       child.__container(null);
       child._parent = null;
@@ -5409,6 +5409,7 @@ wcSplitter.prototype = {
     this._parent = false;
   },
 };
+
 /**
  * @class
  * A collapsable container for carrying its own arrangement of panels.<br>
