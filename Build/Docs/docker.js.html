@@ -322,7 +322,8 @@ wcDocker.prototype = {
    */
   theme: function(themeName) {
     if (themeName !== undefined) {
-      $('#wcTheme').remove();
+      var $oldTheme = $('#wcTheme');
+
       // The default theme requires no additional theme css file.
       var cacheBreak = (new Date()).getTime();
       var ext = themeName.indexOf('.css');
@@ -334,6 +335,7 @@ wcDocker.prototype = {
 
       var self = this;
       $link[0].onload = function() {
+        $oldTheme.remove();
         self.__update();
 
         // Special update to fix the size of collapsed drawers
