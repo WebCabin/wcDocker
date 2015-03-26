@@ -72,9 +72,16 @@
   background-color: white;
 }
 
-.wcFrameTitle {
+.wcFrameTitleBar {
   height: 17px;
   background-color: #555;
+}
+
+.wcFrameTitle {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 3px;
 }
 
 .wcFrameCenter {

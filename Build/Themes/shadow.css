@@ -58,10 +58,17 @@
   background-color: #555;
 }
 
-.wcFrameTitle {
+.wcFrameTitleBar {
   height: 20px;
   background-color: #222;
   text-align: left;
+}
+
+.wcFrameTitle {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 3px;
 }
 
 .wcFrameCenter {
@@ -140,11 +147,13 @@
   background-color: #444;
   margin-top: 1px;
   font-size: 12px;
-  line-height: 18px;
+  line-height: 19px;
   font-weight: normal;
 }
 
 .wcPanelTabActive:hover {
+  color: #DDD;
+  background-color: #444;
 }
 
 .wcGhost {

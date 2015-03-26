@@ -107,7 +107,8 @@
 <li><p><strong>WARNING: Before upgrading to this version from 2.2.0, You will need to make the following changes in your implementation:</strong></p>
 <ul>
 <li>Themes are no longer linked directly to the page using the &lt;link&gt; tag, instead use wcDocker.theme().</li>
-<li>If your themes are not found in the &quot;Themes&quot; folder, you will need to assign the correct path when you construct your wcDocker instance.<pre class="prettyprint source"><code> new wcDocker(domNode, {themePath: 'New/theme/folder'});</code></pre></li>
+<li><p>If your themes are not found in the &quot;Themes&quot; folder, you will need to assign the correct path when you construct your wcDocker instance.</p>
+<pre class="prettyprint source"><code> new wcDocker(domNode, {themePath: 'New/theme/folder'});</code></pre></li>
 <li><p>All wcDocker.DOCK, wcDocker.EVENT, and wcDocker.ORIENTATION enumerations have changed slightly, instead of each being one variable, they are broken into objects.</p>
 <pre class="prettyprint source"><code> // OLD format...
  wcDocker.DOCK_LEFT;

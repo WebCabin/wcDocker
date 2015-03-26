@@ -1269,7 +1269,7 @@ wcDocker.prototype = {
       event.returnValue = false;
     });
 
-    $('body').on('selectstart', '.wcFrameTitle, .wcPanelTab, .wcFrameButton', function(event) {
+    $('body').on('selectstart', '.wcFrameTitleBar, .wcPanelTab, .wcFrameButton', function(event) {
       event.preventDefault();
     });
 
@@ -1290,7 +1290,7 @@ wcDocker.prototype = {
           return;
         }
         if (frame.$tabLeft[0] === this) {
-          frame._tabScrollPos-=frame.$title.width()/2;
+          frame._tabScrollPos-=frame.$titleBar.width()/2;
           if (frame._tabScrollPos < 0) {
             frame._tabScrollPos = 0;
           }
@@ -1298,7 +1298,7 @@ wcDocker.prototype = {
           return;
         }
         if (frame.$tabRight[0] === this) {
-          frame._tabScrollPos+=frame.$title.width()/2;
+          frame._tabScrollPos+=frame.$titleBar.width()/2;
           frame.__updateTabs();
           return;
         }
@@ -1339,7 +1339,7 @@ wcDocker.prototype = {
         }
 
         if (customTab.$tabLeft[0] === this) {
-          customTab._tabScrollPos-=customTab.$title.width()/2;
+          customTab._tabScrollPos-=customTab.$titleBar.width()/2;
           if (customTab._tabScrollPos < 0) {
             customTab._tabScrollPos = 0;
           }
@@ -1347,7 +1347,7 @@ wcDocker.prototype = {
           return;
         }
         if (customTab.$tabRight[0] === this) {
-          customTab._tabScrollPos+=customTab.$title.width()/2;
+          customTab._tabScrollPos+=customTab.$titleBar.width()/2;
           customTab.__updateTabs();
           return;
         }
@@ -1378,7 +1378,7 @@ wcDocker.prototype = {
 
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
-        if (frame.$title[0] === $(this).parents('.wcFrameTitle')[0]) {
+        if (frame.$titleBar[0] === $(this).parents('.wcFrameTitleBar')[0]) {
           var panel = frame._panelList[index];
           if (self._removingPanel === panel) {
             self.removePanel(panel);
@@ -1408,7 +1408,7 @@ wcDocker.prototype = {
     });
 
     // Mouse down on a frame title will allow you to move them.
-    $('body').on('mousedown', '.wcFrameTitle', function(event) {
+    $('body').on('mousedown', '.wcFrameTitleBar', function(event) {
       if (event.which === 3) {
         return true;
       }
@@ -1418,7 +1418,7 @@ wcDocker.prototype = {
       
       self.$container.addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].$title[0] == this) {
+        if (self._frameList[i].$titleBar[0] == this) {
           self._draggingFrame = self._frameList[i];
 
           var mouse = {
@@ -1442,7 +1442,7 @@ wcDocker.prototype = {
 
           // If the window is able to be docked, give it a dark shadow tint and
           // begin the movement process
-          if ((!self._draggingFrame.$title.hasClass('wcNotMoveable') && !$panelTab.hasClass('wcNotMoveable')) &&
+          if ((!self._draggingFrame.$titleBar.hasClass('wcNotMoveable') && !$panelTab.hasClass('wcNotMoveable')) &&
           (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
@@ -1453,7 +1453,7 @@ wcDocker.prototype = {
         }
       }
       for (var i = 0; i < self._tabList.length; ++i) {
-        if (self._tabList[i].$title[0] == this) {
+        if (self._tabList[i].$titleBar[0] == this) {
           self._draggingCustomTabFrame = self._tabList[i];
 
           var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
@@ -1733,7 +1733,7 @@ wcDocker.prototype = {
 
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
-        if (frame.$title[0] === $(this).parents('.wcFrameTitle')[0]) {
+        if (frame.$titleBar[0] === $(this).parents('.wcFrameTitleBar')[0]) {
           var panel = frame._panelList[index];
           self._removingPanel = panel;
           return;

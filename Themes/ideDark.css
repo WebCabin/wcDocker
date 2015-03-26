@@ -99,7 +99,7 @@ html,body {
     opacity: 0
 }
 
-.wcFrameTitle {
+.wcFrameTitleBar {
     width: 100%;
     cursor: move;
     overflow: hidden;
@@ -337,7 +337,7 @@ html,body {
     background-color: white
 }
 
-.wcFrameTitle {
+.wcFrameTitleBar {
     background-color: #333;
     border-bottom: 4px solid rgba(192,88,1,1);
     height: 30px;
