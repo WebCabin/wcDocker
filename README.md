@@ -49,9 +49,17 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 
  - wcLayout's are slightly different, wcLayout.addItem() and wcLayout.item() no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
  - wcLayout.scene() function is now deprecated, please use wcLayout.$frame.
-- Collapsable drawers! You can now attach collapsable drawer containers to your docker window on any side(s). Drawer containers contain any number of drawers (as tabbed items) that can each contain their own panel layout and expand or collapse from view.
+
 - Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
 - Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the table size changes.
+- **COMING SOON!**
+ - **Collapsable panels!** Ability to collapse any panel in the view. Collapsed panels appear as a tabbed item on one side, activating the tab will expand your collapsed panel into view where it can be used and then collapsed again, or re-docked back into the panel again!
+ - Ability for a **panel's tabs to appear on the left, right, or even bottom** edge of the frame.
+ - Ability to **assign any DOM element as a panel creation button**. A panel creation button can be clicked, or drag+dropped, by the user to create new panels in their view.
+
+      ```
+      {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
+      ```
 
 #### Version: 2.2.0 ####
 - Separated the default theme out of wcDocker.css (now use wcDockerSkeleton.css with Themes/default.css).
