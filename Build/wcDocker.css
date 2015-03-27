@@ -137,6 +137,7 @@ html, body {
 
 .wcFrameButtonBar {
   position: absolute;
+  top: 0px;
   right: 0px;
   width: auto !important;
 }
@@ -150,7 +151,6 @@ html, body {
   font-size: 11px;
   cursor: pointer;
   text-align: center;
-  /*margin-right: 3px;*/
   overflow: hidden;
   z-index: 1;
 
@@ -284,6 +284,61 @@ html, body {
   display: inline-block;
   text-decoration: none;
   top: 0px;
+}
+
+.wcTabLeft {
+  transform: rotate(-90deg);
+  transform-origin: left top 0;
+  top: 100%;
+  left: 0%;
+}
+
+.wcTabLeft .wcFrameButton {
+  transform: rotate(90deg);
+  transform-origin: center center 0;
+}
+
+.wcTabLeft .wcFrameButton span {
+  transform: rotate(-90deg);
+  transform-origin: center center 0;
+}
+
+.wcTabRight {
+  transform: rotate(90deg);
+  transform-origin: left top 0;
+  top: 0px;
+  left: 100%;
+}
+
+.wcTabRight .wcFrameButton {
+  transform: rotate(-90deg);
+  transform-origin: center center 0;
+}
+
+.wcTabRight .wcFrameButton span {
+  transform: rotate(90deg);
+  transform-origin: center center 0;
+}
+
+.wcTabBottom {
+  transform: rotate(180deg) scaleX(-1);
+  transform-origin: left top 0;
+  top: 100%;
+  left: 0px;
+}
+
+.wcTabBottom .wcFrameButton {
+  transform: rotate(-90deg);
+  transform-origin: center center 0;
+}
+
+.wcTabBottom .wcFrameButton span {
+  transform: rotate(90deg);
+  transform-origin: center center 0;
+}
+
+.wcTabBottom .wcPanelTab > div {
+  transform: scaleY(-1);
 }
 
 .wcPanelTabContent {

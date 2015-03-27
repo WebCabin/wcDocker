@@ -1,4 +1,15 @@
 /**
+ * Options for adding a new panel.
+ *
+ * @typedef {Object} wcDocker~PanelOptions
+ * @property {Number|String} [x] - X coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [y] - Y coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [w] - Desired width of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [h] - Desired height of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {wcDocker.TAB} [tabOrientation] - Desired position of tab widgets when using [wcDocker.DOCK.STACKED]{@link wcDocker.DOCK}. <b>Not supported on IE8 or below.</b>
+ */
+
+/**
  * A rectangle structure.
  *
  * @typedef {Object} wcDocker~Rect

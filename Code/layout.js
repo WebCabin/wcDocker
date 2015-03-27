@@ -408,42 +408,84 @@ wcLayout.prototype = {
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
     var offset = $elem.offset();
-    var top = $elem.find('.wcFrameTitleBar').height();
+    var titleSize = $elem.find('.wcFrameTitleBar').height();
     if (!title) {
-      top = 0;
+      titleSize = 0;
     }
 
-    if (same) {
-      // Same tabs
-      if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
+    // If the target panel has a title, hovering over it (on all sides) will cause stacking
+    // and also change the orientation of the tabs (if enabled).
+    if (title) {
+      // Top title bar
+      if (mouse.y >= offset.top && mouse.y <= offset.top + titleSize &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
+
+        // Stacking with top orientation.
         ghost.anchor(mouse, {
           x: offset.left-2,
           y: offset.top-2,
           w: width,
-          h: top-2,
+          h: titleSize-2,
           loc: wcDocker.DOCK.STACKED,
+          tab: wcDocker.TAB.TOP,
           item: this,
-          self: true,
+          self: same === wcDocker.TAB.TOP,
         });
         return true;
       }
-    }
+      // Any other tab orientation is only valid if tab orientation is enabled.
+      else if (this._parent.docker()._canOrientTabs) {
+        // Bottom bar
+        if (mouse.y >= offset.top + height - titleSize && mouse.y <= offset.top + height &&
+            mouse.x >= offset.left && mouse.x <= offset.left + width) {
+          
+          // Stacking with bottom orientation.
+          ghost.anchor(mouse, {
+            x: offset.left-2,
+            y: offset.top + height - titleSize-2,
+            w: width,
+            h: titleSize-2,
+            loc: wcDocker.DOCK.STACKED,
+            tab: wcDocker.TAB.BOTTOM,
+            item: this,
+            self: same === wcDocker.TAB.BOTTOM,
+          });
+          return true;
+        }
+        // Left bar
+        else if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+            mouse.x >= offset.left && mouse.x <= offset.left + titleSize) {
+          
+          // Stacking with bottom orientation.
+          ghost.anchor(mouse, {
+            x: offset.left-2,
+            y: offset.top-2,
+            w: titleSize-2,
+            h: height,
+            loc: wcDocker.DOCK.STACKED,
+            tab: wcDocker.TAB.LEFT,
+            item: this,
+            self: same === wcDocker.TAB.LEFT,
+          });
+          return true;
+        }
+        // Right bar
+        else if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+            mouse.x >= offset.left + width - titleSize && mouse.x <= offset.left + width) {
 
-    // Tab ordering or adding.
-    if (title) {
-      if (mouse.y >= offset.top && mouse.y <= offset.top + top &&
-          mouse.x >= offset.left && mouse.x <= offset.left + width) {
-        ghost.anchor(mouse, {
-          x: offset.left-2,
-          y: offset.top-2,
-          w: width,
-          h: top-2,
-          loc: wcDocker.DOCK.STACKED,
-          item: this,
-          self: false,
-        });
-        return true;
+          // Stacking with bottom orientation.
+          ghost.anchor(mouse, {
+            x: offset.left + width - titleSize-2,
+            y: offset.top-2,
+            w: titleSize-2,
+            h: height,
+            loc: wcDocker.DOCK.STACKED,
+            tab: wcDocker.TAB.RIGHT,
+            item: this,
+            self: same === wcDocker.TAB.RIGHT,
+          });
+          return true;
+        }
       }
     }
 

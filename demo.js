@@ -423,7 +423,9 @@ $(document).ready(function() {
     myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
     
     var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.RIGHT, chatPanel1);
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
+      tabOrientation: wcDocker.TAB.BOTTOM
+    });
     var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
   }
 });

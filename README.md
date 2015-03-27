@@ -52,9 +52,9 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 
 - Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
 - Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the table size changes.
+- Ability for a **panel's tabs to appear on the left, right, or even bottom** edge of the frame.
 - **COMING SOON!**
  - **Collapsable panels!** Ability to collapse any panel in the view. Collapsed panels appear as a tabbed item on one side, activating the tab will expand your collapsed panel into view where it can be used and then collapsed again, or re-docked back into the panel again!
- - Ability for a **panel's tabs to appear on the left, right, or even bottom** edge of the frame.
  - Ability to **assign any DOM element as a panel creation button**. A panel creation button can be clicked, or drag+dropped, by the user to create new panels in their view.
 
       ```
