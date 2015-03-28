@@ -6611,7 +6611,7 @@ wcIFrame.prototype = {
   openURL: function(url) {
     this.__clearFrame();
 
-    this.$iFrame = $('<iframe>');
+    this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
     this.$frame.append(this.$iFrame);
 
     this.__onMoved();
@@ -6621,26 +6621,43 @@ wcIFrame.prototype = {
   },
 
   /**
-   * Populates the iFrame with the given HTML source code.
+   * Populates the iFrame with the given HTML source code using the document to write data.
    *
    * @param {String} html - The HTML source code.
    */
   openHTML: function(html) {
     this.__clearFrame();
 
-    this.$iFrame = $('<iframe>');
+    this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
     this.$frame.append(this.$iFrame);
 
     this.__onMoved();
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
     this.__updateFrame();
 
-    this._boundEvents = [];
-
     // Write the frame source.
     this._window.document.open();
     this._window.document.write(html);
     this._window.document.close();
+  },
+
+  /**
+   * Populates the iFrame with the given HTML source code using the srcdoc attribute.
+   *
+   * @param {String} html - The HTML source code.
+   */
+  openSRC: function(html) {
+    this.__clearFrame();
+
+    this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
+    this.$frame.append(this.$iFrame);
+
+    this.__onMoved();
+    this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
+    this.__updateFrame();
+
+    // Write the frame source.
+    this.$iFrame[0].srcdoc = html;
   },
 
   /**
