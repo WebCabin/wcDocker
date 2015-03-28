@@ -6643,6 +6643,7 @@ wcIFrame.prototype = {
 
   /**
    * Populates the iFrame with the given HTML source code using the srcdoc attribute.
+   * @version 3.0.0
    *
    * @param {String} html - The HTML source code.
    */
