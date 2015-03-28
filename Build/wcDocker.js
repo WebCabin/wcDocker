@@ -6749,7 +6749,7 @@ wcIFrame.prototype = {
   },
 
   __updateFrame: function() {
-    if (this.$frame) {
+    if (this.$frame && this._panel) {
       this.$frame.toggleClass('wcIFrameFloating', !this._isAttached);
       if (!this._isAttached) {
         this.$frame.toggleClass('wcIFrameFloatingFocus', this._hasFocus);
@@ -6798,7 +6798,7 @@ wcIFrame.prototype = {
   },
 
   __onMoved: function() {
-    if (this.$frame) {
+    if (this.$frame && this._panel) {
       // Size, position, and show the frame once the move is finished.
       var dockerPos = this.docker().$container.offset();
       var pos = this.$container.offset();
