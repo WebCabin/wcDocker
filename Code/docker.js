@@ -1238,9 +1238,9 @@ wcDocker.prototype = {
       event.returnValue = false;
     });
 
-    $('body').on('selectstart', '.wcFrameTitleBar, .wcPanelTab, .wcFrameButton', function(event) {
-      event.preventDefault();
-    });
+    // $('body').on('selectstart', '.wcFrameTitleBar, .wcPanelTab, .wcFrameButton', function(event) {
+    //   event.preventDefault();
+    // });
 
     $('body').on('mousedown', '.wcFrameButtonBar > .wcFrameButton', function() {
       self.$container.addClass('wcDisableSelection');
@@ -1307,7 +1307,7 @@ wcDocker.prototype = {
         }
 
         if (customTab.$tabLeft[0] === this) {
-          customTab._tabScrollPos-=customTab.$titleBar.width()/2;
+          customTab._tabScrollPos-=customTab.$tabBar.width()/2;
           if (customTab._tabScrollPos < 0) {
             customTab._tabScrollPos = 0;
           }
@@ -1315,7 +1315,7 @@ wcDocker.prototype = {
           return;
         }
         if (customTab.$tabRight[0] === this) {
-          customTab._tabScrollPos+=customTab.$titleBar.width()/2;
+          customTab._tabScrollPos+=customTab.$tabBar.width()/2;
           customTab.__updateTabs();
           return;
         }
@@ -1423,7 +1423,7 @@ wcDocker.prototype = {
         }
       }
       for (var i = 0; i < self._tabList.length; ++i) {
-        if (self._tabList[i].$titleBar[0] == this) {
+        if (self._tabList[i].$tabBar[0] == this) {
           self._draggingCustomTabFrame = self._tabList[i];
 
           var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
