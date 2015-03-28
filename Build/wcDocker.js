@@ -15,55 +15,6 @@
  *
  */
 
-// Provide backward compatibility for IE8 and other such older browsers.
-if (!Function.prototype.bind) {
-  Function.prototype.bind = function (oThis) {
-    if (typeof this !== "function") {
-      // closest thing possible to the ECMAScript 5
-      // internal IsCallable function
-      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-    }
-
-    var aArgs = Array.prototype.slice.call(arguments, 1), 
-        fToBind = this, 
-        fNOP = function () {},
-        fBound = function () {
-          return fToBind.apply(this instanceof fNOP && oThis
-                 ? this
-                 : oThis,
-                 aArgs.concat(Array.prototype.slice.call(arguments)));
-        };
-
-    fNOP.prototype = this.prototype;
-    fBound.prototype = new fNOP();
-
-    return fBound;
-  };
-}
-
-if (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(elt /*, from*/)
-  {
-    var len = this.length >>> 0;
-
-    var from = Number(arguments[1]) || 0;
-    from = (from < 0)
-         ? Math.ceil(from)
-         : Math.floor(from);
-    if (from < 0)
-      from += len;
-
-    for (; from < len; from++)
-    {
-      if (from in this &&
-          this[from] === elt)
-        return from;
-    }
-    return -1;
-  };
-}
-
 /**
  * @class
  * The main docker instance.  This manages all of the docking panels and user input.
@@ -82,22 +33,7 @@ function wcDocker(container, options) {
   this.$outer.append(this.$container);
   this.$container.append(this.$transition);
 
-  // Check if the browser supports transformations, if not, we cannot rotate tabs.
-  var ie = (function(){
-      var v = 3;
-      var div = document.createElement('div');
-      var all = div.getElementsByTagName('i');
-      while (
-          div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
-          all[0]
-      );
-      return v > 4 ? v : undefined;
-  }());
-
   this._canOrientTabs = true;
-  if (ie < 10) {
-    this._canOrientTabs = false;
-  }
 
   this._events = {};
 
@@ -1234,6 +1170,8 @@ wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   __init: function() {
+    this.__compatibilityCheck();
+
     this._root = null;
     this.__addPlaceholder();
     
@@ -1778,6 +1716,86 @@ wcDocker.prototype = {
         }
       }
     });
+  },
+
+  // Test for browser compatability issues.
+  __compatibilityCheck: function() {
+    // Provide backward compatibility for IE8 and other such older browsers.
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (oThis) {
+        if (typeof this !== "function") {
+          // closest thing possible to the ECMAScript 5
+          // internal IsCallable function
+          throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+        }
+
+        var aArgs = Array.prototype.slice.call(arguments, 1), 
+            fToBind = this, 
+            fNOP = function () {},
+            fBound = function () {
+              return fToBind.apply(this instanceof fNOP && oThis
+                     ? this
+                     : oThis,
+                     aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
+
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+
+        return fBound;
+      };
+    }
+
+    if (!Array.prototype.indexOf)
+    {
+      Array.prototype.indexOf = function(elt /*, from*/)
+      {
+        var len = this.length >>> 0;
+
+        var from = Number(arguments[1]) || 0;
+        from = (from < 0)
+             ? Math.ceil(from)
+             : Math.floor(from);
+        if (from < 0)
+          from += len;
+
+        for (; from < len; from++)
+        {
+          if (from in this &&
+              this[from] === elt)
+            return from;
+        }
+        return -1;
+      };
+    }
+
+    // Check if the browser supports transformations, if not, we cannot rotate tabs.
+    var ie = (function(){
+        var v = 3;
+        var div = document.createElement('div');
+        var all = div.getElementsByTagName('i');
+        while (
+            div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+            all[0]
+        );
+        return v > 4 ? v : undefined;
+    }());
+
+    if (ie < 9) {
+      this._canOrientTabs = false;
+    } else {
+      function getSupportedTransform() {
+          var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
+          var div = document.createElement('div');
+          for(var i = 0; i < prefixes.length; i++) {
+              if(div && div.style[prefixes[i]] !== undefined) {
+                  return true;
+              }
+          }
+          return false;
+      };
+      this._canOrientTabs = getSupportedTransform();
+    }
   },
 
   // Updates the sizing of all panels inside this window.
