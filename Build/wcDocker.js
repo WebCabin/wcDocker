@@ -6556,6 +6556,7 @@ wcTabFrame.prototype = {
  * iFrame is essentially on top of the window, it can not be only partially hidden.
  * If the wcIFrame container is partially hidden outside the bounds of the panel,
  * the iFrame will not be hidden.
+ * {@tutorial 3.0-widgets}
  *
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
@@ -6568,6 +6569,11 @@ function wcIFrame(container, panel) {
 
   this.$container = $(container);
   this.$frame = null;
+
+  /**
+   * The iFrame element.
+   * @member {external:jQuery~Object}
+   */
   this.$iFrame = null;
 
   this._window = null;
@@ -6665,7 +6671,8 @@ wcIFrame.prototype = {
   },
 
   /**
-   * Destroys the iFrame element and clears all references.
+   * Destroys the iFrame element and clears all references.<br>
+   * <b>Note:</b> This is automatically called when the owner panel is destroyed.
    */
   destroy: function() {
     // Remove all registered events.
