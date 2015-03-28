@@ -1,9 +1,24 @@
+# Welcome! #
+
+Welcome to WebCabin.org!  Your developers cabin, on the web!  
+
+Here at Web Cabin, we sincerely believe that anyone with the proper tools can become a developer! The open source community provides us with a powerful network for sharing, inspiring, and revolutionizing the world! It is awfully daunting, viewing the long road ahead through our small cabin window, but all memorable journeys must have a beginning. Will you join us?
+
+
+****
 ### What is wcDocker? ###
 
-wcDocker (Web Cabin Docker) is a page layout framework that allows users to organize an array-able list of panel types in almost any configuration. Panels can be docked beside other panels, floating on their own, resized, moved, duplicated, and removed at will by the user. It is a powerful library for use as an IDE or a visual data management interface.
+wcDocker (Web Cabin Docker) is a responsive IDE interface designed for the developer at heart!  Compartmentalize your environment into smaller components, put each of those parts into a docker panel, and organize your environment however you like, whenever you like!
 
-Try the demo here:  [http://docker.webcabin.org/](http://docker.webcabin.org/)  
-View the API documentation here: [http://docker.api.webcabin.org/](http://docker.api.webcabin.org/)
+### [http://docker.webcabin.org](http://docker.webcabin.org) ###
+  * Try the front page demo.
+
+### [http://docker.api.webcabin.org](http://docker.api.webcabin.org) ###
+  * View the API documentation.
+
+### [http://arpg.webcabin.org](http://arpg.webcabin.org) ###
+  * Try out our upcoming project (currently in alpha development), a completely web based Action RPG Maker tool!  
+  
 
 ****
 ### Features ###
@@ -15,9 +30,11 @@ View the API documentation here: [http://docker.api.webcabin.org/](http://docker
 * Compatible with all major browsers, including IE8.
 * Completely free!
 
+
 ****
 ### Getting Started ###
 See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-started.html) tutorial.
+
 
 ****
 ### Change Log ###
@@ -109,12 +126,14 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 - Fixed compatibility with IE8.
 - Fixed tabs disappearing when the panel is too small to fit them.
 
+
 ****
 ### Dependencies ###
 
 * JQuery Library version 1.11.1 [http://jquery.com/](http://jquery.com/)
 * JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
 * Font-Awesome [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/)
+
 
 ****
 ### License ###
@@ -128,6 +147,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 ****
 ### Suggestions/Comments? ###
