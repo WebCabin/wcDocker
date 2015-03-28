@@ -73,6 +73,8 @@ wcIFrame.prototype = {
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
     this.__updateFrame();
     this._window.location.replace(url);
+
+    this.$iFrame[0].focus();
   },
 
   /**
@@ -94,6 +96,8 @@ wcIFrame.prototype = {
     this._window.document.open();
     this._window.document.write(html);
     this._window.document.close();
+
+    this.$iFrame[0].focus();
   },
 
   /**
@@ -114,6 +118,7 @@ wcIFrame.prototype = {
 
     // Write the frame source.
     this.$iFrame[0].srcdoc = html;
+    this.$iFrame[0].focus();
   },
 
   /**
