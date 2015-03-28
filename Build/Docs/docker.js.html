@@ -89,55 +89,6 @@
  *
  */
 
-// Provide backward compatibility for IE8 and other such older browsers.
-if (!Function.prototype.bind) {
-  Function.prototype.bind = function (oThis) {
-    if (typeof this !== "function") {
-      // closest thing possible to the ECMAScript 5
-      // internal IsCallable function
-      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-    }
-
-    var aArgs = Array.prototype.slice.call(arguments, 1), 
-        fToBind = this, 
-        fNOP = function () {},
-        fBound = function () {
-          return fToBind.apply(this instanceof fNOP &amp;&amp; oThis
-                 ? this
-                 : oThis,
-                 aArgs.concat(Array.prototype.slice.call(arguments)));
-        };
-
-    fNOP.prototype = this.prototype;
-    fBound.prototype = new fNOP();
-
-    return fBound;
-  };
-}
-
-if (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(elt /*, from*/)
-  {
-    var len = this.length >>> 0;
-
-    var from = Number(arguments[1]) || 0;
-    from = (from &lt; 0)
-         ? Math.ceil(from)
-         : Math.floor(from);
-    if (from &lt; 0)
-      from += len;
-
-    for (; from &lt; len; from++)
-    {
-      if (from in this &amp;&amp;
-          this[from] === elt)
-        return from;
-    }
-    return -1;
-  };
-}
-
 /**
  * @class
  * The main docker instance.  This manages all of the docking panels and user input.
@@ -149,26 +100,14 @@ if (!Array.prototype.indexOf)
  * @param {wcDocker~Options} [options] - Options for constructing the instance.
  */
 function wcDocker(container, options) {
-  this.$container = $(container).addClass('wcDocker');
-  this.$transition = $('&lt;div class="wcDockerTransition">&lt;/div>');
+  this.$outer = $(container);
+  this.$container = $('&lt;div class="wcDocker">');
+  this.$transition = $('&lt;div class="wcDockerTransition">');
+
+  this.$outer.append(this.$container);
   this.$container.append(this.$transition);
 
-  // Check if the browser supports transformations, if not, we cannot rotate tabs.
-  var ie = (function(){
-      var v = 3;
-      var div = document.createElement('div');
-      var all = div.getElementsByTagName('i');
-      while (
-          div.innerHTML = '&lt;!--[if gt IE ' + (++v) + ']>&lt;i>&lt;/i>&lt;![endif]-->',
-          all[0]
-      );
-      return v > 4 ? v : undefined;
-  }());
-
   this._canOrientTabs = true;
-  if (ie &lt; 10) {
-    this._canOrientTabs = false;
-  }
 
   this._events = {};
 
@@ -1305,6 +1244,8 @@ wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   __init: function() {
+    this.__compatibilityCheck();
+
     this._root = null;
     this.__addPlaceholder();
     
@@ -1849,6 +1790,86 @@ wcDocker.prototype = {
         }
       }
     });
+  },
+
+  // Test for browser compatability issues.
+  __compatibilityCheck: function() {
+    // Provide backward compatibility for IE8 and other such older browsers.
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (oThis) {
+        if (typeof this !== "function") {
+          // closest thing possible to the ECMAScript 5
+          // internal IsCallable function
+          throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+        }
+
+        var aArgs = Array.prototype.slice.call(arguments, 1), 
+            fToBind = this, 
+            fNOP = function () {},
+            fBound = function () {
+              return fToBind.apply(this instanceof fNOP &amp;&amp; oThis
+                     ? this
+                     : oThis,
+                     aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
+
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+
+        return fBound;
+      };
+    }
+
+    if (!Array.prototype.indexOf)
+    {
+      Array.prototype.indexOf = function(elt /*, from*/)
+      {
+        var len = this.length >>> 0;
+
+        var from = Number(arguments[1]) || 0;
+        from = (from &lt; 0)
+             ? Math.ceil(from)
+             : Math.floor(from);
+        if (from &lt; 0)
+          from += len;
+
+        for (; from &lt; len; from++)
+        {
+          if (from in this &amp;&amp;
+              this[from] === elt)
+            return from;
+        }
+        return -1;
+      };
+    }
+
+    // Check if the browser supports transformations, if not, we cannot rotate tabs.
+    var ie = (function(){
+        var v = 3;
+        var div = document.createElement('div');
+        var all = div.getElementsByTagName('i');
+        while (
+            div.innerHTML = '&lt;!--[if gt IE ' + (++v) + ']>&lt;i>&lt;/i>&lt;![endif]-->',
+            all[0]
+        );
+        return v > 4 ? v : undefined;
+    }());
+
+    if (ie &lt; 9) {
+      this._canOrientTabs = false;
+    } else {
+      function getSupportedTransform() {
+          var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
+          var div = document.createElement('div');
+          for(var i = 0; i &lt; prefixes.length; i++) {
+              if(div &amp;&amp; div.style[prefixes[i]] !== undefined) {
+                  return true;
+              }
+          }
+          return false;
+      };
+      this._canOrientTabs = getSupportedTransform();
+    }
   },
 
   // Updates the sizing of all panels inside this window.
