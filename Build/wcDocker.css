@@ -53,6 +53,8 @@ html, body {
 
 .wcDocker {
   position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .wcDockerTransition {
@@ -407,13 +409,14 @@ html, body {
   float: right;
 }
 
-.wcIFrame {
-  position: fixed;
+.wcIFrame, .wcIFrame iframe {
+  position: absolute;
+
+  overflow: auto;
+  z-index: 1;
 
   width: 100%;
   height: 100%;
-
-  z-index: 1;
 
   border: 0px;
   margin: 0px;

@@ -75,8 +75,11 @@ if (!Array.prototype.indexOf)
  * @param {wcDocker~Options} [options] - Options for constructing the instance.
  */
 function wcDocker(container, options) {
-  this.$container = $(container).addClass('wcDocker');
-  this.$transition = $('<div class="wcDockerTransition"></div>');
+  this.$outer = $(container);
+  this.$container = $('<div class="wcDocker">');
+  this.$transition = $('<div class="wcDockerTransition">');
+
+  this.$outer.append(this.$container);
   this.$container.append(this.$transition);
 
   // Check if the browser supports transformations, if not, we cannot rotate tabs.

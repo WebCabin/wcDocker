@@ -386,16 +386,11 @@ $(document).ready(function() {
     myDocker.registerPanelType('Tutorial Panel', {
       faicon: 'graduation-cap',
       onCreate: function(myPanel) {
-        var $title = $('<small style="white-space:nowrap;">View the API documentation: </small>');
-        var $link  = $('<a href="http://docker.api.webcabin.org/" target="_blank"><input type="text" readonly style="width:99%;" value="http://docker.api.webcabin.org/"/></a>');
-        myPanel.layout().addItem($title, 0, 0);
-        myPanel.layout().addItem($link, 1, 0).stretch('99%', '');
-
-        var $container = $('<div style="position:absolute;top:25px;left:0px;right:0px;bottom:0px;"></div>');
-        myPanel.layout().addItem($container, 0, 1, 2, 1).stretch('', '100%');
+        var $container = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');
+        myPanel.layout().addItem($container);
 
         var iFrame = new wcIFrame($container, myPanel);
-        iFrame.openURL('http://docker.api.webcabin.org/tutorial-1.0-getting-started.html');
+        iFrame.openURL('http://docker.api.webcabin.org/');
 
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');

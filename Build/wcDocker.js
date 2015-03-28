@@ -75,8 +75,11 @@ if (!Array.prototype.indexOf)
  * @param {wcDocker~Options} [options] - Options for constructing the instance.
  */
 function wcDocker(container, options) {
-  this.$container = $(container).addClass('wcDocker');
-  this.$transition = $('<div class="wcDockerTransition"></div>');
+  this.$outer = $(container);
+  this.$container = $('<div class="wcDocker">');
+  this.$transition = $('<div class="wcDockerTransition">');
+
+  this.$outer.append(this.$container);
   this.$container.append(this.$transition);
 
   // Check if the browser supports transformations, if not, we cannot rotate tabs.
@@ -6547,6 +6550,7 @@ function wcIFrame(container, panel) {
 
   this.$container = $(container);
   this.$frame = null;
+  this.$iFrame = null;
 
   this._window = null;
   this._isAttached = true;
@@ -6583,10 +6587,11 @@ wcIFrame.prototype = {
   openURL: function(url) {
     this.__clearFrame();
 
-    this.$frame = $('<iframe class="wcIFrame">');
-    this._panel.docker().$container.append(this.$frame);
+    this.$iFrame = $('<iframe>');
+    this.$frame.append(this.$iFrame);
+
     this.__onMoved();
-    this._window = this.$frame[0].contentWindow || this.$frame[0];
+    this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
     this.__updateFrame();
     this._window.location.replace(url);
   },
@@ -6599,10 +6604,11 @@ wcIFrame.prototype = {
   openHTML: function(html) {
     this.__clearFrame();
 
-    this.$frame = $('<iframe class="wcIFrame">');
-    this._panel.docker().$container.append(this.$frame);
+    this.$iFrame = $('<iframe>');
+    this.$frame.append(this.$iFrame);
+
     this.__onMoved();
-    this._window = this.$frame[0].contentWindow || this.$frame[0];
+    this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
     this.__updateFrame();
 
     this._boundEvents = [];
@@ -6662,6 +6668,9 @@ wcIFrame.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   __init: function() {
+    this.$frame = $('<div class="wcIFrame">');
+    this._panel.docker().$container.append(this.$frame);
+
     this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK,         handler: this.__onBeginDock.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.END_DOCK,           handler: this.__onEndDock.bind(this)});
@@ -6683,10 +6692,10 @@ wcIFrame.prototype = {
   },
 
   __clearFrame: function() {
-    if (this.$frame) {
-      this.$frame[0].srcdoc = '';
-      this.$frame.remove();
-      this.$frame = null;
+    if (this.$iFrame) {
+      this.$iFrame[0].srcdoc = '';
+      this.$iFrame.remove();
+      this.$iFrame = null;
       this._window = null;
     }
   },
@@ -6743,12 +6752,15 @@ wcIFrame.prototype = {
   __onMoved: function() {
     if (this.$frame) {
       // Size, position, and show the frame once the move is finished.
+      var dockerPos = this.docker().$container.offset();
       var pos = this.$container.offset();
       var width = this.$container.width();
       var height = this.$container.height();
 
-      this.$frame.css('left', pos.left);
-      this.$frame.css('top', pos.top);
+      this.$frame.css('top', pos.top - dockerPos.top);
+      this.$frame.css('left', pos.left - dockerPos.left);
+      // this.$frame.css('right', pos.left + width - dockerPos.left);
+      // this.$frame.css('bottom', pos.top + height - dockerPos.top);
       this.$frame.css('width', width);
       this.$frame.css('height', height);
     }
