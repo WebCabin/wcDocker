@@ -76,7 +76,7 @@
 <article>
     <h3>Splitter Widget</h3><p>The <a href="wcSplitter.html">splitter</a> widget separates two elements by a moveable bar, either vertically or horizontally. It is the same one used by <a href="wcDocker.html">docker</a> to organize the layout of all docked panels.</p>
 <p>To use it, you will need an element that will contain it. This element should be added to your layout and will mark the size and location of the splitter area.<br><strong>Note:</strong> Some limitations exist with iFrames. Even if the container element is partially hidden beyond the bounds of the panel layout, the iFrame itself will not be occluded.<br><strong>Troubleshooting:</strong> If the widget does not appear correctly, double check and make sure your container element has been positioned and sized properly according to your browser.</p>
-<pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;position:absolute:top:0px;left:0px;right:0px;bottom:0px;&quot;>&lt;/div>');
+<pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;position:absolute;top:0px;left:0px;right:0px;bottom:0px;&quot;>&lt;/div>');
 myPanel.layout().addItem($container);
 
 var splitter = new wcSplitter($container, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
@@ -103,7 +103,7 @@ Because an iFrame's contents is cleared whenever it is moved in the DOM heirarch
 (and changing a panels docking position causes DOM movement), special care must
 be taken when using them.</p>
 <p>To use it, you will need an element that will contain it. This element should be added to your layout and will mark the size and location of the iFrame area.<br><strong>Note:</strong> Some limitations exist with iFrames. Even if the container element is partially hidden beyond the bounds of the panel layout, the iFrame itself will not be occluded.<br><strong>Troubleshooting:</strong> If the widget does not appear correctly, double check and make sure your container element has been positioned and sized properly according to your browser.</p>
-<pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;position:absolute:top:0px;left:0px;right:0px;bottom:0px;&quot;>&lt;/div>');
+<pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;position:absolute;top:0px;left:0px;right:0px;bottom:0px;&quot;>&lt;/div>');
 myPanel.layout().addItem($container);
 
 var iFrame = new wcIFrame($container, myPanel);</code></pre><p>And fill its contents...</p>
