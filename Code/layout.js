@@ -444,7 +444,7 @@ wcLayout.prototype = {
             x: offset.left-2,
             y: offset.top + height - titleSize-2,
             w: width,
-            h: titleSize-2,
+            h: titleSize,
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.BOTTOM,
             item: this,
@@ -477,7 +477,7 @@ wcLayout.prototype = {
           ghost.anchor(mouse, {
             x: offset.left + width - titleSize-2,
             y: offset.top-2,
-            w: titleSize-2,
+            w: titleSize,
             h: height,
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.RIGHT,
