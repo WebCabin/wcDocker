@@ -495,6 +495,7 @@ wcFrame.prototype = {
     var tabPositions = [];
     var totalWidth = 0;
     var parentLeft = getOffset(this.$tabScroll);
+    var showTabs = this._panelList.length > 1 || this._isFloating;
     var self = this;
 
     this.$titleBar.removeClass('wcNotMoveable');
@@ -511,7 +512,7 @@ wcFrame.prototype = {
       var panel = this._panelList[i];
 
       var $tab = null;
-      if (this._isFloating || this._panelList.length > 1) {
+      if (showTabs) {
         $tab = $('<div id="' + i + '" class="wcPanelTab"><div>' + panel.title() + '</div></div>');
         this.$tabScroll.append($tab);
         if (panel.$icon) {
@@ -579,7 +580,7 @@ wcFrame.prototype = {
           this.$titleBar.remove();
           this.$tabBar.addClass('wcTabTop').removeClass('wcTabLeft wcTabRight wcTabBottom');
           this.$tabBar.css('margin-top', '');
-          if (this._panelList.length > 1) {
+          if (showTabs) {
             this.$title.remove();
           } else {
             this.$tabBar.prepend(this.$title);
@@ -592,7 +593,7 @@ wcFrame.prototype = {
           this.$frame.prepend(this.$titleBar);
           this.$titleBar.append(this.$title);
 
-          if (this._panelList.length > 1) {
+          if (showTabs) {
             var titleSize = this.$titleBar.height();
             this.$frame.append(this.$tabBar);
             this.$tabBar.addClass('wcTabBottom').removeClass('wcTabTop wcTabLeft wcTabRight');
@@ -609,7 +610,7 @@ wcFrame.prototype = {
           this.$frame.prepend(this.$titleBar);
           this.$titleBar.append(this.$title);
 
-          if (this._panelList.length > 1) {
+          if (showTabs) {
             var titleSize = this.$titleBar.height();
             this.$frame.append(this.$tabBar);
             this.$tabBar.addClass('wcTabLeft').removeClass('wcTabTop wcTabRight wcTabBottom');
@@ -626,7 +627,7 @@ wcFrame.prototype = {
           this.$frame.prepend(this.$titleBar);
           this.$titleBar.append(this.$title);
 
-          if (this._panelList.length > 1) {
+          if (showTabs) {
             var titleSize = this.$titleBar.height();
             this.$frame.append(this.$tabBar);
             this.$tabBar.addClass('wcTabRight').removeClass('wcTabTop wcTabLeft wcTabBottom');
@@ -639,10 +640,13 @@ wcFrame.prototype = {
           tabWidth = this.$center.height();
           break;
       }
+      if (!showTabs) {
+        this.$center.css('left', 0).css('right', 0).css('bottom', 0);
+      }
     } else {
       this.$titleBar.remove();
       this.$tabBar.remove();
-      this.$center.css('top', '0px');
+      this.$center.css('top', 0).css('left', 0).css('right', 0).css('bottom', 0);
     }
 
     // Now remove all unused panel tabs.
