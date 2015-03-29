@@ -4112,7 +4112,7 @@ wcFrame.prototype = {
   },
 
   /**
-   * Gets, or Sets the tab orientation for the frame.
+   * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the frame.
    * @version 3.0.0
    *
    * @param {wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
@@ -6050,7 +6050,7 @@ wcTabFrame.prototype = {
   },
 
   /**
-   * Gets, or Sets the tab orientation for the frame.
+   * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the tab frame.
    * @version 3.0.0
    *
    * @param {wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
