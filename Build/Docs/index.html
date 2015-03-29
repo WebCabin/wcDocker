@@ -132,8 +132,8 @@
  wcDocker.ORIENTATION.HORIZONTAL;
 
  // Notice how each used to be one variable name...
- // Now they each are an object with the same enumeration inside 
- // them, just replace the first '_' with a '.' and everything should work fine again!</code></pre></li>
+ // Now they each are an object with the same enumeration inside them,
+ // just replace the first '_' with a '.' and they should work fine again!</code></pre></li>
 <li><p>wcLayout's are slightly different, wcLayout.addItem() and wcLayout.item() no longer return a jQuery object. Instead, they return a <a href="http://docker.api.webcabin.org/wcLayout.html#~tableItem">layout table item</a> that can be used to make alterations to that cell.</p>
 </li>
 <li>wcLayout.scene() function is now deprecated, please use wcLayout.$frame.</li>
@@ -142,12 +142,16 @@
 <li><p>Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).</p>
 </li>
 <li>Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the table size changes.</li>
-<li>Ability for a <strong>panel's tabs to appear on the left, right, or even bottom</strong> edge of the frame.</li>
+<li><p>Tab buttons shown on the panel frame and the custom tab widget can now be oriented to show on the left, right, or bottom edge of the frames (if the browser supports it).</p>
+<pre class="prettyprint source"><code>   myDocker.addPanel('Some Panel', wcDocker.DOCK.STACKED, parentPanel, {tabOrientation: wcDocker.TAB.BOTTOM});
+
+   var myCustomTabFrame = new wcTabFrame(domElem, myPanel);
+   myCustomTabFrame.tabOrientation(wcDocker.TAB.LEFT);</code></pre></li>
 <li><p><strong>COMING SOON!</strong></p>
 <ul>
 <li><strong>Collapsable panels!</strong> Ability to collapse any panel in the view. Collapsed panels appear as a tabbed item on one side, activating the tab will expand your collapsed panel into view where it can be used and then collapsed again, or re-docked back into the panel again!</li>
 <li><p>Ability to <strong>assign any DOM element as a panel creation button</strong>. A panel creation button can be clicked, or drag+dropped, by the user to create new panels in their view.</p>
-<pre class="prettyprint source"><code>  {@lang xml}&lt;span class=&quot;wcCreatePanel&quot; data-panel=&quot;My Custom Panel Type&quot;>Create My Custom Panel Type&lt;/span></code></pre></li>
+<pre class="prettyprint source"><code> {@lang xml}&lt;span class=&quot;wcCreatePanel&quot; data-panel=&quot;My Custom Panel Type&quot;>Create My Custom Panel Type&lt;/span></code></pre></li>
 </ul>
 </li>
 </ul>

@@ -60,8 +60,8 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
      wcDocker.ORIENTATION.HORIZONTAL;
 
      // Notice how each used to be one variable name...
-     // Now they each are an object with the same enumeration inside 
-     // them, just replace the first '_' with a '.' and everything should work fine again!
+     // Now they each are an object with the same enumeration inside them,
+     // just replace the first '_' with a '.' and they should work fine again!
      ```
 
  - wcLayout's are slightly different, wcLayout.addItem() and wcLayout.item() no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
@@ -69,14 +69,21 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 
 - Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
 - Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the table size changes.
-- Ability for a **panel's tabs to appear on the left, right, or even bottom** edge of the frame.
+- Tab buttons shown on the panel frame and the custom tab widget can now be oriented to show on the left, right, or bottom edge of the frames (if the browser supports it).
+
+     ```
+     myDocker.addPanel('Some Panel', wcDocker.DOCK.STACKED, parentPanel, {tabOrientation: wcDocker.TAB.BOTTOM});
+
+     var myCustomTabFrame = new wcTabFrame(domElem, myPanel);
+     myCustomTabFrame.tabOrientation(wcDocker.TAB.LEFT);
+     ```
 - **COMING SOON!**
  - **Collapsable panels!** Ability to collapse any panel in the view. Collapsed panels appear as a tabbed item on one side, activating the tab will expand your collapsed panel into view where it can be used and then collapsed again, or re-docked back into the panel again!
  - Ability to **assign any DOM element as a panel creation button**. A panel creation button can be clicked, or drag+dropped, by the user to create new panels in their view.
 
-      ```
-      {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
-      ```
+     ```
+     {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
+     ```
 
 #### Version: 2.2.0 ####
 - Separated the default theme out of wcDocker.css (now use wcDockerSkeleton.css with Themes/default.css).
