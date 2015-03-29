@@ -312,25 +312,23 @@ wcFrame.prototype = {
 
   // Initialize
   __init: function() {
-    this.$frame     = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
-    this.$title     = $('<div class="wcFrameTitle">');
-    this.$titleBar  = $('<div class="wcFrameTitleBar">');
-    this.$tabBar    = $('<div class="wcFrameTitleBar">');
-    this.$tabScroll = $('<div class="wcTabScroller">');
-    this.$center    = $('<div class="wcFrameCenter">');
-    this.$tabLeft   = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
-    this.$tabRight  = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
-    this.$close     = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
-    this.$buttonBar = $('<div class="wcFrameButtonBar">');
-    this.$tabButtonBar = $('<div class="wcFrameButtonBar">');
+    this.$frame         = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
+    this.$title         = $('<div class="wcFrameTitle">');
+    this.$titleBar      = $('<div class="wcFrameTitleBar">');
+    this.$tabBar        = $('<div class="wcFrameTitleBar">');
+    this.$tabScroll     = $('<div class="wcTabScroller">');
+    this.$center        = $('<div class="wcFrameCenter">');
+    this.$tabLeft       = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
+    this.$tabRight      = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
+    this.$close         = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
+    this.$buttonBar     = $('<div class="wcFrameButtonBar">');
+    this.$tabButtonBar  = $('<div class="wcFrameButtonBar">');
 
-    // this.$frame.append(this.$titleBar);
-    // this.$titleBar.append(this.$tabBar);
-    // this.$titleBar.append(this.$title);
     this.$tabBar.append(this.$tabScroll);
     this.$tabBar.append(this.$tabButtonBar);
     this.$frame.append(this.$buttonBar);
     this.$buttonBar.append(this.$close);
+    this.$frame.append(this.$center);
 
     if (this._isFloating) {
       this.$top     = $('<div class="wcFrameEdgeH wcFrameEdge"></div>').css('top', '-6px').css('left', '0px').css('right', '0px');
@@ -352,9 +350,6 @@ wcFrame.prototype = {
       this.$frame.append(this.$corner4);
     }
 
-    this.$frame.append(this.$center);
-
-    // Floating windows have no container.
     this.__container(this.$container);
 
     if (this._isFloating) {
@@ -739,9 +734,7 @@ wcFrame.prototype = {
       var scrollable = panel.scrollable();
       this.$center.toggleClass('wcScrollableX', scrollable.x);
       this.$center.toggleClass('wcScrollableY', scrollable.y);
-
-      var overflowVisible = panel.overflowVisible();
-      this.$center.toggleClass('wcOverflowVisible', overflowVisible);
+      this.$center.toggleClass('wcOverflowVisible', panel.overflowVisible());
 
       this.$tabLeft.remove();
       this.$tabRight.remove();

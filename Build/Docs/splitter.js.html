@@ -172,6 +172,10 @@ wcSplitter.prototype = {
       this.$pane[1].css('top', '').css('left', '').css('width', '').css('height', '');
       this.$bar.css('top', '').css('left', '').css('width', '').css('height', '');
       this.__update();
+
+      if (this._parent instanceof wcPanel) {
+        this._parent.__trigger(wcDocker.EVENT.UPDATED);
+      }
     }
   },
 

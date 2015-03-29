@@ -1246,6 +1246,36 @@ wcDocker.prototype = {
       self.$container.addClass('wcDisableSelection');
     });
 
+    // Clicking on a custom tab button.
+    $('body').on('click', '.wcCustomTab .wcFrameButton', function(event) {
+      self.$container.removeClass('wcDisableSelection');
+      for (var i = 0; i < self._tabList.length; ++i) {
+        var customTab = self._tabList[i];
+        if (customTab.$close[0] === this) {
+          var tabIndex = customTab.tab();
+          customTab.removeTab(tabIndex);
+          event.stopPropagation();
+          return;
+        }
+
+        if (customTab.$tabLeft[0] === this) {
+          customTab._tabScrollPos-=customTab.$tabBar.width()/2;
+          if (customTab._tabScrollPos < 0) {
+            customTab._tabScrollPos = 0;
+          }
+          customTab.__updateTabs();
+          event.stopPropagation();
+          return;
+        }
+        if (customTab.$tabRight[0] === this) {
+          customTab._tabScrollPos+=customTab.$tabBar.width()/2;
+          customTab.__updateTabs();
+          event.stopPropagation();
+          return;
+        }
+      }
+    });
+
     // Clicking on a panel frame button.
     $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', function() {
       self.$container.removeClass('wcDisableSelection');
@@ -1291,33 +1321,6 @@ wcDocker.prototype = {
             panel.__trigger(wcDocker.EVENT.BUTTON, result);
             return;
           }
-        }
-      }
-    });
-
-    // Clicking on a custom tab button.
-    $('body').on('click', '.wcCustomTab > .wcFrameButton', function() {
-      self.$container.removeClass('wcDisableSelection');
-      for (var i = 0; i < self._tabList.length; ++i) {
-        var customTab = self._tabList[i];
-        if (customTab.$close[0] === this) {
-          var tabIndex = customTab.tab();
-          customTab.removeTab(tabIndex);
-          return;
-        }
-
-        if (customTab.$tabLeft[0] === this) {
-          customTab._tabScrollPos-=customTab.$tabBar.width()/2;
-          if (customTab._tabScrollPos < 0) {
-            customTab._tabScrollPos = 0;
-          }
-          customTab.__updateTabs();
-          return;
-        }
-        if (customTab.$tabRight[0] === this) {
-          customTab._tabScrollPos+=customTab.$tabBar.width()/2;
-          customTab.__updateTabs();
-          return;
         }
       }
     });

@@ -245,6 +245,8 @@ $(document).ready(function() {
           if (data.name == 'View') {
             splitter.orientation(data.isToggled);
             subSplitter.orientation(!data.isToggled);
+            // We also orient the tab location so it better matches with the splitter orientation change!
+            tabFrame.tabOrientation(data.isToggled? wcDocker.TAB.LEFT: wcDocker.TAB.TOP);
           } else if (data.name == 'Info') {
             // Use the preivously defined common function to popup the Info Panel.
             showInfo('The widget panel demonstrates some of the custom layout widgets provided for you by wcDocker.');
