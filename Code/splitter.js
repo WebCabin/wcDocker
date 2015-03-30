@@ -351,7 +351,7 @@ wcSplitter.prototype = {
       }
     }
 
-    if (typeof destroyPanes === 'undefined' || destroyPanes) {
+    if (destroyPanes === undefined || destroyPanes) {
       this.__destroy();
     } else {
       this.__container(null);
@@ -451,6 +451,8 @@ wcSplitter.prototype = {
         }
       }
     }
+
+    this.$bar.toggleClass('wcSplitterBarStatic', this.__isStatic());
 
     if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
       var barSize = this.$bar.outerWidth() / 2;
@@ -646,6 +648,19 @@ wcSplitter.prototype = {
     maxSize.x = Math.min(minSize.x, maxSize.x);
     maxSize.y = Math.min(minSize.y, maxSize.y);
     return maxSize;
+  },
+
+  // Retrieves whether the splitter is static (not moveable).
+  __isStatic: function() {
+    var attr = this._orientation === wcDocker.ORIENTATION.HORIZONTAL? 'x': 'y';
+    for (var i = 0; i < 2; ++i) {
+      if (this._pane[i] && this._pane[i].minSize && this._pane[i].maxSize &&
+          this._pane[i].maxSize()[attr] - this._pane[i].minSize()[attr] === 0) {
+        return true;
+      }
+    }
+
+    return false;
   },
 
   // Gets, or Sets a new container for this layout.

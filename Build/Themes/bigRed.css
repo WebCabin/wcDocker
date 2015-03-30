@@ -2,39 +2,6 @@
   background-color: #A55;
 }
 
-.wcDrawerLeft .wcDrawer, .wcDrawerRight .wcDrawer,
-.wcDrawerTop .wcDrawer, .wcDrawerBottom .wcDrawer {
-  border: 2px dashed #633;
-}
-
-.wcDrawerLeft .wcDrawer {
-  border-left: 0;
-}
-.wcDrawerRight .wcDrawer {
-  border-right: 0;
-}
-.wcDrawerTop .wcDrawer {
-  border-top: 0;
-}
-.wcDrawerBottom .wcDrawer {
-  border-bottom: 0;
-}
-
-.wcDrawerOuterBar {
-  border: 2px outset #633;
-  background-color: #422;
-  width: 10px;
-  height: 10px;
-}
-
-.wcDrawerOuterBar:hover {
-  background-color: #822;
-}
-
-.wcDrawerOuterBar:active {
-  background-color: #A55;
-}
-
 .wcPanelBackground {
   background-color: #A55;
 }

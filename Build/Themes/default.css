@@ -23,39 +23,6 @@
   opacity: 0.8;
 }
 
-.wcDrawerLeft .wcDrawer, .wcDrawerRight .wcDrawer,
-.wcDrawerTop .wcDrawer, .wcDrawerBottom .wcDrawer {
-  border: 2px dashed #656565;
-}
-
-.wcDrawerLeft .wcDrawer {
-  border-left: 0;
-}
-.wcDrawerRight .wcDrawer {
-  border-right: 0;
-}
-.wcDrawerTop .wcDrawer {
-  border-top: 0;
-}
-.wcDrawerBottom .wcDrawer {
-  border-bottom: 0;
-}
-
-.wcDrawerOuterBar {
-  border: 2px outset #555;
-  background-color: #444;
-  width: 10px;
-  height: 10px;
-}
-
-.wcDrawerOuterBar:hover {
-  background-color: #666;
-}
-
-.wcDrawerOuterBar:active {
-  background-color: #888;
-}
-
 .wcPanelBackground {
   background-color: gray;
 }

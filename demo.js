@@ -428,17 +428,13 @@ $(document).ready(function() {
     var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h:'20%'});
     var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.RIGHT, null, {w:'25%'});
 
-    // TODO: Drawers are not fully functional yet, please wait for version 3.0.0 coming soon!
-    // var leftDrawer = myDocker.addDrawer(wcDocker.DOCK.LEFT);
-    // var rightDrawer = myDocker.addDrawer(wcDocker.DOCK.RIGHT);
-    // var bottomDrawer = myDocker.addDrawer(wcDocker.DOCK.BOTTOM);
-
+    myDocker.initCollapsers();
     myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
     
     var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.RIGHT, chatPanel1);
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
       tabOrientation: wcDocker.TAB.BOTTOM
     });
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
+    // var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, wcDocker.COLLAPSED);
   }
 });

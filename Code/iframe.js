@@ -163,6 +163,8 @@ wcIFrame.prototype = {
     this._panel = null;
     this._layout = null;
     this.$container = null;
+    this.$frame.remove();
+    this.$frame = null;
   },
 
 

@@ -55,27 +55,16 @@ html, body {
   position: absolute;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .wcDockerTransition {
   opacity: 0;
 }
 
-.wcDrawer, .wcDrawerFrame {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-}
-
-.wcDrawerOuterBar {
-  position: absolute;
-  z-index: 3;
-}
-
 .wcFrame {
   position: relative;
+  overflow: hidden;
 }
 
 .wcFrameFlasher, .wcFrameShadower {
@@ -269,6 +258,20 @@ html, body {
   height: 2px;
   width: 100%;
   cursor: ns-resize;
+}
+
+.wcSplitterBarV.wcSplitterBarStatic {
+  width: 0px !important;
+  border: 0px !important;
+  display: none !important;
+  cursor: default !important;
+}
+
+.wcSplitterBarH.wcSplitterBarStatic {
+  height: 0px !important;
+  border: 0px !important;
+  display: none !important;
+  cursor: default !important;
 }
 
 .wcLayoutPane {

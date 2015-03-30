@@ -45,42 +45,6 @@ html,body {
     position: relative;
 }
 
-.wcDrawerLeft .wcDrawer, .wcDrawerRight .wcDrawer,
-.wcDrawerTop .wcDrawer, .wcDrawerBottom .wcDrawer {
-  border: 10px dashed #252525;
-  background-color: black;
-}
-
-.wcDrawerLeft .wcDrawer {
-  border-left: 0;
-}
-.wcDrawerRight .wcDrawer {
-  border-right: 0;
-}
-.wcDrawerTop .wcDrawer {
-  border-top: 0;
-}
-.wcDrawerBottom .wcDrawer {
-  border-bottom: 0;
-}
-
-.wcDrawerOuterBar {
-  border: 2px outset darkgray;
-  background-color: darkgray;
-  width: 15px;
-  height: 15px;
-}
-
-.wcDrawerOuterBar:hover {
-  border: 2px outset lightgray;
-  background-color: lightgray;
-}
-
-.wcDrawerOuterBar:active {
-  border: 2px outset gray;
-  background-color: gray;
-}
-
 .wcFrame {
     border-right: 2px inset black;
     border-bottom: 2px inset black;

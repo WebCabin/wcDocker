@@ -296,13 +296,9 @@ wcFrame.prototype = {
     return false;
   },
 
-  // Gets whether this frame is inside a drawer.
-  isInDrawer: function() {
-    var parent = this._parent;
-    while (!(parent instanceof wcDrawer || parent instanceof wcDocker)) {
-      parent = parent._parent;
-    }
-    return parent instanceof wcDrawer;
+  // Gets whether this frame is inside a collapser.
+  isCollapser: function() {
+    return (this._panelList.length && this._panelList[0]._isCollapser);
   },
 
 
@@ -490,7 +486,7 @@ wcFrame.prototype = {
     var tabPositions = [];
     var totalWidth = 0;
     var parentLeft = getOffset(this.$tabScroll);
-    var showTabs = this._panelList.length > 1 || this._isFloating;
+    var showTabs = this._panelList.length > 1 || this._isFloating || this.isCollapser();
     var self = this;
 
     this.$titleBar.removeClass('wcNotMoveable');
@@ -734,6 +730,7 @@ wcFrame.prototype = {
       var scrollable = panel.scrollable();
       this.$center.toggleClass('wcScrollableX', scrollable.x);
       this.$center.toggleClass('wcScrollableY', scrollable.y);
+      this.$frame.toggleClass('wcOverflowVisible', panel.overflowVisible());
       this.$center.toggleClass('wcOverflowVisible', panel.overflowVisible());
 
       this.$tabLeft.remove();

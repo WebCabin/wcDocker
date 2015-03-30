@@ -1,13 +1,11 @@
 /**
  * @class
- * A collapsable container for carrying its own arrangement of panels.<br>
- * <b>WARNING: The drawer system is still being developed, it is in very early stages right now and not all features are active! Please wait for the official 3.0.0 version to come out!</b>
+ * A collapsable container for carrying panels.<br>
  * 
  * @version 3.0.0
  * @constructor
  * @description
- * <b><i>PRIVATE</i> - Use [wcDocker.addDrawer]{@link wcDocker#addDrawer} and [wcDocker.removeDrawer]{@link wcDocker#removeDrawer} to manage drawers, 
- * this <u>should never be constructed directly by the user.</u></b>
+ * <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
  * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
  * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
@@ -15,15 +13,16 @@
 /*
   A docker container for carrying its own arrangement of docked panels as a slide out drawer.
 */
-function wcDrawer(container, parent, position) {
+function wcCollapser(container, parent, position) {
   this.$container   = $(container);
-  this.$drawerFrame = null;
-  this.$drawer      = null;
-  this.$bar         = null;
+  this.$frame       = null;
+
   this._position    = position;
   this._parent      = parent;
-  this._root        = null;
-  this._size        = 0.5;
+  this._panelFrame  = null;
+  this._top         = 0;
+  this._bottom      = 1;
+  this._openSize    = 0.5;
   this._closeSize   = 0;
   this._expanded    = true;
   this._sliding     = false;
@@ -32,7 +31,7 @@ function wcDrawer(container, parent, position) {
   this.__init();
 }
 
-wcDrawer.prototype = {
+wcCollapser.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +41,7 @@ wcDrawer.prototype = {
    */
   collapse: function() {
     if (this._expanded) {
-      this._size = this._parent.pos();
+      this._openSize = this._parent.pos();
       this._expanded = false;
       this._sliding = true;
 
@@ -72,7 +71,7 @@ wcDrawer.prototype = {
       this._expanded = true;
       this._sliding = true;
       var self = this;
-      this._parent.animPos(this._size, function() {
+      this._parent.animPos(this._openSize, function() {
         self._sliding = false;
       });
     }
@@ -143,12 +142,12 @@ wcDrawer.prototype = {
 // Private Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
   __init: function() {
-    this.$drawerFrame = $('<div class="wcDrawerFrame"></div>');
-    this.$drawer = $('<div class="wcDrawer"></div>');
-    this.$bar = $('<div class="wcDrawerOuterBar"></div>');
+    this.$frame = $('<div class="wcCollapserFrame"></div>');
+    this.$drawer = $('<div class="wcCollapser"></div>');
+    this.$bar = $('<div class="wcCollapserOuterBar"></div>');
 
-    this.$drawerFrame.append(this.$bar);
-    this.$drawerFrame.append(this.$drawer);
+    this.$frame.append(this.$bar);
+    this.$frame.append(this.$drawer);
     this.__container(this.$container);
 
     this.__adjustSize();
@@ -166,26 +165,26 @@ wcDrawer.prototype = {
   __adjustSize: function() {
     switch (this._position) {
       case wcDocker.DOCK.LEFT:
-        this.$drawerFrame.addClass('wcDrawerLeft');
-        var size = this.$bar.css('left', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
+        this.$frame.addClass('wcCollapserLeft');
+        var size = this.$bar.css('left', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
         this.$drawer.css('left', size);
         this._closeSize = size;
         break;
       case wcDocker.DOCK.RIGHT:
-        this.$drawerFrame.addClass('wcDrawerRight');
-        var size = this.$bar.css('right', 0).outerHeight(this.$drawerFrame.innerHeight()).outerWidth();
+        this.$frame.addClass('wcCollapserRight');
+        var size = this.$bar.css('right', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
         this.$drawer.css('right', size);
         this._closeSize = size;
         break;
       case wcDocker.DOCK.TOP:
-        this.$drawerFrame.addClass('wcDrawerTop');
-        var size = this.$bar.css('top', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
+        this.$frame.addClass('wcCollapserTop');
+        var size = this.$bar.css('top', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
         this.$drawer.css('top', size);
         this._closeSize = size;
         break;
       case wcDocker.DOCK.BOTTOM:
-        this.$drawerFrame.addClass('wcDrawerBottom');
-        var size = this.$bar.css('bottom', 0).outerWidth(this.$drawerFrame.innerWidth()).outerHeight();
+        this.$frame.addClass('wcCollapserBottom');
+        var size = this.$bar.css('bottom', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
         this.$drawer.css('bottom', size);
         this._closeSize = size;
         break;
@@ -245,9 +244,9 @@ wcDrawer.prototype = {
   // object that can be used later to restore it.
   __save: function() {
     var data = {};
-    data.type     = 'wcDrawer';
+    data.type     = 'wcCollapser';
     data.position = this._position;
-    data.size     = this._size;
+    data.size     = this._openSize;
     data.expanded = this._expanded;
     if (this._root) {
       data.root = this._root.__save();
@@ -257,7 +256,7 @@ wcDrawer.prototype = {
 
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
-    this._size     = data.size;
+    this._openSize     = data.size;
     this._expanded = data.expanded;
     if (data.root) {
       this._root = docker.__create(data.root, this, this.$drawer);
@@ -278,9 +277,9 @@ wcDrawer.prototype = {
 
     this.$container = $container;
     if (this.$container) {
-      this.$container.append(this.$drawerFrame);
+      this.$container.append(this.$frame);
     } else {
-      this.$drawerFrame.remove();
+      this.$frame.remove();
     }
     return this.$container;
   },

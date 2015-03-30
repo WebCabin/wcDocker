@@ -63,7 +63,7 @@ concat({
     '../Code/panel.js',
     '../Code/frame.js',
     '../Code/splitter.js',
-    '../Code/drawer.js',
+    '../Code/collapser.js',
     '../Code/tabframe.js',
     '../Code/iframe.js',
   ],
