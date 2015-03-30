@@ -253,61 +253,6 @@ wcDocker.prototype = {
   },
 
   /**
-   * Sets up the collapsers for the panel.<br>
-   * <b>Note: </b> This should be called AFTER you have initialized your panel layout, but BEFORE you add
-   * any static panels that you do not wish to be overlapped by the collapsers (such as file menu panels).
-   */
-  initCollapsers: function() {
-    // Only initialize once.
-    if (!$.isEmptyObject(this._collapser)) {
-      return;
-    }
-
-    function __createPanel(horizontal) {
-      var panel = new wcPanel(wcDocker.COLLAPSED, {});
-      panel._parent = this;
-      panel.__container(this.$transition);
-      panel.moveable(false);
-      panel.closeable(false);
-      panel.overflowVisible(false);
-      panel.title('');
-      panel._isCollapser = true;
-      panel.on(wcDocker.EVENT.UPDATED, function() {
-        setTimeout(function() {
-          var tabSize = 0;
-          var numPanels = 0;
-          if (numPanels) {
-            tabSize = panel._parent.$tabBar.height();
-            panel._parent.$frame.css('display', '');
-          } else {
-            panel._parent.$frame.css('display', 'none');
-          }
-          panel.minSize(tabSize, tabSize);
-          panel.maxSize(horizontal? tabSize: Infinity, !horizontal? tabSize: Infinity);
-        });
-      });
-      panel.on(wcDocker.EVENT.INIT, function() {
-        panel._parent._parent.$bar.addClass('wcSplitterHidden');
-      });
-      return panel;
-    };
-
-    function __createCollapser(location, horizontal) {
-      this._collapser[location] = {
-        frame: __createPanel.call(this, horizontal),
-        collapser: null,
-      };
-
-      this.__addPanelAlone(this._collapser[location].frame, location, null, {w:0, h:0});
-      this._collapser[location].frame._parent.tabOrientation(location);
-    }
-
-    __createCollapser.call(this, wcDocker.DOCK.LEFT, true);
-    __createCollapser.call(this, wcDocker.DOCK.RIGHT, true);
-    __createCollapser.call(this, wcDocker.DOCK.BOTTOM, false);
-  },
-
-  /**
    * Registers a new docking panel type to be used later.
    * @version 3.0.0
    *
@@ -408,8 +353,12 @@ wcDocker.prototype = {
 
         // If we are collapsing the panel, put it into the collapser.
         if (targetPanel === wcDocker.COLLAPSED) {
+          this.__initCollapsers();
           if (this._collapser[location]) {
-            targetPanel = this._collapser[location].frame;
+            targetPanel = this._collapser[location]._frame.addPanel(panel);
+            var self = this;
+            setTimeout(function() {self.__update();});
+            return panel;
           } else {
             console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
             return false;
@@ -457,7 +406,7 @@ wcDocker.prototype = {
       panel.__trigger(wcDocker.EVENT.CLOSED);
 
       // If no more panels remain in this frame, remove the frame.
-      if (!parentFrame.removePanel(panel)) {
+      if (!parentFrame.removePanel(panel) && !parentFrame.isCollapser()) {
         // If this is the last frame, create a dummy panel to take up
         // the space until another one is created.
         if (lastPanel) {
@@ -588,7 +537,7 @@ wcDocker.prototype = {
       parentFrame.__updateTabs();
       
       // If no more panels remain in this frame, remove the frame.
-      if (parentFrame._panelList.length === 0) {
+      if (!parentFrame.isCollapser() && parentFrame._panelList.length === 0) {
         // If this is the last frame, create a dummy panel to take up
         // the space until another one is created.
         if (lastPanel) {
@@ -1367,7 +1316,7 @@ wcDocker.prototype = {
 
           // If the window is able to be docked, give it a dark shadow tint and
           // begin the movement process
-          if ((!self._draggingFrame.$titleBar.hasClass('wcNotMoveable') && !$panelTab.hasClass('wcNotMoveable')) &&
+          if (!$panelTab.hasClass('wcNotMoveable') && (self._draggingFrameTab || !self._draggingFrame.$titleBar.hasClass('wcNotMoveable')) &&
           (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
@@ -1402,7 +1351,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel().layout().$table[0] == this) {
+        if (self._frameList[i].panel() && self._frameList[i].panel().layout().$table[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);
@@ -1744,6 +1693,89 @@ wcDocker.prototype = {
     }
   },
 
+  /*
+   * Sets up the collapsers for the panel.<br>
+   * <b>Note: </b> This should be called AFTER you have initialized your panel layout, but BEFORE you add
+   * any static panels that you do not wish to be overlapped by the collapsers (such as file menu panels).
+   */
+  __initCollapsers: function() {
+    // Only initialize once.
+    if (!$.isEmptyObject(this._collapser)) {
+      return;
+    }
+
+    function isPaneStatic(pane) {
+      if (pane && pane instanceof wcFrame && pane.panel() && !pane.panel().moveable()) {
+        return true;
+      }
+      return false;
+    };
+
+    var parent = this._root;
+    while (parent) {
+      if (parent instanceof wcSplitter) {
+        var pane0 = isPaneStatic(parent._pane[0]);
+        var pane1 = isPaneStatic(parent._pane[1]);
+        if (pane0 && !pane1) {
+          parent = parent._pane[1];
+        } else if (pane1 && !pane0) {
+          parent = parent._pane[0];
+        } else if (!pane0 && !pane1) {
+          break;
+        }
+      }
+    }
+
+    function __createPanel(horizontal) {
+      var panel = new wcPanel(wcDocker.COLLAPSED, {});
+      panel._parent = this;
+      panel.__container(this.$transition);
+      panel.moveable(false);
+      panel.closeable(false);
+      panel.overflowVisible(false);
+      panel.title('');
+      panel._isCollapser = true;
+      panel.on(wcDocker.EVENT.UPDATED, function() {
+        var tabSize = 0;
+        var hasPanels = true; // TODO: Actually check for panels.
+        if (hasPanels) {
+          tabSize = panel._parent.$tabBar.height();
+          panel._parent.$frame.css('display', '');
+          panel._parent._parent.$bar.removeClass('wcSplitterHidden');
+        } else {
+          panel._parent.$frame.css('display', 'none');
+          panel._parent._parent.$bar.addClass('wcSplitterHidden');
+        }
+        panel.minSize(tabSize, tabSize);
+        panel.maxSize(horizontal? tabSize: Infinity, !horizontal? tabSize: Infinity);
+      });
+      return panel;
+    };
+
+    function __createCollapser(location, horizontal) {
+      // this._collapser[location] = {
+      //   frame: __createPanel.call(this, horizontal),
+      //   collapser: null,
+      // };
+
+      // this.__addPanelAlone(this._collapser[location].frame, location, parent, {w:0, h:0});
+      // this._collapser[location].frame._parent.tabOrientation(location);
+
+      this._collapser[location] = this.__addCollapser(location, parent);
+      this._frameList.push(this._collapser[location]._frame);
+      // parent = this._collapser[location];
+    }
+
+    __createCollapser.call(this, wcDocker.DOCK.BOTTOM, false);
+    __createCollapser.call(this, wcDocker.DOCK.LEFT, true);
+    __createCollapser.call(this, wcDocker.DOCK.RIGHT, true);
+
+    var self = this;
+    setTimeout(function() {
+      self.__update();
+    });
+  },
+
   // Updates the sizing of all panels inside this window.
   __update: function(opt_dontMove) {
     if (this._root) {
@@ -1782,13 +1814,17 @@ wcDocker.prototype = {
   //    frame     The frame to focus.
   //    flash     Whether to flash the frame.
   __focus: function(frame, flash) {
-    var reorder = this._focusFrame != frame;
+    var differentFrames = this._focusFrame != frame;
     if (this._focusFrame) {
       if (this._focusFrame._isFloating) {
         this._focusFrame.$frame.removeClass('wcFloatingFocus');
       }
 
       this._focusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
+      if (this._focusFrame.isCollapser() && differentFrames) {
+        this._focusFrame._parent.collapse();
+        this._focusFrame.panel(-1);
+      }
       this._focusFrame = null;
     }
 
@@ -1797,7 +1833,7 @@ wcDocker.prototype = {
       if (this._focusFrame._isFloating) {
         this._focusFrame.$frame.addClass('wcFloatingFocus');
 
-        if (reorder) {
+        if (differentFrames) {
           $('body').append(this._focusFrame.$frame);
         }
       }
@@ -1937,7 +1973,7 @@ wcDocker.prototype = {
   // Params:
   //    panel         The panel to insert.
   //    location      The desired location for the panel.
-  //    parentPanel  An optional panel to 'split', if not supplied the
+  //    parentPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, parentPanel, options) {
     if (options) {
@@ -1999,80 +2035,83 @@ wcDocker.prototype = {
     }
 
     if (parentPanel) {
-      var parentFrame = parentPanel._parent;
-      if (parentFrame instanceof wcFrame) {
-        var parentSplitter = parentFrame._parent;
-        if (parentSplitter instanceof wcSplitter) {
-          var splitter;
-          var left  = parentSplitter.pane(0);
-          var right = parentSplitter.pane(1);
-          var size = {
-            x: -1,
-            y: -1,
-          };
-          if (left === parentFrame) {
-            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-            parentSplitter.pane(0, splitter);
-            size.x = parentSplitter.$pane[0].width();
-            size.y = parentSplitter.$pane[0].height();
-          } else {
-            splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-            parentSplitter.pane(1, splitter);
-            size.x = parentSplitter.$pane[1].width();
-            size.y = parentSplitter.$pane[1].height();
-          }
+      var parentSplitter = parentPanel._parent;
+      var splitterChild = parentPanel;
+      while (!(parentSplitter instanceof wcSplitter || parentSplitter instanceof wcDocker)) {
+        splitterChild = parentSplitter;
+        parentSplitter = parentSplitter._parent;
+      }
 
-          if (splitter) {
-            splitter.scrollable(0, false, false);
-            splitter.scrollable(1, false, false);
-
-            if (!options) {
-              options = {
-                w: panel._size.x,
-                h: panel._size.y,
-              };
-            }
-
-            if (options) {
-              if (options.w < 0) {
-                options.w = size.x/2;
-              }
-              if (options.h < 0) {
-                options.h = size.y/2;
-              }
-
-              switch (location) {
-                case wcDocker.DOCK.LEFT:
-                  splitter.pos(options.w / size.x);
-                  break;
-                case wcDocker.DOCK.RIGHT:
-                  splitter.pos(1.0 - (options.w / size.x));
-                  break;
-                case wcDocker.DOCK.TOP:
-                  splitter.pos(options.h / size.y);
-                  break;
-                case wcDocker.DOCK.BOTTOM:
-                  splitter.pos(1.0 - (options.h / size.y));
-                  break;
-              }
-            } else {
-              splitter.pos(0.5);
-            }
-
-            frame = new wcFrame(this.$transition, splitter, false);
-            this._frameList.push(frame);
-            if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
-              splitter.pane(0, frame);
-              splitter.pane(1, parentFrame);
-            } else {
-              splitter.pane(0, parentFrame);
-              splitter.pane(1, frame);
-            }
-
-            frame.addPanel(panel);
-          }
-          return;
+      if (parentSplitter instanceof wcSplitter) {
+        var splitter;
+        var left  = parentSplitter.pane(0);
+        var right = parentSplitter.pane(1);
+        var size = {
+          x: -1,
+          y: -1,
+        };
+        if (left === splitterChild) {
+          splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+          parentSplitter.pane(0, splitter);
+          size.x = parentSplitter.$pane[0].width();
+          size.y = parentSplitter.$pane[0].height();
+        } else {
+          splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+          parentSplitter.pane(1, splitter);
+          size.x = parentSplitter.$pane[1].width();
+          size.y = parentSplitter.$pane[1].height();
         }
+
+        if (splitter) {
+          splitter.scrollable(0, false, false);
+          splitter.scrollable(1, false, false);
+
+          if (!options) {
+            options = {
+              w: panel._size.x,
+              h: panel._size.y,
+            };
+          }
+
+          if (options) {
+            if (options.w < 0) {
+              options.w = size.x/2;
+            }
+            if (options.h < 0) {
+              options.h = size.y/2;
+            }
+
+            switch (location) {
+              case wcDocker.DOCK.LEFT:
+                splitter.pos(options.w / size.x);
+                break;
+              case wcDocker.DOCK.RIGHT:
+                splitter.pos(1.0 - (options.w / size.x));
+                break;
+              case wcDocker.DOCK.TOP:
+                splitter.pos(options.h / size.y);
+                break;
+              case wcDocker.DOCK.BOTTOM:
+                splitter.pos(1.0 - (options.h / size.y));
+                break;
+            }
+          } else {
+            splitter.pos(0.5);
+          }
+
+          frame = new wcFrame(this.$transition, splitter, false);
+          this._frameList.push(frame);
+          if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
+            splitter.pane(0, frame);
+            splitter.pane(1, splitterChild);
+          } else {
+            splitter.pane(0, splitterChild);
+            splitter.pane(1, frame);
+          }
+
+          frame.addPanel(panel);
+        }
+        return;
       }
     }
 
@@ -2134,6 +2173,65 @@ wcDocker.prototype = {
     }
 
     frame.addPanel(panel);
+  },
+
+  __addCollapser: function(location, parent) {
+    var collapser = null;
+    if (parent) {
+      var parentSplitter = parent._parent;
+      var splitterChild = parent;
+      while (!(parentSplitter instanceof wcSplitter || parentSplitter instanceof wcDocker)) {
+        splitterChild = parentSplitter;
+        parentSplitter = parentSplitter._parent;
+      }
+
+      if (parentSplitter instanceof wcSplitter) {
+        var splitter;
+        var left  = parentSplitter.pane(0);
+        var right = parentSplitter.pane(1);
+        var size = {
+          x: -1,
+          y: -1,
+        };
+        if (left === splitterChild) {
+          splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+          parentSplitter.pane(0, splitter);
+          size.x = parentSplitter.$pane[0].width();
+          size.y = parentSplitter.$pane[0].height();
+        } else {
+          splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+          parentSplitter.pane(1, splitter);
+          size.x = parentSplitter.$pane[1].width();
+          size.y = parentSplitter.$pane[1].height();
+        }
+
+        if (splitter) {
+          splitter.scrollable(0, false, false);
+          splitter.scrollable(1, false, false);
+          collapser = new wcCollapser(this.$transition, splitter, location);
+
+          switch (location) {
+            case wcDocker.DOCK.TOP:
+            case wcDocker.DOCK.LEFT:
+              splitter.pos(0);
+              break;
+            case wcDocker.DOCK.BOTTOM:
+            case wcDocker.DOCK.RIGHT:
+              splitter.pos(1);
+              break;
+          }
+
+          if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
+            splitter.pane(0, collapser);
+            splitter.pane(1, splitterChild);
+          } else {
+            splitter.pane(0, splitterChild);
+            splitter.pane(1, collapser);
+          }
+        }
+      }
+    }
+    return collapser;
   },
 
   // Adds the placeholder panel as needed
@@ -2788,7 +2886,7 @@ wcLayout.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, forceTabOrientation) {
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
     var offset = $elem.offset();
@@ -2801,7 +2899,8 @@ wcLayout.prototype = {
     // and also change the orientation of the tabs (if enabled).
     if (title) {
       // Top title bar
-      if (mouse.y >= offset.top && mouse.y <= offset.top + titleSize &&
+      if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.TOP) &&
+          mouse.y >= offset.top && mouse.y <= offset.top + titleSize &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
 
         // Stacking with top orientation.
@@ -2820,7 +2919,8 @@ wcLayout.prototype = {
       // Any other tab orientation is only valid if tab orientation is enabled.
       else if (this._parent.docker()._canOrientTabs) {
         // Bottom bar
-        if (mouse.y >= offset.top + height - titleSize && mouse.y <= offset.top + height &&
+        if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.BOTTOM) &&
+            mouse.y >= offset.top + height - titleSize && mouse.y <= offset.top + height &&
             mouse.x >= offset.left && mouse.x <= offset.left + width) {
           
           // Stacking with bottom orientation.
@@ -2837,7 +2937,8 @@ wcLayout.prototype = {
           return true;
         }
         // Left bar
-        else if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+        else if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.LEFT) &&
+            mouse.y >= offset.top && mouse.y <= offset.top + height &&
             mouse.x >= offset.left && mouse.x <= offset.left + titleSize) {
           
           // Stacking with bottom orientation.
@@ -2854,7 +2955,8 @@ wcLayout.prototype = {
           return true;
         }
         // Right bar
-        else if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+        else if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.RIGHT) &&
+            mouse.y >= offset.top && mouse.y <= offset.top + height &&
             mouse.x >= offset.left + width - titleSize && mouse.x <= offset.left + width) {
 
           // Stacking with bottom orientation.
@@ -4083,7 +4185,9 @@ wcFrame.prototype = {
     }
 
     if (this._curTab === -1 && this._panelList.length) {
-      this._curTab = 0;
+      if (!this.isCollapser()) {
+        this._curTab = 0;
+      }
       this._size = this.initSize();
     }
 
@@ -4112,8 +4216,12 @@ wcFrame.prototype = {
       }
     }
 
-    if (this._curTab === -1 && this._panelList.length) {
-      this._curTab = 0;
+    if (this._curTab === -1) {
+      if (this.isCollapser()) {
+        this._parent.collapse();
+      } else if (this._panelList.length) {
+        this._curTab = 0;
+      }
     }
 
     this.__updateTabs();
@@ -4129,25 +4237,36 @@ wcFrame.prototype = {
    */
   panel: function(tabIndex, autoFocus) {
     if (typeof tabIndex !== 'undefined') {
-      if (tabIndex > -1 && tabIndex < this._panelList.length) {
+      if (this.isCollapser() && tabIndex === this._curTab) {
+        tabIndex = -1;
+        this._parent.collapse();
+      }
+      if (tabIndex < this._panelList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.children('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
         this._curTab = tabIndex;
-        this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
-        this.$center.children('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
+        if (tabIndex > -1) {
+          this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
+          this.$center.children('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
+          if (this.isCollapser()) {
+            this._parent.expand();
+          }
+        }
         this.__updateTabs(autoFocus);
       }
     }
 
     if (this._curTab > -1 && this._curTab < this._panelList.length) {
       return this._panelList[this._curTab];
+    } else if (this.isCollapser() && this._panelList.length) {
+      return this._panelList[0];
     }
     return false;
   },
 
   // Gets whether this frame is inside a collapser.
   isCollapser: function() {
-    return (this._panelList.length && this._panelList[0]._isCollapser);
+    return (this._parent instanceof wcCollapser);
   },
 
 
@@ -4338,14 +4457,20 @@ wcFrame.prototype = {
     var showTabs = this._panelList.length > 1 || this._isFloating || this.isCollapser();
     var self = this;
 
-    this.$titleBar.removeClass('wcNotMoveable');
-    this.$tabBar.removeClass('wcNotMoveable');
+    if (this.isCollapser()) {
+      this.$titleBar.addClass('wcNotMoveable');
+      this.$tabBar.addClass('wcNotMoveable');
+    } else {
+      this.$titleBar.removeClass('wcNotMoveable');
+      this.$tabBar.removeClass('wcNotMoveable');
+    }
 
     this.$center.children('.wcPanelTabContent').each(function() {
       $(this).addClass('wcPanelTabContentHidden wcPanelTabUnused');
     });
 
     this._titleVisible = true;
+    this.$title.text('');
 
     // Determine if the title and tabs are visible based on the panels inside.
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -4575,6 +4700,15 @@ wcFrame.prototype = {
     var buttonSize = 0;
     var tabButtonSize = 0;
     var panel = this.panel();
+
+    this.$tabLeft.remove();
+    this.$tabRight.remove();
+    this.$close.hide();
+
+    while (this._buttonList.length) {
+      this._buttonList.pop().remove();
+    }
+
     if (panel) {
       var scrollable = panel.scrollable();
       this.$center.toggleClass('wcScrollableX', scrollable.x);
@@ -4582,43 +4716,36 @@ wcFrame.prototype = {
       this.$frame.toggleClass('wcOverflowVisible', panel.overflowVisible());
       this.$center.toggleClass('wcOverflowVisible', panel.overflowVisible());
 
-      this.$tabLeft.remove();
-      this.$tabRight.remove();
+      if (!this.isCollapser() || this._parent.isExpanded()) {
+        if (panel.closeable()) {
+          this.$close.show();
+          buttonSize += this.$close.outerWidth();
+        }
 
-      while (this._buttonList.length) {
-        this._buttonList.pop().remove();
-      }
+        for (var i = 0; i < panel._buttonList.length; ++i) {
+          var buttonData = panel._buttonList[i];
+          var $button = $('<div>');
+          var buttonClass = buttonData.className;
+          $button.addClass('wcFrameButton');
+          if (buttonData.isTogglable) {
+            $button.addClass('wcFrameButtonToggler');
 
-      if (panel.closeable()) {
-        this.$close.show();
-        buttonSize += this.$close.outerWidth();
-      } else {
-        this.$close.hide();
-      }
-
-      for (var i = 0; i < panel._buttonList.length; ++i) {
-        var buttonData = panel._buttonList[i];
-        var $button = $('<div>');
-        var buttonClass = buttonData.className;
-        $button.addClass('wcFrameButton');
-        if (buttonData.isTogglable) {
-          $button.addClass('wcFrameButtonToggler');
-
-          if (buttonData.isToggled) {
-            $button.addClass('wcFrameButtonToggled');
-            buttonClass = buttonData.toggleClassName || buttonClass;
+            if (buttonData.isToggled) {
+              $button.addClass('wcFrameButtonToggled');
+              buttonClass = buttonData.toggleClassName || buttonClass;
+            }
           }
-        }
-        $button.attr('title', buttonData.tip);
-        $button.data('name', buttonData.name);
-        $button.text(buttonData.text);
-        if (buttonClass) {
-          $button.prepend($('<div class="' + buttonClass + '">'));
-        }
+          $button.attr('title', buttonData.tip);
+          $button.data('name', buttonData.name);
+          $button.text(buttonData.text);
+          if (buttonClass) {
+            $button.prepend($('<div class="' + buttonClass + '">'));
+          }
 
-        this._buttonList.push($button);
-        this.$buttonBar.append($button);
-        buttonSize += $button.outerWidth();
+          this._buttonList.push($button);
+          this.$buttonBar.append($button);
+          buttonSize += $button.outerWidth();
+        }
       }
 
       if (this._canScrollTabs) {
@@ -4749,7 +4876,7 @@ wcFrame.prototype = {
   __checkAnchorDrop: function(mouse, same, ghost, canSplit) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title());
+      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title(), this.isCollapser()? this._tabOrientation: undefined);
     }
     return false;
   },
@@ -5428,6 +5555,14 @@ wcSplitter.prototype = {
   // Saves the current panel configuration into a meta
   // object that can be used later to restore it.
   __save: function() {
+    // If this is a collapser splitter, do not save it, skip to the children.
+    if (this._pane[0] && this._pane[0] instanceof wcCollapser) {
+      return this._pane[1].__save();
+    }
+    if (this._pane[1] && this._pane[1] instanceof wcCollapser) {
+      return this._pane[0].__save();
+    }
+
     var data = {};
     data.type       = 'wcSplitter';
     data.horizontal = this._orientation;
@@ -5653,14 +5788,12 @@ function wcCollapser(container, parent, position) {
 
   this._position    = position;
   this._parent      = parent;
-  this._panelFrame  = null;
-  this._top         = 0;
-  this._bottom      = 1;
-  this._openSize    = 0.5;
+  this._frame       = null;
+  this._openSize    = (this._position === wcDocker.DOCK.LEFT)? 0.25: 0.75;
   this._closeSize   = 0;
-  this._expanded    = true;
+  this._expanded    = false;
   this._sliding     = false;
-  this._horizontal  = this._position === wcDocker.DOCK.LEFT || this._position === wcDocker.DOCK.RIGHT;
+  this._orientation = (this._position === wcDocker.DOCK.LEFT || this._position === wcDocker.DOCK.RIGHT)? wcDocker.ORIENTATION.HORIZONTAL: wcDocker.ORIENTATION.VERTICAL;
 
   this.__init();
 }
@@ -5669,6 +5802,19 @@ wcCollapser.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Retrieves the main [docker]{@link wcDocker} instance.
+   *
+   * @returns {wcDocker} - The top level docker object.
+   */
+  docker: function() {
+    var parent = this._parent;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
+  },
 
   /**
    * Collapses the drawer to its respective side wall.
@@ -5747,6 +5893,7 @@ wcCollapser.prototype = {
         return {x: 100, y: 100};
       }
     }
+    this.__adjustSize();
     return {x: this._closeSize, y: this._closeSize};
   },
 
@@ -5756,19 +5903,21 @@ wcCollapser.prototype = {
    * @returns {wcDocker~Size} - The maximum size.
    */
   maxSize: function() {
+    var isHorizontal = (this._orientation === wcDocker.ORIENTATION.HORIZONTAL)? true: false;
     if (this._expanded || this._sliding) {
       if (this._root && typeof this._root.maxSize === 'function') {
         return {
-          x: (this._horizontal?  this._root.maxSize().x: Infinity),
-          y: (!this._horizontal? this._root.maxSize().y: Infinity)
+          x: (isHorizontal?  this._root.maxSize().x: Infinity),
+          y: (!isHorizontal? this._root.maxSize().y: Infinity)
         };
       } else {
         return {x: Infinity, y: Infinity};
       }
     }
+    this.__adjustSize();
     return {
-      x: (this._horizontal?  this._closeSize: Infinity),
-      y: (!this._horizontal? this._closeSize: Infinity)
+      x: (isHorizontal?  this._closeSize: Infinity),
+      y: (!isHorizontal? this._closeSize: Infinity)
     };
   },
 
@@ -5776,53 +5925,71 @@ wcCollapser.prototype = {
 // Private Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
   __init: function() {
-    this.$frame = $('<div class="wcCollapserFrame"></div>');
-    this.$drawer = $('<div class="wcCollapser"></div>');
-    this.$bar = $('<div class="wcCollapserOuterBar"></div>');
+    this.$frame = $('<div class="wcCollapserFrame">');
 
-    this.$frame.append(this.$bar);
-    this.$frame.append(this.$drawer);
     this.__container(this.$container);
 
-    this.__adjustSize();
+    this._frame = new wcFrame(this.$frame, this, false);
+    this._frame.tabOrientation(this._position);
   },
 
   // Updates the size of the drawer.
   __update: function(opt_dontMove) {
     this.__adjustSize();
-    if (this._root) {
-      this._root.__update(opt_dontMove);
-    }
+    this._frame.__update();
   },
 
   // Adjusts the size of the drawer based on css
   __adjustSize: function() {
-    switch (this._position) {
-      case wcDocker.DOCK.LEFT:
-        this.$frame.addClass('wcCollapserLeft');
-        var size = this.$bar.css('left', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
-        this.$drawer.css('left', size);
-        this._closeSize = size;
-        break;
-      case wcDocker.DOCK.RIGHT:
-        this.$frame.addClass('wcCollapserRight');
-        var size = this.$bar.css('right', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
-        this.$drawer.css('right', size);
-        this._closeSize = size;
-        break;
-      case wcDocker.DOCK.TOP:
-        this.$frame.addClass('wcCollapserTop');
-        var size = this.$bar.css('top', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
-        this.$drawer.css('top', size);
-        this._closeSize = size;
-        break;
-      case wcDocker.DOCK.BOTTOM:
-        this.$frame.addClass('wcCollapserBottom');
-        var size = this.$bar.css('bottom', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
-        this.$drawer.css('bottom', size);
-        this._closeSize = size;
-        break;
+    // switch (this._orientation) {
+    //   case wcDocker.ORIENTATION.HORIZONTAL:
+    //     var top = this.$container.offset().top - this.docker().$container.offset().top;
+    //     var height = this.$container.outerHeight();
+    //     this.$frame.css('top', top);
+    //     this.$frame.css('height', height);
+    //     break;
+    //   case wcDocker.ORIENTATION.VERTICAL:
+    //     var left = this.$container.offset().left - this.docker().$container.offset().left;
+    //     var width = this.$container.outerWidth();
+    //     this.$frame.css('left', left);
+    //     this.$frame.css('width', width);
+    //     break;
+    // }
+
+    if (this._frame._panelList.length) {
+      this._closeSize = this._frame.$tabBar.outerHeight();
+      this._parent.$bar.removeClass('wcSplitterHidden');
+    } else {
+      this._closeSize = 0;
+      this._parent.$bar.addClass('wcSplitterHidden');
     }
+
+    // switch (this._position) {
+    //   case wcDocker.DOCK.LEFT:
+    //     this.$frame.addClass('wcCollapserLeft');
+    //     var size = this.$bar.css('left', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
+    //     this.$drawer.css('left', size);
+    //     this._closeSize = size;
+    //     break;
+    //   case wcDocker.DOCK.RIGHT:
+    //     this.$frame.addClass('wcCollapserRight');
+    //     var size = this.$bar.css('right', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
+    //     this.$drawer.css('right', size);
+    //     this._closeSize = size;
+    //     break;
+    //   case wcDocker.DOCK.TOP:
+    //     this.$frame.addClass('wcCollapserTop');
+    //     var size = this.$bar.css('top', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
+    //     this.$drawer.css('top', size);
+    //     this._closeSize = size;
+    //     break;
+    //   case wcDocker.DOCK.BOTTOM:
+    //     this.$frame.addClass('wcCollapserBottom');
+    //     var size = this.$bar.css('bottom', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
+    //     this.$drawer.css('bottom', size);
+    //     this._closeSize = size;
+    //     break;
+    // }
   },
 
   // Checks if the mouse is in a valid anchor position for docking a panel.
@@ -5868,11 +6035,11 @@ wcCollapser.prototype = {
   // Params:
   //    eventName   The name of the event.
   //    data        A custom data parameter to pass to all handlers.
-  __trigger: function(eventName, data) {
-    if (this._root) {
-      this._root.__trigger(eventName, data);
-    }
-  },
+  // __trigger: function(eventName, data) {
+  //   if (this._root) {
+  //     this._root.__trigger(eventName, data);
+  //   }
+  // },
 
   // Saves the current panel configuration into a meta
   // object that can be used later to restore it.
@@ -5910,6 +6077,7 @@ wcCollapser.prototype = {
     }
 
     this.$container = $container;
+
     if (this.$container) {
       this.$container.append(this.$frame);
     } else {
@@ -5920,10 +6088,11 @@ wcCollapser.prototype = {
 
   // Disconnects and prepares this widget for destruction.
   __destroy: function() {
-    if (this._root) {
-      this._root.__destroy();
-      this._root = null;
+    if (this._frame) {
+      this._frame.__destroy();
+      this._frame = null;
     }
+
     this.__container(null);
     this._parent = null;
   },

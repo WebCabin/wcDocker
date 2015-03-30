@@ -524,6 +524,14 @@ wcSplitter.prototype = {
   // Saves the current panel configuration into a meta
   // object that can be used later to restore it.
   __save: function() {
+    // If this is a collapser splitter, do not save it, skip to the children.
+    if (this._pane[0] && this._pane[0] instanceof wcCollapser) {
+      return this._pane[1].__save();
+    }
+    if (this._pane[1] && this._pane[1] instanceof wcCollapser) {
+      return this._pane[0].__save();
+    }
+
     var data = {};
     data.type       = 'wcSplitter';
     data.horizontal = this._orientation;

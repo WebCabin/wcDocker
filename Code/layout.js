@@ -404,7 +404,7 @@ wcLayout.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title) {
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, forceTabOrientation) {
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
     var offset = $elem.offset();
@@ -417,7 +417,8 @@ wcLayout.prototype = {
     // and also change the orientation of the tabs (if enabled).
     if (title) {
       // Top title bar
-      if (mouse.y >= offset.top && mouse.y <= offset.top + titleSize &&
+      if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.TOP) &&
+          mouse.y >= offset.top && mouse.y <= offset.top + titleSize &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
 
         // Stacking with top orientation.
@@ -436,7 +437,8 @@ wcLayout.prototype = {
       // Any other tab orientation is only valid if tab orientation is enabled.
       else if (this._parent.docker()._canOrientTabs) {
         // Bottom bar
-        if (mouse.y >= offset.top + height - titleSize && mouse.y <= offset.top + height &&
+        if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.BOTTOM) &&
+            mouse.y >= offset.top + height - titleSize && mouse.y <= offset.top + height &&
             mouse.x >= offset.left && mouse.x <= offset.left + width) {
           
           // Stacking with bottom orientation.
@@ -453,7 +455,8 @@ wcLayout.prototype = {
           return true;
         }
         // Left bar
-        else if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+        else if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.LEFT) &&
+            mouse.y >= offset.top && mouse.y <= offset.top + height &&
             mouse.x >= offset.left && mouse.x <= offset.left + titleSize) {
           
           // Stacking with bottom orientation.
@@ -470,7 +473,8 @@ wcLayout.prototype = {
           return true;
         }
         // Right bar
-        else if (mouse.y >= offset.top && mouse.y <= offset.top + height &&
+        else if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.RIGHT) &&
+            mouse.y >= offset.top && mouse.y <= offset.top + height &&
             mouse.x >= offset.left + width - titleSize && mouse.x <= offset.left + width) {
 
           // Stacking with bottom orientation.

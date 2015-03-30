@@ -428,13 +428,13 @@ $(document).ready(function() {
     var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h:'20%'});
     var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.RIGHT, null, {w:'25%'});
 
-    myDocker.initCollapsers();
     myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
     
     var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.RIGHT, chatPanel1);
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
       tabOrientation: wcDocker.TAB.BOTTOM
     });
-    // var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, wcDocker.COLLAPSED);
+    // var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED);
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
   }
 });

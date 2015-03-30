@@ -234,7 +234,9 @@ wcFrame.prototype = {
     }
 
     if (this._curTab === -1 && this._panelList.length) {
-      this._curTab = 0;
+      if (!this.isCollapser()) {
+        this._curTab = 0;
+      }
       this._size = this.initSize();
     }
 
@@ -263,8 +265,12 @@ wcFrame.prototype = {
       }
     }
 
-    if (this._curTab === -1 && this._panelList.length) {
-      this._curTab = 0;
+    if (this._curTab === -1) {
+      if (this.isCollapser()) {
+        this._parent.collapse();
+      } else if (this._panelList.length) {
+        this._curTab = 0;
+      }
     }
 
     this.__updateTabs();
@@ -280,25 +286,36 @@ wcFrame.prototype = {
    */
   panel: function(tabIndex, autoFocus) {
     if (typeof tabIndex !== 'undefined') {
-      if (tabIndex > -1 && tabIndex < this._panelList.length) {
+      if (this.isCollapser() && tabIndex === this._curTab) {
+        tabIndex = -1;
+        this._parent.collapse();
+      }
+      if (tabIndex < this._panelList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.children('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
         this._curTab = tabIndex;
-        this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
-        this.$center.children('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
+        if (tabIndex > -1) {
+          this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
+          this.$center.children('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
+          if (this.isCollapser()) {
+            this._parent.expand();
+          }
+        }
         this.__updateTabs(autoFocus);
       }
     }
 
     if (this._curTab > -1 && this._curTab < this._panelList.length) {
       return this._panelList[this._curTab];
+    } else if (this.isCollapser() && this._panelList.length) {
+      return this._panelList[0];
     }
     return false;
   },
 
   // Gets whether this frame is inside a collapser.
   isCollapser: function() {
-    return (this._panelList.length && this._panelList[0]._isCollapser);
+    return (this._parent instanceof wcCollapser);
   },
 
 
@@ -489,14 +506,20 @@ wcFrame.prototype = {
     var showTabs = this._panelList.length > 1 || this._isFloating || this.isCollapser();
     var self = this;
 
-    this.$titleBar.removeClass('wcNotMoveable');
-    this.$tabBar.removeClass('wcNotMoveable');
+    if (this.isCollapser()) {
+      this.$titleBar.addClass('wcNotMoveable');
+      this.$tabBar.addClass('wcNotMoveable');
+    } else {
+      this.$titleBar.removeClass('wcNotMoveable');
+      this.$tabBar.removeClass('wcNotMoveable');
+    }
 
     this.$center.children('.wcPanelTabContent').each(function() {
       $(this).addClass('wcPanelTabContentHidden wcPanelTabUnused');
     });
 
     this._titleVisible = true;
+    this.$title.text('');
 
     // Determine if the title and tabs are visible based on the panels inside.
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -726,6 +749,15 @@ wcFrame.prototype = {
     var buttonSize = 0;
     var tabButtonSize = 0;
     var panel = this.panel();
+
+    this.$tabLeft.remove();
+    this.$tabRight.remove();
+    this.$close.hide();
+
+    while (this._buttonList.length) {
+      this._buttonList.pop().remove();
+    }
+
     if (panel) {
       var scrollable = panel.scrollable();
       this.$center.toggleClass('wcScrollableX', scrollable.x);
@@ -733,43 +765,36 @@ wcFrame.prototype = {
       this.$frame.toggleClass('wcOverflowVisible', panel.overflowVisible());
       this.$center.toggleClass('wcOverflowVisible', panel.overflowVisible());
 
-      this.$tabLeft.remove();
-      this.$tabRight.remove();
+      if (!this.isCollapser() || this._parent.isExpanded()) {
+        if (panel.closeable()) {
+          this.$close.show();
+          buttonSize += this.$close.outerWidth();
+        }
 
-      while (this._buttonList.length) {
-        this._buttonList.pop().remove();
-      }
+        for (var i = 0; i < panel._buttonList.length; ++i) {
+          var buttonData = panel._buttonList[i];
+          var $button = $('<div>');
+          var buttonClass = buttonData.className;
+          $button.addClass('wcFrameButton');
+          if (buttonData.isTogglable) {
+            $button.addClass('wcFrameButtonToggler');
 
-      if (panel.closeable()) {
-        this.$close.show();
-        buttonSize += this.$close.outerWidth();
-      } else {
-        this.$close.hide();
-      }
-
-      for (var i = 0; i < panel._buttonList.length; ++i) {
-        var buttonData = panel._buttonList[i];
-        var $button = $('<div>');
-        var buttonClass = buttonData.className;
-        $button.addClass('wcFrameButton');
-        if (buttonData.isTogglable) {
-          $button.addClass('wcFrameButtonToggler');
-
-          if (buttonData.isToggled) {
-            $button.addClass('wcFrameButtonToggled');
-            buttonClass = buttonData.toggleClassName || buttonClass;
+            if (buttonData.isToggled) {
+              $button.addClass('wcFrameButtonToggled');
+              buttonClass = buttonData.toggleClassName || buttonClass;
+            }
           }
-        }
-        $button.attr('title', buttonData.tip);
-        $button.data('name', buttonData.name);
-        $button.text(buttonData.text);
-        if (buttonClass) {
-          $button.prepend($('<div class="' + buttonClass + '">'));
-        }
+          $button.attr('title', buttonData.tip);
+          $button.data('name', buttonData.name);
+          $button.text(buttonData.text);
+          if (buttonClass) {
+            $button.prepend($('<div class="' + buttonClass + '">'));
+          }
 
-        this._buttonList.push($button);
-        this.$buttonBar.append($button);
-        buttonSize += $button.outerWidth();
+          this._buttonList.push($button);
+          this.$buttonBar.append($button);
+          buttonSize += $button.outerWidth();
+        }
       }
 
       if (this._canScrollTabs) {
@@ -900,7 +925,7 @@ wcFrame.prototype = {
   __checkAnchorDrop: function(mouse, same, ghost, canSplit) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title());
+      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title(), this.isCollapser()? this._tabOrientation: undefined);
     }
     return false;
   },

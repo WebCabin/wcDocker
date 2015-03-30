@@ -19,14 +19,12 @@ function wcCollapser(container, parent, position) {
 
   this._position    = position;
   this._parent      = parent;
-  this._panelFrame  = null;
-  this._top         = 0;
-  this._bottom      = 1;
-  this._openSize    = 0.5;
+  this._frame       = null;
+  this._openSize    = (this._position === wcDocker.DOCK.LEFT)? 0.25: 0.75;
   this._closeSize   = 0;
-  this._expanded    = true;
+  this._expanded    = false;
   this._sliding     = false;
-  this._horizontal  = this._position === wcDocker.DOCK.LEFT || this._position === wcDocker.DOCK.RIGHT;
+  this._orientation = (this._position === wcDocker.DOCK.LEFT || this._position === wcDocker.DOCK.RIGHT)? wcDocker.ORIENTATION.HORIZONTAL: wcDocker.ORIENTATION.VERTICAL;
 
   this.__init();
 }
@@ -35,6 +33,19 @@ wcCollapser.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Retrieves the main [docker]{@link wcDocker} instance.
+   *
+   * @returns {wcDocker} - The top level docker object.
+   */
+  docker: function() {
+    var parent = this._parent;
+    while (parent && !(parent instanceof wcDocker)) {
+      parent = parent._parent;
+    }
+    return parent;
+  },
 
   /**
    * Collapses the drawer to its respective side wall.
@@ -113,6 +124,7 @@ wcCollapser.prototype = {
         return {x: 100, y: 100};
       }
     }
+    this.__adjustSize();
     return {x: this._closeSize, y: this._closeSize};
   },
 
@@ -122,19 +134,21 @@ wcCollapser.prototype = {
    * @returns {wcDocker~Size} - The maximum size.
    */
   maxSize: function() {
+    var isHorizontal = (this._orientation === wcDocker.ORIENTATION.HORIZONTAL)? true: false;
     if (this._expanded || this._sliding) {
       if (this._root && typeof this._root.maxSize === 'function') {
         return {
-          x: (this._horizontal?  this._root.maxSize().x: Infinity),
-          y: (!this._horizontal? this._root.maxSize().y: Infinity)
+          x: (isHorizontal?  this._root.maxSize().x: Infinity),
+          y: (!isHorizontal? this._root.maxSize().y: Infinity)
         };
       } else {
         return {x: Infinity, y: Infinity};
       }
     }
+    this.__adjustSize();
     return {
-      x: (this._horizontal?  this._closeSize: Infinity),
-      y: (!this._horizontal? this._closeSize: Infinity)
+      x: (isHorizontal?  this._closeSize: Infinity),
+      y: (!isHorizontal? this._closeSize: Infinity)
     };
   },
 
@@ -142,53 +156,71 @@ wcCollapser.prototype = {
 // Private Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
   __init: function() {
-    this.$frame = $('<div class="wcCollapserFrame"></div>');
-    this.$drawer = $('<div class="wcCollapser"></div>');
-    this.$bar = $('<div class="wcCollapserOuterBar"></div>');
+    this.$frame = $('<div class="wcCollapserFrame">');
 
-    this.$frame.append(this.$bar);
-    this.$frame.append(this.$drawer);
     this.__container(this.$container);
 
-    this.__adjustSize();
+    this._frame = new wcFrame(this.$frame, this, false);
+    this._frame.tabOrientation(this._position);
   },
 
   // Updates the size of the drawer.
   __update: function(opt_dontMove) {
     this.__adjustSize();
-    if (this._root) {
-      this._root.__update(opt_dontMove);
-    }
+    this._frame.__update();
   },
 
   // Adjusts the size of the drawer based on css
   __adjustSize: function() {
-    switch (this._position) {
-      case wcDocker.DOCK.LEFT:
-        this.$frame.addClass('wcCollapserLeft');
-        var size = this.$bar.css('left', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
-        this.$drawer.css('left', size);
-        this._closeSize = size;
-        break;
-      case wcDocker.DOCK.RIGHT:
-        this.$frame.addClass('wcCollapserRight');
-        var size = this.$bar.css('right', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
-        this.$drawer.css('right', size);
-        this._closeSize = size;
-        break;
-      case wcDocker.DOCK.TOP:
-        this.$frame.addClass('wcCollapserTop');
-        var size = this.$bar.css('top', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
-        this.$drawer.css('top', size);
-        this._closeSize = size;
-        break;
-      case wcDocker.DOCK.BOTTOM:
-        this.$frame.addClass('wcCollapserBottom');
-        var size = this.$bar.css('bottom', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
-        this.$drawer.css('bottom', size);
-        this._closeSize = size;
-        break;
+    // switch (this._orientation) {
+    //   case wcDocker.ORIENTATION.HORIZONTAL:
+    //     var top = this.$container.offset().top - this.docker().$container.offset().top;
+    //     var height = this.$container.outerHeight();
+    //     this.$frame.css('top', top);
+    //     this.$frame.css('height', height);
+    //     break;
+    //   case wcDocker.ORIENTATION.VERTICAL:
+    //     var left = this.$container.offset().left - this.docker().$container.offset().left;
+    //     var width = this.$container.outerWidth();
+    //     this.$frame.css('left', left);
+    //     this.$frame.css('width', width);
+    //     break;
+    // }
+
+    if (this._frame._panelList.length) {
+      this._closeSize = this._frame.$tabBar.outerHeight();
+      this._parent.$bar.removeClass('wcSplitterHidden');
+    } else {
+      this._closeSize = 0;
+      this._parent.$bar.addClass('wcSplitterHidden');
     }
+
+    // switch (this._position) {
+    //   case wcDocker.DOCK.LEFT:
+    //     this.$frame.addClass('wcCollapserLeft');
+    //     var size = this.$bar.css('left', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
+    //     this.$drawer.css('left', size);
+    //     this._closeSize = size;
+    //     break;
+    //   case wcDocker.DOCK.RIGHT:
+    //     this.$frame.addClass('wcCollapserRight');
+    //     var size = this.$bar.css('right', 0).outerHeight(this.$frame.innerHeight()).outerWidth();
+    //     this.$drawer.css('right', size);
+    //     this._closeSize = size;
+    //     break;
+    //   case wcDocker.DOCK.TOP:
+    //     this.$frame.addClass('wcCollapserTop');
+    //     var size = this.$bar.css('top', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
+    //     this.$drawer.css('top', size);
+    //     this._closeSize = size;
+    //     break;
+    //   case wcDocker.DOCK.BOTTOM:
+    //     this.$frame.addClass('wcCollapserBottom');
+    //     var size = this.$bar.css('bottom', 0).outerWidth(this.$frame.innerWidth()).outerHeight();
+    //     this.$drawer.css('bottom', size);
+    //     this._closeSize = size;
+    //     break;
+    // }
   },
 
   // Checks if the mouse is in a valid anchor position for docking a panel.
@@ -234,11 +266,11 @@ wcCollapser.prototype = {
   // Params:
   //    eventName   The name of the event.
   //    data        A custom data parameter to pass to all handlers.
-  __trigger: function(eventName, data) {
-    if (this._root) {
-      this._root.__trigger(eventName, data);
-    }
-  },
+  // __trigger: function(eventName, data) {
+  //   if (this._root) {
+  //     this._root.__trigger(eventName, data);
+  //   }
+  // },
 
   // Saves the current panel configuration into a meta
   // object that can be used later to restore it.
@@ -276,6 +308,7 @@ wcCollapser.prototype = {
     }
 
     this.$container = $container;
+
     if (this.$container) {
       this.$container.append(this.$frame);
     } else {
@@ -286,10 +319,11 @@ wcCollapser.prototype = {
 
   // Disconnects and prepares this widget for destruction.
   __destroy: function() {
-    if (this._root) {
-      this._root.__destroy();
-      this._root = null;
+    if (this._frame) {
+      this._frame.__destroy();
+      this._frame = null;
     }
+
     this.__container(null);
     this._parent = null;
   },
