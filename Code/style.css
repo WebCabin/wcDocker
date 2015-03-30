@@ -260,17 +260,17 @@ html, body {
   cursor: ns-resize;
 }
 
-.wcSplitterBarV.wcSplitterBarStatic {
+.wcSplitterHidden {
   width: 0px !important;
   border: 0px !important;
   display: none !important;
+}
+
+.wcSplitterBarV.wcSplitterBarStatic {
   cursor: default !important;
 }
 
 .wcSplitterBarH.wcSplitterBarStatic {
-  height: 0px !important;
-  border: 0px !important;
-  display: none !important;
   cursor: default !important;
 }
 

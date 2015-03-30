@@ -85,6 +85,11 @@
   background-color: black;
 }
 
+.wcSplitterBarStatic {
+  width: 0px;
+  height: 0px;
+}
+
 .wcPanelTab {
   font-family: sans-serif;
   color: #999;

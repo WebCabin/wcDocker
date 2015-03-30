@@ -104,6 +104,11 @@
   background-color: gray;
 }
 
+.wcSplitterBarStatic {
+  width: 0px;
+  height: 0px;
+}
+
 .wcGhost {
   background-color: #444444;
   border: 0px;

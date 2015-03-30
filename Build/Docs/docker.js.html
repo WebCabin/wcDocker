@@ -360,6 +360,9 @@ wcDocker.prototype = {
           panel.maxSize(horizontal? tabSize: Infinity, !horizontal? tabSize: Infinity);
         });
       });
+      panel.on(wcDocker.EVENT.INIT, function() {
+        panel._parent._parent.$bar.addClass('wcSplitterHidden');
+      });
       return panel;
     };
 
