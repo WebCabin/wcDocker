@@ -28,7 +28,9 @@
   font-size: 15px;
   font-weight: bold;
   text-align: center;
-  margin-top: 3px;
+  padding-top: 3px;
+  background-color: #944;
+  border-bottom: 1px solid #F88;
 }
 
 .wcFrameCenter {

@@ -54,6 +54,7 @@ function wcDocker(container, options) {
   this._draggingFrame = null;
   this._draggingFrameSizer = null;
   this._draggingFrameTab = null;
+  this._draggingFrameTopper = false;
   this._draggingCustomTabFrame = null;
   this._ghost = null;
   this._menuTimer = 0;
@@ -897,7 +898,7 @@ wcDocker.prototype = {
           if (myFrame && !myFrame._isFloating && myFrame.panel().moveable()) {
             var rect = myFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
+            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false);
             self._ghost.$ghost.hide();
           }
         }
@@ -1321,9 +1322,10 @@ wcDocker.prototype = {
           // begin the movement process
           if (!$panelTab.hasClass('wcNotMoveable') && (self._draggingFrameTab || !self._draggingFrame.$titleBar.hasClass('wcNotMoveable')) &&
           (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
+            self._draggingFrameTopper = $(event.target).parents('.wcFrameTopper').length > 0;
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
+            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper);
             self.trigger(wcDocker.EVENT.BEGIN_DOCK);
           }
           break;
@@ -1449,12 +1451,13 @@ wcDocker.prototype = {
           var found = false;
 
           // Check anchoring with self.
-          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab)) {
+          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper)) {
             self._draggingFrame.__shadow(true);
+            self.__focus();
             if (!forceFloat) {
               for (var i = 0; i < self._frameList.length; ++i) {
                 if (self._frameList[i] !== self._draggingFrame) {
-                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true)) {
+                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper)) {
                     self._draggingFrame.__shadow(true);
                     return;
                   }
@@ -1561,8 +1564,12 @@ wcDocker.prototype = {
             panel._parent.panel(panel._parent._panelList.length-1, true);
             // Dragging the entire frame.
             if (!self._draggingFrameTab) {
+              var rect = self._ghost.rect();
+              if (!rect.tabOrientation) {
+                rect.tabOrientation = self._draggingFrame.tabOrientation();
+              }
               while (self._draggingFrame.panel()) {
-                self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.STACKED, panel, self._ghost.rect());
+                self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.STACKED, panel, rect);
               }
             } else {
               var frame = panel._parent;
@@ -1592,6 +1599,7 @@ wcDocker.prototype = {
       self._draggingFrame = null;
       self._draggingFrameSizer = null;
       self._draggingFrameTab = null;
+      self._draggingFrameTopper = false;
       self._draggingCustomTabFrame = null;
       self._removingPanel = null;
       return true;
@@ -2889,7 +2897,7 @@ wcLayout.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, forceTabOrientation) {
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation) {
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
     var offset = $elem.offset();
@@ -2915,7 +2923,7 @@ wcLayout.prototype = {
           loc: wcDocker.DOCK.STACKED,
           tab: wcDocker.TAB.TOP,
           item: this,
-          self: same === wcDocker.TAB.TOP,
+          self: same === wcDocker.TAB.TOP || isTopper,
         });
         return true;
       }
@@ -4281,7 +4289,7 @@ wcFrame.prototype = {
   __init: function() {
     this.$frame         = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
     this.$title         = $('<div class="wcFrameTitle">');
-    this.$titleBar      = $('<div class="wcFrameTitleBar">');
+    this.$titleBar      = $('<div class="wcFrameTitleBar wcFrameTopper">');
     this.$tabBar        = $('<div class="wcFrameTitleBar">');
     this.$tabScroll     = $('<div class="wcTabScroller">');
     this.$center        = $('<div class="wcFrameCenter">');
@@ -4868,10 +4876,13 @@ wcFrame.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit) {
+  //    ghost     The ghost object.
+  //    canSplit  Whether the frame can be split
+  //    isTopper  Whether the user is dragging the topper (top title bar).
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title(), this.isCollapser()? this._tabOrientation: undefined);
+      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
     }
     return false;
   },
@@ -6709,6 +6720,7 @@ function wcIFrame(container, panel) {
 
   this.$container = $(container);
   this.$frame = null;
+  this.$focus = null;
 
   /**
    * The iFrame element.
@@ -6719,6 +6731,7 @@ function wcIFrame(container, panel) {
   this._window = null;
   this._isAttached = true;
   this._hasFocus = false;
+  this._isDocking = false;
 
   this._boundEvents = [];
 
@@ -6752,7 +6765,7 @@ wcIFrame.prototype = {
     this.__clearFrame();
 
     this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
-    this.$frame.append(this.$iFrame);
+    this.$frame.prepend(this.$iFrame);
 
     this.__onMoved();
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
@@ -6760,7 +6773,6 @@ wcIFrame.prototype = {
     this._window.location.replace(url);
 
     this.$iFrame[0].focus();
-    this.__handleClick();
   },
 
   /**
@@ -6772,7 +6784,7 @@ wcIFrame.prototype = {
     this.__clearFrame();
 
     this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
-    this.$frame.append(this.$iFrame);
+    this.$frame.prepend(this.$iFrame);
 
     this.__onMoved();
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
@@ -6784,7 +6796,6 @@ wcIFrame.prototype = {
     this._window.document.close();
 
     this.$iFrame[0].focus();
-    this.__handleClick();
   },
 
   /**
@@ -6797,7 +6808,7 @@ wcIFrame.prototype = {
     this.__clearFrame();
 
     this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
-    this.$frame.append(this.$iFrame);
+    this.$frame.prepend(this.$iFrame);
 
     this.__onMoved();
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
@@ -6806,7 +6817,6 @@ wcIFrame.prototype = {
     // Write the frame source.
     this.$iFrame[0].srcdoc = html;
     this.$iFrame[0].focus();
-    this.__handleClick();
   },
 
   /**
@@ -6862,7 +6872,9 @@ wcIFrame.prototype = {
 
   __init: function() {
     this.$frame = $('<div class="wcIFrame">');
+    this.$focus = $('<div class="wcIFrameFocus wcIFrameHidden">');
     this._panel.docker().$container.append(this.$frame);
+    this.$frame.append(this.$focus);
 
     this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK,         handler: this.__onBeginDock.bind(this)});
@@ -6882,6 +6894,11 @@ wcIFrame.prototype = {
     for (var i = 0; i < this._boundEvents.length; ++i) {
       this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
     }
+
+    var self = this;
+    this.$focus.click(function() {
+      self._layout.$table.click();
+    });
   },
 
   __clearFrame: function() {
@@ -6912,39 +6929,38 @@ wcIFrame.prototype = {
     this.$frame.css('left', parseInt(this.$frame.css('left'))-1);
   },
 
-  __handleClick: function() {
-    var self = this;
-    this.$frame.click(function() {
-      self._layout.$table.click();
-    });
-  },
-
   __onVisibilityChanged: function() {
     this.__updateFrame();
   },
 
   __onBeginDock: function() {
     if (this.$frame) {
+      this._isDocking = true;
       this.$frame.addClass('wcIFrameMoving');
+      this.$focus.removeClass('wcIFrameHidden');
     }
   },
 
   __onEndDock: function() {
-    if (this.$frame && this._hasFocus) {
+    if (this.$frame) {
+      this._isDocking = false;
       this.$frame.removeClass('wcIFrameMoving');
+      this.$focus.addClass('wcIFrameHidden');
       this.__focusFix();
     }
   },
 
   __onMoveStarted: function() {
-    if (this.$frame) {
+    if (this.$frame && !this._isDocking) {
       this.$frame.addClass('wcIFrameMoving');
+      this.$focus.removeClass('wcIFrameHidden');
     }
   },
 
   __onMoveFinished: function() {
-    if (this.$frame) {
+    if (this.$frame && !this._isDocking) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.$focus.addClass('wcIFrameHidden');
       this.__focusFix();
     }
   },
@@ -6959,8 +6975,6 @@ wcIFrame.prototype = {
 
       this.$frame.css('top', pos.top - dockerPos.top);
       this.$frame.css('left', pos.left - dockerPos.left);
-      // this.$frame.css('right', pos.left + width - dockerPos.left);
-      // this.$frame.css('bottom', pos.top + height - dockerPos.top);
       this.$frame.css('width', width);
       this.$frame.css('height', height);
     }

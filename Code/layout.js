@@ -404,7 +404,7 @@ wcLayout.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, forceTabOrientation) {
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation) {
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
     var offset = $elem.offset();
@@ -430,7 +430,7 @@ wcLayout.prototype = {
           loc: wcDocker.DOCK.STACKED,
           tab: wcDocker.TAB.TOP,
           item: this,
-          self: same === wcDocker.TAB.TOP,
+          self: same === wcDocker.TAB.TOP || isTopper,
         });
         return true;
       }

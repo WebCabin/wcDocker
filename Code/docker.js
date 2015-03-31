@@ -54,6 +54,7 @@ function wcDocker(container, options) {
   this._draggingFrame = null;
   this._draggingFrameSizer = null;
   this._draggingFrameTab = null;
+  this._draggingFrameTopper = false;
   this._draggingCustomTabFrame = null;
   this._ghost = null;
   this._menuTimer = 0;
@@ -897,7 +898,7 @@ wcDocker.prototype = {
           if (myFrame && !myFrame._isFloating && myFrame.panel().moveable()) {
             var rect = myFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true);
+            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false);
             self._ghost.$ghost.hide();
           }
         }
@@ -1321,9 +1322,10 @@ wcDocker.prototype = {
           // begin the movement process
           if (!$panelTab.hasClass('wcNotMoveable') && (self._draggingFrameTab || !self._draggingFrame.$titleBar.hasClass('wcNotMoveable')) &&
           (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
+            self._draggingFrameTopper = $(event.target).parents('.wcFrameTopper').length > 0;
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true);
+            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper);
             self.trigger(wcDocker.EVENT.BEGIN_DOCK);
           }
           break;
@@ -1449,12 +1451,13 @@ wcDocker.prototype = {
           var found = false;
 
           // Check anchoring with self.
-          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab)) {
+          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper)) {
             self._draggingFrame.__shadow(true);
+            self.__focus();
             if (!forceFloat) {
               for (var i = 0; i < self._frameList.length; ++i) {
                 if (self._frameList[i] !== self._draggingFrame) {
-                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true)) {
+                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper)) {
                     self._draggingFrame.__shadow(true);
                     return;
                   }
@@ -1561,8 +1564,12 @@ wcDocker.prototype = {
             panel._parent.panel(panel._parent._panelList.length-1, true);
             // Dragging the entire frame.
             if (!self._draggingFrameTab) {
+              var rect = self._ghost.rect();
+              if (!rect.tabOrientation) {
+                rect.tabOrientation = self._draggingFrame.tabOrientation();
+              }
               while (self._draggingFrame.panel()) {
-                self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.STACKED, panel, self._ghost.rect());
+                self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.STACKED, panel, rect);
               }
             } else {
               var frame = panel._parent;
@@ -1592,6 +1599,7 @@ wcDocker.prototype = {
       self._draggingFrame = null;
       self._draggingFrameSizer = null;
       self._draggingFrameTab = null;
+      self._draggingFrameTopper = false;
       self._draggingCustomTabFrame = null;
       self._removingPanel = null;
       return true;

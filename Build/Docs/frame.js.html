@@ -401,7 +401,7 @@ wcFrame.prototype = {
   __init: function() {
     this.$frame         = $('&lt;div class="wcFrame wcWide wcTall wcPanelBackground">');
     this.$title         = $('&lt;div class="wcFrameTitle">');
-    this.$titleBar      = $('&lt;div class="wcFrameTitleBar">');
+    this.$titleBar      = $('&lt;div class="wcFrameTitleBar wcFrameTopper">');
     this.$tabBar        = $('&lt;div class="wcFrameTitleBar">');
     this.$tabScroll     = $('&lt;div class="wcTabScroller">');
     this.$center        = $('&lt;div class="wcFrameCenter">');
@@ -988,10 +988,13 @@ wcFrame.prototype = {
   // Params:
   //    mouse     The current mouse position.
   //    same      Whether the moving frame and this one are the same.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit) {
+  //    ghost     The ghost object.
+  //    canSplit  Whether the frame can be split
+  //    isTopper  Whether the user is dragging the topper (top title bar).
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper) {
     var panel = this.panel();
     if (panel &amp;&amp; panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same &amp;&amp; this._tabOrientation, ghost, (!this._isFloating &amp;&amp; canSplit), this.$frame, panel.moveable() &amp;&amp; panel.title(), this.isCollapser()? this._tabOrientation: undefined);
+      return panel.layout().__checkAnchorDrop(mouse, same &amp;&amp; this._tabOrientation, ghost, (!this._isFloating &amp;&amp; canSplit), this.$frame, panel.moveable() &amp;&amp; panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
     }
     return false;
   },

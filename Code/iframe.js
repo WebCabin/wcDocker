@@ -24,6 +24,7 @@ function wcIFrame(container, panel) {
 
   this.$container = $(container);
   this.$frame = null;
+  this.$focus = null;
 
   /**
    * The iFrame element.
@@ -34,6 +35,7 @@ function wcIFrame(container, panel) {
   this._window = null;
   this._isAttached = true;
   this._hasFocus = false;
+  this._isDocking = false;
 
   this._boundEvents = [];
 
@@ -67,7 +69,7 @@ wcIFrame.prototype = {
     this.__clearFrame();
 
     this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
-    this.$frame.append(this.$iFrame);
+    this.$frame.prepend(this.$iFrame);
 
     this.__onMoved();
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
@@ -86,7 +88,7 @@ wcIFrame.prototype = {
     this.__clearFrame();
 
     this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
-    this.$frame.append(this.$iFrame);
+    this.$frame.prepend(this.$iFrame);
 
     this.__onMoved();
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
@@ -110,7 +112,7 @@ wcIFrame.prototype = {
     this.__clearFrame();
 
     this.$iFrame = $('<iframe>iFrames not supported on your device!</iframe>');
-    this.$frame.append(this.$iFrame);
+    this.$frame.prepend(this.$iFrame);
 
     this.__onMoved();
     this._window = this.$iFrame[0].contentWindow || this.$iFrame[0];
@@ -174,7 +176,9 @@ wcIFrame.prototype = {
 
   __init: function() {
     this.$frame = $('<div class="wcIFrame">');
+    this.$focus = $('<div class="wcIFrameFocus wcIFrameHidden">');
     this._panel.docker().$container.append(this.$frame);
+    this.$frame.append(this.$focus);
 
     this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK,         handler: this.__onBeginDock.bind(this)});
@@ -194,6 +198,11 @@ wcIFrame.prototype = {
     for (var i = 0; i < this._boundEvents.length; ++i) {
       this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
     }
+
+    var self = this;
+    this.$focus.click(function() {
+      self._layout.$table.click();
+    });
   },
 
   __clearFrame: function() {
@@ -230,26 +239,32 @@ wcIFrame.prototype = {
 
   __onBeginDock: function() {
     if (this.$frame) {
+      this._isDocking = true;
       this.$frame.addClass('wcIFrameMoving');
+      this.$focus.removeClass('wcIFrameHidden');
     }
   },
 
   __onEndDock: function() {
-    if (this.$frame && this._hasFocus) {
+    if (this.$frame) {
+      this._isDocking = false;
       this.$frame.removeClass('wcIFrameMoving');
+      this.$focus.addClass('wcIFrameHidden');
       this.__focusFix();
     }
   },
 
   __onMoveStarted: function() {
-    if (this.$frame) {
+    if (this.$frame && !this._isDocking) {
       this.$frame.addClass('wcIFrameMoving');
+      this.$focus.removeClass('wcIFrameHidden');
     }
   },
 
   __onMoveFinished: function() {
-    if (this.$frame) {
+    if (this.$frame && !this._isDocking) {
       this.$frame.removeClass('wcIFrameMoving');
+      this.$focus.addClass('wcIFrameHidden');
       this.__focusFix();
     }
   },
@@ -264,8 +279,6 @@ wcIFrame.prototype = {
 
       this.$frame.css('top', pos.top - dockerPos.top);
       this.$frame.css('left', pos.left - dockerPos.left);
-      // this.$frame.css('right', pos.left + width - dockerPos.left);
-      // this.$frame.css('bottom', pos.top + height - dockerPos.top);
       this.$frame.css('width', width);
       this.$frame.css('height', height);
     }
