@@ -149,6 +149,7 @@ wcIFrame.prototype = {
     this._window.location.replace(url);
 
     this.$iFrame[0].focus();
+    this.__handleClick();
   },
 
   /**
@@ -172,6 +173,7 @@ wcIFrame.prototype = {
     this._window.document.close();
 
     this.$iFrame[0].focus();
+    this.__handleClick();
   },
 
   /**
@@ -193,6 +195,7 @@ wcIFrame.prototype = {
     // Write the frame source.
     this.$iFrame[0].srcdoc = html;
     this.$iFrame[0].focus();
+    this.__handleClick();
   },
 
   /**
@@ -296,6 +299,13 @@ wcIFrame.prototype = {
     // it has been assigned and unassigned pointer-events: none in css.
     this.$frame.css('left', parseInt(this.$frame.css('left'))+1);
     this.$frame.css('left', parseInt(this.$frame.css('left'))-1);
+  },
+
+  __handleClick: function() {
+    var self = this;
+    this.$frame.click(function() {
+      self._layout.$table.click();
+    });
   },
 
   __onVisibilityChanged: function() {

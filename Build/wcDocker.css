@@ -297,17 +297,17 @@ html, body {
 }
 
 .wcTabLeft {
-  -webkit-transform: rotate(-90deg);
-      -ms-transform: rotate(-90deg);
-     -moz-transform: rotate(-90deg);
-       -o-transform: rotate(-90deg);
-          transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg) scaleX(-1);
+      -ms-transform: rotate(-90deg) scaleX(-1);
+     -moz-transform: rotate(-90deg) scaleX(-1);
+       -o-transform: rotate(-90deg) scaleX(-1);
+          transform: rotate(-90deg) scaleX(-1);
   -webkit-transform-origin: left top;
       -ms-transform-origin: left top;
      -moz-transform-origin: left top;
        -o-transform-origin: left top;
           transform-origin: left top;
-  top: 100%;
+  top: 0%;
   left: 0%;
 }
 
@@ -335,6 +335,14 @@ html, body {
      -moz-transform-origin: center center;
        -o-transform-origin: center center;
           transform-origin: center center;
+}
+
+.wcTabLeft .wcPanelTab > div {
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+     -moz-transform: scaleX(-1);
+       -o-transform: scaleX(-1);
+          transform: scaleX(-1);
 }
 
 .wcTabRight {

@@ -535,6 +535,9 @@ wcDocker.prototype = {
       }
 
       parentFrame.__updateTabs();
+      if (parentFrame.isCollapser()) {
+        parentFrame._parent.collapse();
+      }
       
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.isCollapser() && parentFrame._panelList.length === 0) {

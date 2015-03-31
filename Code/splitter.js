@@ -232,7 +232,7 @@ wcSplitter.prototype = {
           next();
           clearInterval(anim);
         }
-      });
+      }, 5);
     });
     this.$bar.dequeue();
   },

@@ -395,7 +395,7 @@ wcTabFrame.prototype = {
         case wcDocker.TAB.TOP:
           return $item.offset().left;
         case wcDocker.TAB.LEFT:
-          return $item.offset().top + $item.outerWidth();
+          return $item.offset().top;
         case wcDocker.TAB.RIGHT:
           return $item.offset().top;
       }
@@ -438,11 +438,7 @@ wcTabFrame.prototype = {
         $tabContent.removeClass('wcPanelTabContentHidden');
       }
 
-      if (this._tabOrientation !== wcDocker.TAB.LEFT) {
-        totalWidth = getOffset($tab) - parentLeft;
-      } else {
-        totalWidth = parentLeft - getOffset($tab);
-      }
+      totalWidth = getOffset($tab) - parentLeft;
       tabPositions.push(totalWidth);
 
       totalWidth += $tab.outerWidth();
@@ -525,11 +521,7 @@ wcTabFrame.prototype = {
         for (var i = 0; i < children.length; ++i) {
           var $tab = $(children[i]);
 
-          if (this._tabOrientation !== wcDocker.TAB.LEFT) {
-            totalWidth = getOffset($tab) - parentLeft;
-          } else {
-            totalWidth = parentLeft - getOffset($tab);
-          }
+          totalWidth = getOffset($tab) - parentLeft;
           if (totalWidth + $tab.outerWidth() > scrollLimit) {
             this._tabScrollPos = totalWidth - this.LEFT_TAB_BUFFER;
             if (this._tabScrollPos < 0) {

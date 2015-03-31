@@ -493,7 +493,7 @@ wcFrame.prototype = {
         case wcDocker.TAB.TOP:
           return $item.offset().left;
         case wcDocker.TAB.LEFT:
-          return $item.offset().top + $item.outerWidth();
+          return $item.offset().top;
         case wcDocker.TAB.RIGHT:
           return $item.offset().top;
       }
@@ -571,11 +571,7 @@ wcFrame.prototype = {
       }
 
       if ($tab) {
-        if (this._tabOrientation !== wcDocker.TAB.LEFT) {
-          totalWidth = getOffset($tab) - parentLeft;
-        } else {
-          totalWidth = parentLeft - getOffset($tab);
-        }
+        totalWidth = getOffset($tab) - parentLeft;
         tabPositions.push(totalWidth);
 
         totalWidth += $tab.outerWidth();
@@ -628,7 +624,7 @@ wcFrame.prototype = {
             var titleSize = this.$titleBar.height();
             this.$frame.append(this.$tabBar);
             this.$tabBar.addClass('wcTabLeft').removeClass('wcTabTop wcTabRight wcTabBottom');
-            this.$tabBar.css('margin-top', '');
+            this.$tabBar.css('margin-top', titleSize);
 
             this.$center.css('left', titleSize).css('right', 0).css('bottom', 0);
           } else {
@@ -716,11 +712,7 @@ wcFrame.prototype = {
           for (var i = 0; i < children.length; ++i) {
             var $tab = $(children[i]);
 
-            if (this._tabOrientation !== wcDocker.TAB.LEFT) {
-              totalWidth = getOffset($tab) - parentLeft;
-            } else {
-              totalWidth = parentLeft - getOffset($tab);
-            }
+            totalWidth = getOffset($tab) - parentLeft;
             if (totalWidth + $tab.outerWidth() > scrollLimit) {
               this._tabScrollPos = totalWidth - this.LEFT_TAB_BUFFER;
               if (this._tabScrollPos < 0) {
@@ -1030,6 +1022,10 @@ wcFrame.prototype = {
 
   // Retrieves the bounding rect for this frame.
   __rect: function() {
+    if (this.isCollapser()) {
+      return this._parent.__rect();
+    }
+
     var offset = this.$frame.offset();
     var width = this.$frame.width();
     var height = this.$frame.height();
