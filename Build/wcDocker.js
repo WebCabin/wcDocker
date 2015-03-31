@@ -254,6 +254,16 @@ wcDocker.prototype = {
   },
 
   /**
+   * Retrieves whether panel collapsers are enabled.
+   * @version 3.0.0
+   * 
+   * @returns {Boolean} - Collapsers are enabled.
+   */
+  canCollapse: function() {
+    return (this._canOrientTabs && this._options.allowCollapse);
+  },
+
+  /**
    * Registers a new docking panel type to be used later.
    * @version 3.0.0
    *
@@ -351,20 +361,6 @@ wcDocker.prototype = {
         panel.__container(this.$transition);
         var panelOptions = (panelType.options && panelType.options.options) || {};
         panel._panelObject = new panelType.options.onCreate(panel, panelOptions);
-
-        // If we are collapsing the panel, put it into the collapser.
-        if (targetPanel === wcDocker.COLLAPSED) {
-          this.__initCollapsers();
-          if (this._collapser[location]) {
-            targetPanel = this._collapser[location]._frame.addPanel(panel);
-            var self = this;
-            setTimeout(function() {self.__update();});
-            return panel;
-          } else {
-            console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
-            return false;
-          }
-        }
 
         if (location === wcDocker.DOCK.STACKED) {
           this.__addPanelGrouped(panel, targetPanel, options);
@@ -492,10 +488,10 @@ wcDocker.prototype = {
   /**
    * Moves a docking panel from its current location to another.
    *
-   * @param {wcPanel} panel                     - The panel to move.
-   * @param {wcDocker.DOCK} location            - The new docking location of the panel.
-   * @param {wcPanel} [targetPanel]             - A target panel to dock relative to.
-   * @param {wcDocker~PanelOptions} [options]   - Other options for panel placement.
+   * @param {wcPanel} panel                             - The panel to move.
+   * @param {wcDocker.DOCK} location                    - The new docking location of the panel.
+   * @param {wcPanel|wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
+   * @param {wcDocker~PanelOptions} [options]           - Other options for panel placement.
    *
    * @returns {wcPanel|Boolean} - The panel that was created, or false on failure.
    */
@@ -517,7 +513,9 @@ wcDocker.prototype = {
       // Remove the panel from the frame.
       for (var i = 0; i < parentFrame._panelList.length; ++i) {
         if (parentFrame._panelList[i] === panel) {
-          if (parentFrame._curTab >= i) {
+          if (parentFrame.isCollapser()) {
+            parentFrame._curTab = -1;
+          } else if (parentFrame._curTab >= i) {
             parentFrame._curTab--;
           }
 
@@ -531,7 +529,7 @@ wcDocker.prototype = {
         }
       }
 
-      if (parentFrame._curTab === -1 && parentFrame._panelList.length) {
+      if (!parentFrame.isCollapser() && parentFrame._curTab === -1 && parentFrame._panelList.length) {
         parentFrame._curTab = 0;
       }
 
@@ -1026,6 +1024,14 @@ wcDocker.prototype = {
     }
 
     data.root = this._root.__save();
+
+    if (!$.isEmptyObject(this._collapser)) {
+      data.collapsers = {
+        left:   this._collapser[wcDocker.DOCK.LEFT].__save(),
+        right:  this._collapser[wcDocker.DOCK.RIGHT].__save(),
+        bottom: this._collapser[wcDocker.DOCK.BOTTOM].__save(),
+      };
+    }
     
     return JSON.stringify(data, function(key, value) {
       if (value == Infinity) {
@@ -1059,6 +1065,17 @@ wcDocker.prototype = {
     }
 
     this.__update(false);
+
+    if (!$.isEmptyObject(data.collapsers) && this.canCollapse()) {
+      this.__initCollapsers();
+
+      this._collapser[wcDocker.DOCK.LEFT].__restore(data.collapsers.left, this);
+      this._collapser[wcDocker.DOCK.RIGHT].__restore(data.collapsers.right, this);
+      this._collapser[wcDocker.DOCK.BOTTOM].__restore(data.collapsers.bottom, this);
+
+      var self = this;
+      setTimeout(function() {self.__update();});
+    }
   },
 
   /**
@@ -1076,6 +1093,13 @@ wcDocker.prototype = {
 
     for (var i = 0; i < this._frameList.length; ++i) {
       this._frameList[i].__destroy();
+    }
+
+    if (!$.isEmptyObject(this._collapser)) {
+      this._collapser[wcDocker.DOCK.LEFT].__destroy();
+      this._collapser[wcDocker.DOCK.RIGHT].__destroy();
+      this._collapser[wcDocker.DOCK.BOTTOM].__destroy();
+      this._collapser = {};
     }
 
     while (this._frameList.length) this._frameList.pop();
@@ -1206,6 +1230,40 @@ wcDocker.prototype = {
           self.__update();
           return;
         }
+        if (frame.$collapse[0] === this) {
+          var $icon = frame.$collapse.children('div');
+          var position = wcDocker.DOCK.BOTTOM;
+          if ($icon.hasClass('wcCollapseLeft')) {
+            position = wcDocker.DOCK.LEFT;
+          } else if ($icon.hasClass('wcCollapseRight')) {
+            position = wcDocker.DOCK.RIGHT;
+          }
+          if (frame.isCollapser()) {
+            // Un-collapse
+            var target;
+            var opts = {};
+            switch (position) {
+              case wcDocker.DOCK.LEFT:
+                target = frame._parent._parent.right();
+                opts.w = frame.$frame.width();
+                break;
+              case wcDocker.DOCK.RIGHT:
+                target = frame._parent._parent.left();
+                opts.w = frame.$frame.width();
+                break;
+              case wcDocker.DOCK.BOTTOM:
+                target = frame._parent._parent.top();
+                opts.h = frame.$frame.height();
+                break;
+            }
+            frame._parent.collapse(true);
+            self.movePanel(frame.panel(), position, target, opts);
+          } else {
+            // collapse.
+            self.movePanel(frame.panel(), position, wcDocker.COLLAPSED);
+          }
+          return;
+        }
         if (frame.$tabLeft[0] === this) {
           frame._tabScrollPos-=frame.$tabBar.width()/2;
           if (frame._tabScrollPos < 0) {
@@ -1322,6 +1380,10 @@ wcDocker.prototype = {
           // begin the movement process
           if (!$panelTab.hasClass('wcNotMoveable') && (self._draggingFrameTab || !self._draggingFrame.$titleBar.hasClass('wcNotMoveable')) &&
           (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
+            // Special case to allow users to drag out only a single collapsed tab even by dragging the title bar (which normally would drag out the entire frame).
+            if (!self._draggingFrameTab && self._draggingFrame.isCollapser()) {
+              self._draggingFrameTab = self._draggingFrame.panel();
+            }
             self._draggingFrameTopper = $(event.target).parents('.wcFrameTopper').length > 0;
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
@@ -1710,8 +1772,8 @@ wcDocker.prototype = {
    * any static panels that you do not wish to be overlapped by the collapsers (such as file menu panels).
    */
   __initCollapsers: function() {
-    // Only initialize once.
-    if (!$.isEmptyObject(this._collapser)) {
+    // Initialize collapsers if it is enabled and not already initialized.
+    if (!this.canCollapse() || !$.isEmptyObject(this._collapser)) {
       return;
     }
 
@@ -1737,49 +1799,14 @@ wcDocker.prototype = {
       }
     }
 
-    function __createPanel(horizontal) {
-      var panel = new wcPanel(wcDocker.COLLAPSED, {});
-      panel._parent = this;
-      panel.__container(this.$transition);
-      panel.moveable(false);
-      panel.closeable(false);
-      panel.overflowVisible(false);
-      panel.title('');
-      panel._isCollapser = true;
-      panel.on(wcDocker.EVENT.UPDATED, function() {
-        var tabSize = 0;
-        var hasPanels = true; // TODO: Actually check for panels.
-        if (hasPanels) {
-          tabSize = panel._parent.$tabBar.height();
-          panel._parent.$frame.css('display', '');
-          panel._parent._parent.$bar.removeClass('wcSplitterHidden');
-        } else {
-          panel._parent.$frame.css('display', 'none');
-          panel._parent._parent.$bar.addClass('wcSplitterHidden');
-        }
-        panel.minSize(tabSize, tabSize);
-        panel.maxSize(horizontal? tabSize: Infinity, !horizontal? tabSize: Infinity);
-      });
-      return panel;
-    };
-
-    function __createCollapser(location, horizontal) {
-      // this._collapser[location] = {
-      //   frame: __createPanel.call(this, horizontal),
-      //   collapser: null,
-      // };
-
-      // this.__addPanelAlone(this._collapser[location].frame, location, parent, {w:0, h:0});
-      // this._collapser[location].frame._parent.tabOrientation(location);
-
+    function __createCollapser(location) {
       this._collapser[location] = this.__addCollapser(location, parent);
       this._frameList.push(this._collapser[location]._frame);
-      // parent = this._collapser[location];
     }
 
-    __createCollapser.call(this, wcDocker.DOCK.BOTTOM, false);
-    __createCollapser.call(this, wcDocker.DOCK.LEFT, true);
-    __createCollapser.call(this, wcDocker.DOCK.RIGHT, true);
+    __createCollapser.call(this, wcDocker.DOCK.BOTTOM);
+    __createCollapser.call(this, wcDocker.DOCK.LEFT);
+    __createCollapser.call(this, wcDocker.DOCK.RIGHT);
 
     var self = this;
     setTimeout(function() {
@@ -1958,12 +1985,12 @@ wcDocker.prototype = {
   // placed in its own frame instead.
   // Params:
   //    panel         The panel to insert.
-  //    parentPanel   An optional panel to 'split', if not supplied the
+  //    targetPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
-  __addPanelGrouped: function(panel, parentPanel, options) {
-    var frame = parentPanel;
-    if (parentPanel instanceof wcPanel) {
-      frame = parentPanel._parent;
+  __addPanelGrouped: function(panel, targetPanel, options) {
+    var frame = targetPanel;
+    if (targetPanel instanceof wcPanel) {
+      frame = targetPanel._parent;
     }
 
     if (frame instanceof wcFrame) {
@@ -1976,7 +2003,7 @@ wcDocker.prototype = {
     }
 
     // If we did not manage to find a place for this panel, last resort is to put it in its own frame.
-    this.__addPanelAlone(panel, wcDocker.DOCK.LEFT, parentPanel, options);
+    this.__addPanelAlone(panel, wcDocker.DOCK.LEFT, targetPanel, options);
   },
 
   // Creates a new frame for the panel and then attaches it
@@ -1984,9 +2011,23 @@ wcDocker.prototype = {
   // Params:
   //    panel         The panel to insert.
   //    location      The desired location for the panel.
-  //    parentPanel   An optional panel to 'split', if not supplied the
+  //    targetPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
-  __addPanelAlone: function(panel, location, parentPanel, options) {
+  __addPanelAlone: function(panel, location, targetPanel, options) {
+    // If we are collapsing the panel, put it into the collapser.
+    if (targetPanel === wcDocker.COLLAPSED) {
+      this.__initCollapsers();
+      if (this._collapser[location]) {
+        targetPanel = this._collapser[location]._frame.addPanel(panel);
+        var self = this;
+        setTimeout(function() {self.__update();});
+        return panel;
+      } else {
+        console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
+        return false;
+      }
+    }
+
     if (options) {
       var width = this.$container.width();
       var height = this.$container.height();
@@ -2045,9 +2086,9 @@ wcDocker.prototype = {
       return;
     }
 
-    if (parentPanel) {
-      var parentSplitter = parentPanel._parent;
-      var splitterChild = parentPanel;
+    if (targetPanel) {
+      var parentSplitter = targetPanel._parent;
+      var splitterChild = targetPanel;
       while (!(parentSplitter instanceof wcSplitter || parentSplitter instanceof wcDocker)) {
         splitterChild = parentSplitter;
         parentSplitter = parentSplitter._parent;
@@ -3994,6 +4035,7 @@ function wcFrame(container, parent, isFloating) {
   this.$tabLeft   = null;
   this.$tabRight  = null;
   this.$close     = null;
+  this.$collapse  = null;
   this.$top       = null;
   this.$bottom    = null;
   this.$left      = null;
@@ -4215,7 +4257,9 @@ wcFrame.prototype = {
   removePanel: function(panel) {
     for (var i = 0; i < this._panelList.length; ++i) {
       if (this._panelList[i] === panel) {
-        if (this._curTab >= i) {
+        if (this.isCollapser()) {
+          this._curTab = -1;
+        } else if (this._curTab >= i) {
           this._curTab--;
         }
 
@@ -4296,6 +4340,7 @@ wcFrame.prototype = {
     this.$tabLeft       = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
     this.$tabRight      = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
     this.$close         = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
+    this.$collapse      = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
     this.$buttonBar     = $('<div class="wcFrameButtonBar">');
     this.$tabButtonBar  = $('<div class="wcFrameButtonBar">');
 
@@ -4303,6 +4348,7 @@ wcFrame.prototype = {
     this.$tabBar.append(this.$tabButtonBar);
     this.$frame.append(this.$buttonBar);
     this.$buttonBar.append(this.$close);
+    this.$buttonBar.append(this.$collapse);
     this.$frame.append(this.$center);
 
     if (this._isFloating) {
@@ -4469,7 +4515,7 @@ wcFrame.prototype = {
     var self = this;
 
     if (this.isCollapser()) {
-      this.$titleBar.addClass('wcNotMoveable');
+      // this.$titleBar.addClass('wcNotMoveable');
       this.$tabBar.addClass('wcNotMoveable');
     } else {
       this.$titleBar.removeClass('wcNotMoveable');
@@ -4707,6 +4753,7 @@ wcFrame.prototype = {
     this.$tabLeft.remove();
     this.$tabRight.remove();
     this.$close.hide();
+    this.$collapse.hide();
 
     while (this._buttonList.length) {
       this._buttonList.pop().remove();
@@ -4723,6 +4770,56 @@ wcFrame.prototype = {
         if (panel.closeable()) {
           this.$close.show();
           buttonSize += this.$close.outerWidth();
+        }
+
+        var docker = this.docker();
+        if (docker.canCollapse() && !this.panel()._isPlaceholder) {
+          if (this.isCollapser()) {
+            // Un-collapse
+            var $icon = this.$collapse.children('div');
+            $icon[0].className = 'fa fa-upload';
+            switch (this._parent._position) {
+              case wcDocker.DOCK.LEFT:
+                $icon.addClass('wcCollapseLeft');
+                break;
+              case wcDocker.DOCK.RIGHT:
+                $icon.addClass('wcCollapseRight');
+                break;
+              case wcDocker.DOCK.BOTTOM:
+                $icon.addClass('wcCollapseBottom');
+                break;
+            }
+            this.$collapse.show();
+            this.$collapse.attr('title', 'Dock this collapsed panel back into the main layout.');
+            buttonSize += this.$collapse.outerWidth();
+          } else {
+            // Collapse
+            // Determine the direction to collapse based on the frame center.
+            var outer = docker.$container.offset();
+            var center = this.$container.offset();
+            center.left = (center.left + (this.$container.width()/2) - outer.left) / docker.$container.width();
+            center.top  = (center.top + (this.$container.height()/2) - outer.top) / docker.$container.height();
+
+            var direction = '';
+            var directionClass = '';
+            if (center.top > 0.85) {
+              direction = 'bottom.';
+              directionClass = 'wcCollapserBottom';
+            } else if (center.left <= 0.5) {
+              direction = 'left side.';
+              directionClass = 'wcCollapseLeft';
+            } else {
+              direction = 'right side.';
+              directionClass = 'wcCollapseRight';
+            }
+
+            var $icon = this.$collapse.children('div');
+            $icon[0].className = 'fa fa-download';
+            $icon.addClass(directionClass);
+            this.$collapse.show();
+            this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
+            buttonSize += this.$collapse.outerWidth();
+          }
         }
 
         for (var i = 0; i < panel._buttonList.length; ++i) {
@@ -4882,7 +4979,7 @@ wcFrame.prototype = {
   __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
+      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && !this.isCollapser() && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
     }
     return false;
   },
@@ -5069,6 +5166,7 @@ function wcSplitter(container, parent, orientation) {
   this._posTarget = 0.5;
   this._pixelPos = -1;
   this._findBestPos = false;
+  this._anim = 0;
 
   this._boundEvents = [];
 
@@ -5252,7 +5350,10 @@ wcSplitter.prototype = {
     this._posTarget = value;
     var self = this;
     this.$bar.queue(function(next) {
-      var anim = setInterval(function() {
+      if (self._anim) {
+        clearInterval(self._anim);
+      }
+      self._anim = setInterval(function() {
         if (self._pos > self._posTarget) {
           self._pos -= (self._pos - self._posTarget) / 3;
           if (self._pos <= self._posTarget + 0.01) {
@@ -5271,7 +5372,8 @@ wcSplitter.prototype = {
         if (self._pos == self._posTarget) {
           callback && callback();
           next();
-          clearInterval(anim);
+          clearInterval(self._anim);
+          self._anim = 0;
         }
       }, 5);
     });
@@ -5757,6 +5859,13 @@ wcSplitter.prototype = {
 
   // Disconnects and prepares this widget for destruction.
   __destroy: function() {
+    // Stop any animations.
+    if (this._anim) {
+      clearInterval(this._anim);
+      this._anim = 0;
+    }
+    this.$bar.clearQueue();
+    
     // Remove all registered events.
     while (this._boundEvents.length){
       this._parent.off(this._boundEvents[0].event, this._boundEvents[0].handler);
@@ -5829,27 +5938,40 @@ wcCollapser.prototype = {
   /**
    * Collapses the drawer to its respective side wall.
    */
-  collapse: function() {
+  collapse: function(instant) {
     if (this._expanded) {
       this._openSize = this._parent.pos();
       this._expanded = false;
-      this._sliding = true;
+      if (instant) {
+        switch (this._position) {
+          case wcDocker.DOCK.TOP:
+          case wcDocker.DOCK.LEFT:
+            this._parent.pos(0);
+            break;
+          case wcDocker.DOCK.RIGHT:
+          case wcDocker.DOCK.BOTTOM:
+            this._parent.pos(1);
+            break;
+        }
+      } else {
+        this._sliding = true;
 
-      var self = this;
-      var fin = function() {
-        self._sliding = false;
-        self._parent.__update();
-      }
+        var self = this;
+        var fin = function() {
+          self._sliding = false;
+          self._parent.__update();
+        }
 
-      switch (this._position) {
-        case wcDocker.DOCK.TOP:
-        case wcDocker.DOCK.LEFT:
-          this._parent.animPos(0, fin);
-          break;
-        case wcDocker.DOCK.RIGHT:
-        case wcDocker.DOCK.BOTTOM:
-          this._parent.animPos(1, fin);
-          break;
+        switch (this._position) {
+          case wcDocker.DOCK.TOP:
+          case wcDocker.DOCK.LEFT:
+            this._parent.animPos(0, fin);
+            break;
+          case wcDocker.DOCK.RIGHT:
+          case wcDocker.DOCK.BOTTOM:
+            this._parent.animPos(1, fin);
+            break;
+        }
       }
     }
   },
@@ -6002,24 +6124,18 @@ wcCollapser.prototype = {
   // object that can be used later to restore it.
   __save: function() {
     var data = {};
-    // data.type     = 'wcCollapser';
-    // data.position = this._position;
-    // data.size     = this._openSize;
-    // data.expanded = this._expanded;
-    // if (this._root) {
-    //   data.root = this._root.__save();
-    // }
+    data.openSize   = this._openSize;
+    data.closeSize  = this._closeSize;
+    data.frame      = this._frame.__save();
     return data;
   },
 
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
-    // this._openSize     = data.size;
-    // this._expanded = data.expanded;
-    // if (data.root) {
-    //   this._root = docker.__create(data.root, this, this.$drawer);
-    //   this._root.__restore(data.root, docker);
-    // }
+    this._openSize = data.openSize;
+    this._closeSize = data.closeSize;
+    this._frame.__restore(data.frame, docker);
+    this.__adjustSize();
   },
 
   // Gets, or Sets a new container for this layout.

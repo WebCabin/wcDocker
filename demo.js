@@ -109,6 +109,7 @@ $(document).ready(function() {
         $themeSelector.append('<option value="default">Default</option>');
         $themeSelector.append('<option value="bigRed">Big Red</option>');
         $themeSelector.append('<option value="shadow">Shadow</option>');
+        // $themeSelector.append('<option value="ideDark">ideDark</option>');
         $themeSelector.val(_currentTheme);
 
         // Pre-configured layout configurations.
@@ -434,7 +435,7 @@ $(document).ready(function() {
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
       tabOrientation: wcDocker.TAB.BOTTOM
     });
-    // var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED);
     var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
   }
 });

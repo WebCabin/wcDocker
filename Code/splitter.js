@@ -28,6 +28,7 @@ function wcSplitter(container, parent, orientation) {
   this._posTarget = 0.5;
   this._pixelPos = -1;
   this._findBestPos = false;
+  this._anim = 0;
 
   this._boundEvents = [];
 
@@ -211,7 +212,10 @@ wcSplitter.prototype = {
     this._posTarget = value;
     var self = this;
     this.$bar.queue(function(next) {
-      var anim = setInterval(function() {
+      if (self._anim) {
+        clearInterval(self._anim);
+      }
+      self._anim = setInterval(function() {
         if (self._pos > self._posTarget) {
           self._pos -= (self._pos - self._posTarget) / 3;
           if (self._pos <= self._posTarget + 0.01) {
@@ -230,7 +234,8 @@ wcSplitter.prototype = {
         if (self._pos == self._posTarget) {
           callback && callback();
           next();
-          clearInterval(anim);
+          clearInterval(self._anim);
+          self._anim = 0;
         }
       }, 5);
     });
@@ -716,6 +721,13 @@ wcSplitter.prototype = {
 
   // Disconnects and prepares this widget for destruction.
   __destroy: function() {
+    // Stop any animations.
+    if (this._anim) {
+      clearInterval(this._anim);
+      this._anim = 0;
+    }
+    this.$bar.clearQueue();
+    
     // Remove all registered events.
     while (this._boundEvents.length){
       this._parent.off(this._boundEvents[0].event, this._boundEvents[0].handler);

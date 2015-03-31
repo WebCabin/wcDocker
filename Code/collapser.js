@@ -50,27 +50,40 @@ wcCollapser.prototype = {
   /**
    * Collapses the drawer to its respective side wall.
    */
-  collapse: function() {
+  collapse: function(instant) {
     if (this._expanded) {
       this._openSize = this._parent.pos();
       this._expanded = false;
-      this._sliding = true;
+      if (instant) {
+        switch (this._position) {
+          case wcDocker.DOCK.TOP:
+          case wcDocker.DOCK.LEFT:
+            this._parent.pos(0);
+            break;
+          case wcDocker.DOCK.RIGHT:
+          case wcDocker.DOCK.BOTTOM:
+            this._parent.pos(1);
+            break;
+        }
+      } else {
+        this._sliding = true;
 
-      var self = this;
-      var fin = function() {
-        self._sliding = false;
-        self._parent.__update();
-      }
+        var self = this;
+        var fin = function() {
+          self._sliding = false;
+          self._parent.__update();
+        }
 
-      switch (this._position) {
-        case wcDocker.DOCK.TOP:
-        case wcDocker.DOCK.LEFT:
-          this._parent.animPos(0, fin);
-          break;
-        case wcDocker.DOCK.RIGHT:
-        case wcDocker.DOCK.BOTTOM:
-          this._parent.animPos(1, fin);
-          break;
+        switch (this._position) {
+          case wcDocker.DOCK.TOP:
+          case wcDocker.DOCK.LEFT:
+            this._parent.animPos(0, fin);
+            break;
+          case wcDocker.DOCK.RIGHT:
+          case wcDocker.DOCK.BOTTOM:
+            this._parent.animPos(1, fin);
+            break;
+        }
       }
     }
   },
@@ -223,24 +236,18 @@ wcCollapser.prototype = {
   // object that can be used later to restore it.
   __save: function() {
     var data = {};
-    // data.type     = 'wcCollapser';
-    // data.position = this._position;
-    // data.size     = this._openSize;
-    // data.expanded = this._expanded;
-    // if (this._root) {
-    //   data.root = this._root.__save();
-    // }
+    data.openSize   = this._openSize;
+    data.closeSize  = this._closeSize;
+    data.frame      = this._frame.__save();
     return data;
   },
 
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
-    // this._openSize     = data.size;
-    // this._expanded = data.expanded;
-    // if (data.root) {
-    //   this._root = docker.__create(data.root, this, this.$drawer);
-    //   this._root.__restore(data.root, docker);
-    // }
+    this._openSize = data.openSize;
+    this._closeSize = data.closeSize;
+    this._frame.__restore(data.frame, docker);
+    this.__adjustSize();
   },
 
   // Gets, or Sets a new container for this layout.

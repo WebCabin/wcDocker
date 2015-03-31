@@ -32,6 +32,7 @@ function wcFrame(container, parent, isFloating) {
   this.$tabLeft   = null;
   this.$tabRight  = null;
   this.$close     = null;
+  this.$collapse  = null;
   this.$top       = null;
   this.$bottom    = null;
   this.$left      = null;
@@ -253,7 +254,9 @@ wcFrame.prototype = {
   removePanel: function(panel) {
     for (var i = 0; i < this._panelList.length; ++i) {
       if (this._panelList[i] === panel) {
-        if (this._curTab >= i) {
+        if (this.isCollapser()) {
+          this._curTab = -1;
+        } else if (this._curTab >= i) {
           this._curTab--;
         }
 
@@ -334,6 +337,7 @@ wcFrame.prototype = {
     this.$tabLeft       = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
     this.$tabRight      = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
     this.$close         = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
+    this.$collapse      = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
     this.$buttonBar     = $('<div class="wcFrameButtonBar">');
     this.$tabButtonBar  = $('<div class="wcFrameButtonBar">');
 
@@ -341,6 +345,7 @@ wcFrame.prototype = {
     this.$tabBar.append(this.$tabButtonBar);
     this.$frame.append(this.$buttonBar);
     this.$buttonBar.append(this.$close);
+    this.$buttonBar.append(this.$collapse);
     this.$frame.append(this.$center);
 
     if (this._isFloating) {
@@ -507,7 +512,7 @@ wcFrame.prototype = {
     var self = this;
 
     if (this.isCollapser()) {
-      this.$titleBar.addClass('wcNotMoveable');
+      // this.$titleBar.addClass('wcNotMoveable');
       this.$tabBar.addClass('wcNotMoveable');
     } else {
       this.$titleBar.removeClass('wcNotMoveable');
@@ -745,6 +750,7 @@ wcFrame.prototype = {
     this.$tabLeft.remove();
     this.$tabRight.remove();
     this.$close.hide();
+    this.$collapse.hide();
 
     while (this._buttonList.length) {
       this._buttonList.pop().remove();
@@ -761,6 +767,56 @@ wcFrame.prototype = {
         if (panel.closeable()) {
           this.$close.show();
           buttonSize += this.$close.outerWidth();
+        }
+
+        var docker = this.docker();
+        if (docker.canCollapse() && !this.panel()._isPlaceholder) {
+          if (this.isCollapser()) {
+            // Un-collapse
+            var $icon = this.$collapse.children('div');
+            $icon[0].className = 'fa fa-upload';
+            switch (this._parent._position) {
+              case wcDocker.DOCK.LEFT:
+                $icon.addClass('wcCollapseLeft');
+                break;
+              case wcDocker.DOCK.RIGHT:
+                $icon.addClass('wcCollapseRight');
+                break;
+              case wcDocker.DOCK.BOTTOM:
+                $icon.addClass('wcCollapseBottom');
+                break;
+            }
+            this.$collapse.show();
+            this.$collapse.attr('title', 'Dock this collapsed panel back into the main layout.');
+            buttonSize += this.$collapse.outerWidth();
+          } else {
+            // Collapse
+            // Determine the direction to collapse based on the frame center.
+            var outer = docker.$container.offset();
+            var center = this.$container.offset();
+            center.left = (center.left + (this.$container.width()/2) - outer.left) / docker.$container.width();
+            center.top  = (center.top + (this.$container.height()/2) - outer.top) / docker.$container.height();
+
+            var direction = '';
+            var directionClass = '';
+            if (center.top > 0.85) {
+              direction = 'bottom.';
+              directionClass = 'wcCollapserBottom';
+            } else if (center.left <= 0.5) {
+              direction = 'left side.';
+              directionClass = 'wcCollapseLeft';
+            } else {
+              direction = 'right side.';
+              directionClass = 'wcCollapseRight';
+            }
+
+            var $icon = this.$collapse.children('div');
+            $icon[0].className = 'fa fa-download';
+            $icon.addClass(directionClass);
+            this.$collapse.show();
+            this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
+            buttonSize += this.$collapse.outerWidth();
+          }
         }
 
         for (var i = 0; i < panel._buttonList.length; ++i) {
@@ -920,7 +976,7 @@ wcFrame.prototype = {
   __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
+      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && !this.isCollapser() && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
     }
     return false;
   },
