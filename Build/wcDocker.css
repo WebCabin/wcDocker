@@ -311,7 +311,7 @@ html, body {
   left: 0%;
 }
 
-.wcTabLeft .wcFrameButton, .wcFrameButton .wcCollapseLeft {
+.wcTabLeft .wcFrameButton {
   -webkit-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
      -moz-transform: rotate(90deg);
@@ -360,7 +360,7 @@ html, body {
   left: 100%;
 }
 
-.wcTabRight .wcFrameButton, .wcFrameButton .wcCollapseRight {
+.wcTabRight .wcFrameButton {
   -webkit-transform: rotate(-90deg);
       -ms-transform: rotate(-90deg);
      -moz-transform: rotate(-90deg);
@@ -433,6 +433,46 @@ html, body {
      -moz-transform: scaleY(-1);
        -o-transform: scaleY(-1);
           transform: scaleY(-1);
+}
+
+.wcFrameButton .wcCollapseLeft.wcCollapsible,
+.wcFrameButton .wcCollapseRight.wcCollapsed {
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+     -moz-transform: rotate(180deg);
+       -o-transform: rotate(180deg);
+          transform: rotate(180deg);
+  -webkit-transform-origin: center center;
+      -ms-transform-origin: center center;
+     -moz-transform-origin: center center;
+       -o-transform-origin: center center;
+          transform-origin: center center;
+}
+
+.wcFrameButton .wcCollapseBottom.wcCollapsible {
+  -webkit-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+     -moz-transform: rotate(90deg);
+       -o-transform: rotate(90deg);
+          transform: rotate(90deg);
+  -webkit-transform-origin: center center;
+      -ms-transform-origin: center center;
+     -moz-transform-origin: center center;
+       -o-transform-origin: center center;
+          transform-origin: center center;
+}
+
+.wcFrameButton .wcCollapseBottom.wcCollapsed {
+  -webkit-transform: rotate(-90deg);
+      -ms-transform: rotate(-90deg);
+     -moz-transform: rotate(-90deg);
+       -o-transform: rotate(-90deg);
+          transform: rotate(-90deg);
+  -webkit-transform-origin: center center;
+      -ms-transform-origin: center center;
+     -moz-transform-origin: center center;
+       -o-transform-origin: center center;
+          transform-origin: center center;
 }
 
 .wcPanelTabContent {

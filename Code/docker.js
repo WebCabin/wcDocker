@@ -259,7 +259,7 @@ wcDocker.prototype = {
    * 
    * @returns {Boolean} - Collapsers are enabled.
    */
-  canCollapse: function() {
+  isCollapseEnabled: function() {
     return (this._canOrientTabs && this._options.allowCollapse);
   },
 
@@ -1066,7 +1066,7 @@ wcDocker.prototype = {
 
     this.__update(false);
 
-    if (!$.isEmptyObject(data.collapsers) && this.canCollapse()) {
+    if (!$.isEmptyObject(data.collapsers) && this.isCollapseEnabled()) {
       this.__initCollapsers();
 
       this._collapser[wcDocker.DOCK.LEFT].__restore(data.collapsers.left, this);
@@ -1773,7 +1773,7 @@ wcDocker.prototype = {
    */
   __initCollapsers: function() {
     // Initialize collapsers if it is enabled and not already initialized.
-    if (!this.canCollapse() || !$.isEmptyObject(this._collapser)) {
+    if (!this.isCollapseEnabled() || !$.isEmptyObject(this._collapser)) {
       return;
     }
 

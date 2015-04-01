@@ -259,7 +259,7 @@ wcDocker.prototype = {
    * 
    * @returns {Boolean} - Collapsers are enabled.
    */
-  canCollapse: function() {
+  isCollapseEnabled: function() {
     return (this._canOrientTabs && this._options.allowCollapse);
   },
 
@@ -1066,7 +1066,7 @@ wcDocker.prototype = {
 
     this.__update(false);
 
-    if (!$.isEmptyObject(data.collapsers) && this.canCollapse()) {
+    if (!$.isEmptyObject(data.collapsers) && this.isCollapseEnabled()) {
       this.__initCollapsers();
 
       this._collapser[wcDocker.DOCK.LEFT].__restore(data.collapsers.left, this);
@@ -1773,7 +1773,7 @@ wcDocker.prototype = {
    */
   __initCollapsers: function() {
     // Initialize collapsers if it is enabled and not already initialized.
-    if (!this.canCollapse() || !$.isEmptyObject(this._collapser)) {
+    if (!this.isCollapseEnabled() || !$.isEmptyObject(this._collapser)) {
       return;
     }
 
@@ -4773,11 +4773,11 @@ wcFrame.prototype = {
         }
 
         var docker = this.docker();
-        if (docker.canCollapse() && !this.panel()._isPlaceholder) {
+        if (docker.isCollapseEnabled() && panel.moveable() && !panel._isPlaceholder) {
           if (this.isCollapser()) {
             // Un-collapse
             var $icon = this.$collapse.children('div');
-            $icon[0].className = 'fa fa-upload';
+            $icon[0].className = 'fa fa-sign-out';
             switch (this._parent._position) {
               case wcDocker.DOCK.LEFT:
                 $icon.addClass('wcCollapseLeft');
@@ -4789,6 +4789,7 @@ wcFrame.prototype = {
                 $icon.addClass('wcCollapseBottom');
                 break;
             }
+            $icon.addClass('wcCollapsed');
             this.$collapse.show();
             this.$collapse.attr('title', 'Dock this collapsed panel back into the main layout.');
             buttonSize += this.$collapse.outerWidth();
@@ -4804,7 +4805,7 @@ wcFrame.prototype = {
             var directionClass = '';
             if (center.top > 0.85) {
               direction = 'bottom.';
-              directionClass = 'wcCollapserBottom';
+              directionClass = 'wcCollapseBottom';
             } else if (center.left <= 0.5) {
               direction = 'left side.';
               directionClass = 'wcCollapseLeft';
@@ -4814,8 +4815,9 @@ wcFrame.prototype = {
             }
 
             var $icon = this.$collapse.children('div');
-            $icon[0].className = 'fa fa-download';
+            $icon[0].className = 'fa fa-sign-in';
             $icon.addClass(directionClass);
+            $icon.addClass('wcCollapsible');
             this.$collapse.show();
             this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
             buttonSize += this.$collapse.outerWidth();
