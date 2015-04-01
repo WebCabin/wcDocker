@@ -178,6 +178,7 @@ function wcPanel(type, options) {
     y: true,
   };
 
+  this._collapsible = true;
   this._overflowVisible = false;
   this._moveable = true;
   this._closeable = true;
@@ -569,6 +570,22 @@ wcPanel.prototype = {
       x: this.$container.parent().scrollLeft(),
       y: this.$container.parent().scrollTop(),
     };
+  },
+
+  /**
+   * Gets, or Sets whether this panel can be collapsed to the side or bottom.&lt;br>
+   * This only works if the collapse feature is enabled {@link wcDocker~Options}.
+   *
+   * @param {Boolean} [enabled] - If supplied, assigns whether collapsing is enabled.
+   *
+   * @returns {Boolean} - The current collapsible enabled state.
+   */
+  collapsible: function(enabled) {
+    if (typeof enabled !== 'undefined') {
+      this._collapsible = enabled? true: false;
+    }
+
+    return this._collapsible;
   },
 
   /**

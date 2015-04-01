@@ -624,7 +624,7 @@ wcDocker.prototype = {
       }
     }
 
-    this.__update();
+    this.__update(true);
 
     if (frame instanceof wcFrame) {
       if (floating !== frame._isFloating) {
@@ -1240,22 +1240,23 @@ wcDocker.prototype = {
           }
           if (frame.isCollapser()) {
             // Un-collapse
-            var target;
+            // var target;
             var opts = {};
             switch (position) {
               case wcDocker.DOCK.LEFT:
-                target = frame._parent._parent.right();
+                // target = frame._parent._parent.right();
                 opts.w = frame.$frame.width();
                 break;
               case wcDocker.DOCK.RIGHT:
-                target = frame._parent._parent.left();
+                // target = frame._parent._parent.left();
                 opts.w = frame.$frame.width();
                 break;
               case wcDocker.DOCK.BOTTOM:
-                target = frame._parent._parent.top();
+                // target = frame._parent._parent.top();
                 opts.h = frame.$frame.height();
                 break;
             }
+            var target = self._collapser[wcDocker.DOCK.LEFT]._parent.right();
             frame._parent.collapse(true);
             self.movePanel(frame.panel(), position, target, opts);
           } else {
@@ -1805,8 +1806,8 @@ wcDocker.prototype = {
     }
 
     __createCollapser.call(this, wcDocker.DOCK.BOTTOM);
-    __createCollapser.call(this, wcDocker.DOCK.LEFT);
     __createCollapser.call(this, wcDocker.DOCK.RIGHT);
+    __createCollapser.call(this, wcDocker.DOCK.LEFT);
 
     var self = this;
     setTimeout(function() {
@@ -2104,14 +2105,14 @@ wcDocker.prototype = {
         };
         if (left === splitterChild) {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(0, splitter);
           size.x = parentSplitter.$pane[0].width();
           size.y = parentSplitter.$pane[0].height();
+          parentSplitter.pane(0, splitter);
         } else {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(1, splitter);
           size.x = parentSplitter.$pane[1].width();
           size.y = parentSplitter.$pane[1].height();
+          parentSplitter.pane(1, splitter);
         }
 
         if (splitter) {
@@ -2247,14 +2248,14 @@ wcDocker.prototype = {
         };
         if (left === splitterChild) {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(0, splitter);
           size.x = parentSplitter.$pane[0].width();
           size.y = parentSplitter.$pane[0].height();
+          parentSplitter.pane(0, splitter);
         } else {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(1, splitter);
           size.x = parentSplitter.$pane[1].width();
           size.y = parentSplitter.$pane[1].height();
+          parentSplitter.pane(1, splitter);
         }
 
         if (splitter) {

@@ -624,7 +624,7 @@ wcDocker.prototype = {
       }
     }
 
-    this.__update();
+    this.__update(true);
 
     if (frame instanceof wcFrame) {
       if (floating !== frame._isFloating) {
@@ -1240,22 +1240,23 @@ wcDocker.prototype = {
           }
           if (frame.isCollapser()) {
             // Un-collapse
-            var target;
+            // var target;
             var opts = {};
             switch (position) {
               case wcDocker.DOCK.LEFT:
-                target = frame._parent._parent.right();
+                // target = frame._parent._parent.right();
                 opts.w = frame.$frame.width();
                 break;
               case wcDocker.DOCK.RIGHT:
-                target = frame._parent._parent.left();
+                // target = frame._parent._parent.left();
                 opts.w = frame.$frame.width();
                 break;
               case wcDocker.DOCK.BOTTOM:
-                target = frame._parent._parent.top();
+                // target = frame._parent._parent.top();
                 opts.h = frame.$frame.height();
                 break;
             }
+            var target = self._collapser[wcDocker.DOCK.LEFT]._parent.right();
             frame._parent.collapse(true);
             self.movePanel(frame.panel(), position, target, opts);
           } else {
@@ -1805,8 +1806,8 @@ wcDocker.prototype = {
     }
 
     __createCollapser.call(this, wcDocker.DOCK.BOTTOM);
-    __createCollapser.call(this, wcDocker.DOCK.LEFT);
     __createCollapser.call(this, wcDocker.DOCK.RIGHT);
+    __createCollapser.call(this, wcDocker.DOCK.LEFT);
 
     var self = this;
     setTimeout(function() {
@@ -2104,14 +2105,14 @@ wcDocker.prototype = {
         };
         if (left === splitterChild) {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(0, splitter);
           size.x = parentSplitter.$pane[0].width();
           size.y = parentSplitter.$pane[0].height();
+          parentSplitter.pane(0, splitter);
         } else {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(1, splitter);
           size.x = parentSplitter.$pane[1].width();
           size.y = parentSplitter.$pane[1].height();
+          parentSplitter.pane(1, splitter);
         }
 
         if (splitter) {
@@ -2247,14 +2248,14 @@ wcDocker.prototype = {
         };
         if (left === splitterChild) {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(0, splitter);
           size.x = parentSplitter.$pane[0].width();
           size.y = parentSplitter.$pane[0].height();
+          parentSplitter.pane(0, splitter);
         } else {
           splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-          parentSplitter.pane(1, splitter);
           size.x = parentSplitter.$pane[1].width();
           size.y = parentSplitter.$pane[1].height();
+          parentSplitter.pane(1, splitter);
         }
 
         if (splitter) {
@@ -3277,6 +3278,7 @@ function wcPanel(type, options) {
     y: true,
   };
 
+  this._collapsible = true;
   this._overflowVisible = false;
   this._moveable = true;
   this._closeable = true;
@@ -3668,6 +3670,22 @@ wcPanel.prototype = {
       x: this.$container.parent().scrollLeft(),
       y: this.$container.parent().scrollTop(),
     };
+  },
+
+  /**
+   * Gets, or Sets whether this panel can be collapsed to the side or bottom.<br>
+   * This only works if the collapse feature is enabled {@link wcDocker~Options}.
+   *
+   * @param {Boolean} [enabled] - If supplied, assigns whether collapsing is enabled.
+   *
+   * @returns {Boolean} - The current collapsible enabled state.
+   */
+  collapsible: function(enabled) {
+    if (typeof enabled !== 'undefined') {
+      this._collapsible = enabled? true: false;
+    }
+
+    return this._collapsible;
   },
 
   /**
@@ -4773,7 +4791,7 @@ wcFrame.prototype = {
         }
 
         var docker = this.docker();
-        if (docker.isCollapseEnabled() && panel.moveable() && !panel._isPlaceholder) {
+        if (docker.isCollapseEnabled() && panel.moveable() && panel.collapsible() && !panel._isPlaceholder) {
           if (this.isCollapser()) {
             // Un-collapse
             var $icon = this.$collapse.children('div');
@@ -4796,31 +4814,41 @@ wcFrame.prototype = {
           } else {
             // Collapse
             // Determine the direction to collapse based on the frame center.
-            var outer = docker.$container.offset();
+            var $inner = docker.$container;
+            if (!$.isEmptyObject(docker._collapser) && docker._collapser.hasOwnProperty(wcDocker.DOCK.RIGHT)) {
+              // Get the inner contents element not taken up by the collapsible drawers.
+              $inner = docker._collapser[wcDocker.DOCK.RIGHT]._parent.$pane[0];
+            }
+
+            var outer = $inner.offset();
             var center = this.$container.offset();
-            center.left = (center.left + (this.$container.width()/2) - outer.left) / docker.$container.width();
-            center.top  = (center.top + (this.$container.height()/2) - outer.top) / docker.$container.height();
+            center.right  = (center.left + this.$container.width() - outer.left) / $inner.width();
+            center.bottom = (center.top + this.$container.height() - outer.top) / $inner.height();
+            center.top    = (center.top - outer.top) / $inner.height();
+            center.left   = (center.left - outer.left) / $inner.width();
 
             var direction = '';
             var directionClass = '';
-            if (center.top > 0.85) {
+            if (center.bottom > 0.95) {
               direction = 'bottom.';
               directionClass = 'wcCollapseBottom';
-            } else if (center.left <= 0.5) {
+            } else if (center.left <= 0.05) {
               direction = 'left side.';
               directionClass = 'wcCollapseLeft';
-            } else {
+            } else if (center.right >= 0.95) {
               direction = 'right side.';
               directionClass = 'wcCollapseRight';
             }
 
-            var $icon = this.$collapse.children('div');
-            $icon[0].className = 'fa fa-sign-in';
-            $icon.addClass(directionClass);
-            $icon.addClass('wcCollapsible');
-            this.$collapse.show();
-            this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
-            buttonSize += this.$collapse.outerWidth();
+            if (direction) {
+              var $icon = this.$collapse.children('div');
+              $icon[0].className = 'fa fa-sign-in';
+              $icon.addClass(directionClass);
+              $icon.addClass('wcCollapsible');
+              this.$collapse.show();
+              this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
+              buttonSize += this.$collapse.outerWidth();
+            }
           }
         }
 

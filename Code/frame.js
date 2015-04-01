@@ -770,7 +770,7 @@ wcFrame.prototype = {
         }
 
         var docker = this.docker();
-        if (docker.isCollapseEnabled() && panel.moveable() && !panel._isPlaceholder) {
+        if (docker.isCollapseEnabled() && panel.moveable() && panel.collapsible() && !panel._isPlaceholder) {
           if (this.isCollapser()) {
             // Un-collapse
             var $icon = this.$collapse.children('div');
@@ -793,31 +793,41 @@ wcFrame.prototype = {
           } else {
             // Collapse
             // Determine the direction to collapse based on the frame center.
-            var outer = docker.$container.offset();
+            var $inner = docker.$container;
+            if (!$.isEmptyObject(docker._collapser) && docker._collapser.hasOwnProperty(wcDocker.DOCK.RIGHT)) {
+              // Get the inner contents element not taken up by the collapsible drawers.
+              $inner = docker._collapser[wcDocker.DOCK.RIGHT]._parent.$pane[0];
+            }
+
+            var outer = $inner.offset();
             var center = this.$container.offset();
-            center.left = (center.left + (this.$container.width()/2) - outer.left) / docker.$container.width();
-            center.top  = (center.top + (this.$container.height()/2) - outer.top) / docker.$container.height();
+            center.right  = (center.left + this.$container.width() - outer.left) / $inner.width();
+            center.bottom = (center.top + this.$container.height() - outer.top) / $inner.height();
+            center.top    = (center.top - outer.top) / $inner.height();
+            center.left   = (center.left - outer.left) / $inner.width();
 
             var direction = '';
             var directionClass = '';
-            if (center.top > 0.85) {
+            if (center.bottom > 0.95) {
               direction = 'bottom.';
               directionClass = 'wcCollapseBottom';
-            } else if (center.left <= 0.5) {
+            } else if (center.left <= 0.05) {
               direction = 'left side.';
               directionClass = 'wcCollapseLeft';
-            } else {
+            } else if (center.right >= 0.95) {
               direction = 'right side.';
               directionClass = 'wcCollapseRight';
             }
 
-            var $icon = this.$collapse.children('div');
-            $icon[0].className = 'fa fa-sign-in';
-            $icon.addClass(directionClass);
-            $icon.addClass('wcCollapsible');
-            this.$collapse.show();
-            this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
-            buttonSize += this.$collapse.outerWidth();
+            if (direction) {
+              var $icon = this.$collapse.children('div');
+              $icon[0].className = 'fa fa-sign-in';
+              $icon.addClass(directionClass);
+              $icon.addClass('wcCollapsible');
+              this.$collapse.show();
+              this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
+              buttonSize += this.$collapse.outerWidth();
+            }
           }
         }
 
