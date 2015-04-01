@@ -1261,6 +1261,7 @@ wcDocker.prototype = {
             // collapse.
             self.movePanel(frame.panel(), position, wcDocker.COLLAPSED);
           }
+          self.__update();
           return;
         }
         if (frame.$tabLeft[0] === this) {
