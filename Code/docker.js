@@ -1795,6 +1795,8 @@ wcDocker.prototype = {
         } else if (!pane0 && !pane1) {
           break;
         }
+      } else {
+        break;
       }
     }
 
