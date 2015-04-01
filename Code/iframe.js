@@ -223,6 +223,9 @@ wcIFrame.prototype = {
         this.$frame.removeClass('wcIFrameFloatingFocus');
       }
       this.$frame.toggleClass('wcIFramePanelHidden', !this._panel.isVisible());
+      if (this._panel._parent instanceof wcFrame) {
+        this.$frame.toggleClass('wcDrawer', this._panel._parent.isCollapser());
+      }
     }
   },
 

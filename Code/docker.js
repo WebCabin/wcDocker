@@ -534,9 +534,7 @@ wcDocker.prototype = {
       }
 
       parentFrame.__updateTabs();
-      if (parentFrame.isCollapser()) {
-        parentFrame._parent.collapse();
-      }
+      parentFrame.collapse();
       
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.isCollapser() && parentFrame._panelList.length === 0) {
@@ -1257,7 +1255,7 @@ wcDocker.prototype = {
                 break;
             }
             var target = self._collapser[wcDocker.DOCK.LEFT]._parent.right();
-            frame._parent.collapse(true);
+            frame.collapse(true);
             self.movePanel(frame.panel(), position, target, opts);
           } else {
             // collapse.
@@ -1802,12 +1800,13 @@ wcDocker.prototype = {
 
     function __createCollapser(location) {
       this._collapser[location] = this.__addCollapser(location, parent);
-      this._frameList.push(this._collapser[location]._frame);
+      parent = this._collapser[location]._parent;
+      this._frameList.push(this._collapser[location]._drawer._frame);
     }
 
-    __createCollapser.call(this, wcDocker.DOCK.BOTTOM);
-    __createCollapser.call(this, wcDocker.DOCK.RIGHT);
     __createCollapser.call(this, wcDocker.DOCK.LEFT);
+    __createCollapser.call(this, wcDocker.DOCK.RIGHT);
+    __createCollapser.call(this, wcDocker.DOCK.BOTTOM);
 
     var self = this;
     setTimeout(function() {
@@ -1861,7 +1860,7 @@ wcDocker.prototype = {
 
       this._focusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
       if (this._focusFrame.isCollapser() && differentFrames) {
-        this._focusFrame._parent.collapse();
+        this._focusFrame.collapse();
         this._focusFrame.panel(-1);
       }
       this._focusFrame = null;
@@ -2019,7 +2018,7 @@ wcDocker.prototype = {
     if (targetPanel === wcDocker.COLLAPSED) {
       this.__initCollapsers();
       if (this._collapser[location]) {
-        targetPanel = this._collapser[location]._frame.addPanel(panel);
+        targetPanel = this._collapser[location]._drawer._frame.addPanel(panel);
         var self = this;
         setTimeout(function() {self.__update();});
         return panel;

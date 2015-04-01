@@ -64,6 +64,7 @@ concat({
     '../Code/frame.js',
     '../Code/splitter.js',
     '../Code/collapser.js',
+    '../Code/drawer.js',
     '../Code/tabframe.js',
     '../Code/iframe.js',
   ],

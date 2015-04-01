@@ -27,7 +27,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
+					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
 				</ul>
 			</li>
 			
@@ -160,12 +160,12 @@ wcSplitter.prototype = {
       this._orientation = orientation;
 
       if (this._orientation) {
-        this.$pane[0].removeClass('wcWide').addClass('wcTall');
-        this.$pane[1].removeClass('wcWide').addClass('wcTall');
+        // this.$pane[0].removeClass('wcWide').addClass('wcTall');
+        // this.$pane[1].removeClass('wcWide').addClass('wcTall');
         this.$bar.removeClass('wcWide').removeClass('wcSplitterBarH').addClass('wcTall').addClass('wcSplitterBarV');
       } else {
-        this.$pane[0].removeClass('wcTall').addClass('wcWide');
-        this.$pane[1].removeClass('wcTall').addClass('wcWide');
+        // this.$pane[0].removeClass('wcTall').addClass('wcWide');
+        // this.$pane[1].removeClass('wcTall').addClass('wcWide');
         this.$bar.removeClass('wcTall').removeClass('wcSplitterBarV').addClass('wcWide').addClass('wcSplitterBarH');
       }
 
@@ -291,14 +291,14 @@ wcSplitter.prototype = {
       }
       self._anim = setInterval(function() {
         if (self._pos > self._posTarget) {
-          self._pos -= (self._pos - self._posTarget) / 3;
+          self._pos -= (self._pos - self._posTarget) / 5;
           if (self._pos &lt;= self._posTarget + 0.01) {
             self._pos = self._posTarget;
           }
         }
 
         if (self._pos &lt; self._posTarget) {
-          self._pos += (self._posTarget - self._pos) / 3;
+          self._pos += (self._posTarget - self._pos) / 5;
           if (self._pos >= self._posTarget - 0.01) {
             self._pos = self._posTarget;
           }
@@ -449,12 +449,12 @@ wcSplitter.prototype = {
     this.$bar = $('&lt;div class="wcSplitterBar">');
 
     if (this._orientation) {
-      this.$pane[0].addClass('wcTall');
-      this.$pane[1].addClass('wcTall');
+      // this.$pane[0].addClass('wcTall');
+      // this.$pane[1].addClass('wcTall');
       this.$bar.addClass('wcTall').addClass('wcSplitterBarV');
     } else {
-      this.$pane[0].addClass('wcWide');
-      this.$pane[1].addClass('wcWide');
+      // this.$pane[0].addClass('wcWide');
+      // this.$pane[1].addClass('wcWide');
       this.$bar.addClass('wcWide').addClass('wcSplitterBarH');
     }
 
@@ -550,16 +550,30 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.x, size);
       }
 
+      var top = 0;
+      var bottom = 0;
+      if (this._parent instanceof wcCollapser) {
+        var $outer = this.docker().$container;
+        var $inner = this._parent.$container;
+
+        top = $inner.offset().top - $outer.offset().top;
+        bottom = ($outer.offset().top + $outer.outerHeight()) - ($inner.offset().top + $inner.outerHeight());
+      }
+
       // Bar is top to bottom
       this.$bar.css('left', size-barSize);
-      this.$bar.css('top', '0px');
-      this.$bar.css('height', height-barBorder);
+      this.$bar.css('top', top);
+      this.$bar.css('height', height-barBorder-bottom);
       this.$pane[0].css('width', size-barSize);
       this.$pane[0].css('left',  '0px');
       this.$pane[0].css('right', '');
+      this.$pane[0].css('top', top);
+      this.$pane[0].css('bottom', bottom);
       this.$pane[1].css('left',  '');
       this.$pane[1].css('right', '0px');
       this.$pane[1].css('width', width-size-barSize-parseInt(this.$container.css('border-left-width'))*2);
+      this.$pane[1].css('top', top);
+      this.$pane[1].css('bottom', bottom);
 
       this._pixelPos = this.$bar.offset().left + barSize;
     } else {
@@ -579,16 +593,30 @@ wcSplitter.prototype = {
         size = Math.min(maxSize.y, size);
       }
 
+      var left = 0;
+      var right = 0;
+      if (this._parent instanceof wcCollapser) {
+        var $outer = this.docker().$container;
+        var $inner = this._parent.$container;
+
+        left = $inner.offset().left - $outer.offset().left;
+        right = ($outer.offset().left + $outer.outerWidth()) - ($inner.offset().left + $inner.outerWidth());
+      }
+
       // Bar is left to right
       this.$bar.css('top', size-barSize);
-      this.$bar.css('left', '0px');
-      this.$bar.css('width', width-barBorder);
+      this.$bar.css('left', left);
+      this.$bar.css('width', width-barBorder-bottom);
       this.$pane[0].css('height', size-barSize);
       this.$pane[0].css('top',    '0px');
       this.$pane[0].css('bottom', '');
+      this.$pane[0].css('left', left);
+      this.$pane[0].css('right', right);
       this.$pane[1].css('top',    '');
       this.$pane[1].css('bottom', '0px');
       this.$pane[1].css('height', height-size-barSize-parseInt(this.$container.css('border-top-width'))*2);
+      this.$pane[1].css('left', left);
+      this.$pane[1].css('right', right);
 
       this._pixelPos = this.$bar.offset().top + barSize;
     }
@@ -801,7 +829,7 @@ wcSplitter.prototype = {
       this._anim = 0;
     }
     this.$bar.clearQueue();
-    
+
     // Remove all registered events.
     while (this._boundEvents.length){
       this._parent.off(this._boundEvents[0].event, this._boundEvents[0].handler);
@@ -847,7 +875,7 @@ wcSplitter.prototype = {
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
-			on 2015-03-31 using the <a
+			on 2015-04-01 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

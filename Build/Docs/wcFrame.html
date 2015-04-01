@@ -27,7 +27,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
+					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
 				</ul>
 			</li>
 			
@@ -654,6 +654,160 @@
             
 <hr>
 <dt>
+    <h4 class="name" id="collapse"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>collapse</b>(<span class="optional">instant</span>)</toc>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Collapses the frame, if it is a collapser.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>instant</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If true, collapses without animating.</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="frame.js.html">frame.js</a>,
+     <a href="frame.js.html#sunlight-1-line-329">line 329</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="frame.js.html">frame.js</a>,
+				 <a href="frame.js.html#sunlight-1-line-329">line 329</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="docker"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>docker</b>()</toc>
         
         >
@@ -766,6 +920,99 @@
             
 <hr>
 <dt>
+    <h4 class="name" id="expand"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>expand</b>()</toc>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Expands the frame, if it is a collapser.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="frame.js.html">frame.js</a>,
+     <a href="frame.js.html#sunlight-1-line-340">line 340</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="frame.js.html">frame.js</a>,
+				 <a href="frame.js.html#sunlight-1-line-340">line 340</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="initSize"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>initSize</b>()</toc>
         
         >
@@ -860,6 +1107,236 @@
 			<li>
 				<a href="frame.js.html">frame.js</a>,
 				 <a href="frame.js.html#sunlight-1-line-141">line 141</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="isCollapser"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>isCollapser</b>()</toc>
+        
+        >
+        
+        <i><small>
+<span class="param-type">Boolean</span>
+
+</small></i>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Gets whether this frame is inside a collapser.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+<h5>Returns: 
+<span class="param-type">Boolean</span>
+
+</h5>
+    
+            <p class="param-desc" style="margin-left: 20px;">
+    
+		 Whether this frame is inside a collapser.
+	</p>
+
+        
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="frame.js.html">frame.js</a>,
+     <a href="frame.js.html#sunlight-1-line-320">line 320</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="frame.js.html">frame.js</a>,
+				 <a href="frame.js.html#sunlight-1-line-320">line 320</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="isExpanded"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>isExpanded</b>()</toc>
+        
+        >
+        
+        <i><small>
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type">undefined</span>
+
+</small></i>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Gets whether the frame is expanded, if it is a collapser.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+<h5>Returns: 
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type">undefined</span>
+
+</h5>
+    
+            <p class="param-desc" style="margin-left: 20px;">
+    
+		 The current expanded state, or undefined if it is not a collapser.
+	</p>
+
+        
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="frame.js.html">frame.js</a>,
+     <a href="frame.js.html#sunlight-1-line-353">line 353</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="frame.js.html">frame.js</a>,
+				 <a href="frame.js.html#sunlight-1-line-353">line 353</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -1250,13 +1727,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="frame.js.html">frame.js</a>,
-     <a href="frame.js.html#sunlight-1-line-290">line 290</a>
+     <a href="frame.js.html#sunlight-1-line-288">line 288</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="frame.js.html">frame.js</a>,
-				 <a href="frame.js.html#sunlight-1-line-290">line 290</a>
+				 <a href="frame.js.html#sunlight-1-line-288">line 288</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -1886,7 +2363,7 @@
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
-			on 2015-03-31 using the <a
+			on 2015-04-01 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

@@ -269,9 +269,7 @@ wcFrame.prototype = {
     }
 
     if (this._curTab === -1) {
-      if (this.isCollapser()) {
-        this._parent.collapse();
-      } else if (this._panelList.length) {
+      if (!this.collapse() && this._panelList.length) {
         this._curTab = 0;
       }
     }
@@ -291,7 +289,7 @@ wcFrame.prototype = {
     if (typeof tabIndex !== 'undefined') {
       if (this.isCollapser() && tabIndex === this._curTab) {
         tabIndex = -1;
-        this._parent.collapse();
+        this.collapse();
       }
       if (tabIndex < this._panelList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
@@ -300,9 +298,7 @@ wcFrame.prototype = {
         if (tabIndex > -1) {
           this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
           this.$center.children('.wcPanelTabContent[id="' + tabIndex + '"]').removeClass('wcPanelTabContentHidden');
-          if (this.isCollapser()) {
-            this._parent.expand();
-          }
+          this.expand();
         }
         this.__updateTabs(autoFocus);
       }
@@ -316,9 +312,48 @@ wcFrame.prototype = {
     return false;
   },
 
-  // Gets whether this frame is inside a collapser.
+  /**
+   * Gets whether this frame is inside a collapser.
+   *
+   * @returns {Boolean} - Whether this frame is inside a collapser.
+   */
   isCollapser: function() {
-    return (this._parent instanceof wcCollapser);
+    return (this._parent instanceof wcDrawer);
+  },
+
+  /**
+   * Collapses the frame, if it is a collapser.
+   *
+   * @param {Boolean} [instant] - If true, collapses without animating.
+   */
+  collapse: function(instant) {
+    if (this.isCollapser()) {
+      this._parent.collapse(instant);
+      return true;
+    }
+    return false;
+  },
+
+  /**
+   * Expands the frame, if it is a collapser.
+   */
+  expand: function() {
+    if (this.isCollapser()) {
+      this._parent.expand();
+      return true;
+    }
+    return false;
+  },
+
+  /**
+   * Gets whether the frame is expanded, if it is a collapser.
+   *
+   * @returns {Boolean|undefined} - The current expanded state, or undefined if it is not a collapser.
+   */
+  isExpanded: function() {
+    if (this.isCollapser()) {
+      return this._parent.isExpanded();
+    }
   },
 
 
@@ -763,7 +798,7 @@ wcFrame.prototype = {
       this.$frame.toggleClass('wcOverflowVisible', panel.overflowVisible());
       this.$center.toggleClass('wcOverflowVisible', panel.overflowVisible());
 
-      if (!this.isCollapser() || this._parent.isExpanded()) {
+      if (!this.isCollapser() || this.isExpanded()) {
         if (panel.closeable()) {
           this.$close.show();
           buttonSize += this.$close.outerWidth();
@@ -808,7 +843,7 @@ wcFrame.prototype = {
 
             var direction = '';
             var directionClass = '';
-            if (center.bottom > 0.95) {
+            if (center.top > 0.05 && center.bottom > 0.95) {
               direction = 'bottom.';
               directionClass = 'wcCollapseBottom';
             } else if (center.left <= 0.05) {
@@ -817,6 +852,9 @@ wcFrame.prototype = {
             } else if (center.right >= 0.95) {
               direction = 'right side.';
               directionClass = 'wcCollapseRight';
+            } else if (center.bottom > 0.95) {
+              direction = 'bottom.';
+              directionClass = 'wcCollapseBottom';
             }
 
             if (direction) {
