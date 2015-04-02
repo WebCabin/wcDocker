@@ -28,13 +28,11 @@ $(document).ready(function() {
       isPrivate: true,
       onCreate: function(myPanel) {
         myPanel.initSize(400, 200);
-        var $infoText = $('<span class="info" style="position:absolute;top:0px;left:0px;right:0px;bottom:30px;margin:20px;"></span>');
-        var $buttonTray = $('<div style="position:absolute;left:0px;right:0px;bottom:0px;margin:20px;text-align:right;"></div>')
+        var $infoText = $('<span class="info" style="margin:20px;"></span>');
         var $okButton = $('<button>OK</button>');
-        $buttonTray.append($okButton);
 
-        myPanel.layout().addItem($infoText);
-        myPanel.layout().addItem($buttonTray, 1, 0);
+        myPanel.layout().addItem($infoText).stretch('100%', '100%');
+        myPanel.layout().addItem($okButton, 0, 1).stretch('100%', '1%').css('text-align', 'right');
 
         $okButton.click(function() {
           myPanel.close();

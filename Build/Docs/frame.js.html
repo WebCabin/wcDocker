@@ -437,12 +437,12 @@ wcFrame.prototype = {
 
   // Initialize
   __init: function() {
-    this.$frame         = $('&lt;div class="wcFrame wcWide wcTall wcPanelBackground">');
+    this.$frame         = $('&lt;div class="wcFrame wcWide wcTall">');
     this.$title         = $('&lt;div class="wcFrameTitle">');
     this.$titleBar      = $('&lt;div class="wcFrameTitleBar wcFrameTopper">');
     this.$tabBar        = $('&lt;div class="wcFrameTitleBar">');
     this.$tabScroll     = $('&lt;div class="wcTabScroller">');
-    this.$center        = $('&lt;div class="wcFrameCenter">');
+    this.$center        = $('&lt;div class="wcFrameCenter wcPanelBackground">');
     this.$tabLeft       = $('&lt;div class="wcFrameButton" title="Scroll tabs to the left.">&lt;span class="fa fa-arrow-left">&lt;/span>&amp;lt;&lt;/div>');
     this.$tabRight      = $('&lt;div class="wcFrameButton" title="Scroll tabs to the right.">&lt;span class="fa fa-arrow-right">&lt;/span>&amp;gt;&lt;/div>');
     this.$close         = $('&lt;div class="wcFrameButton" title="Close the currently active panel tab">&lt;div class="fa fa-close">&lt;/div>X&lt;/div>');
@@ -661,7 +661,7 @@ wcFrame.prototype = {
 
       var $tabContent = this.$center.children('.wcPanelTabContent[id="' + i + '"]');
       if (!$tabContent.length) {
-        $tabContent = $('&lt;div class="wcPanelTabContent wcPanelBackground wcPanelTabContentHidden" id="' + i + '">');
+        $tabContent = $('&lt;div class="wcPanelTabContent wcPanelTabContentHidden" id="' + i + '">');
         this.$center.append($tabContent);
       }
 
@@ -879,7 +879,7 @@ wcFrame.prototype = {
         }
 
         var docker = this.docker();
-        if (docker.isCollapseEnabled() &amp;&amp; panel.moveable() &amp;&amp; panel.collapsible() &amp;&amp; !panel._isPlaceholder) {
+        if (docker.isCollapseEnabled() &amp;&amp; panel.moveable() &amp;&amp; panel.collapsible() &amp;&amp; !this._isFloating &amp;&amp; !panel._isPlaceholder) {
           if (this.isCollapser()) {
             // Un-collapse
             var $icon = this.$collapse.children('div');

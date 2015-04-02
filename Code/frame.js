@@ -363,12 +363,12 @@ wcFrame.prototype = {
 
   // Initialize
   __init: function() {
-    this.$frame         = $('<div class="wcFrame wcWide wcTall wcPanelBackground">');
+    this.$frame         = $('<div class="wcFrame wcWide wcTall">');
     this.$title         = $('<div class="wcFrameTitle">');
     this.$titleBar      = $('<div class="wcFrameTitleBar wcFrameTopper">');
     this.$tabBar        = $('<div class="wcFrameTitleBar">');
     this.$tabScroll     = $('<div class="wcTabScroller">');
-    this.$center        = $('<div class="wcFrameCenter">');
+    this.$center        = $('<div class="wcFrameCenter wcPanelBackground">');
     this.$tabLeft       = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span>&lt;</div>');
     this.$tabRight      = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span>&gt;</div>');
     this.$close         = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div>X</div>');
@@ -587,7 +587,7 @@ wcFrame.prototype = {
 
       var $tabContent = this.$center.children('.wcPanelTabContent[id="' + i + '"]');
       if (!$tabContent.length) {
-        $tabContent = $('<div class="wcPanelTabContent wcPanelBackground wcPanelTabContentHidden" id="' + i + '">');
+        $tabContent = $('<div class="wcPanelTabContent wcPanelTabContentHidden" id="' + i + '">');
         this.$center.append($tabContent);
       }
 
@@ -805,7 +805,7 @@ wcFrame.prototype = {
         }
 
         var docker = this.docker();
-        if (docker.isCollapseEnabled() && panel.moveable() && panel.collapsible() && !panel._isPlaceholder) {
+        if (docker.isCollapseEnabled() && panel.moveable() && panel.collapsible() && !this._isFloating && !panel._isPlaceholder) {
           if (this.isCollapser()) {
             // Un-collapse
             var $icon = this.$collapse.children('div');
