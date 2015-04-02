@@ -7250,7 +7250,7 @@ wcIFrame.prototype = {
 
   __init: function() {
     this.$frame = $('<div class="wcIFrame">');
-    this.$focus = $('<div class="wcIFrameFocus wcIFrameHidden">');
+    this.$focus = $('<div class="wcIFrameFocus">');
     this._panel.docker().$container.append(this.$frame);
     this.$frame.append(this.$focus);
 
@@ -7275,7 +7275,7 @@ wcIFrame.prototype = {
 
     var self = this;
     this.$focus.click(function() {
-      self._layout.$table.click();
+      self.docker().__focus(self._panel._parent);
     });
   },
 
@@ -7318,7 +7318,6 @@ wcIFrame.prototype = {
     if (this.$frame) {
       this._isDocking = true;
       this.$frame.addClass('wcIFrameMoving');
-      this.$focus.removeClass('wcIFrameHidden');
     }
   },
 
@@ -7326,7 +7325,6 @@ wcIFrame.prototype = {
     if (this.$frame) {
       this._isDocking = false;
       this.$frame.removeClass('wcIFrameMoving');
-      this.$focus.addClass('wcIFrameHidden');
       this.__focusFix();
     }
   },
@@ -7334,14 +7332,12 @@ wcIFrame.prototype = {
   __onMoveStarted: function() {
     if (this.$frame && !this._isDocking) {
       this.$frame.addClass('wcIFrameMoving');
-      this.$focus.removeClass('wcIFrameHidden');
     }
   },
 
   __onMoveFinished: function() {
     if (this.$frame && !this._isDocking) {
       this.$frame.removeClass('wcIFrameMoving');
-      this.$focus.addClass('wcIFrameHidden');
       this.__focusFix();
     }
   },
@@ -7374,11 +7370,13 @@ wcIFrame.prototype = {
   __onGainFocus: function() {
     this._hasFocus = true;
     this.__updateFrame();
+    this.$focus.addClass('wcIFrameHidden');
   },
 
   __onLostFocus: function() {
     this._hasFocus = false;
     this.__updateFrame();
+    this.$focus.removeClass('wcIFrameHidden');
   },
 
   __onClosed: function() {
