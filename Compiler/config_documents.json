@@ -10,7 +10,7 @@
     "templates": {
         "cleverLinks": false,
         "monospaceLinks": false,
-        "systemName": "Web Cabin Docker v3.0.0 (pre)",
+        "systemName": "<div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div>",
         "footer": "",
         "copyright": "",
         "navType": "vertical",

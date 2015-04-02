@@ -43,6 +43,7 @@ function wcDocker(container, options) {
   this._modalList = [];
   this._focusFrame = null;
   this._placeholderPanel = null;
+  this._contextTimer = 0;
 
   this._splitterList = [];
   this._tabList = [];
@@ -163,7 +164,7 @@ wcDocker.EVENT = {
  * The name of the placeholder panel.
  * @constant {String}
  */
-wcDocker.PANEL_PLACEHOLDER_NAME = '__wcDockerPlaceholderPanel';
+wcDocker.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
 
 /**
  * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
@@ -750,6 +751,7 @@ wcDocker.prototype = {
     $.contextMenu({
       selector: selector,
       build: function($trigger, event) {
+        var mouse = self.__mouse(event);
         var myFrame;
         for (var i = 0; i < self._frameList.length; ++i) {
           var $frame = $trigger.hasClass('wcFrame') && $trigger || $trigger.parents('.wcFrame');
@@ -759,10 +761,6 @@ wcDocker.prototype = {
           }
         }
 
-        var mouse = {
-          x: event.clientX,
-          y: event.clientY,
-        };
         var isTitle = false;
         if ($(event.target).hasClass('wcTabScroller')) {
           isTitle = true;
@@ -1123,434 +1121,71 @@ wcDocker.prototype = {
 
     this.theme(this._options.theme);
 
-    var self = this;
-    var contextTimer;
-    $(window).resize(self.__resize.bind(self));
-
-    $('body').on('contextmenu', 'a, img', function() {
-      if (contextTimer) {
-        clearTimeout(contextTimer);
-      }
-
-      $(".wcFrame").contextMenu(false);
-      contextTimer = setTimeout(function() {
-        $(".wcFrame").contextMenu(true);
-        contextTimer = null;
-      }, 100);
-      return true;
-    });
-
-    $('body').on('contextmenu', '.wcSplitterBar', function() {
-      return false;
-    });
-    
-    // Hovering over a panel creation context menu.
-    $('body').on('mouseenter', '.wcMenuCreatePanel', function() {
-      if (self._ghost) {
-        self._ghost.$ghost.stop().fadeIn(200);
-      }
-    });
-
-    $('body').on('mouseleave', '.wcMenuCreatePanel', function() {
-      if (self._ghost) {
-        self._ghost.$ghost.stop().fadeOut(200);
-      }
-    });
-
-    // A catch all on mouse down to record the mouse origin position.
-    $('body').on('mousedown', function(event) {
-      self._mouseOrigin.x = event.clientX;
-      self._mouseOrigin.y = event.clientY;
-    });
-
-    $('body').on('mousedown', '.wcModalBlocker', function(event) {
-      // for (var i = 0; i < self._modalList.length; ++i) {
-      //   self._modalList[i].__focus(true);
-      // }
-      if (self._modalList.length) {
-        self._modalList[self._modalList.length-1].__focus(true);
-      }
-    });
-
-    // On some browsers, clicking and dragging a tab will drag it's graphic around.
-    // Here I am disabling this as it interferes with my own drag-drop.
-    $('body').on('mousedown', '.wcPanelTab', function(event) {
-      event.preventDefault();
-      event.returnValue = false;
-    });
+    $(window).resize(this.__resize.bind(this));
+    $('body').on('contextmenu', 'a, img', __onContextShowNormal);
+    $('body').on('contextmenu', '.wcSplitterBar', __onContextDisable);
 
     // $('body').on('selectstart', '.wcFrameTitleBar, .wcPanelTab, .wcFrameButton', function(event) {
     //   event.preventDefault();
     // });
 
-    $('body').on('mousedown', '.wcFrameButtonBar > .wcFrameButton', function() {
-      self.$container.addClass('wcDisableSelection');
-    });
-
-    // Clicking on a custom tab button.
-    $('body').on('click', '.wcCustomTab .wcFrameButton', function(event) {
-      self.$container.removeClass('wcDisableSelection');
-      for (var i = 0; i < self._tabList.length; ++i) {
-        var customTab = self._tabList[i];
-        if (customTab.$close[0] === this) {
-          var tabIndex = customTab.tab();
-          customTab.removeTab(tabIndex);
-          event.stopPropagation();
-          return;
-        }
-
-        if (customTab.$tabLeft[0] === this) {
-          customTab._tabScrollPos-=customTab.$tabBar.width()/2;
-          if (customTab._tabScrollPos < 0) {
-            customTab._tabScrollPos = 0;
-          }
-          customTab.__updateTabs();
-          event.stopPropagation();
-          return;
-        }
-        if (customTab.$tabRight[0] === this) {
-          customTab._tabScrollPos+=customTab.$tabBar.width()/2;
-          customTab.__updateTabs();
-          event.stopPropagation();
-          return;
-        }
-      }
-    });
-
-    // Clicking on a panel frame button.
-    $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', function() {
-      self.$container.removeClass('wcDisableSelection');
-      for (var i = 0; i < self._frameList.length; ++i) {
-        var frame = self._frameList[i];
-        if (frame.$close[0] === this) {
-          var panel = frame.panel();
-          self.removePanel(panel);
-          self.__update();
-          return;
-        }
-        if (frame.$collapse[0] === this) {
-          var $icon = frame.$collapse.children('div');
-          var position = wcDocker.DOCK.BOTTOM;
-          if ($icon.hasClass('wcCollapseLeft')) {
-            position = wcDocker.DOCK.LEFT;
-          } else if ($icon.hasClass('wcCollapseRight')) {
-            position = wcDocker.DOCK.RIGHT;
-          }
-          if (frame.isCollapser()) {
-            // Un-collapse
-            // var target;
-            var opts = {};
-            switch (position) {
-              case wcDocker.DOCK.LEFT:
-                // target = frame._parent._parent.right();
-                opts.w = frame.$frame.width();
-                break;
-              case wcDocker.DOCK.RIGHT:
-                // target = frame._parent._parent.left();
-                opts.w = frame.$frame.width();
-                break;
-              case wcDocker.DOCK.BOTTOM:
-                // target = frame._parent._parent.top();
-                opts.h = frame.$frame.height();
-                break;
-            }
-            var target = self._collapser[wcDocker.DOCK.LEFT]._parent.right();
-            frame.collapse(true);
-            self.movePanel(frame.panel(), position, target, opts);
-          } else {
-            // collapse.
-            self.movePanel(frame.panel(), position, wcDocker.COLLAPSED);
-          }
-          self.__update();
-          return;
-        }
-        if (frame.$tabLeft[0] === this) {
-          frame._tabScrollPos-=frame.$tabBar.width()/2;
-          if (frame._tabScrollPos < 0) {
-            frame._tabScrollPos = 0;
-          }
-          frame.__updateTabs();
-          return;
-        }
-        if (frame.$tabRight[0] === this) {
-          frame._tabScrollPos+=frame.$tabBar.width()/2;
-          frame.__updateTabs();
-          return;
-        }
-
-        for (var a = 0; a < frame._buttonList.length; ++a) {
-          if (frame._buttonList[a][0] === this) {
-            var $button = frame._buttonList[a];
-            var result = {
-              name: $button.data('name'),
-              isToggled: false,
-            }
-
-            if ($button.hasClass('wcFrameButtonToggler')) {
-              $button.toggleClass('wcFrameButtonToggled');
-              if ($button.hasClass('wcFrameButtonToggled')) {
-                result.isToggled = true;
-              }
-            }
-
-            var panel = frame.panel();
-            panel.buttonState(result.name, result.isToggled);
-            panel.__trigger(wcDocker.EVENT.BUTTON, result);
-            return;
-          }
-        }
-      }
-    });
-
-    // Middle mouse button on a panel tab to close it.
-    $('body').on('mouseup', '.wcPanelTab', function(event) {
-      if (event.which !== 2) {
-        return;
-      }
-
-      var index = parseInt($(this).attr('id'));
-
-      for (var i = 0; i < self._frameList.length; ++i) {
-        var frame = self._frameList[i];
-        if (frame.$tabBar[0] === $(this).parents('.wcFrameTitleBar')[0]) {
-          var panel = frame._panelList[index];
-          if (self._removingPanel === panel) {
-            self.removePanel(panel);
-            self.__update();
-          }
-          return;
-        }
-      }
-    });
-
-    // Mouse down on a splitter bar will allow you to resize them.
-    $('body').on('mousedown', '.wcSplitterBar', function(event) {
-      if (event.which !== 1) {
-        return true;
-      }
-
-      self.$container.addClass('wcDisableSelection');
-      for (var i = 0; i < self._splitterList.length; ++i) {
-        if (self._splitterList[i].$bar[0] === this) {
-          self._draggingSplitter = self._splitterList[i];
-          self._draggingSplitter.$pane[0].addClass('wcResizing');
-          self._draggingSplitter.$pane[1].addClass('wcResizing');
-          break;
-        }
-      }
-      return true;
-    });
-
-    // Mouse down on a frame title will allow you to move them.
-    $('body').on('mousedown', '.wcFrameTitleBar', function(event) {
-      if (event.which === 3) {
-        return true;
-      }
-      // Skip frame buttons, they are handled elsewhere (Buttons may also have a child image or span so we check parent as well);
-      if ($(event.target).hasClass('wcFrameButton') || $(event.target).parents('.wcFrameButton').length) {
-        return false;
-      }
-      
-      self.$container.addClass('wcDisableSelection');
-      for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].$titleBar[0] == this ||
-            self._frameList[i].$tabBar[0] == this) {
-          self._draggingFrame = self._frameList[i];
-
-          var mouse = {
-            x: event.clientX,
-            y: event.clientY,
-          };
-          self._draggingFrame.__anchorMove(mouse);
-
-          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab'); 
-          if ($panelTab && $panelTab.length) {
-            var index = parseInt($panelTab.attr('id'));
-            self._draggingFrame.panel(index, true);
-
-            // if (event.which === 2) {
-            //   self._draggingFrame = null;
-            //   return;
-            // }
-
-            self._draggingFrameTab = $panelTab[0];
-          }
-
-          // If the window is able to be docked, give it a dark shadow tint and
-          // begin the movement process
-          if (!$panelTab.hasClass('wcNotMoveable') && (self._draggingFrameTab || !self._draggingFrame.$titleBar.hasClass('wcNotMoveable')) &&
-          (!self._draggingFrame._isFloating || event.which !== 1 || self._draggingFrameTab)) {
-            // Special case to allow users to drag out only a single collapsed tab even by dragging the title bar (which normally would drag out the entire frame).
-            if (!self._draggingFrameTab && self._draggingFrame.isCollapser()) {
-              self._draggingFrameTab = self._draggingFrame.panel();
-            }
-            self._draggingFrameTopper = $(event.target).parents('.wcFrameTopper').length > 0;
-            var rect = self._draggingFrame.__rect();
-            self._ghost = new wcGhost(rect, mouse, self);
-            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper);
-            self.trigger(wcDocker.EVENT.BEGIN_DOCK);
-          }
-          break;
-        }
-      }
-      for (var i = 0; i < self._tabList.length; ++i) {
-        if (self._tabList[i].$tabBar[0] == this) {
-          self._draggingCustomTabFrame = self._tabList[i];
-
-          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
-          if ($panelTab && $panelTab.length) {
-            var index = parseInt($panelTab.attr('id'));
-            self._draggingCustomTabFrame.tab(index, true);
-            self._draggingFrameTab = $panelTab[0];
-          }
-          break;
-        }
-      }
-      if (self._draggingFrame) {
-        self.__focus(self._draggingFrame);
-      }
-      return true;
-    });
-
-    // Mouse down on a panel will put it into focus.
-    $('body').on('mousedown', '.wcLayout', function(event) {
-      if (event.which === 3) {
-        return true;
-      }
-      for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel() && self._frameList[i].panel().layout().$table[0] == this) {
-          setTimeout(function() {
-            self.__focus(self._frameList[i]);
-          }, 10);
-          break;
-        }
-      }
-      return true;
-    });
-
-    // Floating frames have resizable edges.
-    $('body').on('mousedown', '.wcFrameEdge', function(event) {
-      if (event.which === 3) {
-        return true;
-      }
-      self.$container.addClass('wcDisableSelection');
-      for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i]._isFloating) {
-          if (self._frameList[i].$top[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['top'];
-            break;
-          } else if (self._frameList[i].$bottom[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['bottom'];
-            break;
-          } else if (self._frameList[i].$left[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['left'];
-            break;
-          } else if (self._frameList[i].$right[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['right'];
-            break;
-          } else if (self._frameList[i].$corner1[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['top', 'left'];
-            break;
-          } else if (self._frameList[i].$corner2[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['top', 'right'];
-            break;
-          } else if (self._frameList[i].$corner3[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['bottom', 'right'];
-            break;
-          } else if (self._frameList[i].$corner4[0] == this) {
-            self._draggingFrame = self._frameList[i];
-            self._draggingFrameSizer = ['bottom', 'left'];
-            break;
-          }
-        }
-      }
-      if (self._draggingFrame) {
-        self.__focus(self._draggingFrame);
-      }
-      return true;
-    });
+    // Hovering over a panel creation context menu.
+    $('body').on('mouseenter', '.wcMenuCreatePanel', __onEnterCreatePanel);
+    $('body').on('mouseleave', '.wcMenuCreatePanel', __onLeaveCreatePanel);
 
     // Mouse move will allow you to move an object that is being dragged.
-    $('body').on('mousemove', function(event) {
-      if (event.which === 3) {
-        return true;
-      }
-      if (self._draggingSplitter) {
-        var mouse = {
-          x: event.clientX,
-          y: event.clientY,
-        };
-        self._draggingSplitter.__moveBar(mouse);
-      } else if (self._draggingFrameSizer) {
-        var mouse = {
-          x: event.clientX,
-          y: event.clientY,
-        };
-
-        var offset = self.$container.offset();
-        mouse.x += offset.left;
-        mouse.y += offset.top;
-
-        self._draggingFrame.__resize(self._draggingFrameSizer, mouse);
-        self._draggingFrame.__update();
-      } else if (self._draggingFrame) {
-        var mouse = {
-          x: event.clientX,
-          y: event.clientY,
-        };
-
-        if (self._ghost) {
-          self._ghost.__move(mouse);
-
-          var forceFloat = !(self._draggingFrame._isFloating || event.which === 1);
-          var found = false;
-
-          // Check anchoring with self.
-          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper)) {
-            self._draggingFrame.__shadow(true);
-            self.__focus();
-            if (!forceFloat) {
-              for (var i = 0; i < self._frameList.length; ++i) {
-                if (self._frameList[i] !== self._draggingFrame) {
-                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper)) {
-                    self._draggingFrame.__shadow(true);
-                    return;
-                  }
-                }
-              }
-            }
-
-            self._ghost.anchor(mouse, null);
-          } else {
-            self._draggingFrame.__shadow(false);
-            var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
-            if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
-              self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
-            }
-          }
-        } else if (!self._draggingFrameTab) {
-          self._draggingFrame.__move(mouse);
-          self._draggingFrame.__update();
-        }
-      } else if (self._draggingCustomTabFrame) {
-        var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parent('.wcPanelTab');
-        if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
-          self._draggingFrameTab = self._draggingCustomTabFrame.moveTab(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
-        }
-      }
-      return true;
-    });
-
+    $('body').on('mousemove', __onMouseMove);
+    $('body').on('touchmove', __onMouseMove);
+    // A catch all on mouse down to record the mouse origin position.
+    $('body').on('mousedown', __onMouseDown);
+    $('body').on('touchstart', __onMouseDown);
+    $('body').on('mousedown', '.wcModalBlocker', __onMouseDownModalBlocker);
+    $('body').on('touchstart', '.wcModalBlocker', __onMouseDownModalBlocker);
+    // On some browsers, clicking and dragging a tab will drag it's graphic around.
+    // Here I am disabling this as it interferes with my own drag-drop.
+    $('body').on('mousedown', '.wcPanelTab', __onPreventDefault);
+    $('body').on('touchstart', '.wcPanelTab', __onPreventDefault);
+    $('body').on('mousedown', '.wcFrameButtonBar > .wcFrameButton', __onMouseSelectionBlocker);
+    $('body').on('touchstart', '.wcFrameButtonBar > .wcFrameButton', __onMouseSelectionBlocker);
+    // Mouse down on a splitter bar will allow you to resize them.
+    $('body').on('mousedown', '.wcSplitterBar', __onMouseDownSplitter);
+    $('body').on('touchstart', '.wcSplitterBar', __onMouseDownSplitter);
+    // Middle mouse button on a panel tab to close it.
+    $('body').on('mousedown', '.wcPanelTab', __onMouseDownPanelTab);
+    $('body').on('touchstart', '.wcPanelTab', __onMouseDownPanelTab);
+    // Middle mouse button on a panel tab to close it.
+    $('body').on('mouseup', '.wcPanelTab', __onReleasePanelTab);
+    $('body').on('touchend', '.wcPanelTab', __onReleasePanelTab);
+    // Mouse down on a frame title will allow you to move them.
+    $('body').on('mousedown', '.wcFrameTitleBar', __onMouseDownFrameTitle);
+    $('body').on('touchstart', '.wcFrameTitleBar', __onMouseDownFrameTitle);
+    // Mouse down on a panel will put it into focus.
+    $('body').on('mousedown', '.wcLayout', __onMouseDownLayout);
+    $('body').on('touchstart', '.wcLayout', __onMouseDownLayout);
+    // Floating frames have resizable edges.
+    $('body').on('mousedown', '.wcFrameEdge', __onMouseDownResizeFrame);
+    $('body').on('touchstart', '.wcFrameEdge', __onMouseDownResizeFrame);
     // Mouse released
-    $('body').on('mouseup', function(event) {
-      if (event.which === 3) {
+    $('body').on('mouseup', __onMouseUp);
+    $('body').on('touchend', __onMouseUp);
+
+    // Clicking on a custom tab button.
+    $('body').on('click', '.wcCustomTab .wcFrameButton', __onClickCustomTab);
+    // Clicking on a panel frame button.
+    $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', __onClickPanelButton);
+
+    var self = this;
+    // on mousedown
+    function __onMouseDown(event) {
+      var mouse = self.__mouse(event);
+      self._mouseOrigin.x = mouse.x;
+      self._mouseOrigin.y = mouse.y;
+    };
+
+    // on mouseup
+    function __onMouseUp(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which === 3) {
         return true;
       }
       self.$container.removeClass('wcDisableSelection');
@@ -1568,11 +1203,6 @@ wcDocker.prototype = {
           if (!self._draggingFrameTab) {
             self._draggingFrame.panel(0);
           }
-
-          var mouse = {
-            x: event.clientX,
-            y: event.clientY,
-          };
 
           if (self._draggingFrameTab || !self.__isLastFrame(self._draggingFrame)) {
             var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.FLOAT);
@@ -1665,11 +1295,239 @@ wcDocker.prototype = {
       self._draggingCustomTabFrame = null;
       self._removingPanel = null;
       return true;
-    });
+    };
 
-    // Middle mouse button on a panel tab to close it.
-    $('body').on('mousedown', '.wcPanelTab', function(event) {
-      if (event.which !== 2) {
+    // on mousemove
+    function __onMouseMove(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which === 3) {
+        return true;
+      }
+      if (self._draggingSplitter) {
+        self._draggingSplitter.__moveBar(mouse);
+      } else if (self._draggingFrameSizer) {
+        var offset = self.$container.offset();
+        mouse.x += offset.left;
+        mouse.y += offset.top;
+
+        self._draggingFrame.__resize(self._draggingFrameSizer, mouse);
+        self._draggingFrame.__update();
+      } else if (self._draggingFrame) {
+        if (self._ghost) {
+          self._ghost.__move(mouse);
+
+          var forceFloat = !(self._draggingFrame._isFloating || mouse.which === 1);
+          var found = false;
+
+          // Check anchoring with self.
+          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper)) {
+            self._draggingFrame.__shadow(true);
+            self.__focus();
+            if (!forceFloat) {
+              for (var i = 0; i < self._frameList.length; ++i) {
+                if (self._frameList[i] !== self._draggingFrame) {
+                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper)) {
+                    self._draggingFrame.__shadow(true);
+                    return;
+                  }
+                }
+              }
+            }
+
+            self._ghost.anchor(mouse, null);
+          } else {
+            self._draggingFrame.__shadow(false);
+            var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
+            if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+              self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
+            }
+          }
+        } else if (!self._draggingFrameTab) {
+          self._draggingFrame.__move(mouse);
+          self._draggingFrame.__update();
+        }
+      } else if (self._draggingCustomTabFrame) {
+        var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
+        if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+          self._draggingFrameTab = self._draggingCustomTabFrame.moveTab(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
+        }
+      }
+      return true;
+    };
+
+    // on contextmenu for a, img
+    function __onContextShowNormal() {
+      if (this._contextTimer) {
+        clearTimeout(this._contextTimer);
+      }
+
+      $(".wcFrame").contextMenu(false);
+      this._contextTimer = setTimeout(function() {
+        $(".wcFrame").contextMenu(true);
+        this._contextTimer = null;
+      }, 100);
+      return true;
+    };
+
+    // on contextmenu for .wcSplitterBar
+    function __onContextDisable() {
+      return false;
+    };
+
+    // on mouseenter for .wcMenuCreatePanel
+    function __onEnterCreatePanel() {
+      if (self._ghost) {
+        self._ghost.$ghost.stop().fadeIn(200);
+      }
+    };
+
+    // on mouseleave for .wcMenuCreatePanel
+    function __onLeaveCreatePanel() {
+      if (self._ghost) {
+        self._ghost.$ghost.stop().fadeOut(200);
+      }
+    };
+
+    // on mousedown for .wcModalBlocker
+    function __onMouseDownModalBlocker(event) {
+      // for (var i = 0; i < self._modalList.length; ++i) {
+      //   self._modalList[i].__focus(true);
+      // }
+      if (self._modalList.length) {
+        self._modalList[self._modalList.length-1].__focus(true);
+      }
+    };
+
+    // on mousedown for .wcPanelTab
+    function __onPreventDefault(event) {
+      event.preventDefault();
+      event.returnValue = false;
+    };
+
+    // on mousedown for .wcFrameButtonBar > .wcFrameButton
+    function __onMouseSelectionBlocker() {
+      self.$container.addClass('wcDisableSelection');
+    };
+
+    // on click for .wcCustomTab .wcFrameButton
+    function __onClickCustomTab(event) {
+      self.$container.removeClass('wcDisableSelection');
+      for (var i = 0; i < self._tabList.length; ++i) {
+        var customTab = self._tabList[i];
+        if (customTab.$close[0] === this) {
+          var tabIndex = customTab.tab();
+          customTab.removeTab(tabIndex);
+          event.stopPropagation();
+          return;
+        }
+
+        if (customTab.$tabLeft[0] === this) {
+          customTab._tabScrollPos-=customTab.$tabBar.width()/2;
+          if (customTab._tabScrollPos < 0) {
+            customTab._tabScrollPos = 0;
+          }
+          customTab.__updateTabs();
+          event.stopPropagation();
+          return;
+        }
+        if (customTab.$tabRight[0] === this) {
+          customTab._tabScrollPos+=customTab.$tabBar.width()/2;
+          customTab.__updateTabs();
+          event.stopPropagation();
+          return;
+        }
+      }
+    };
+
+    // on click for .wcFrameButtonBar > .wcFrameButton
+    function __onClickPanelButton() {
+      self.$container.removeClass('wcDisableSelection');
+      for (var i = 0; i < self._frameList.length; ++i) {
+        var frame = self._frameList[i];
+        if (frame.$close[0] === this) {
+          var panel = frame.panel();
+          self.removePanel(panel);
+          self.__update();
+          return;
+        }
+        if (frame.$collapse[0] === this) {
+          var $icon = frame.$collapse.children('div');
+          var position = wcDocker.DOCK.BOTTOM;
+          if ($icon.hasClass('wcCollapseLeft')) {
+            position = wcDocker.DOCK.LEFT;
+          } else if ($icon.hasClass('wcCollapseRight')) {
+            position = wcDocker.DOCK.RIGHT;
+          }
+          if (frame.isCollapser()) {
+            // Un-collapse
+            // var target;
+            var opts = {};
+            switch (position) {
+              case wcDocker.DOCK.LEFT:
+                // target = frame._parent._parent.right();
+                opts.w = frame.$frame.width();
+                break;
+              case wcDocker.DOCK.RIGHT:
+                // target = frame._parent._parent.left();
+                opts.w = frame.$frame.width();
+                break;
+              case wcDocker.DOCK.BOTTOM:
+                // target = frame._parent._parent.top();
+                opts.h = frame.$frame.height();
+                break;
+            }
+            var target = self._collapser[wcDocker.DOCK.LEFT]._parent.right();
+            frame.collapse(true);
+            self.movePanel(frame.panel(), position, target, opts);
+          } else {
+            // collapse.
+            self.movePanel(frame.panel(), position, wcDocker.COLLAPSED);
+          }
+          self.__update();
+          return;
+        }
+        if (frame.$tabLeft[0] === this) {
+          frame._tabScrollPos-=frame.$tabBar.width()/2;
+          if (frame._tabScrollPos < 0) {
+            frame._tabScrollPos = 0;
+          }
+          frame.__updateTabs();
+          return;
+        }
+        if (frame.$tabRight[0] === this) {
+          frame._tabScrollPos+=frame.$tabBar.width()/2;
+          frame.__updateTabs();
+          return;
+        }
+
+        for (var a = 0; a < frame._buttonList.length; ++a) {
+          if (frame._buttonList[a][0] === this) {
+            var $button = frame._buttonList[a];
+            var result = {
+              name: $button.data('name'),
+              isToggled: false,
+            }
+
+            if ($button.hasClass('wcFrameButtonToggler')) {
+              $button.toggleClass('wcFrameButtonToggled');
+              if ($button.hasClass('wcFrameButtonToggled')) {
+                result.isToggled = true;
+              }
+            }
+
+            var panel = frame.panel();
+            panel.buttonState(result.name, result.isToggled);
+            panel.__trigger(wcDocker.EVENT.BUTTON, result);
+            return;
+          }
+        }
+      }
+    };
+
+    // on mouseup for .wcPanelTab
+    function __onReleasePanelTab(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which !== 2) {
         return;
       }
 
@@ -1679,11 +1537,181 @@ wcDocker.prototype = {
         var frame = self._frameList[i];
         if (frame.$tabBar[0] === $(this).parents('.wcFrameTitleBar')[0]) {
           var panel = frame._panelList[index];
-          self._removingPanel = panel;
+          if (self._removingPanel === panel) {
+            self.removePanel(panel);
+            self.__update();
+          }
           return;
         }
       }
-    });
+    };
+
+    // on mousedown for .wcSplitterBar
+    function __onMouseDownSplitter(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which !== 1) {
+        return true;
+      }
+
+      self.$container.addClass('wcDisableSelection');
+      for (var i = 0; i < self._splitterList.length; ++i) {
+        if (self._splitterList[i].$bar[0] === this) {
+          self._draggingSplitter = self._splitterList[i];
+          self._draggingSplitter.$pane[0].addClass('wcResizing');
+          self._draggingSplitter.$pane[1].addClass('wcResizing');
+          break;
+        }
+      }
+      return true;
+    };
+
+    // on mousedown for .wcFrameTitleBar
+    function __onMouseDownFrameTitle(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which === 3) {
+        return true;
+      }
+      // Skip frame buttons, they are handled elsewhere (Buttons may also have a child image or span so we check parent as well);
+      if ($(event.target).hasClass('wcFrameButton') || $(event.target).parents('.wcFrameButton').length) {
+        return false;
+      }
+      
+      self.$container.addClass('wcDisableSelection');
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i].$titleBar[0] == this ||
+            self._frameList[i].$tabBar[0] == this) {
+          self._draggingFrame = self._frameList[i];
+
+          self._draggingFrame.__anchorMove(mouse);
+
+          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
+          if ($panelTab && $panelTab.length) {
+            var index = parseInt($panelTab.attr('id'));
+            self._draggingFrame.panel(index, true);
+            self._draggingFrameTab = $panelTab[0];
+          }
+
+          // If the window is able to be docked, give it a dark shadow tint and begin the movement process
+          if (!$panelTab.hasClass('wcNotMoveable') && (self._draggingFrameTab || !self._draggingFrame.$titleBar.hasClass('wcNotMoveable')) &&
+          (!self._draggingFrame._isFloating || mouse.which !== 1 || self._draggingFrameTab)) {
+            // Special case to allow users to drag out only a single collapsed tab even by dragging the title bar (which normally would drag out the entire frame).
+            if (!self._draggingFrameTab && self._draggingFrame.isCollapser()) {
+              self._draggingFrameTab = self._draggingFrame.panel();
+            }
+            self._draggingFrameTopper = $(event.target).parents('.wcFrameTopper').length > 0;
+            var rect = self._draggingFrame.__rect();
+            self._ghost = new wcGhost(rect, mouse, self);
+            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper);
+            self.trigger(wcDocker.EVENT.BEGIN_DOCK);
+          }
+          break;
+        }
+      }
+      for (var i = 0; i < self._tabList.length; ++i) {
+        if (self._tabList[i].$tabBar[0] == this) {
+          self._draggingCustomTabFrame = self._tabList[i];
+
+          var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
+          if ($panelTab && $panelTab.length) {
+            var index = parseInt($panelTab.attr('id'));
+            self._draggingCustomTabFrame.tab(index, true);
+            self._draggingFrameTab = $panelTab[0];
+          }
+          break;
+        }
+      }
+      if (self._draggingFrame) {
+        self.__focus(self._draggingFrame);
+      }
+      return true;
+    };
+
+    // on mousedown for .wcLayout
+    function __onMouseDownLayout(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which === 3) {
+        return true;
+      }
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i].panel() && self._frameList[i].panel().layout().$table[0] == this) {
+          setTimeout(function() {
+            self.__focus(self._frameList[i]);
+          }, 10);
+          break;
+        }
+      }
+      return true;
+    };
+
+    // on mousedown for .wcFrameEdge
+    function __onMouseDownResizeFrame(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which === 3) {
+        return true;
+      }
+      self.$container.addClass('wcDisableSelection');
+      for (var i = 0; i < self._frameList.length; ++i) {
+        if (self._frameList[i]._isFloating) {
+          if (self._frameList[i].$top[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['top'];
+            break;
+          } else if (self._frameList[i].$bottom[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['bottom'];
+            break;
+          } else if (self._frameList[i].$left[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['left'];
+            break;
+          } else if (self._frameList[i].$right[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['right'];
+            break;
+          } else if (self._frameList[i].$corner1[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['top', 'left'];
+            break;
+          } else if (self._frameList[i].$corner2[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['top', 'right'];
+            break;
+          } else if (self._frameList[i].$corner3[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['bottom', 'right'];
+            break;
+          } else if (self._frameList[i].$corner4[0] == this) {
+            self._draggingFrame = self._frameList[i];
+            self._draggingFrameSizer = ['bottom', 'left'];
+            break;
+          }
+        }
+      }
+      if (self._draggingFrame) {
+        self.__focus(self._draggingFrame);
+      }
+      return true;
+    };
+
+    // on mousedown for .wcPanelTab
+    function __onMouseDownPanelTab(event) {
+      var mouse = self.__mouse(event);
+      if (mouse.which !== 2) {
+        return true;
+      }
+
+      var index = parseInt($(this).attr('id'));
+
+      for (var i = 0; i < self._frameList.length; ++i) {
+        var frame = self._frameList[i];
+        if (frame.$tabBar[0] === $(this).parents('.wcFrameTitleBar')[0]) {
+          var panel = frame._panelList[index];
+          self._removingPanel = panel;
+          return true;
+        }
+      }
+      return true;
+    };
   },
 
   // Test for browser compatability issues.
@@ -1826,6 +1854,24 @@ wcDocker.prototype = {
     for (var i = 0; i < this._floatingList.length; ++i) {
       this._floatingList[i].__update();
     }
+  },
+
+  // Retrieve mouse or touch position.
+  __mouse: function(event) {
+    if (event.originalEvent.touches || event.originalEvent.changedTouches) {
+      var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+      return {
+        x: touch.clientX,
+        y: touch.clientY,
+        which: 1,
+      };
+    }
+
+    return {
+      x: event.clientX,
+      y: event.clientY,
+      which: event.which,
+    };
   },
 
   // On window resized event.
@@ -2294,7 +2340,7 @@ wcDocker.prototype = {
     if (this._placeholderPanel) {
       console.log('WARNING: wcDocker creating placeholder panel when one already exists');
     }
-    this._placeholderPanel = new wcPanel(wcDocker.PANEL_PLACEHOLDER_NAME, {});
+    this._placeholderPanel = new wcPanel(wcDocker.PANEL_PLACEHOLDER, {});
     this._placeholderPanel._isPlaceholder = true;
     this._placeholderPanel._parent = this;
     this._placeholderPanel.__container(this.$transition);

@@ -156,7 +156,7 @@ html, body {
   width: 6px;
 }
 
-.wcFrameButton:hover {
+.wcFrameButtonhover {
   border: 2px outset #666666;
   background-color: #686868;
 }
@@ -566,7 +566,7 @@ html, body {
   right: 0px;
   bottom: 0px;
   z-index: 2;
-  /*background-color: rgba(0,0,0,0.15);*/
+  cursor: pointer;
 }
 
 .wcIFrameFloating {
