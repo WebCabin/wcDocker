@@ -1585,7 +1585,6 @@ wcDocker.prototype = {
 
           self._draggingFrame.__anchorMove(mouse);
 
-          var $target = $(event.target);
           var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
           if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
@@ -1594,8 +1593,9 @@ wcDocker.prototype = {
           }
 
           // If the window is able to be docked, give it a dark shadow tint and begin the movement process
-          if (!$panelTab.hasClass('wcNotMoveable') && (self._draggingFrameTab || !self._draggingFrame.$titleBar.hasClass('wcNotMoveable')) &&
-          (!self._draggingFrame._isFloating || mouse.which !== 1 || self._draggingFrameTab)) {
+          if (((!$panelTab.hasClass('wcNotMoveable') && self._draggingFrameTab) ||
+              !(self._draggingFrame.$titleBar.hasClass('wcNotMoveable') || self._draggingFrame.$tabBar.hasClass('wcNotMoveable'))) &&
+              (!self._draggingFrame._isFloating || mouse.which !== 1 || self._draggingFrameTab)) {
             // Special case to allow users to drag out only a single collapsed tab even by dragging the title bar (which normally would drag out the entire frame).
             if (!self._draggingFrameTab && self._draggingFrame.isCollapser()) {
               self._draggingFrameTab = self._draggingFrame.panel();
