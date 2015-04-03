@@ -292,7 +292,7 @@ html, body {
 }
 
 .wcPanelTab.wcNotMoveable {
-  cursor: none;
+  cursor: default;
 }
 
 .wcTabLeft {
