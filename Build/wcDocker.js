@@ -1125,9 +1125,9 @@ wcDocker.prototype = {
     $('body').on('contextmenu', 'a, img', __onContextShowNormal);
     $('body').on('contextmenu', '.wcSplitterBar', __onContextDisable);
 
-    $('body').on('selectstart', '.wcFrameTitleBar, .wcPanelTab, .wcFrameButton', function(event) {
-      event.preventDefault();
-    });
+    // $('body').on('selectstart', '.wcFrameTitleBar, .wcPanelTab, .wcFrameButton', function(event) {
+    //   event.preventDefault();
+    // });
 
     // Hovering over a panel creation context menu.
     $('body').on('mouseenter', '.wcMenuCreatePanel', __onEnterCreatePanel);
@@ -1170,7 +1170,7 @@ wcDocker.prototype = {
     $('body').on('touchend', __onMouseUp);
 
     // Clicking on a custom tab button.
-    $('body').on('click', '.wcCustomTab .wcFrameButton', __onClickCustomTab);
+    $('body').on('click', '.wcCustomTab .wcFrameButton', __onClickCustomTabButton);
     // Clicking on a panel frame button.
     $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', __onClickPanelButton);
 
@@ -1337,8 +1337,9 @@ wcDocker.prototype = {
             self._ghost.anchor(mouse, null);
           } else {
             self._draggingFrame.__shadow(false);
-            var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
-            if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+            var $target = $(document.elementFromPoint(mouse.x, mouse.y));
+            var $hoverTab = $target.hasClass('wcPanelTab')? $target: $target.parents('.wcPanelTab');
+            if (self._draggingFrameTab && $hoverTab.length && self._draggingFrameTab !== $hoverTab[0]) {
               self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
             }
           }
@@ -1410,7 +1411,7 @@ wcDocker.prototype = {
     };
 
     // on click for .wcCustomTab .wcFrameButton
-    function __onClickCustomTab(event) {
+    function __onClickCustomTabButton(event) {
       self.$container.removeClass('wcDisableSelection');
       for (var i = 0; i < self._tabList.length; ++i) {
         var customTab = self._tabList[i];
@@ -1584,6 +1585,7 @@ wcDocker.prototype = {
 
           self._draggingFrame.__anchorMove(mouse);
 
+          var $target = $(event.target);
           var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
           if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
@@ -1858,7 +1860,7 @@ wcDocker.prototype = {
 
   // Retrieve mouse or touch position.
   __mouse: function(event) {
-    if (event.originalEvent.touches || event.originalEvent.changedTouches) {
+    if (event.originalEvent && (event.originalEvent.touches || event.originalEvent.changedTouches)) {
       var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
       return {
         x: touch.clientX,
@@ -1868,9 +1870,9 @@ wcDocker.prototype = {
     }
 
     return {
-      x: event.clientX,
-      y: event.clientY,
-      which: event.which,
+      x: event.clientX || event.pageX,
+      y: event.clientY || event.pageY,
+      which: event.which || 1,
     };
   },
 
@@ -1883,7 +1885,7 @@ wcDocker.prototype = {
       this.__trigger(wcDocker.EVENT.RESIZE_STARTED);
     }
     this.__trigger(wcDocker.EVENT.RESIZED);
-    this.__update();
+    this.__update(false);
   },
 
   // On window resize event ended.
@@ -3252,13 +3254,8 @@ function wcPanel(type, options) {
   this.$container = null;
   this._parent = null;
   this.$icon = null;
-
-  if (options.icon) {
-    this.icon(options.icon);
-  }
-  if (options.faicon) {
-    this.faicon(options.faicon);
-  }
+  this.$title = null;
+  this.$titleText = null;
 
   this._panelObject = null;
   this._initialized = false;
@@ -3266,9 +3263,8 @@ function wcPanel(type, options) {
   this._type = type;
   this._title = type;
   this._titleVisible = true;
-  if (options.title) {
-    this.title(options.title);
-  }
+
+  this._options = options;
 
   this._layout = null;
 
@@ -3368,12 +3364,14 @@ wcPanel.prototype = {
     if (typeof title !== 'undefined') {
       if (title === false) {
         this._titleVisible = false;
+        this.$titleText.text(this._type);
       } else {
         this._title = title;
+        this.$titleText.text(title);
       }
 
-      if (this._parent instanceof wcFrame) {
-        this._parent.__updateTabs();
+      if (this.$icon) {
+        this.$titleText.prepend(this.$icon);
       }
     }
 
@@ -3652,6 +3650,7 @@ wcPanel.prototype = {
   icon: function(icon) {
     if (!this.$icon) {
       this.$icon = $('<div>');
+      this.$titleText.prepend(this.$icon);
     }
 
     this.$icon.removeClass();
@@ -3665,10 +3664,11 @@ wcPanel.prototype = {
   faicon: function(icon) {
     if (!this.$icon) {
       this.$icon = $('<div>');
+      this.$titleText.prepend(this.$icon);
     }
 
     this.$icon.removeClass();
-    this.$icon.addClass('fa fa-fw fa-' + icon);
+    this.$icon.addClass('wcTabIcon fa fa-fw fa-' + icon);
   },
 
   /**
@@ -3779,6 +3779,8 @@ wcPanel.prototype = {
   moveable: function(enabled) {
     if (typeof enabled !== 'undefined') {
       this._moveable = enabled? true: false;
+
+      this.$title.toggleClass('wcNotMoveable', !this._moveable);
     }
 
     return this._moveable;
@@ -3884,6 +3886,20 @@ wcPanel.prototype = {
   // Initialize
   __init: function() {
     this._layout = new wcLayout(this.$container, this);
+    this.$title = $('<div class="wcPanelTab">');
+    this.$titleText = $('<div>' + this._title + '</div>');
+    this.$title.append(this.$titleText);
+
+    if (this._options.hasOwnProperty('title')) {
+      this.title(this._options.title);
+    }
+
+    if (this._options.icon) {
+      this.icon(this._options.icon);
+    }
+    if (this._options.faicon) {
+      this.faicon(this._options.faicon);
+    }
   },
 
   // Updates the size of the layout.
@@ -4636,13 +4652,9 @@ wcFrame.prototype = {
 
       var $tab = null;
       if (showTabs) {
-        $tab = $('<div id="' + i + '" class="wcPanelTab"><div>' + panel.title() + '</div></div>');
-        this.$tabScroll.append($tab);
-        if (panel.$icon) {
-          $tab.find('div').prepend(panel.$icon);
-        }
-
-        $tab.toggleClass('wcNotMoveable', !panel.moveable());
+        $tab = panel.$title;
+        panel.$title.attr('id', i);
+        this.$tabScroll.append(panel.$title);
       }
 
       if (!panel.moveable()) {

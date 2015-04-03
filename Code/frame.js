@@ -567,13 +567,9 @@ wcFrame.prototype = {
 
       var $tab = null;
       if (showTabs) {
-        $tab = $('<div id="' + i + '" class="wcPanelTab"><div>' + panel.title() + '</div></div>');
-        this.$tabScroll.append($tab);
-        if (panel.$icon) {
-          $tab.find('div').prepend(panel.$icon);
-        }
-
-        $tab.toggleClass('wcNotMoveable', !panel.moveable());
+        $tab = panel.$title;
+        panel.$title.attr('id', i);
+        this.$tabScroll.append(panel.$title);
       }
 
       if (!panel.moveable()) {

@@ -287,7 +287,6 @@ html, body {
   vertical-align: top;
   position: relative;
   display: inline-block;
-  text-decoration: none;
   cursor: move;
   top: 0px;
 }
@@ -515,6 +514,7 @@ html, body {
   width: 1.28571429em;
   height: 1em;
   text-align: center;
+  margin-right: 2px;
 }
 
 .wcMenuIcon {

@@ -30,13 +30,8 @@ function wcPanel(type, options) {
   this.$container = null;
   this._parent = null;
   this.$icon = null;
-
-  if (options.icon) {
-    this.icon(options.icon);
-  }
-  if (options.faicon) {
-    this.faicon(options.faicon);
-  }
+  this.$title = null;
+  this.$titleText = null;
 
   this._panelObject = null;
   this._initialized = false;
@@ -44,9 +39,8 @@ function wcPanel(type, options) {
   this._type = type;
   this._title = type;
   this._titleVisible = true;
-  if (options.title) {
-    this.title(options.title);
-  }
+
+  this._options = options;
 
   this._layout = null;
 
@@ -146,12 +140,14 @@ wcPanel.prototype = {
     if (typeof title !== 'undefined') {
       if (title === false) {
         this._titleVisible = false;
+        this.$titleText.text(this._type);
       } else {
         this._title = title;
+        this.$titleText.text(title);
       }
 
-      if (this._parent instanceof wcFrame) {
-        this._parent.__updateTabs();
+      if (this.$icon) {
+        this.$titleText.prepend(this.$icon);
       }
     }
 
@@ -430,6 +426,7 @@ wcPanel.prototype = {
   icon: function(icon) {
     if (!this.$icon) {
       this.$icon = $('<div>');
+      this.$titleText.prepend(this.$icon);
     }
 
     this.$icon.removeClass();
@@ -443,10 +440,11 @@ wcPanel.prototype = {
   faicon: function(icon) {
     if (!this.$icon) {
       this.$icon = $('<div>');
+      this.$titleText.prepend(this.$icon);
     }
 
     this.$icon.removeClass();
-    this.$icon.addClass('fa fa-fw fa-' + icon);
+    this.$icon.addClass('wcTabIcon fa fa-fw fa-' + icon);
   },
 
   /**
@@ -557,6 +555,8 @@ wcPanel.prototype = {
   moveable: function(enabled) {
     if (typeof enabled !== 'undefined') {
       this._moveable = enabled? true: false;
+
+      this.$title.toggleClass('wcNotMoveable', !this._moveable);
     }
 
     return this._moveable;
@@ -662,6 +662,20 @@ wcPanel.prototype = {
   // Initialize
   __init: function() {
     this._layout = new wcLayout(this.$container, this);
+    this.$title = $('<div class="wcPanelTab">');
+    this.$titleText = $('<div>' + this._title + '</div>');
+    this.$title.append(this.$titleText);
+
+    if (this._options.hasOwnProperty('title')) {
+      this.title(this._options.title);
+    }
+
+    if (this._options.icon) {
+      this.icon(this._options.icon);
+    }
+    if (this._options.faicon) {
+      this.faicon(this._options.faicon);
+    }
   },
 
   // Updates the size of the layout.

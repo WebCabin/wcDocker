@@ -1170,7 +1170,7 @@ wcDocker.prototype = {
     $('body').on('touchend', __onMouseUp);
 
     // Clicking on a custom tab button.
-    $('body').on('click', '.wcCustomTab .wcFrameButton', __onClickCustomTab);
+    $('body').on('click', '.wcCustomTab .wcFrameButton', __onClickCustomTabButton);
     // Clicking on a panel frame button.
     $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', __onClickPanelButton);
 
@@ -1337,8 +1337,9 @@ wcDocker.prototype = {
             self._ghost.anchor(mouse, null);
           } else {
             self._draggingFrame.__shadow(false);
-            var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
-            if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+            var $target = $(document.elementFromPoint(mouse.x, mouse.y));
+            var $hoverTab = $target.hasClass('wcPanelTab')? $target: $target.parents('.wcPanelTab');
+            if (self._draggingFrameTab && $hoverTab.length && self._draggingFrameTab !== $hoverTab[0]) {
               self._draggingFrameTab = self._draggingFrame.__tabMove(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
             }
           }
@@ -1410,7 +1411,7 @@ wcDocker.prototype = {
     };
 
     // on click for .wcCustomTab .wcFrameButton
-    function __onClickCustomTab(event) {
+    function __onClickCustomTabButton(event) {
       self.$container.removeClass('wcDisableSelection');
       for (var i = 0; i < self._tabList.length; ++i) {
         var customTab = self._tabList[i];
@@ -1584,6 +1585,7 @@ wcDocker.prototype = {
 
           self._draggingFrame.__anchorMove(mouse);
 
+          var $target = $(event.target);
           var $panelTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
           if ($panelTab && $panelTab.length) {
             var index = parseInt($panelTab.attr('id'));
@@ -1858,7 +1860,7 @@ wcDocker.prototype = {
 
   // Retrieve mouse or touch position.
   __mouse: function(event) {
-    if (event.originalEvent.touches || event.originalEvent.changedTouches) {
+    if (event.originalEvent && (event.originalEvent.touches || event.originalEvent.changedTouches)) {
       var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
       return {
         x: touch.clientX,
@@ -1868,9 +1870,9 @@ wcDocker.prototype = {
     }
 
     return {
-      x: event.clientX,
-      y: event.clientY,
-      which: event.which,
+      x: event.clientX || event.pageX,
+      y: event.clientY || event.pageY,
+      which: event.which || 1,
     };
   },
 
@@ -1883,7 +1885,7 @@ wcDocker.prototype = {
       this.__trigger(wcDocker.EVENT.RESIZE_STARTED);
     }
     this.__trigger(wcDocker.EVENT.RESIZED);
-    this.__update();
+    this.__update(false);
   },
 
   // On window resize event ended.
