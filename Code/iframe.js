@@ -158,7 +158,7 @@ wcIFrame.prototype = {
     // Remove all registered events.
     while (this._boundEvents.length){
       this._panel.off(this._boundEvents[0].event, this._boundEvents[0].handler);
-      this._boundEvents.pop();
+      this._boundEvents.shift();
     }
 
     this.__clearFrame();
@@ -167,6 +167,7 @@ wcIFrame.prototype = {
     this.$container = null;
     this.$frame.remove();
     this.$frame = null;
+    this.$focus = null;
   },
 
 
