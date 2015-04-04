@@ -1199,7 +1199,6 @@ wcDocker.prototype = {
         var anchor = self._ghost.anchor();
 
         if (!anchor) {
-          var index = self._draggingFrame._curTab;
           if (!self._draggingFrameTab) {
             self._draggingFrame.panel(0);
           }
@@ -1216,7 +1215,6 @@ wcDocker.prototype = {
             var frame = panel._parent;
             if (frame instanceof wcFrame) {
               frame.pos(mouse.x, mouse.y + self._ghost.__rect().h/2 - 10, true);
-              frame.panel(index);
 
               frame._size.x = self._ghost.__rect().w;
               frame._size.y = self._ghost.__rect().h;
@@ -2079,20 +2077,6 @@ wcDocker.prototype = {
   //    targetPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, targetPanel, options) {
-    // If we are collapsing the panel, put it into the collapser.
-    if (targetPanel === wcDocker.COLLAPSED) {
-      this.__initCollapsers();
-      if (this._collapser[location]) {
-        targetPanel = this._collapser[location]._drawer._frame.addPanel(panel);
-        var self = this;
-        setTimeout(function() {self.__update();});
-        return panel;
-      } else {
-        console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
-        return false;
-      }
-    }
-
     if (options) {
       var width = this.$container.width();
       var height = this.$container.height();
@@ -2111,6 +2095,23 @@ wcDocker.prototype = {
       }
       options.w = this.__stringToPixel(options.w, width);
       options.h = this.__stringToPixel(options.h, height);
+
+      panel._size.x = options.w;
+      panel._size.y = options.h;
+    }
+
+    // If we are collapsing the panel, put it into the collapser.
+    if (targetPanel === wcDocker.COLLAPSED) {
+      this.__initCollapsers();
+      if (this._collapser[location]) {
+        targetPanel = this._collapser[location]._drawer._frame.addPanel(panel);
+        var self = this;
+        setTimeout(function() {self.__update();});
+        return panel;
+      } else {
+        console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
+        return false;
+      }
     }
 
     // Floating windows need no placement.
@@ -4002,6 +4003,10 @@ wcPanel.prototype = {
     data.type = 'wcPanel';
     data.panelType = this._type;
     // data.title = this._title;
+    data.size = {
+      x: this._size.x,
+      y: this._size.y,
+    };
     // data.minSize = {
     //   x: this._minSize.x,
     //   y: this._minSize.y,
@@ -4025,6 +4030,10 @@ wcPanel.prototype = {
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
     // this._title = data.title;
+    if (data.size) {
+      this._size.x = data.size.x;
+      this._size.y = data.size.y;
+    }
     // this._minSize.x = data.minSize.x;
     // this._minSize.y = data.minSize.y;
     // this._maxSize.x = data.maxSize.x;
@@ -4387,12 +4396,15 @@ wcFrame.prototype = {
   panel: function(tabIndex, autoFocus) {
     if (typeof tabIndex !== 'undefined') {
       if (this.isCollapser() && tabIndex === this._curTab) {
-        tabIndex = -1;
         this.collapse();
+        tabIndex = -1;
       }
       if (tabIndex < this._panelList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.children('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
+        if (this._curTab !== tabIndex) {
+          this.collapse();
+        }
         this._curTab = tabIndex;
         if (tabIndex > -1) {
           this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + tabIndex + '"]').addClass('wcPanelTabActive');
@@ -6272,7 +6284,6 @@ function wcDrawer(container, parent, position) {
   this._position    = position;
   this._parent      = parent;
   this._frame       = null;
-  this._openSize    = (this._position === wcDocker.DOCK.LEFT)? 0.25: 0.75;
   this._closeSize   = 0;
   this._expanded    = false;
   this._sliding     = false;
@@ -6304,7 +6315,25 @@ wcDrawer.prototype = {
    */
   collapse: function(instant) {
     if (this._expanded) {
-      this._openSize = this._parent.pos();
+      // Collapse happens before the tab is de-selected, so record the
+      // current size and assign it to the current panel.
+      var panel = this._frame.panel();
+      if (panel) {
+        var size = this._parent.pos();
+        if (this._position !== wcDocker.DOCK.LEFT) {
+          size = 1.0 - size;
+        }
+
+        var max;
+        if (this._position === wcDocker.DOCK.BOTTOM) {
+          max = this.docker().$container.height();
+          panel._size.y = size * max;
+        } else {
+          max = this.docker().$container.width();
+          panel._size.x = size * max;
+        }
+      }
+
       this._expanded = false;
       if (instant) {
         switch (this._position) {
@@ -6347,11 +6376,30 @@ wcDrawer.prototype = {
     if (!this._expanded) {
       this._expanded = true;
       this._sliding = true;
-      var self = this;
-      this._parent.animPos(this._openSize, function() {
-        self._sliding = false;
-        self._parent.__update();
-      });
+
+      var panel = this._frame.panel();
+      if (panel) {
+        // Determine the size to expand the drawer based on the size of the panel.
+        var size, max;
+        if (this._position === wcDocker.DOCK.BOTTOM) {
+          size = panel._size.y;
+          max = this.docker().$container.height();
+        } else {
+          size = panel._size.x;
+          max = this.docker().$container.width();
+        }
+
+        if (this._position !== wcDocker.DOCK.LEFT) {
+          size = max - size;
+        }
+
+        size = size / max;
+        var self = this;
+        this._parent.animPos(size, function() {
+          self._sliding = false;
+          self._parent.__update();
+        });
+      }
     }
   },
 
@@ -6377,7 +6425,7 @@ wcDrawer.prototype = {
         return {x: 100, y: 100};
       }
     }
-    this.__adjustSize();
+    this.__adjustCollapsedSize();
     return {x: this._closeSize, y: this._closeSize};
   },
 
@@ -6398,7 +6446,7 @@ wcDrawer.prototype = {
         return {x: Infinity, y: Infinity};
       }
     }
-    this.__adjustSize();
+    this.__adjustCollapsedSize();
     return {
       x: (isHorizontal?  this._closeSize: Infinity),
       y: (!isHorizontal? this._closeSize: Infinity)
@@ -6418,12 +6466,12 @@ wcDrawer.prototype = {
 
   // Updates the size of the collapser.
   __update: function(opt_dontMove) {
-    this.__adjustSize();
+    this.__adjustCollapsedSize();
     this._frame.__update();
   },
 
-  // Adjusts the size of the collapser based on css
-  __adjustSize: function() {
+  // Adjusts the size of the collapser when it is closed.
+  __adjustCollapsedSize: function() {
     if (this._frame._panelList.length) {
       this._closeSize = this._frame.$tabBar.outerHeight();
       this._parent.$bar.removeClass('wcSplitterHidden');
@@ -6439,16 +6487,16 @@ wcDrawer.prototype = {
     var width = this.$frame.width();
     var height = this.$frame.height();
 
-    switch (this._position) {
-      case wcDocker.DOCK.BOTTOM:
-        height = this.docker().$container.height() * (1.0 - this._openSize);
-        break;
-      case wcDocker.DOCK.LEFT:
-        width = this.docker().$container.width() * this._openSize;
-        break;
-      case wcDocker.DOCK.RIGHT:
-        width = this.docker().$container.width() * (1.0 - this._openSize);
-        break;
+    var panel = this._frame.panel();
+    if (panel) {
+      // Determine the size to expand the drawer based on the size of the panel.
+      if (this._position === wcDocker.DOCK.BOTTOM) {
+        height = panel._size.y;
+        width = width / 3;
+      } else {
+        width = panel._size.x;
+        height = height / 3;
+      }
     }
 
     return {
@@ -6463,7 +6511,6 @@ wcDrawer.prototype = {
   // object that can be used later to restore it.
   __save: function() {
     var data = {};
-    data.openSize   = this._openSize;
     data.closeSize  = this._closeSize;
     data.frame      = this._frame.__save();
     return data;
@@ -6471,10 +6518,9 @@ wcDrawer.prototype = {
 
   // Restores a previously saved configuration.
   __restore: function(data, docker) {
-    this._openSize = data.openSize;
     this._closeSize = data.closeSize;
     this._frame.__restore(data.frame, docker);
-    this.__adjustSize();
+    this.__adjustCollapsedSize();
   },
 
   // Gets, or Sets a new container for this layout.

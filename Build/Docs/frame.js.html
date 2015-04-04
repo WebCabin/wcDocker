@@ -362,12 +362,15 @@ wcFrame.prototype = {
   panel: function(tabIndex, autoFocus) {
     if (typeof tabIndex !== 'undefined') {
       if (this.isCollapser() &amp;&amp; tabIndex === this._curTab) {
-        tabIndex = -1;
         this.collapse();
+        tabIndex = -1;
       }
       if (tabIndex &lt; this._panelList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
         this.$center.children('.wcPanelTabContent[id="' + this._curTab + '"]').addClass('wcPanelTabContentHidden');
+        if (this._curTab !== tabIndex) {
+          this.collapse();
+        }
         this._curTab = tabIndex;
         if (tabIndex > -1) {
           this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + tabIndex + '"]').addClass('wcPanelTabActive');

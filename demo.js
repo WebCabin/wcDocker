@@ -433,7 +433,7 @@ $(document).ready(function() {
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
       tabOrientation: wcDocker.TAB.BOTTOM
     });
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED);
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
     var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
   }
 });

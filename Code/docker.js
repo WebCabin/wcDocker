@@ -1199,7 +1199,6 @@ wcDocker.prototype = {
         var anchor = self._ghost.anchor();
 
         if (!anchor) {
-          var index = self._draggingFrame._curTab;
           if (!self._draggingFrameTab) {
             self._draggingFrame.panel(0);
           }
@@ -1216,7 +1215,6 @@ wcDocker.prototype = {
             var frame = panel._parent;
             if (frame instanceof wcFrame) {
               frame.pos(mouse.x, mouse.y + self._ghost.__rect().h/2 - 10, true);
-              frame.panel(index);
 
               frame._size.x = self._ghost.__rect().w;
               frame._size.y = self._ghost.__rect().h;
@@ -2079,20 +2077,6 @@ wcDocker.prototype = {
   //    targetPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, targetPanel, options) {
-    // If we are collapsing the panel, put it into the collapser.
-    if (targetPanel === wcDocker.COLLAPSED) {
-      this.__initCollapsers();
-      if (this._collapser[location]) {
-        targetPanel = this._collapser[location]._drawer._frame.addPanel(panel);
-        var self = this;
-        setTimeout(function() {self.__update();});
-        return panel;
-      } else {
-        console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
-        return false;
-      }
-    }
-
     if (options) {
       var width = this.$container.width();
       var height = this.$container.height();
@@ -2111,6 +2095,23 @@ wcDocker.prototype = {
       }
       options.w = this.__stringToPixel(options.w, width);
       options.h = this.__stringToPixel(options.h, height);
+
+      panel._size.x = options.w;
+      panel._size.y = options.h;
+    }
+
+    // If we are collapsing the panel, put it into the collapser.
+    if (targetPanel === wcDocker.COLLAPSED) {
+      this.__initCollapsers();
+      if (this._collapser[location]) {
+        targetPanel = this._collapser[location]._drawer._frame.addPanel(panel);
+        var self = this;
+        setTimeout(function() {self.__update();});
+        return panel;
+      } else {
+        console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
+        return false;
+      }
     }
 
     // Floating windows need no placement.
