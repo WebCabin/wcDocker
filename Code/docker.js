@@ -1205,7 +1205,7 @@ wcDocker.prototype = {
           }
 
           if (self._draggingFrameTab || !self.__isLastFrame(self._draggingFrame)) {
-            var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.FLOAT);
+            var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.FLOAT, null, self._ghost.__rect());
             // Dragging the entire frame.
             if (!self._draggingFrameTab) {
               while (self._draggingFrame.panel()) {
@@ -1280,9 +1280,10 @@ wcDocker.prototype = {
         self._ghost = null;
 
         self.trigger(wcDocker.EVENT.END_DOCK);
+        self.__update();
       }
 
-      if ( self._draggingSplitter ) { 
+      if (self._draggingSplitter) { 
         self._draggingSplitter.$pane[0].removeClass('wcResizing');
         self._draggingSplitter.$pane[1].removeClass('wcResizing');
       }
@@ -1590,6 +1591,7 @@ wcDocker.prototype = {
             var index = parseInt($panelTab.attr('id'));
             self._draggingFrame.panel(index, true);
             self._draggingFrameTab = $panelTab[0];
+            $(window).focus();
           }
 
           // If the window is able to be docked, give it a dark shadow tint and begin the movement process
