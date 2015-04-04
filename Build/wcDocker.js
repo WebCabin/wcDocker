@@ -4689,6 +4689,10 @@ wcFrame.prototype = {
         $tab && $tab.addClass('wcPanelTabActive');
         $tabContent.removeClass('wcPanelTabContentHidden');
         this.$title.text(panel.title());
+        if (panel.$icon) {
+          var $icon = panel.$icon.clone();
+          this.$title.prepend($icon);
+        }
       }
 
       if ($tab) {
@@ -7335,6 +7339,9 @@ wcIFrame.prototype = {
     var self = this;
     this.$focus.click(function() {
       self.docker().__focus(self._panel._parent);
+      if (this.$iFrame) {
+        this.$iFrame[0].focus();
+      }
     });
   },
 

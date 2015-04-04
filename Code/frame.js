@@ -604,6 +604,10 @@ wcFrame.prototype = {
         $tab && $tab.addClass('wcPanelTabActive');
         $tabContent.removeClass('wcPanelTabContentHidden');
         this.$title.text(panel.title());
+        if (panel.$icon) {
+          var $icon = panel.$icon.clone();
+          this.$title.prepend($icon);
+        }
       }
 
       if ($tab) {

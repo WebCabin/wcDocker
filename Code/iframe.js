@@ -203,6 +203,9 @@ wcIFrame.prototype = {
     var self = this;
     this.$focus.click(function() {
       self.docker().__focus(self._panel._parent);
+      if (this.$iFrame) {
+        this.$iFrame[0].focus();
+      }
     });
   },
 
