@@ -24,7 +24,6 @@ function wcIFrame(container, panel) {
 
   this.$container = $(container);
   this.$frame = null;
-  this.$focus = null;
 
   /**
    * The iFrame element.
@@ -36,6 +35,7 @@ function wcIFrame(container, panel) {
   this._isAttached = true;
   this._hasFocus = false;
   this._isDocking = false;
+  this._isHovering = false;
 
   this._boundEvents = [];
 
@@ -77,6 +77,7 @@ wcIFrame.prototype = {
     this._window.location.replace(url);
 
     this.$iFrame[0].focus();
+    this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
   },
 
   /**
@@ -100,6 +101,7 @@ wcIFrame.prototype = {
     this._window.document.close();
 
     this.$iFrame[0].focus();
+    this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
   },
 
   /**
@@ -121,6 +123,7 @@ wcIFrame.prototype = {
     // Write the frame source.
     this.$iFrame[0].srcdoc = html;
     this.$iFrame[0].focus();
+    this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
   },
 
   /**
@@ -167,7 +170,6 @@ wcIFrame.prototype = {
     this.$container = null;
     this.$frame.remove();
     this.$frame = null;
-    this.$focus = null;
   },
 
 
@@ -177,9 +179,7 @@ wcIFrame.prototype = {
 
   __init: function() {
     this.$frame = $('<div class="wcIFrame">');
-    this.$focus = $('<div class="wcIFrameFocus">');
     this._panel.docker().$container.append(this.$frame);
-    this.$frame.append(this.$focus);
 
     this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK,         handler: this.__onBeginDock.bind(this)});
@@ -200,13 +200,7 @@ wcIFrame.prototype = {
       this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
     }
 
-    var self = this;
-    this.$focus.click(function() {
-      self.docker().__focus(self._panel._parent);
-      if (this.$iFrame) {
-        this.$iFrame[0].focus();
-      }
-    });
+    $(window).blur(this.__onBlur.bind(this));
   },
 
   __clearFrame: function() {
@@ -238,6 +232,20 @@ wcIFrame.prototype = {
     // it has been assigned and unassigned pointer-events: none in css.
     this.$frame.css('left', parseInt(this.$frame.css('left'))+1);
     this.$frame.css('left', parseInt(this.$frame.css('left'))-1);
+  },
+
+  __onHoverEnter: function() {
+    this._isHovering = true;
+  },
+
+  __onHoverExit: function() {
+    this._isHovering = false;
+  },
+
+  __onBlur: function() {
+    if (this._isHovering) {
+      this.docker().__focus(this._panel._parent);
+    }
   },
 
   __onVisibilityChanged: function() {
@@ -300,13 +308,11 @@ wcIFrame.prototype = {
   __onGainFocus: function() {
     this._hasFocus = true;
     this.__updateFrame();
-    this.$focus.addClass('wcIFrameHidden');
   },
 
   __onLostFocus: function() {
     this._hasFocus = false;
     this.__updateFrame();
-    this.$focus.removeClass('wcIFrameHidden');
   },
 
   __onClosed: function() {
