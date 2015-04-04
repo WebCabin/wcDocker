@@ -570,7 +570,7 @@ html, body {
 }
 
 .wcIFrame.wcDrawer {
-  z-index: 5;
+  z-index: 6;
 }
 
 .wcIFrameFloating {
@@ -599,5 +599,5 @@ html, body {
 }
 
 .wcDrawer {
-  z-index: 2;
+  z-index: 5;
 }
