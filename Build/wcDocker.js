@@ -1593,9 +1593,21 @@ wcDocker.prototype = {
           }
 
           // If the window is able to be docked, give it a dark shadow tint and begin the movement process
-          if (((!$panelTab.hasClass('wcNotMoveable') && self._draggingFrameTab) ||
-              !(self._draggingFrame.$titleBar.hasClass('wcNotMoveable') || self._draggingFrame.$tabBar.hasClass('wcNotMoveable'))) &&
-              (!self._draggingFrame._isFloating || mouse.which !== 1 || self._draggingFrameTab)) {
+          var shouldMove = true;
+          if (self._draggingFrameTab) {
+            if ($panelTab.hasClass('wcNotMoveable')) {
+              shouldMove = false;
+            }
+          } else {
+            if (self._draggingFrame._isFloating && mouse.which === 1) {
+              shouldMove = false;
+            }
+          }
+
+          // if (((!$panelTab.hasClass('wcNotMoveable') && self._draggingFrameTab) ||
+          //     !(self._draggingFrame.$titleBar.hasClass('wcNotMoveable') || self._draggingFrame.$tabBar.hasClass('wcNotMoveable'))) &&
+          //     (!self._draggingFrame._isFloating || mouse.which !== 1 || self._draggingFrameTab)) {
+          if (shouldMove) {
             // Special case to allow users to drag out only a single collapsed tab even by dragging the title bar (which normally would drag out the entire frame).
             if (!self._draggingFrameTab && self._draggingFrame.isCollapser()) {
               self._draggingFrameTab = self._draggingFrame.panel();
@@ -7160,6 +7172,7 @@ function wcIFrame(container, panel) {
 
   this.$container = $(container);
   this.$frame = null;
+  this.$focus = null;
 
   /**
    * The iFrame element.
@@ -7306,6 +7319,7 @@ wcIFrame.prototype = {
     this.$container = null;
     this.$frame.remove();
     this.$frame = null;
+    this.$focus = null;
   },
 
 
@@ -7315,7 +7329,9 @@ wcIFrame.prototype = {
 
   __init: function() {
     this.$frame = $('<div class="wcIFrame">');
+    this.$focus = $('<div class="wcIFrameFocus">');
     this._panel.docker().$container.append(this.$frame);
+    this.$frame.append(this.$focus);
 
     this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK,         handler: this.__onBeginDock.bind(this)});

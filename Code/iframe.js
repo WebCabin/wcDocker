@@ -24,6 +24,7 @@ function wcIFrame(container, panel) {
 
   this.$container = $(container);
   this.$frame = null;
+  this.$focus = null;
 
   /**
    * The iFrame element.
@@ -170,6 +171,7 @@ wcIFrame.prototype = {
     this.$container = null;
     this.$frame.remove();
     this.$frame = null;
+    this.$focus = null;
   },
 
 
@@ -179,7 +181,9 @@ wcIFrame.prototype = {
 
   __init: function() {
     this.$frame = $('<div class="wcIFrame">');
+    this.$focus = $('<div class="wcIFrameFocus">');
     this._panel.docker().$container.append(this.$frame);
+    this.$frame.append(this.$focus);
 
     this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK,         handler: this.__onBeginDock.bind(this)});
