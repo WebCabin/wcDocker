@@ -2241,7 +2241,7 @@
     
     
     <div class="description">
-        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
+        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
     </div>
     
 
@@ -2383,6 +2383,15 @@
     
 
 	
+	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
+	
+	<dd>
+		<ul class="dummy">
+			<li>Renamed to [wcDocker.menu}<a href="wcDocker.html#menu">wcDocker#menu</a>.</li>
+		</ul>
+	</dd>
+	
+	
 
 	
 
@@ -2397,13 +2406,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-749">line 749</a>
+     <a href="docker.js.html#sunlight-1-line-750">line 750</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-749">line 749</a>
+				 <a href="docker.js.html#sunlight-1-line-750">line 750</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2490,13 +2499,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-988">line 988</a>
+     <a href="docker.js.html#sunlight-1-line-1005">line 1005</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-988">line 988</a>
+				 <a href="docker.js.html#sunlight-1-line-1005">line 1005</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2583,13 +2592,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1080">line 1080</a>
+     <a href="docker.js.html#sunlight-1-line-1097">line 1097</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1080">line 1080</a>
+				 <a href="docker.js.html#sunlight-1-line-1097">line 1097</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2870,6 +2879,197 @@
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-263">line 263</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="menu"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>menu</b>(selector, itemListOrBuildFunc, includeDefault)</toc>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>selector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external-jQuery.html#~selector">external:jQuery~selector</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A selector string that designates the elements who use this menu.</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>itemListOrBuildFunc</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="external-jQuery.html#contextMenu#~item">external:jQuery#contextMenu~item</a>></span>
+|
+
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An array with each context menu item in it, or a function to call that returns one.</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>includeDefault</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If true, all default menu options will be included.</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="docker.js.html">docker.js</a>,
+     <a href="docker.js.html#sunlight-1-line-766">line 766</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="docker.js.html">docker.js</a>,
+				 <a href="docker.js.html#sunlight-1-line-766">line 766</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4376,13 +4576,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1045">line 1045</a>
+     <a href="docker.js.html#sunlight-1-line-1062">line 1062</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1045">line 1045</a>
+				 <a href="docker.js.html#sunlight-1-line-1062">line 1062</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4488,13 +4688,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1014">line 1014</a>
+     <a href="docker.js.html#sunlight-1-line-1031">line 1031</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1014">line 1014</a>
+				 <a href="docker.js.html#sunlight-1-line-1031">line 1031</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -7067,7 +7267,7 @@
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
-			on 2015-04-03 using the <a
+			on 2015-04-04 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

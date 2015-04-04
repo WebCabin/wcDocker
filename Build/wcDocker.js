@@ -281,12 +281,12 @@ wcDocker.prototype = {
       options = {
         onCreate: optionsOrCreateFunc,
       };
-      console.log("Warning! Passing in the creation function directly to wcDocker.registerPanelType parameter 2 is now deprecated and will be removed in the next version!  Please use the preferred options object instead.");
+      console.log("WARNING: Passing in the creation function directly to wcDocker.registerPanelType parameter 2 is now deprecated and will be removed in the next version!  Please use the preferred options object instead.");
     }
 
     if (typeof isPrivate != 'undefined') {
       options.isPrivate = isPrivate;
-      console.log("Warning! Passing in the isPrivate flag to wcDocker.registerPanelType parameter 3 is now deprecated and will be removed in the next version!  Please use the preferred options object instead.");
+      console.log("WARNING: Passing in the isPrivate flag to wcDocker.registerPanelType parameter 3 is now deprecated and will be removed in the next version!  Please use the preferred options object instead.");
     }
 
     if ($.isEmptyObject(options)) {
@@ -737,7 +737,24 @@ wcDocker.prototype = {
 
   /**
    * Assigns a basic context menu to a selector element.  The context
-   * Menu is a simple list of options, no nesting or special options.
+   * Menu is a simple list of options, no nesting or special options.<br><br>
+   *
+   * If you wish to use a more complex context menu, you can use
+   * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
+   * @deprecated Renamed to [wcDocker.menu}{@link wcDocker#menu}.
+   *
+   * @param {external:jQuery~selector} selector                               - A selector string that designates the elements who use this menu.
+   * @param {external:jQuery#contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
+   * @param {Boolean} includeDefault                                          - If true, all default menu options will be included.
+   */
+  basicMenu: function(selector, itemListOrBuildFunc, includeDefault) {
+    console.log('WARNING: wcDocker.basicMenu is deprecated, please use wcDocker.menu instead.');
+    this.menu(selector, itemListOrBuildFunc, includeDefault);
+  },
+
+  /**
+   * Assigns a basic context menu to a selector element.  The context
+   * Menu is a simple list of options, no nesting or special options.<br><br>
    *
    * If you wish to use a more complex context menu, you can use
    * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
@@ -746,7 +763,7 @@ wcDocker.prototype = {
    * @param {external:jQuery#contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
    * @param {Boolean} includeDefault                                          - If true, all default menu options will be included.
    */
-  basicMenu: function(selector, itemListOrBuildFunc, includeDefault) {
+  menu: function(selector, itemListOrBuildFunc, includeDefault) {
     var self = this;
     $.contextMenu({
       selector: selector,
@@ -1116,7 +1133,7 @@ wcDocker.prototype = {
     
     // Setup our context menus.
     if (this._options.allowContextMenu) {
-      this.basicMenu('.wcFrame', [], true);
+      this.menu('.wcFrame', [], true);
     }
 
     this.theme(this._options.theme);
