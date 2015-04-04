@@ -858,14 +858,14 @@ wcDocker.prototype = {
 
           if (isTitle) {
             items['Close Panel'] = {
-              name: 'Close Tab',
+              name: 'Remove Panel',
               faicon: 'close',
               disabled: !myFrame.panel().closeable(),
             };
             if (!myFrame._isFloating) {
               items['Detach Panel'] = {
-                name: 'Detach Tab',
-                faicon: 'level-down',
+                name: 'Float Panel',
+                faicon: 'level-up',
                 disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder,
               };
             }
@@ -873,7 +873,7 @@ wcDocker.prototype = {
             items['sep' + separatorIndex++] = "---------";
     
             items.fold1 = {
-              name: 'Add Tab',
+              name: 'Add Panel',
               faicon: 'columns',
               items: windowTypes,
               disabled: !(myFrame.panel()._titleVisible && (!myFrame._isFloating || self._modalList.indexOf(myFrame) === -1)),
@@ -882,14 +882,14 @@ wcDocker.prototype = {
           } else {
             if (myFrame) {
               items['Close Panel'] = {
-                name: 'Close Panel',
+                name: 'Remove Panel',
                 faicon: 'close',
                 disabled: !myFrame.panel().closeable(),
               };
               if (!myFrame._isFloating) {
                 items['Detach Panel'] = {
-                  name: 'Detach Panel',
-                  faicon: 'level-down',
+                  name: 'Float Panel',
+                  faicon: 'level-up',
                   disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder,
                 };
               }
@@ -898,7 +898,7 @@ wcDocker.prototype = {
             }
 
             items.fold1 = {
-              name: 'Insert Panel',
+              name: 'Add Panel',
               faicon: 'columns',
               items: windowTypes,
               disabled: !(!myFrame || (!myFrame._isFloating && myFrame.panel().moveable())),
@@ -1238,6 +1238,7 @@ wcDocker.prototype = {
             }
 
             frame.__update();
+            self.__focus(frame);
           }
         } else if (!anchor.self) {
           // Changing tab location on the same frame.
@@ -1289,6 +1290,7 @@ wcDocker.prototype = {
             if (frame instanceof wcFrame) {
               frame.panel(index);
             }
+            self.__focus(frame);
           }
         }
         self._ghost.destroy();
