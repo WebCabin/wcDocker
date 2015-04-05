@@ -10,6 +10,7 @@
     "templates": {
         "cleverLinks": false,
         "monospaceLinks": false,
+        "systemTitle": "wcDocker",
         "systemName": "<div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div>",
         "footer": "",
         "copyright": "",
