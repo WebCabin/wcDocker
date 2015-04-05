@@ -849,6 +849,33 @@ wcDocker.prototype = {
           finalItems[itemList[i].name] = itemList[i];
         }
 
+        var collapseTypes = {};
+        var defaultCollapse = '';
+        if (self.isCollapseEnabled()) {
+
+          var $icon = myFrame.$collapse.children('div');
+          if ($icon.hasClass('wcCollapseLeft')) {
+            defaultCollapse = ' wcCollapseLeft';
+          } else if ($icon.hasClass('wcCollapseRight')) {
+            defaultCollapse = ' wcCollapseRight';
+          } else {
+            defaultCollapse = ' wcCollapseBottom';
+          }
+
+          collapseTypes[wcDocker.DOCK.LEFT] = {
+            name: wcDocker.DOCK.LEFT,
+            faicon: 'sign-in wcCollapseLeft wcCollapsible',
+          };
+          collapseTypes[wcDocker.DOCK.RIGHT] = {
+            name: wcDocker.DOCK.RIGHT,
+            faicon: 'sign-in wcCollapseRight wcCollapsible',
+          };
+          collapseTypes[wcDocker.DOCK.BOTTOM] = {
+            name: wcDocker.DOCK.BOTTOM,
+            faicon: 'sign-in wcCollapseBottom wcCollapsible',
+          };
+        }
+
         var items = finalItems;
 
         if (includeDefault) {
@@ -862,6 +889,20 @@ wcDocker.prototype = {
               faicon: 'close',
               disabled: !myFrame.panel().closeable(),
             };
+            if (self.isCollapseEnabled()) {
+              if (!myFrame.isCollapser()) {
+                items.fold1 = {
+                  name: 'Collapse Panel',
+                  faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
+                  items: collapseTypes,
+                }
+              } else {
+                items['Attach Panel'] = {
+                  name: 'Dock Panel',
+                  faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                }
+              }
+            }
             if (!myFrame._isFloating) {
               items['Detach Panel'] = {
                 name: 'Float Panel',
@@ -872,7 +913,7 @@ wcDocker.prototype = {
 
             items['sep' + separatorIndex++] = "---------";
     
-            items.fold1 = {
+            items.fold2 = {
               name: 'Add Panel',
               faicon: 'columns',
               items: windowTypes,
@@ -886,6 +927,20 @@ wcDocker.prototype = {
                 faicon: 'close',
                 disabled: !myFrame.panel().closeable(),
               };
+              if (self.isCollapseEnabled()) {
+                if (!myFrame.isCollapser()) {
+                  items.fold1 = {
+                    name: 'Collapse Panel',
+                    faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
+                    items: collapseTypes,
+                  }
+                } else {
+                  items['Attach Panel'] = {
+                    name: 'Dock Panel',
+                    faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                  }
+                }
+              }
               if (!myFrame._isFloating) {
                 items['Detach Panel'] = {
                   name: 'Float Panel',
@@ -897,7 +952,7 @@ wcDocker.prototype = {
               items['sep' + separatorIndex++] = "---------";
             }
 
-            items.fold1 = {
+            items.fold2 = {
               name: 'Add Panel',
               faicon: 'columns',
               items: windowTypes,
@@ -922,6 +977,35 @@ wcDocker.prototype = {
               }, 10);
             } else if (key === 'Detach Panel') {
               self.movePanel(myFrame.panel(), wcDocker.DOCK.FLOAT, false);
+            } else if (key === 'Attach Panel') {
+              var $icon = myFrame.$collapse.children('div');
+              var position = wcDocker.DOCK.BOTTOM;
+              if ($icon.hasClass('wcCollapseLeft')) {
+                position = wcDocker.DOCK.LEFT;
+              } else if ($icon.hasClass('wcCollapseRight')) {
+                position = wcDocker.DOCK.RIGHT;
+              }
+              var opts = {};
+              switch (position) {
+                case wcDocker.DOCK.LEFT:
+                  opts.w = myFrame.$frame.width();
+                  break;
+                case wcDocker.DOCK.RIGHT:
+                  opts.w = myFrame.$frame.width();
+                  break;
+                case wcDocker.DOCK.BOTTOM:
+                  opts.h = myFrame.$frame.height();
+                  break;
+              }
+              var target = self._collapser[wcDocker.DOCK.LEFT]._parent.right();
+              myFrame.collapse(true);
+              self.movePanel(myFrame.panel(), position, target, opts);
+            } else if (key === wcDocker.DOCK.LEFT) {
+              self.movePanel(myFrame.panel(), wcDocker.DOCK.LEFT, wcDocker.COLLAPSED);
+            } else if (key === wcDocker.DOCK.RIGHT) {
+              self.movePanel(myFrame.panel(), wcDocker.DOCK.RIGHT, wcDocker.COLLAPSED);
+            } else if (key === wcDocker.DOCK.BOTTOM) {
+              self.movePanel(myFrame.panel(), wcDocker.DOCK.BOTTOM, wcDocker.COLLAPSED);
             } else {
               if (self._ghost && (myFrame)) {
                 var anchor = self._ghost.anchor();

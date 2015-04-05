@@ -434,13 +434,13 @@ html, body {
           transform: scaleY(-1);
 }
 
-.wcFrameButton .wcCollapseLeft.wcCollapsible,
-.wcFrameButton .wcCollapseRight.wcCollapsed {
-  -webkit-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-     -moz-transform: rotate(180deg);
-       -o-transform: rotate(180deg);
-          transform: rotate(180deg);
+.wcCollapseLeft.wcCollapsible,
+.wcCollapseRight.wcCollapsed {
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+     -moz-transform: scaleX(-1);
+       -o-transform: scaleX(-1);
+          transform: scaleX(-1);
   -webkit-transform-origin: center center;
       -ms-transform-origin: center center;
      -moz-transform-origin: center center;
@@ -448,7 +448,7 @@ html, body {
           transform-origin: center center;
 }
 
-.wcFrameButton .wcCollapseBottom.wcCollapsible {
+.wcCollapseBottom.wcCollapsible {
   -webkit-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
      -moz-transform: rotate(90deg);
@@ -461,7 +461,7 @@ html, body {
           transform-origin: center center;
 }
 
-.wcFrameButton .wcCollapseBottom.wcCollapsed {
+.wcCollapseBottom.wcCollapsed {
   -webkit-transform: rotate(-90deg);
       -ms-transform: rotate(-90deg);
      -moz-transform: rotate(-90deg);
