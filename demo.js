@@ -78,11 +78,13 @@ $(document).ready(function() {
         '</div>');
 
         var $version= $('<pre style="position:absolute;top:5px;right:10px;margin:0px;background-color:transparent;">Version (pre-release) 3.0.0</pre>');
+        var $b0     = $('<div style="position:absolute;top:30px;right:171px;"><img src="images/tablet.png"/></div>');
         var $b1     = $('<div style="position:absolute;top:28px;right:130px;"><img src="images/chrome.png"/></div>');
         var $b2     = $('<div style="position:absolute;top:28px;right:90px;"><img src="images/firefox.png"/></div>');
         var $b3     = $('<div style="position:absolute;top:28px;right:50px;"><img src="images/internet-explorer.png"/></div>');
         var $b4     = $('<div style="position:absolute;top:28px;right:10px;"><img src="images/safari.png"/></div>');
         $header.append($version);
+        $header.append($b0);
         $header.append($b1);
         $header.append($b2);
         $header.append($b3);
