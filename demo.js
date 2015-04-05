@@ -119,7 +119,7 @@ $(document).ready(function() {
           }
 
           // Now create the panel item.
-          var $item = $('<div class="wcCreatePanel" style="padding:5px;text-align:center;width:100%;">');
+          var $item = $('<div class="wcCreatePanel" style="padding:5px;margin-bottom:5px;text-align:center;border:2px solid black;border-radius:10px;">');
           $item.text(panelTypes[i]);
           $item.data('panel', panelTypes[i]);
           $item.prepend($icon);
