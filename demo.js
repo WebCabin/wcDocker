@@ -95,6 +95,42 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
+    // Register the creation panel that allows users to drag-drop custom elements
+    // to create panels in docker.
+    myDocker.registerPanelType('Creation Panel', {
+      faicon: 'plus-square',
+      onCreate: function(myPanel) {
+        myPanel.layout().$table.css('border-top', '2px solid black');
+        myPanel.layout().addItem($('<div>')).stretch('100%', '25px');
+
+        // Retrieve a list of all panel types, that are not marked as private.
+        var panelTypes = myDocker.panelTypes(false);
+        for (var i = 0; i < panelTypes.length; ++i) {
+          // Retrieve more detailed information about the panel.
+          var info = myDocker.panelTypeInfo(panelTypes[i]);
+
+          // We want to show the panel icon, if it exists.
+          var $icon = $('<div class="wcMenuIcon">');
+          if (info.icon) {
+            $icon.addClass(info.icon);
+          }
+          if (info.faicon) {
+            $icon.addClass('fa fa-menu fa-' + info.faicon + ' fa-lg fa-fw');
+          }
+
+          // Now create the panel item.
+          var $item = $('<div class="wcCreatePanel" style="padding:5px;text-align:center;width:100%;">');
+          $item.text(panelTypes[i]);
+          $item.data('panel', panelTypes[i]);
+          $item.prepend($icon);
+
+          myPanel.layout().addItem($item, 0, i+1).stretch('100%', '1%');
+        }
+        myPanel.layout().addItem($('<div>'), 0, i+1).stretch(undefined, '100%');
+      }
+    });
+
+    // --------------------------------------------------------------------------------
     // Register the control panel, this one has a few controls that allow you to change
     // dockers theme as well as layout configuration controls.
     myDocker.registerPanelType('Control Panel', {
@@ -435,7 +471,7 @@ $(document).ready(function() {
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
       tabOrientation: wcDocker.TAB.RIGHT
     });
-    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
+    var batchPanel = myDocker.addPanel('Creation Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
     var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
   }
 });

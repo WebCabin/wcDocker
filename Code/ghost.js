@@ -123,7 +123,7 @@ wcGhost.prototype = {
       y: this.$ghost.offset().top,
       w: parseInt(this.$ghost.css('width')),
       h: parseInt(this.$ghost.css('height')),
-      tabOrientation: this._anchor.tab,
+      tabOrientation: this._anchor && this._anchor.tab,
     };
   },
 
