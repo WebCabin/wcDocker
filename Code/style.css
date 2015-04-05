@@ -133,41 +133,17 @@ html, body {
   width: auto !important;
 }
 
-.wcFrameButton, .wcFrameMiniButton {
-  width: 13px;
-  height: 13px;
+.wcFrameButton {
   position: relative;
   float: right;
-  border: 2px outset #444444;
-  font-size: 11px;
   cursor: pointer;
   text-align: center;
   overflow: hidden;
   z-index: 1;
-
-  background-color: #555555;
 }
 
-.wcFrameButton > div, .wcFrameMiniButton > div {
+.wcFrameButton > div {
   width: 100%;
-}
-
-.wcFrameMiniButton {
-  width: 6px;
-}
-
-.wcFrameButtonhover {
-  border: 2px outset #666666;
-  background-color: #686868;
-}
-
-.wcFrameButton:active {
-  border: 2px inset #AAAAAA;
-  background-color: #888888;
-}
-
-.wcFrameButtonToggled, .wcFrameButtonToggled:hover {
-  border-style: inset;
 }
 
 .wcFrameCenter {
@@ -196,7 +172,6 @@ html, body {
   border: 0px;
   margin: 0px;
   padding: 0px;
-  background-color: transparent;
 
   border-spacing: 0px;
 }
@@ -489,10 +464,7 @@ html, body {
 
 .wcGhost {
   opacity: 0.0;
-  background-color: #444444;
   position: fixed;
-  border: 0px;
-  border-radius: 6px;
   z-index: 100;
   cursor: move;
 }
@@ -511,20 +483,11 @@ html, body {
 
 .wcTabIcon {
   display: inline-block;
-  width: 1.28571429em;
-  height: 1em;
   text-align: center;
-  margin-right: 2px;
 }
 
 .wcMenuIcon {
-  margin-left: -24px;
-  width: 1.28571429em;
-  font-size: 1.33333333em;
-  line-height: 0.75em;
-  height: 1em;
   display: inline-block;
-  vertical-align: -15%;
   text-align: center;
 }
 

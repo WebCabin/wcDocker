@@ -47,10 +47,6 @@
   font-size: 17px;
 }
 
-.wcFrameMiniButton {
-  width: 8px;
-}
-
 .wcFrameButton:hover {
   border: 0px solid black;
   background-color: black;
@@ -87,8 +83,10 @@
   background-color: black;
 }
 
-.wcSplitterBarStatic {
+.wcSplitterBarV.wcSplitterBarStatic {
   width: 0px;
+}
+.wcSplitterBarH.wcSplitterBarStatic {
   height: 0px;
 }
 
@@ -174,6 +172,12 @@
   background-color: #777;
 }
 
+
+/*
+  The following are not actually used in docker, they are provided as a convenience when
+  controls are used in your panels, if you want to match the active theme.
+*/
+
 .wcInput, input {
   color: #CCC;
   background-color: #555;
@@ -211,4 +215,70 @@
   border: 1px outset #494949 !important;
   background-color: #494949 !important;
   color: #333 !important;
+}
+
+
+
+
+
+
+
+
+/*
+  Mobile style changes.
+*/
+
+.wcMobile .wcFrameTitleBar {
+  height: 29px;
+}
+
+.wcMobile .wcFrameTitle {
+  font-size: 20px;
+}
+
+.wcMobile .wcFrameButton, .wcMobile .wcFrameButton {
+  width: 25px;
+  height: 25px;
+  font-size: 22px;
+  border: 2px solid #111;
+}
+
+.wcMobile .wcFrameCenter {
+  top: 29px;
+}
+
+.wcMobile .wcPanelTab {
+  font-size: 14px;
+  height: 26px;
+}
+
+.wcMobile .wcPanelTabActive {
+  height: 30px;
+}
+
+.wcMobile .wcPanelTab > div {
+  margin-top: 4px;
+}
+
+.wcMobile .wcSplitterBarV.wcSplitterBar:not(.wcSplitterBarStatic) {
+  width: 12px;
+  border-width: 3px;
+  border-color: #000;
+  border-top: 0;
+  border-bottom: 0;
+  background-color: #111;
+}
+.wcMobile .wcSplitterBarH.wcSplitterBar:not(.wcSplitterBarStatic) {
+  height: 12px;
+  border-width: 3px;
+  border-color: #000;
+  border-left: 0;
+  border-right: 0;
+  background-color: #111;
+}
+
+.wcInput, input,
+.wcSelect, select,
+.wcButton, button {
+  font-size: 22px;
 }

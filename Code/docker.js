@@ -1066,7 +1066,7 @@ wcDocker.prototype = {
             },
             hide: function(opt) {
               if (self._ghost) {
-                self._ghost.__destroy();
+                self._ghost.destroy();
                 self._ghost = false;
               }
             },
@@ -1248,6 +1248,9 @@ wcDocker.prototype = {
     $('body').on('touchstart', '.wcPanelTab', __onPreventDefault);
     $('body').on('mousedown', '.wcFrameButtonBar > .wcFrameButton', __onMouseSelectionBlocker);
     $('body').on('touchstart', '.wcFrameButtonBar > .wcFrameButton', __onMouseSelectionBlocker);
+    // Mouse down on a frame title will allow you to move them.
+    $('body').on('mousedown', '.wcFrameTitleBar', __onMouseDownFrameTitle);
+    $('body').on('touchstart', '.wcFrameTitleBar', __onMouseDownFrameTitle);
     // Mouse down on a splitter bar will allow you to resize them.
     $('body').on('mousedown', '.wcSplitterBar', __onMouseDownSplitter);
     $('body').on('touchstart', '.wcSplitterBar', __onMouseDownSplitter);
@@ -1257,9 +1260,6 @@ wcDocker.prototype = {
     // Middle mouse button on a panel tab to close it.
     $('body').on('mouseup', '.wcPanelTab', __onReleasePanelTab);
     $('body').on('touchend', '.wcPanelTab', __onReleasePanelTab);
-    // Mouse down on a frame title will allow you to move them.
-    $('body').on('mousedown', '.wcFrameTitleBar', __onMouseDownFrameTitle);
-    $('body').on('touchstart', '.wcFrameTitleBar', __onMouseDownFrameTitle);
     // Mouse down on a panel will put it into focus.
     $('body').on('mousedown', '.wcLayout', __onMouseDownLayout);
     $('body').on('touchstart', '.wcLayout', __onMouseDownLayout);
@@ -1274,6 +1274,9 @@ wcDocker.prototype = {
     $('body').on('click', '.wcCustomTab .wcFrameButton', __onClickCustomTabButton);
     // Clicking on a panel frame button.
     $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', __onClickPanelButton);
+
+    // Escape key to cancel drag operations.
+    $('body').on('keyup', __onKeyup);
 
     var self = this;
     // on mousedown
@@ -1662,6 +1665,7 @@ wcDocker.prototype = {
           self._draggingSplitter = self._splitterList[i];
           self._draggingSplitter.$pane[0].addClass('wcResizing');
           self._draggingSplitter.$pane[1].addClass('wcResizing');
+          event.preventDefault();
           break;
         }
       }
@@ -1676,7 +1680,7 @@ wcDocker.prototype = {
       }
       // Skip frame buttons, they are handled elsewhere (Buttons may also have a child image or span so we check parent as well);
       if ($(event.target).hasClass('wcFrameButton') || $(event.target).parents('.wcFrameButton').length) {
-        return false;
+        return true;
       }
       
       self.$container.addClass('wcDisableSelection');
@@ -1829,6 +1833,26 @@ wcDocker.prototype = {
       }
       return true;
     };
+
+    // on keyup
+    function __onKeyup(event) {
+      if (event.keyCode == 27) {
+        if (self._ghost && self._draggingFrame) {
+          self._draggingFrame.__shadow(false);
+          self._ghost.destroy();
+          self._ghost = false;
+          self.trigger(wcDocker.EVENT.END_DOCK);
+
+          self._draggingSplitter = null;
+          self._draggingFrame = null;
+          self._draggingFrameSizer = null;
+          self._draggingFrameTab = null;
+          self._draggingFrameTopper = false;
+          self._draggingCustomTabFrame = null;
+          self._removingPanel = null;
+        }
+      }
+    };
   },
 
   // Test for browser compatability issues.
@@ -1882,7 +1906,7 @@ wcDocker.prototype = {
       };
     }
 
-    // Check if the browser supports transformations, if not, we cannot rotate tabs.
+    // Check if the browser supports transformations. If not, we cannot rotate tabs or collapse panels.
     var ie = (function(){
         var v = 3;
         var div = document.createElement('div');
@@ -1898,17 +1922,21 @@ wcDocker.prototype = {
       this._canOrientTabs = false;
     } else {
       function getSupportedTransform() {
-          var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
-          var div = document.createElement('div');
-          for(var i = 0; i < prefixes.length; i++) {
-              if(div && div.style[prefixes[i]] !== undefined) {
-                  return true;
-              }
+        var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
+        var div = document.createElement('div');
+        for(var i = 0; i < prefixes.length; i++) {
+          if(div && div.style[prefixes[i]] !== undefined) {
+            return true;
           }
-          return false;
+        }
+        return false;
       };
       this._canOrientTabs = getSupportedTransform();
     }
+
+    // Check if we are running on a mobile device so we can alter themes accordingly.
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    $('body').addClass(isMobile? "wcMobile": "wcDesktop");
   },
 
   /*
@@ -2212,7 +2240,7 @@ wcDocker.prototype = {
         setTimeout(function() {self.__update();});
         return panel;
       } else {
-        console.log('ERROR: Attempted to collapse panel "' + typeName + '" to invalid location: ' + location);
+        console.log('ERROR: Attempted to collapse panel "' + panel._type + '" to invalid location: ' + location);
         return false;
       }
     }

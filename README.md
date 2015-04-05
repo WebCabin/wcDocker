@@ -77,9 +77,9 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
      var myCustomTabFrame = new wcTabFrame(domElem, myPanel);
      myCustomTabFrame.tabOrientation(wcDocker.TAB.LEFT);
      ```
+- **Collapsable panels!** Ability to collapse any panel in the view. Collapsed panels appear as a tabbed item on one side, activating the tab will expand your collapsed panel into view where it can be used and then collapsed again, or re-docked back into the panel again!
 - **COMING SOON!**
- - **Collapsable panels!** Ability to collapse any panel in the view. Collapsed panels appear as a tabbed item on one side, activating the tab will expand your collapsed panel into view where it can be used and then collapsed again, or re-docked back into the panel again!
- - Ability to **assign any DOM element as a panel creation button**. A panel creation button can be clicked, or drag+dropped, by the user to create new panels in their view.
+ - Ability to **assign any DOM element as a panel creation widget**. A panel creation widget can be drag-dropped by the user to create new panels in their view.
 
      ```
      {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
