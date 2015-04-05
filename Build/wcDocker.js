@@ -4871,7 +4871,7 @@ wcFrame.prototype = {
           this.$frame.prepend(this.$tabBar);
           this.$titleBar.remove();
           this.$tabBar.addClass('wcTabTop').removeClass('wcTabLeft wcTabRight wcTabBottom');
-          this.$tabBar.css('margin-top', '');
+          // this.$tabBar.css('margin-top', '');
           if (showTabs) {
             this.$title.remove();
           } else {
@@ -4889,7 +4889,7 @@ wcFrame.prototype = {
             var titleSize = this.$titleBar.height();
             this.$frame.append(this.$tabBar);
             this.$tabBar.addClass('wcTabBottom').removeClass('wcTabTop wcTabLeft wcTabRight');
-            this.$tabBar.css('margin-top', '');
+            // this.$tabBar.css('margin-top', '');
 
             this.$center.css('left', 0).css('right', 0).css('bottom', titleSize);
           } else {
@@ -4906,7 +4906,7 @@ wcFrame.prototype = {
             var titleSize = this.$titleBar.height();
             this.$frame.append(this.$tabBar);
             this.$tabBar.addClass('wcTabLeft').removeClass('wcTabTop wcTabRight wcTabBottom');
-            this.$tabBar.css('margin-top', titleSize);
+            // this.$tabBar.css('margin-top', titleSize);
 
             this.$center.css('left', titleSize).css('right', 0).css('bottom', 0);
           } else {
@@ -4923,7 +4923,7 @@ wcFrame.prototype = {
             var titleSize = this.$titleBar.height();
             this.$frame.append(this.$tabBar);
             this.$tabBar.addClass('wcTabRight').removeClass('wcTabTop wcTabLeft wcTabBottom');
-            this.$tabBar.css('margin-top', titleSize);
+            // this.$tabBar.css('margin-top', titleSize);
 
             this.$center.css('left', 0).css('right', titleSize).css('bottom', 0);
           } else {
@@ -5145,14 +5145,17 @@ wcFrame.prototype = {
       }
 
       if (this._titleVisible) {
+        this.$buttonBar.css('right', '');
         switch (this._tabOrientation) {
           case wcDocker.TAB.RIGHT:
+            this.$buttonBar.css('right', this.$tabBar.height());
           case wcDocker.TAB.LEFT:
-            this.$tabBar.css('width', this.$center.height());
+            this.$tabBar.css('width', this.$center.height() + this.$tabBar.height());
             break;
           case wcDocker.TAB.TOP:
           case wcDocker.TAB.BOTTOM:
             this.$tabBar.css('width', this.$center.width());
+            break;
           default:
             break;
         }

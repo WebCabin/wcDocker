@@ -30,8 +30,7 @@
   font-weight: bold;
   text-align: center;
   padding-top: 3px;
-  background-color: #555;
-  border-bottom: 1px solid gray;
+  background-color: #444;
 }
 
 .wcFrameCenter {
@@ -42,7 +41,7 @@
   width: 20px;
   height: 20px;
   border: 0px solid #111;
-  background-color: #111;
+  background-color: transparent;
   color: #888;
   font-size: 17px;
 }

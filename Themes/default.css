@@ -49,8 +49,7 @@
   font-weight: bold;
   text-align: center;
   padding-top: 3px;
-  background-color: #333;
-  /*border-bottom: 1px solid #666;*/
+  background-color: gray;
 }
 
 .wcFrameButton {
@@ -59,6 +58,14 @@
   border: 2px outset #444444;
   font-size: 11px;
   background-color: #555555;
+}
+
+.wcFrameButton:hover {
+  background-color: #666;
+}
+
+.wcFrameButton:active {
+  border: 2px inset #444;
 }
 
 .wcFrameCenter {
