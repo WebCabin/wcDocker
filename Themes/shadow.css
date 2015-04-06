@@ -276,8 +276,8 @@
   background-color: #111;
 }
 
-.wcInput, input,
-.wcSelect, select,
-.wcButton, button {
+.wcMobile .wcInput, .wcMobile input,
+.wcMobile .wcSelect, .wcMobile select,
+.wcMobile .wcButton, .wcMobile button {
   font-size: 22px;
 }
