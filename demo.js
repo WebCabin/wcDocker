@@ -100,9 +100,6 @@ $(document).ready(function() {
     myDocker.registerPanelType('Creation Panel', {
       faicon: 'plus-square',
       onCreate: function(myPanel) {
-        myPanel.layout().$table.css('border-top', '2px solid black');
-        myPanel.layout().addItem($('<div>')).stretch('100%', '25px');
-
         // Retrieve a list of all panel types, that are not marked as private.
         var panelTypes = myDocker.panelTypes(false);
         for (var i = 0; i < panelTypes.length; ++i) {
@@ -110,7 +107,7 @@ $(document).ready(function() {
           var info = myDocker.panelTypeInfo(panelTypes[i]);
 
           // We want to show the panel icon, if it exists.
-          var $icon = $('<div class="wcMenuIcon">');
+          var $icon = $('<div class="wcMenuIcon" style="margin-right: 15px;">');
           if (info.icon) {
             $icon.addClass(info.icon);
           }
@@ -118,14 +115,23 @@ $(document).ready(function() {
             $icon.addClass('fa fa-menu fa-' + info.faicon + ' fa-lg fa-fw');
           }
 
-          // Now create the panel item.
-          var $item = $('<div class="wcCreatePanel" style="padding:5px;margin-bottom:5px;text-align:center;border:2px solid black;border-radius:10px;">');
+          // Now create the item using our theme's button style, but add a few styles of our own.
+          var $item = $('<div class="wcCreatePanel wcButton">');
+          $item.css('padding', 5)
+            .css('margin-top', 5)
+            .css('margin-bottom', 5)
+            .css('border', '2px solid black')
+            .css('border-radius', '10px')
+            .css('text-align', 'center');
+
+          // Set our item content and insert the icon.
           $item.text(panelTypes[i]);
           $item.data('panel', panelTypes[i]);
           $item.prepend($icon);
 
-          myPanel.layout().addItem($item, 0, i+1).stretch('100%', '1%');
+          myPanel.layout().addItem($item, 0, i+1);
         }
+        // Add a stretched element that will push everything to the top of the layout.
         myPanel.layout().addItem($('<div>'), 0, i+1).stretch(undefined, '100%');
       }
     });

@@ -46,7 +46,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
      ```
      new wcDocker(domNode, {themePath: 'New/theme/folder'});
      ```
- - All wcDocker.DOCK, wcDocker.EVENT, and wcDocker.ORIENTATION enumerations have changed slightly, instead of each being one variable, they are broken into objects.
+ - All `wcDocker.DOCK`, `wcDocker.EVENT`, and `wcDocker.ORIENTATION` enumerations have changed slightly, instead of each being one variable, they are broken into objects.
  
      ```
      // OLD format...
@@ -64,12 +64,18 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
      // just replace the first '_' with a '.' and they should work fine again!
      ```
 
- - wcLayout's are slightly different, wcLayout.addItem() and wcLayout.item() no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
- - wcLayout.scene() function is now deprecated, please use wcLayout.$frame.
+ - `wcLayout's` are slightly different, `wcLayout.addItem()` and `wcLayout.item()` no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
+ - The following functions are now `deprecated` and will be removed in an upcoming version:
+   - `wcDocker.basicMenu()`, renamed to `wcDocker.menu()`.
+   - `wcLayout.scene()`, please use the `wcLayout.$table` jQuery element instead.
 
-- Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
-- Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the table size changes.
-- Tab buttons shown on the panel frame and the custom tab widget can now be oriented to show on the left, right, or bottom edge of the frames (if the browser supports it).
+- **`Collapsible panels:`** Panels can now be collapsed to the side or bottom of the screen, where they become a slide-out drawer above the main layout.
+- **`Panel creation elements:`** Instead of relying on the context-menu controls to add new panwls, you can now add the CSS class **`"wcCreatePanel"`** to any dom element along with the data attribute **`"panel"`** and wcDocker will treat it as a panel creation control. A user will then be able to drag-drop that element into their view to create new panels of the specified type.
+
+     ```
+     {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
+     ```
+- **`Tab orientation:`** Tab controls displayed on panels and the custom tab widget can now be oriented to the left, right, or bottom edges (browser must support css transforms).
 
      ```
      myDocker.addPanel('Some Panel', wcDocker.DOCK.STACKED, parentPanel, {tabOrientation: wcDocker.TAB.BOTTOM});
@@ -77,57 +83,50 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
      var myCustomTabFrame = new wcTabFrame(domElem, myPanel);
      myCustomTabFrame.tabOrientation(wcDocker.TAB.LEFT);
      ```
-- **Collapsable panels!** Ability to collapse any panel in the view. Collapsed panels appear as a tabbed item on one side, activating the tab will expand your collapsed panel into view where it can be used and then collapsed again, or re-docked back into the panel again!
-- **COMING SOON!**
- - Ability to **assign any DOM element as a panel creation widget**. A panel creation widget can be drag-dropped by the user to create new panels in their view.
-
-     ```
-     {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
-     ```
+- Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
+- Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the grid size changes.
 
 #### Version: 2.2.0 ####
-- Separated the default theme out of wcDocker.css (now use wcDockerSkeleton.css with Themes/default.css).
-- Added wcDocker.panelTypeInfo() and wcPanel.info() that will retrieve the registration data of a panel.
-- Added wcDocker.panelTypes() to retrieve a list of all registered panel types.
-- New event type wcDocker.EVENT.INIT.
+- Separated the default theme out of `wcDocker.css` (now use `wcDocker.css` with `Themes/default.css`).
+- Added `wcDocker.panelTypeInfo()` and `wcPanel.info()` that will retrieve the registration data of a panel.
+- Added `wcDocker.panelTypes()` to retrieve a list of all registered panel types.
+- New event type `wcDocker.EVENT.INIT`.
 - Panel width and height can now be retrieved.
-- wcPanel functions initPos, initSize, minSize, and maxSize can now take a string value with a 'px' or '%' suffix.
+- `wcPanel` functions `initPos`, `initSize`, `minSize`, and `maxSize` can now take a string value with a `'px'` or `'%'` suffix.
 - Fixed issue with using normal CSS icons in the context menu.
 - Improved auto scrolling of tab items when clicked.
-- Created a new wcCustomTabs object for creating docker styled tab areas inside a panel.
+- Create your own `wcTabFrame` widget within your panels.
+- Create your own `wcIFrame` widget within your panels.
 - Floating panels can now be modal.
-- Create your own splitter widget within a panel.
-- Create your own tabbed frame widget within a panel.
-- Create your own iFrame widget within a panel.
 
 #### Version: 2.1.0 ####
-- wcDocker now has Bower support for easy package management.
-- wcSplitter is now usable inside a panel.
+- `wcDocker` now has Bower support for easy package management.
+- `wcSplitter` is now usable inside a panel.
 - Improved performance of panel resizing.
-- wcPanel.focus() now actually sets itself as the current active tab.
-- wcDocker.registerPanelType() has a new option {limit: Number} that limits the total number of copies for this panel.
-- New event type wcDocker.EVENT.VISIBILITY_CHANGED, triggered whenever the panel gains or loses visibility.  Use wcPanel.isVisible() to retrieve the current state.
+- `wcPanel.focus()` now actually sets itself as the current active tab.
+- `wcDocker.registerPanelType()` has a new option `{limit: Number}` that limits the total number of copies for this panel.
+- New event type `wcDocker.EVENT.VISIBILITY_CHANGED`, triggered whenever the panel gains or loses visibility.  Use `wcPanel.isVisible()` to retrieve the current state.
 - Reduced DOM changes during tab change and resize.
-- New event types wcDocker.EVENT.BEGIN_DOCK and wcDocker.EVENT.END_DOCK that trigger whenever the user is dragging a panel to a new location.
-- New event types wcDocker.EVENT.GAIN_FOCUS and wcDocker.EVENT.LOST_FOCUS that trigger whenever a panel is brought it and out of focus.
+- New event types `wcDocker.EVENT.BEGIN_DOCK` and `wcDocker.EVENT.END_DOCK` that trigger whenever the user is dragging a panel to a new location.
+- New event types `wcDocker.EVENT.GAIN_FOCUS` and `wcDocker.EVENT.LOST_FOCUS` that trigger whenever a panel is brought it and out of focus.
 - Floating panels no longer change size whenever a new panel is added to it as a tab.
 
 #### Version: 2.0.0 ####
 - Layout grid can now have a spacing size.
 - Layout grid can now be set to alternating row color.
-- wcLayout.item() added to retrieve an already existing item in the layout.
-- wcDocker can now send and receive events.
-- wcLayout can now batch large numbers of elements added without page refreshing between each.
-- wcPanel can now contain custom buttons that appear within the title bar.
-- wcDocker.basicMenu() now has an option to include the default menu options along with your custom ones.
-- wcDocker.basicMenu() can now accept a dynamic callback function that returns custom menu's at the time of the event.
+- `wcLayout.item()` added to retrieve an already existing item in the layout.
+- `wcDocker` can now send and receive events.
+- `wcLayout` can now batch large numbers of elements added without page refreshing between each.
+- `wcPanel` can now contain custom buttons that appear within the title bar.
+- `wcDocker.basicMenu()` now has an option to include the default menu options along with your custom ones.
+- `wcDocker.basicMenu()` can now accept a dynamic callback function that returns custom menu's at the time of the event.
 - New events added for resize start, resize end, move start, and move end.
 - Panels can now be set to hide their contents whenever they are resized.
-- wcDocker constructor now takes an options object.
-- wcDocker now has an option to disable the default context menu.
+- `wcDocker` constructor now takes an options object.
+- `wcDocker` now has an option to disable the default context menu.
 - Panel tabs are now scrollable.
 - Icons are now supported using regular CSS or the Font-Awesome library [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/).
-- wcDocker.registerPanelType() can now take an options object instead of just a single callback.
+- `wcDocker.registerPanelType()` can now take an options object instead of just a single callback.
 - Fixed layout save/restore.
 - Fixed layout clear not actually removing elements.
 - Fixed compatibility with IE8.
