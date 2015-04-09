@@ -44,6 +44,7 @@ function wcDocker(container, options) {
   this._focusFrame = null;
   this._placeholderPanel = null;
   this._contextTimer = 0;
+  this._dirty = false;
 
   this._splitterList = [];
   this._tabList = [];
@@ -73,7 +74,8 @@ function wcDocker(container, options) {
     theme: 'default',
     allowContextMenu: true,
     hideOnResize: false,
-    allowCollapse: true
+    allowCollapse: true,
+    responseRate: 10
   };
 
   this._options = {};
@@ -1211,6 +1213,8 @@ wcDocker.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   __init: function() {
+    var self = this;
+
     this.__compatibilityCheck();
 
     this._root = null;
@@ -1222,6 +1226,20 @@ wcDocker.prototype = {
     }
 
     this.theme(this._options.theme);
+
+    // Set up our responsive updater.
+    this._updateId = setInterval(function() {
+      if (self._dirty) {
+        if (self._root) {
+          self._root.__update();
+        }
+
+        for (var i = 0; i < self._floatingList.length; ++i) {
+          self._floatingList[i].__update();
+        }
+        self._dirty = false;        
+      }
+    }, this._options.responseRate);
 
     $(window).resize(this.__resize.bind(this));
     $('body').on('contextmenu', 'a, img', __onContextShowNormal);
@@ -1282,7 +1300,6 @@ wcDocker.prototype = {
     // Escape key to cancel drag operations.
     $('body').on('keyup', __onKeyup);
 
-    var self = this;
     // on mousedown
     function __onMouseDown(event) {
       var mouse = self.__mouse(event);
@@ -1417,11 +1434,36 @@ wcDocker.prototype = {
     };
 
     // on mousemove
+    var lastMouseMove = new Date().getTime();
+    var lastMouseEvent = null;
+    var moveTimeout = 0;
     function __onMouseMove(event) {
+      lastMouseEvent = event;
       var mouse = self.__mouse(event);
-      if (mouse.which === 3) {
+      if (mouse.which === 3 || (
+        !self._draggingSplitter &&
+        !self._draggingFrameSizer &&
+        !self._draggingCustomTabFrame &&
+        !self._ghost &&
+        !self._draggingFrame &&
+        !self._draggingFrameTab)) {
         return true;
       }
+
+      var t = new Date().getTime();
+      if (t - lastMouseMove < self._options.responseRate) {
+        if (!moveTimeout) {
+          moveTimeout = setTimeout(function() {
+            lastMouseMove = 0;
+            moveTimeout = 0;
+            __onMouseMove(lastMouseEvent);
+          }, self._options.responseRate);
+        }
+        return true;
+      }
+
+      lastMouseMove = new Date().getTime();
+
       if (self._draggingSplitter) {
         self._draggingSplitter.__moveBar(mouse);
       } else if (self._draggingFrameSizer) {
@@ -2036,13 +2078,17 @@ wcDocker.prototype = {
 
   // Updates the sizing of all panels inside this window.
   __update: function(opt_dontMove) {
-    if (this._root) {
-      this._root.__update(opt_dontMove);
-    }
+    this._dirty = true;
+    // if (opt_dontMove !== undefined) {
+    //   if (this._root) {
+    //     this._root.__update(opt_dontMove);
+    //   }
 
-    for (var i = 0; i < this._floatingList.length; ++i) {
-      this._floatingList[i].__update();
-    }
+    //   for (var i = 0; i < this._floatingList.length; ++i) {
+    //     this._floatingList[i].__update();
+    //   }
+    //   this._dirty = false;
+    // }
   },
 
   // Retrieve mouse or touch position.
