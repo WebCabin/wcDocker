@@ -1164,7 +1164,7 @@ wcDocker.prototype = {
       panel.__restore(data.floating[i], this);
     }
 
-    this.__update(false);
+    this.__forceUpdate(false);
 
     if (!$.isEmptyObject(data.collapsers) && this.isCollapseEnabled()) {
       this.__initCollapsers();
@@ -1174,7 +1174,7 @@ wcDocker.prototype = {
       this._collapser[wcDocker.DOCK.BOTTOM].__restore(data.collapsers.bottom, this);
 
       var self = this;
-      setTimeout(function() {self.__update();});
+      setTimeout(function() {self.__forceUpdate();});
     }
   },
 
@@ -2079,16 +2079,20 @@ wcDocker.prototype = {
   // Updates the sizing of all panels inside this window.
   __update: function(opt_dontMove) {
     this._dirty = true;
-    // if (opt_dontMove !== undefined) {
-    //   if (this._root) {
-    //     this._root.__update(opt_dontMove);
-    //   }
+  },
 
-    //   for (var i = 0; i < this._floatingList.length; ++i) {
-    //     this._floatingList[i].__update();
-    //   }
-    //   this._dirty = false;
-    // }
+  // Forces an update, regardless of the response rate.
+  __forceUpdate: function(opt_dontMove) {
+    if (opt_dontMove !== undefined) {
+      if (this._root) {
+        this._root.__update(opt_dontMove);
+      }
+
+      for (var i = 0; i < this._floatingList.length; ++i) {
+        this._floatingList[i].__update();
+      }
+      this._dirty = false;
+    }
   },
 
   // Retrieve mouse or touch position.
