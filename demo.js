@@ -71,7 +71,7 @@ $(document).ready(function() {
             '<a style="color:#AAA" href="https://github.com/WebCabin/wcDocker" target="_blank">' + 
               '<span class="fa">( </span><span class="fa fa-github-square"> Github )</span>' +
             '</a> ' + 
-            '<a style="color:#AAA" href="http://docker.api.webcabin.org/" target="_blank">' + 
+            '<a style="color:#AAA" href="https://docker.api.webcabin.org/" target="_blank">' + 
               '<span class="fa">( </span><span class="fa fa-file-text"> Documentation )</span>' + 
             '</a>' + 
           '</pre>' + 
@@ -451,7 +451,7 @@ $(document).ready(function() {
         myPanel.layout().addItem($container);
 
         var iFrame = new wcIFrame($container, myPanel);
-        iFrame.openURL('http://docker.api.webcabin.org/');
+        iFrame.openURL('https://docker.api.webcabin.org/');
 
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');

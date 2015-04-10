@@ -10,13 +10,13 @@ Here at Web Cabin, we sincerely believe that anyone with the proper tools can be
 
 wcDocker (Web Cabin Docker) is a responsive IDE interface designed for the developer at heart!  Compartmentalize your environment into smaller components, put each of those parts into a docker panel, and organize your environment however you like, whenever you like!
 
-### [http://docker.webcabin.org](http://docker.webcabin.org) ###
+### [https://docker.webcabin.org](https://docker.webcabin.org) ###
   * Try the front page demo.
 
-### [http://docker.api.webcabin.org](http://docker.api.webcabin.org) ###
+### [https://docker.api.webcabin.org](https://docker.api.webcabin.org) ###
   * View the API documentation.
 
-### [http://arpg.webcabin.org](http://arpg.webcabin.org) ###
+### [https://arpg.webcabin.org](https://arpg.webcabin.org) ###
   * Try out our upcoming project (currently in alpha development), a completely web based Action RPG Maker tool!  
   
 
@@ -33,7 +33,7 @@ wcDocker (Web Cabin Docker) is a responsive IDE interface designed for the devel
 
 ****
 ### Getting Started ###
-See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-started.html) tutorial.
+See the [Getting Started](https://docker.api.webcabin.org/tutorial-1.0-getting-started.html) tutorial.
 
 
 ****
@@ -64,7 +64,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
      // just replace the first '_' with a '.' and they should work fine again!
      ```
 
- - `wcLayout's` are slightly different, `wcLayout.addItem()` and `wcLayout.item()` no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
+ - `wcLayout's` are slightly different, `wcLayout.addItem()` and `wcLayout.item()` no longer return a jQuery object. Instead, they return a [layout table item](https://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
  - The following functions are now `deprecated` and will be removed in an upcoming version:
    - `wcDocker.basicMenu()`, renamed to `wcDocker.menu()`.
    - `wcLayout.scene()`, please use the `wcLayout.$table` jQuery element instead.
