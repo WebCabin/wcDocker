@@ -380,7 +380,7 @@ wcDocker.prototype = {
           }
         }
 
-        this.__update();
+        this.__forceUpdate();
         return panel;
       }
     }
@@ -1320,7 +1320,7 @@ wcDocker.prototype = {
         }
       }
 
-      if (self._ghost) {
+      if (self._ghost && (self._draggingFrame || self._creatingPanel)) {
         var anchor = self._ghost.anchor();
 
         if (self._draggingFrame) {
@@ -1411,6 +1411,7 @@ wcDocker.prototype = {
           }
           self.addPanel(self._creatingPanel, loc, target, self._ghost.rect());
         }
+
         self._ghost.destroy();
         self._ghost = null;
 
