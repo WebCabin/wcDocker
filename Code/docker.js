@@ -123,9 +123,9 @@ wcDocker.EVENT = {
   UPDATED              : 'panelUpdated',
   /** When the panel has changed its visibility */
   VISIBILITY_CHANGED   : 'panelVisibilityChanged',
-  /** When the user begins moving this panel from its current docked position */
+  /** When the user begins moving any panel from its current docked position */
   BEGIN_DOCK           : 'panelBeginDock',
-  /** When the user finishes moving this panel */
+  /** When the user finishes moving or docking a panel */
   END_DOCK             : 'panelEndDock',
   /** When the user brings this panel into focus */
   GAIN_FOCUS           : 'panelGainFocus',
