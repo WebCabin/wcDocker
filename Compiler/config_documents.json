@@ -23,6 +23,10 @@
         "outputSourcePath": false,
         "dateFormat": "YYYY-MM-DD",
         "highlightTutorialCode": false,
-        "syntaxTheme": "dark"
+        "syntaxTheme": "dark",
+        "analytics": {
+            "piwikSite": 5,
+            "domain": "analytics.webcabin.org"
+        }
     }
 }
