@@ -25,7 +25,7 @@
         "highlightTutorialCode": false,
         "syntaxTheme": "dark",
         "analytics": {
-            "piwikSite": 5,
+            "piwikSite": 6,
             "domain": "analytics.webcabin.org"
         }
     }

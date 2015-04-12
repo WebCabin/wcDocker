@@ -7,7 +7,7 @@
  *  font-awesome 4.2.0
  *
  * Author: Jeff Houde (lochemage@webcabin.org)
- * Web: http://docker.webcabin.org/
+ * Web: https://docker.webcabin.org/
  *
  * Licensed under
  *   MIT License http://www.opensource.org/licenses/mit-license
