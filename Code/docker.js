@@ -2084,16 +2084,14 @@ wcDocker.prototype = {
 
   // Forces an update, regardless of the response rate.
   __forceUpdate: function(opt_dontMove) {
-    if (opt_dontMove !== undefined) {
-      if (this._root) {
-        this._root.__update(opt_dontMove);
-      }
-
-      for (var i = 0; i < this._floatingList.length; ++i) {
-        this._floatingList[i].__update();
-      }
-      this._dirty = false;
+    if (this._root) {
+      this._root.__update(opt_dontMove);
     }
+
+    for (var i = 0; i < this._floatingList.length; ++i) {
+      this._floatingList[i].__update();
+    }
+    this._dirty = false;
   },
 
   // Retrieve mouse or touch position.

@@ -7,7 +7,7 @@
  *  font-awesome 4.2.0
  *
  * Author: Jeff Houde (lochemage@webcabin.org)
- * Web: http://docker.webcabin.org/
+ * Web: https://docker.webcabin.org/
  *
  * Licensed under
  *   MIT License http://www.opensource.org/licenses/mit-license
@@ -123,9 +123,9 @@ wcDocker.EVENT = {
   UPDATED              : 'panelUpdated',
   /** When the panel has changed its visibility */
   VISIBILITY_CHANGED   : 'panelVisibilityChanged',
-  /** When the user begins moving this panel from its current docked position */
+  /** When the user begins moving any panel from its current docked position */
   BEGIN_DOCK           : 'panelBeginDock',
-  /** When the user finishes moving this panel */
+  /** When the user finishes moving or docking a panel */
   END_DOCK             : 'panelEndDock',
   /** When the user brings this panel into focus */
   GAIN_FOCUS           : 'panelGainFocus',
@@ -2084,16 +2084,14 @@ wcDocker.prototype = {
 
   // Forces an update, regardless of the response rate.
   __forceUpdate: function(opt_dontMove) {
-    if (opt_dontMove !== undefined) {
-      if (this._root) {
-        this._root.__update(opt_dontMove);
-      }
-
-      for (var i = 0; i < this._floatingList.length; ++i) {
-        this._floatingList[i].__update();
-      }
-      this._dirty = false;
+    if (this._root) {
+      this._root.__update(opt_dontMove);
     }
+
+    for (var i = 0; i < this._floatingList.length; ++i) {
+      this._floatingList[i].__update();
+    }
+    this._dirty = false;
   },
 
   // Retrieve mouse or touch position.
