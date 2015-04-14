@@ -1230,6 +1230,7 @@ wcDocker.prototype = {
     // Set up our responsive updater.
     this._updateId = setInterval(function() {
       if (self._dirty) {
+        self._dirty = false;
         if (self._root) {
           self._root.__update();
         }
@@ -1237,7 +1238,6 @@ wcDocker.prototype = {
         for (var i = 0; i < self._floatingList.length; ++i) {
           self._floatingList[i].__update();
         }
-        self._dirty = false;        
       }
     }, this._options.responseRate);
 
@@ -2084,6 +2084,7 @@ wcDocker.prototype = {
 
   // Forces an update, regardless of the response rate.
   __forceUpdate: function(opt_dontMove) {
+    this._dirty = false;
     if (this._root) {
       this._root.__update(opt_dontMove);
     }
@@ -2091,7 +2092,6 @@ wcDocker.prototype = {
     for (var i = 0; i < this._floatingList.length; ++i) {
       this._floatingList[i].__update();
     }
-    this._dirty = false;
   },
 
   // Retrieve mouse or touch position.
