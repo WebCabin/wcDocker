@@ -10,4 +10,3 @@ call Compiler\node_modules\.bin\jsdoc Code README.md -u Code\tutorials -t Compil
 ::call Compiler\node_modules\.bin\jsdoc Code README.md -u Code\tutorials -t Compiler\node_modules\docstrap\template -c Compiler\config_documents.json -d Build\Docs
 
 endlocal
-pause
