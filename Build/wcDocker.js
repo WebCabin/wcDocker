@@ -69,7 +69,7 @@ function wcDocker(container, options) {
     delta: 150,
   };
 
-  this._defaultOptions = {
+  var defaultOptions = {
     themePath: 'Themes',
     theme: 'default',
     allowContextMenu: true,
@@ -79,8 +79,8 @@ function wcDocker(container, options) {
   };
 
   this._options = {};
-  for (var prop in this._defaultOptions) {
-    this._options[prop] = this._defaultOptions[prop];
+  for (var prop in defaultOptions) {
+    this._options[prop] = defaultOptions[prop];
   }
   for (var prop in options) {
     this._options[prop] = options[prop];
@@ -1349,7 +1349,7 @@ wcDocker.prototype = {
               frame.__update();
               self.__focus(frame);
             }
-          } else if (!anchor.self) {
+          } else if (!anchor.self && anchor.loc !== undefined) {
             // Changing tab location on the same frame.
             if (anchor.tab && anchor.item._parent._parent == self._draggingFrame) {
               self._draggingFrame.tabOrientation(anchor.tab);

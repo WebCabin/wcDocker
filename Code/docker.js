@@ -1349,7 +1349,7 @@ wcDocker.prototype = {
               frame.__update();
               self.__focus(frame);
             }
-          } else if (!anchor.self) {
+          } else if (!anchor.self && anchor.loc !== undefined) {
             // Changing tab location on the same frame.
             if (anchor.tab && anchor.item._parent._parent == self._draggingFrame) {
               self._draggingFrame.tabOrientation(anchor.tab);
