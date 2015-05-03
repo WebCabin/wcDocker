@@ -24,7 +24,8 @@
     "Code",
     "Compiler",
     "images",
-    "Themes"
+    "Themes",
+    "bower_components"
   ],
   "dependencies": {
     "jquery": "1.11.1",
