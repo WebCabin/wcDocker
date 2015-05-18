@@ -898,11 +898,13 @@ wcDocker.prototype = {
                   name: 'Collapse Panel',
                   faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
                   items: collapseTypes,
+                  disabled: !myFrame.panel().moveable()
                 }
               } else {
                 items['Attach Panel'] = {
                   name: 'Dock Panel',
                   faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                  disabled: !myFrame.panel().moveable()
                 }
               }
             }
@@ -936,11 +938,13 @@ wcDocker.prototype = {
                     name: 'Collapse Panel',
                     faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
                     items: collapseTypes,
+                    disabled: !myFrame.panel().moveable()
                   }
                 } else {
                   items['Attach Panel'] = {
                     name: 'Dock Panel',
                     faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                    disabled: !myFrame.panel().moveable()
                   }
                 }
               }
