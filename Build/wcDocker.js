@@ -2531,16 +2531,20 @@ wcDocker.prototype = {
         parentSplitter = parentSplitter._parent;
       }
 
+      var splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+      if (parentSplitter instanceof wcDocker) {
+        this._root = splitter;
+        splitter.__container(this.$container);
+      }
+
       if (parentSplitter instanceof wcSplitter) {
-        var splitter;
-        var left  = parentSplitter.pane(0);
-        var right = parentSplitter.pane(1);
+        var left  = parentSplitter.left();
+        var right = parentSplitter.right();
         var size = {
           x: -1,
           y: -1,
         };
         if (left === splitterChild) {
-          splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
           size.x = parentSplitter.$pane[0].width();
           size.y = parentSplitter.$pane[0].height();
           parentSplitter.pane(0, splitter);
@@ -2550,30 +2554,30 @@ wcDocker.prototype = {
           size.y = parentSplitter.$pane[1].height();
           parentSplitter.pane(1, splitter);
         }
+      }
 
-        if (splitter) {
-          splitter.scrollable(0, false, false);
-          splitter.scrollable(1, false, false);
-          collapser = new wcCollapser(this.$transition, splitter, location);
+      if (splitter) {
+        splitter.scrollable(0, false, false);
+        splitter.scrollable(1, false, false);
+        collapser = new wcCollapser(this.$transition, splitter, location);
 
-          switch (location) {
-            case wcDocker.DOCK.TOP:
-            case wcDocker.DOCK.LEFT:
-              splitter.pos(0);
-              break;
-            case wcDocker.DOCK.BOTTOM:
-            case wcDocker.DOCK.RIGHT:
-              splitter.pos(1);
-              break;
-          }
+        switch (location) {
+          case wcDocker.DOCK.TOP:
+          case wcDocker.DOCK.LEFT:
+            splitter.pos(0);
+            break;
+          case wcDocker.DOCK.BOTTOM:
+          case wcDocker.DOCK.RIGHT:
+            splitter.pos(1);
+            break;
+        }
 
-          if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
-            splitter.pane(0, collapser);
-            splitter.pane(1, splitterChild);
-          } else {
-            splitter.pane(0, splitterChild);
-            splitter.pane(1, collapser);
-          }
+        if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
+          splitter.pane(0, collapser);
+          splitter.pane(1, splitterChild);
+        } else {
+          splitter.pane(0, splitterChild);
+          splitter.pane(1, collapser);
         }
       }
     }
