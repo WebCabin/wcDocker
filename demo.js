@@ -152,7 +152,7 @@ $(document).ready(function() {
         $themeSelector.append('<option value="default">Default</option>');
         $themeSelector.append('<option value="bigRed">Big Red</option>');
         $themeSelector.append('<option value="shadow">Shadow</option>');
-        // $themeSelector.append('<option value="ideDark">ideDark</option>');
+        $themeSelector.append('<option value="ideDark">ideDark</option>');
         $themeSelector.val(_currentTheme);
 
         // Pre-configured layout configurations.
