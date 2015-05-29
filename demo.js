@@ -454,6 +454,13 @@ $(document).ready(function() {
         var iFrame = new wcIFrame($container, myPanel);
         iFrame.openURL('http://docker.api.webcabin.org/');
 
+        myPanel.startLoading('Loading...');
+        iFrame.onLoaded(function() {
+          setTimeout(function() {
+            myPanel.finishLoading();
+          }, 200);
+        });
+
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');
         myPanel.on(wcDocker.EVENT.BUTTON, function(data) {
