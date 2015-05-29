@@ -724,7 +724,7 @@ wcDocker.prototype = {
   /**
    * Shows the loading screen.
    * @param {String} [label] - An optional label to display.
-   * @param {Boolean} [isSolid] - Whether the background of the loading screen should be completely hide the window.
+   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
    */
   startLoading: function(label, isSolid) {
     if (!this.$loading) {
