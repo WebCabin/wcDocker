@@ -1342,7 +1342,8 @@ wcDocker.prototype = {
             }
 
             if (self._draggingFrameTab || !self.__isLastFrame(self._draggingFrame)) {
-              var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.FLOAT, null, self._ghost.__rect());
+              var panel = self._draggingFrame.panel(parseInt($(self._draggingFrameTab).attr('id')));
+              self.movePanel(panel, wcDocker.DOCK.FLOAT, null, self._ghost.__rect());
               // Dragging the entire frame.
               if (!self._draggingFrameTab) {
                 while (self._draggingFrame.panel()) {
@@ -1366,7 +1367,7 @@ wcDocker.prototype = {
             if (anchor.tab && anchor.item._parent._parent == self._draggingFrame) {
               self._draggingFrame.tabOrientation(anchor.tab);
             } else {
-              var index = self._draggingFrame._curTab;
+              var index = parseInt($(self._draggingFrameTab).attr('id'));
               if (!self._draggingFrameTab) {
                 self._draggingFrame.panel(0);
               }
@@ -1376,7 +1377,7 @@ wcDocker.prototype = {
               }
               // If we are dragging a tab to split its own container, find another
               // tab item within the same frame and split from there.
-              if (panel === self._draggingFrame.panel()) {
+              if (self._draggingFrame._panelList.indexOf(panel) > -1) {
                 // Can not split the frame if it is the only panel inside.
                 if (self._draggingFrame._panelList.length === 1) {
                   return;
@@ -1389,7 +1390,13 @@ wcDocker.prototype = {
                   }
                 }
               }
-              panel = self.movePanel(self._draggingFrame.panel(), anchor.loc, panel, self._ghost.rect());
+              var movingPanel = null;
+              if (self._draggingFrameTab) {
+                movingPanel = self._draggingFrame.panel(parseInt($(self._draggingFrameTab).attr('id')));
+              } else {
+                movingPanel = self._draggingFrame.panel();
+              }
+              self.movePanel(movingPanel, anchor.loc, panel, self._ghost.rect());
               panel._parent.panel(panel._parent._panelList.length-1, true);
               // Dragging the entire frame.
               if (!self._draggingFrameTab) {

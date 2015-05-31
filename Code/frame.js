@@ -280,9 +280,8 @@ wcFrame.prototype = {
 
   /**
    * Gets, or Sets the currently visible panel.
-   *
    * @param {Number} [tabIndex] - If supplied, sets the current panel index.
-   *
+   * @param {Boolean} [autoFocus] - If true, this tab will be focused (brought to front).
    * @returns {wcPanel} - The currently visible panel.
    */
   panel: function(tabIndex, autoFocus) {
