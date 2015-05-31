@@ -193,7 +193,7 @@ html,body {
   border: 1px solid #111;
 }
 
-.wcMenuItem, .context-menu-item {
+.wcMenuItem, .context-menu-item, .context-menu-list {
   color: rgba(192,88,1,1);
   background-color: #333;
 }

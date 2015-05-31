@@ -158,7 +158,7 @@
   border: 1px solid #111;
 }
 
-.wcMenuItem, .context-menu-item {
+.wcMenuItem, .context-menu-item, .context-menu-list {
   background-color: #444;
 }
 
