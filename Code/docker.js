@@ -2008,6 +2008,16 @@ wcDocker.prototype = {
 
     // If we reach this point, all existing panels are initialized and loaded!
     this.trigger(wcDocker.EVENT.LOADED);
+
+    // Now unregister all loaded events so they do not fire again.
+    this.off(wcDocker.EVENT.LOADED);
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        panel.off(wcDocker.EVENT.LOADED);
+      }
+    }
   },
 
   // Test for browser compatability issues.

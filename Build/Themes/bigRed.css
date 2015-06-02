@@ -178,6 +178,19 @@
   background-color: #733;
 }
 
+.wcLoadingBackground {
+  background-color: rgba(55, 55, 55, 1);
+  opacity: 0.4;
+}
+
+.wcLoadingIcon {
+  color: #222;
+}
+
+.wcLoadingLabel {
+  color: #111;
+}
+
 
 /*
   The following are not actually used in docker, they are provided as a convenience when

@@ -121,6 +121,8 @@ wcDocker.DOCK = {
 wcDocker.EVENT = {
   /** When the panel is initialized */ 
   INIT                 : 'panelInit',
+  /** When all panels have finished loading */
+  LOADED               : 'dockerLoaded',
   /** When the panel is updated */
   UPDATED              : 'panelUpdated',
   /** When the panel has changed its visibility */
@@ -650,15 +652,21 @@ wcDocker.prototype = {
   /**
    * Shows the loading screen.
    * @param {String} [label] - An optional label to display.
-   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
+   * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
+   * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
    */
-  startLoading: function(label, isSolid) {
+  startLoading: function(label, opacity, textOpacity) {
     if (!this.$loading) {
-      this.$loading = $('<div class="wcLoadingBackground"></div>');
-      if (isSolid) {
-        this.$loading.addClass('wcLoadingBackgroundSolid');
-      }
+      this.$loading = $('<div class="wcLoadingContainer"></div>');
       this.$outer.append(this.$loading);
+
+      var $background = $('<div class="wcLoadingBackground"></div>');
+      if (typeof opacity !== 'number') {
+        opacity = 0.4;
+      }
+
+      $background.css('opacity', opacity);
+      this.$loading.append($background);
 
       var $icon = $('<div class="wcLoadingIconContainer"><i class="wcLoadingIcon ' + this._options.loadingClass + '"></i></div>');
       this.$loading.append($icon);
@@ -667,16 +675,35 @@ wcDocker.prototype = {
         var $label = $('<span class="wcLoadingLabel">' + label + '</span>');
         this.$loading.append($label);
       }
+
+      if (typeof textOpacity !== 'number') {
+        textOpacity = 1;
+      }
+
+      $icon.css('opacity', textOpacity);
+
+      if ($label) {
+        $label.css('opacity', textOpacity);
+      }
     }
   },
 
   /**
    * Hides the loading screen.
+   * @param {Number} [fadeDuration=0] - The fade out duration for the loading screen.
    */
-  finishLoading: function() {
+  finishLoading: function(fadeDuration) {
     if (this.$loading) {
-      this.$loading.remove();
-      this.$loading = null;
+      if (fadeDuration > 0) {
+        var self = this;
+        this.$loading.fadeOut(fadeDuration, function() {
+          self.$loading.remove();
+          self.$loading = null;
+        });
+      } else {
+        this.$loading.remove();
+        this.$loading = null;
+      }
     }
   },
 
@@ -1959,6 +1986,38 @@ wcDocker.prototype = {
         }
       }
     };
+  },
+
+  // Test for load completion.
+  __testLoadFinished: function() {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        // Skip if any panels are not initialized yet.
+        if (panel._isVisible && !panel._initialized) {
+          return;
+        }
+
+        // Skip if any panels still have a loading screen.
+        if (panel.$loading) {
+          return;
+        }
+      }
+    }
+
+    // If we reach this point, all existing panels are initialized and loaded!
+    this.trigger(wcDocker.EVENT.LOADED);
+
+    // Now unregister all loaded events so they do not fire again.
+    this.off(wcDocker.EVENT.LOADED);
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        panel.off(wcDocker.EVENT.LOADED);
+      }
+    }
   },
 
   // Test for browser compatability issues.
@@ -4044,15 +4103,20 @@ wcPanel.prototype = {
   /**
    * Shows the loading screen.
    * @param {String} [label] - An optional label to display.
-   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
+   * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
+   * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
    */
-  startLoading: function(label, isSolid) {
+  startLoading: function(label, opacity, textOpacity) {
     if (!this.$loading) {
-      this.$loading = $('<div class="wcLoadingBackground"></div>');
-      if (isSolid) {
-        this.$loading.addClass('wcLoadingBackgroundSolid');
-      }
+      this.$loading = $('<div class="wcLoadingContainer"></div>');
       this.$container.append(this.$loading);
+
+      var $background = $('<div class="wcLoadingBackground"></div>');
+      if (typeof opacity !== 'number') {
+        opacity = 0.4;
+      }
+
+      this.$loading.append($background);
 
       var $icon = $('<div class="wcLoadingIconContainer"><i class="wcLoadingIcon ' + this.docker()._options.loadingClass + '"></i></div>');
       this.$loading.append($icon);
@@ -4061,16 +4125,45 @@ wcPanel.prototype = {
         var $label = $('<span class="wcLoadingLabel">' + label + '</span>');
         this.$loading.append($label);
       }
+
+      if (typeof textOpacity !== 'number') {
+        textOpacity = 1;
+      }
+
+      // Override opacity values if the global loading screen is active.
+      if (this.docker().$loading) {
+        opacity = 0;
+        textOpacity = 0;
+      }
+
+      $background.css('opacity', opacity);
+      $icon.css('opacity', textOpacity);
+
+      if ($label) {
+        $label.css('opacity', textOpacity);
+      }
     }
   },
 
   /**
    * Hides the loading screen.
+   * @param {Number} [fadeDuration=0] - If supplied, assigns a fade out duration for the loading screen.
    */
-  finishLoading: function() {
+  finishLoading: function(fadeDuration) {
     if (this.$loading) {
-      this.$loading.remove();
-      this.$loading = null;
+      if (fadeDuration > 0) {
+        var self = this;
+        this.$loading.fadeOut(fadeDuration, function() {
+          self.$loading.remove();
+          self.$loading = null;
+          self.docker().__testLoadFinished();
+        });
+      } else {
+        this.$loading.remove();
+        this.$loading = null;
+        this.docker().__testLoadFinished();
+      }
+
     }
   },
 
@@ -4160,6 +4253,9 @@ wcPanel.prototype = {
 
   // Updates the size of the layout.
   __update: function() {
+    var docker = this.docker();
+    if (!docker) return;
+
     this._layout.__update();
     if (!this.$container) {
       return;
@@ -4176,10 +4272,12 @@ wcPanel.prototype = {
       var self = this;
       setTimeout(function() {
         self.__trigger(wcDocker.EVENT.INIT);
-      }, 0);
-    }
 
-    this.__trigger(wcDocker.EVENT.UPDATED);
+        docker.__testLoadFinished();
+      }, 0);
+    } else {
+      this.__trigger(wcDocker.EVENT.UPDATED);
+    }
 
     var width   = this.$container.width();
     var height  = this.$container.height();

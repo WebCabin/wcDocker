@@ -177,10 +177,6 @@
 }
 
 .wcLoadingBackground {
-  background-color: rgba(55, 55, 55, 0.4);
-}
-
-.wcLoadingBackgroundSolid {
   background-color: rgba(55, 55, 55, 1);
 }
 

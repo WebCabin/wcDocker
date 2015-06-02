@@ -251,3 +251,17 @@ html,body {
 .wcButton:focus, button:focus {
   outline: 0px;
 }
+
+.wcLoadingBackground {
+  background-color: rgba(55, 55, 55, 1);
+  opacity: 0.4;
+}
+
+.wcLoadingIcon {
+  color: #222;
+}
+
+.wcLoadingLabel {
+  color: #111;
+}
+
