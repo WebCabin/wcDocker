@@ -456,9 +456,7 @@ $(document).ready(function() {
 
         myPanel.startLoading('Loading...');
         iFrame.onLoaded(function() {
-          setTimeout(function() {
-            myPanel.finishLoading();
-          }, 200);
+          myPanel.finishLoading(250);
         });
 
         // Create a panel button that shows information about this panel.

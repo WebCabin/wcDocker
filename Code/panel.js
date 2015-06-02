@@ -557,8 +557,8 @@ wcPanel.prototype = {
   /**
    * Shows the loading screen.
    * @param {String} [label] - An optional label to display.
-   * @param {Number} [opacity] - If supplied, assigns a custom opacity value to the loading screen.
-   * @param {Number} [textOpacity] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
+   * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
+   * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
    */
   startLoading: function(label, opacity, textOpacity) {
     if (!this.$loading) {
@@ -566,8 +566,8 @@ wcPanel.prototype = {
       this.$container.append(this.$loading);
 
       var $background = $('<div class="wcLoadingBackground"></div>');
-      if (typeof opacity === 'number') {
-        $background.css('opacity', opacity);
+      if (typeof opacity !== 'number') {
+        opacity = 0.4;
       }
 
       this.$loading.append($background);
@@ -580,23 +580,35 @@ wcPanel.prototype = {
         this.$loading.append($label);
       }
 
-      if (typeof textOpacity === 'number') {
-        $icon.css('opacity', textOpacity);
+      if (typeof textOpacity !== 'number') {
+        textOpacity = 1;
+      }
 
-        if ($label) {
-          $label.css('opacity', textOpacity);
-        }
+      $background.css('opacity', opacity);
+      $icon.css('opacity', textOpacity);
+
+      if ($label) {
+        $label.css('opacity', textOpacity);
       }
     }
   },
 
   /**
    * Hides the loading screen.
+   * @param {Number} [fadeDuration=0] - If supplied, assigns a fade out duration for the loading screen.
    */
-  finishLoading: function() {
+  finishLoading: function(fadeDuration) {
     if (this.$loading) {
-      this.$loading.remove();
-      this.$loading = null;
+      if (fadeDuration > 0) {
+        var self = this;
+        this.$loading.fadeOut(fadeDuration, function() {
+          self.$loading.remove();
+          self.$loading = null;
+        });
+      } else {
+        this.$loading.remove();
+        this.$loading = null;
+      }
     }
   },
 
