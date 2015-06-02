@@ -121,6 +121,8 @@ wcDocker.DOCK = {
 wcDocker.EVENT = {
   /** When the panel is initialized */ 
   INIT                 : 'panelInit',
+  /** When all panels have finished loading */
+  LOADED               : 'dockerLoaded',
   /** When the panel is updated */
   UPDATED              : 'panelUpdated',
   /** When the panel has changed its visibility */
@@ -1984,6 +1986,28 @@ wcDocker.prototype = {
         }
       }
     };
+  },
+
+  // Test for load completion.
+  __testLoadFinished: function() {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        // Skip if any panels are not initialized yet.
+        if (panel._isVisible && !panel._initialized) {
+          return;
+        }
+
+        // Skip if any panels still have a loading screen.
+        if (panel.$loading) {
+          return;
+        }
+      }
+    }
+
+    // If we reach this point, all existing panels are initialized and loaded!
+    this.trigger(wcDocker.EVENT.LOADED);
   },
 
   // Test for browser compatability issues.

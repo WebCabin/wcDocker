@@ -584,6 +584,12 @@ wcPanel.prototype = {
         textOpacity = 1;
       }
 
+      // Override opacity values if the global loading screen is active.
+      if (this.docker().$loading) {
+        opacity = 0;
+        textOpacity = 0;
+      }
+
       $background.css('opacity', opacity);
       $icon.css('opacity', textOpacity);
 
@@ -604,11 +610,14 @@ wcPanel.prototype = {
         this.$loading.fadeOut(fadeDuration, function() {
           self.$loading.remove();
           self.$loading = null;
+          self.docker().__testLoadFinished();
         });
       } else {
         this.$loading.remove();
         this.$loading = null;
+        this.docker().__testLoadFinished();
       }
+
     }
   },
 
@@ -698,6 +707,9 @@ wcPanel.prototype = {
 
   // Updates the size of the layout.
   __update: function() {
+    var docker = this.docker();
+    if (!docker) return;
+
     this._layout.__update();
     if (!this.$container) {
       return;
@@ -714,10 +726,12 @@ wcPanel.prototype = {
       var self = this;
       setTimeout(function() {
         self.__trigger(wcDocker.EVENT.INIT);
-      }, 0);
-    }
 
-    this.__trigger(wcDocker.EVENT.UPDATED);
+        docker.__testLoadFinished();
+      }, 0);
+    } else {
+      this.__trigger(wcDocker.EVENT.UPDATED);
+    }
 
     var width   = this.$container.width();
     var height  = this.$container.height();

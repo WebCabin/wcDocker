@@ -472,6 +472,7 @@ $(document).ready(function() {
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
+    myDocker.startLoading('Loading...');
     var tutorialPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.LEFT);
 
     var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h:'20%'});
@@ -485,5 +486,9 @@ $(document).ready(function() {
     });
     var batchPanel = myDocker.addPanel('Creation Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
     var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
+
+    myDocker.on(wcDocker.EVENT.LOADED, function() {
+      myDocker.finishLoading(500);
+    });
   }
 });
