@@ -557,15 +557,20 @@ wcPanel.prototype = {
   /**
    * Shows the loading screen.
    * @param {String} [label] - An optional label to display.
-   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
+   * @param {Number} [opacity] - If supplied, assigns a custom opacity value to the loading screen.
+   * @param {Number} [textOpacity] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
    */
-  startLoading: function(label, isSolid) {
+  startLoading: function(label, opacity, textOpacity) {
     if (!this.$loading) {
-      this.$loading = $('<div class="wcLoadingBackground"></div>');
-      if (isSolid) {
-        this.$loading.addClass('wcLoadingBackgroundSolid');
-      }
+      this.$loading = $('<div class="wcLoadingContainer"></div>');
       this.$container.append(this.$loading);
+
+      var $background = $('<div class="wcLoadingBackground"></div>');
+      if (typeof opacity === 'number') {
+        $background.css('opacity', opacity);
+      }
+
+      this.$loading.append($background);
 
       var $icon = $('<div class="wcLoadingIconContainer"><i class="wcLoadingIcon ' + this.docker()._options.loadingClass + '"></i></div>');
       this.$loading.append($icon);
@@ -573,6 +578,14 @@ wcPanel.prototype = {
       if (label) {
         var $label = $('<span class="wcLoadingLabel">' + label + '</span>');
         this.$loading.append($label);
+      }
+
+      if (typeof textOpacity === 'number') {
+        $icon.css('opacity', textOpacity);
+
+        if ($label) {
+          $label.css('opacity', textOpacity);
+        }
       }
     }
   },

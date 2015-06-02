@@ -569,12 +569,15 @@ html, body {
   cursor: move;
 }
 
-.wcLoadingBackground {
+.wcLoadingContainer, .wcLoadingBackground {
   position: absolute;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
+}
+
+.wcLoadingContainer {
   z-index: 10;
 }
 
