@@ -70,7 +70,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
    - `wcLayout.scene()`, please use the `wcLayout.$table` jQuery element instead.
 
 - **`Collapsible panels:`** Panels can now be collapsed to the side or bottom of the screen, where they become a slide-out drawer above the main layout.
-- **`Panel creation elements:`** Instead of relying on the context-menu controls to add new panwls, you can now add the CSS class **`"wcCreatePanel"`** to any dom element along with the data attribute **`"panel"`** and wcDocker will treat it as a panel creation control. A user will then be able to drag-drop that element into their view to create new panels of the specified type.
+- **`Panel creation elements:`** Instead of relying on the context-menu controls to add new panels, you can now add the CSS class **`"wcCreatePanel"`** to any dom element along with the data attribute **`"panel"`** and wcDocker will treat it as a panel creation control. A user will then be able to drag-drop that element into their view to create new panels of the specified type.
 
      ```
      {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
@@ -83,6 +83,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
      var myCustomTabFrame = new wcTabFrame(domElem, myPanel);
      myCustomTabFrame.tabOrientation(wcDocker.TAB.LEFT);
      ```
+- Built in loading screens for both panels, and the entire window.
 - Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
 - Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the grid size changes.
 

@@ -29,6 +29,7 @@ function wcDocker(container, options) {
   this.$outer = $(container);
   this.$container = $('<div class="wcDocker">');
   this.$transition = $('<div class="wcDockerTransition">');
+  this.$loading = null;
 
   this.$outer.append(this.$container);
   this.$container.append(this.$transition);
@@ -72,6 +73,7 @@ function wcDocker(container, options) {
   var defaultOptions = {
     themePath: 'Themes',
     theme: 'default',
+    loadingClass: 'fa fa-spinner fa-pulse',
     allowContextMenu: true,
     hideOnResize: false,
     allowCollapse: true,
@@ -213,9 +215,7 @@ wcDocker.prototype = {
   /**
    * Gets, or Sets the path where all theme files can be found.
    * "Themes" is the default folder path.
-   *
    * @param {String} path - If supplied, will set the path where all themes can be found.
-   *
    * @returns {String} - The currently assigned path.
    */
   themePath: function(path) {
@@ -227,9 +227,7 @@ wcDocker.prototype = {
 
   /**
    * Gets, or Sets the current theme used by docker.
-   *
    * @param {String} themeName - If supplied, will activate a theme with the given name.
-   *
    * @returns {String} - The currently active theme.
    */
   theme: function(themeName) {
@@ -260,7 +258,6 @@ wcDocker.prototype = {
   /**
    * Retrieves whether panel collapsers are enabled.
    * @version 3.0.0
-   * 
    * @returns {Boolean} - Collapsers are enabled.
    */
   isCollapseEnabled: function() {
@@ -270,11 +267,9 @@ wcDocker.prototype = {
   /**
    * Registers a new docking panel type to be used later.
    * @version 3.0.0
-   *
    * @param {String} name                       - The name identifier for the new panel type.
    * @param {wcDocker~registerOptions} options  - An options object for describing the panel type.
    * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options]{@link wcDocker~registerOptions} instead.
-   *
    * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
    */
   registerPanelType: function(name, optionsOrCreateFunc, isPrivate) {
@@ -314,9 +309,7 @@ wcDocker.prototype = {
 
   /**
    * Retrieves a list of all currently registered panel types.
-   *
    * @param {Boolean} includePrivate - If true, panels registered as private will also be included with this list.
-   *
    * @returns {String[]} - A list of panel type names.
    */
   panelTypes: function(includePrivate) {
@@ -331,9 +324,7 @@ wcDocker.prototype = {
 
   /**
    * Retrieves the options data associated with a given panel type when it was registered.
-   *
    * @param {String} typeName - The name identifier of the panel.
-   *
    * @returns {wcDocker~registerOptions} - Registered options of the panel type, or false if the panel was not found.
    */
   panelTypeInfo: function(typeName) {
@@ -348,12 +339,10 @@ wcDocker.prototype = {
   /**
    * Add a new docked panel to the docker instance.<br>
    * <b>Note:</b> It is best to use {@link wcDocker.COLLAPSED} after you have added your other docked panels, as it may ensure proper placement.
-   *
    * @param {String} typeName                           - The name identifier of the panel to create.
    * @param {wcDocker.DOCK} location                    - The docking location to place this panel.
    * @param {wcPanel|wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
    * @param {wcDocker~PanelOptions} [options]           - Other options for panel placement.
-   *
    * @returns {wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
    */
   addPanel: function(typeName, location, targetPanel, options) {
@@ -389,9 +378,7 @@ wcDocker.prototype = {
 
   /**
    * Removes a docked panel from the window.
-   *
    * @param {wcPanel} panel - The panel to remove.
-   *
    * @returns {Boolean} - Success or failure.
    */
   removePanel: function(panel) {
@@ -491,12 +478,10 @@ wcDocker.prototype = {
 
   /**
    * Moves a docking panel from its current location to another.
-   *
    * @param {wcPanel} panel                             - The panel to move.
    * @param {wcDocker.DOCK} location                    - The new docking location of the panel.
    * @param {wcPanel|wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
    * @param {wcDocker~PanelOptions} [options]           - Other options for panel placement.
-   *
    * @returns {wcPanel|Boolean} - The panel that was created, or false on failure.
    */
   movePanel: function(panel, location, targetPanel, options) {
@@ -644,9 +629,7 @@ wcDocker.prototype = {
 
   /**
    * Finds all instances of a given panel type.
-   *
    * @param {String} [typeName] - The name identifier for the panel. If not supplied, all panels are retrieved.
-   *
    * @returns {wcPanel[]} - A list of all panels found of the given type.
    */
   findPanels: function(typeName) {
@@ -665,11 +648,42 @@ wcDocker.prototype = {
   },
 
   /**
+   * Shows the loading screen.
+   * @param {String} [label] - An optional label to display.
+   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
+   */
+  startLoading: function(label, isSolid) {
+    if (!this.$loading) {
+      this.$loading = $('<div class="wcLoadingBackground"></div>');
+      if (isSolid) {
+        this.$loading.addClass('wcLoadingBackgroundSolid');
+      }
+      this.$outer.append(this.$loading);
+
+      var $icon = $('<div class="wcLoadingIconContainer"><i class="wcLoadingIcon ' + this._options.loadingClass + '"></i></div>');
+      this.$loading.append($icon);
+
+      if (label) {
+        var $label = $('<span class="wcLoadingLabel">' + label + '</span>');
+        this.$loading.append($label);
+      }
+    }
+  },
+
+  /**
+   * Hides the loading screen.
+   */
+  finishLoading: function() {
+    if (this.$loading) {
+      this.$loading.remove();
+      this.$loading = null;
+    }
+  },
+
+  /**
    * Registers a global [event]{@link wcDocker.EVENT}.
-   *
    * @param {wcDocker.EVENT} eventType        - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {wcDocker~event:onEvent} handler  - A handler function to be called for the event.
-   *
    * @returns {Boolean} Success or failure that the event has been registered.
    */
   on: function(eventType, handler) {
@@ -691,7 +705,6 @@ wcDocker.prototype = {
 
   /**
    * Unregisters a global [event]{@link wcDocker.EVENT}.
-   *
    * @param {wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
    */
@@ -718,7 +731,6 @@ wcDocker.prototype = {
   /**
    * Trigger an [event]{@link wcDocker.EVENT} on all panels.
    * @fires wcDocker~event:onEvent
-   *
    * @param {wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {Object} [data]             - A custom data object to be passed along with the event.
    */
@@ -745,7 +757,6 @@ wcDocker.prototype = {
    * If you wish to use a more complex context menu, you can use
    * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
    * @deprecated Renamed to [wcDocker.menu}{@link wcDocker#menu}.
-   *
    * @param {external:jQuery~selector} selector                               - A selector string that designates the elements who use this menu.
    * @param {external:jQuery#contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
    * @param {Boolean} includeDefault                                          - If true, all default menu options will be included.
@@ -761,7 +772,6 @@ wcDocker.prototype = {
    *
    * If you wish to use a more complex context menu, you can use
    * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
-   *
    * @param {external:jQuery~selector} selector                               - A selector string that designates the elements who use this menu.
    * @param {external:jQuery#contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
    * @param {Boolean} includeDefault                                          - If true, all default menu options will be included.
@@ -1116,7 +1126,6 @@ wcDocker.prototype = {
   /**
    * Saves the current panel configuration into a serialized
    * string that can be used later to restore it.
-   *
    * @returns {String} - A serialized string that describes the current panel configuration.
    */
   save: function() {
@@ -1147,7 +1156,6 @@ wcDocker.prototype = {
 
   /**
    * Restores a previously saved configuration.
-   *
    * @param {String} dataString - A previously saved serialized string, See [wcDocker.save]{@link wcDocker#save}.
    */
   restore: function(dataString) {
@@ -1334,7 +1342,8 @@ wcDocker.prototype = {
             }
 
             if (self._draggingFrameTab || !self.__isLastFrame(self._draggingFrame)) {
-              var panel = self.movePanel(self._draggingFrame.panel(), wcDocker.DOCK.FLOAT, null, self._ghost.__rect());
+              var panel = self._draggingFrame.panel(parseInt($(self._draggingFrameTab).attr('id')));
+              self.movePanel(panel, wcDocker.DOCK.FLOAT, null, self._ghost.__rect());
               // Dragging the entire frame.
               if (!self._draggingFrameTab) {
                 while (self._draggingFrame.panel()) {
@@ -1358,7 +1367,7 @@ wcDocker.prototype = {
             if (anchor.tab && anchor.item._parent._parent == self._draggingFrame) {
               self._draggingFrame.tabOrientation(anchor.tab);
             } else {
-              var index = self._draggingFrame._curTab;
+              var index = parseInt($(self._draggingFrameTab).attr('id'));
               if (!self._draggingFrameTab) {
                 self._draggingFrame.panel(0);
               }
@@ -1368,7 +1377,7 @@ wcDocker.prototype = {
               }
               // If we are dragging a tab to split its own container, find another
               // tab item within the same frame and split from there.
-              if (panel === self._draggingFrame.panel()) {
+              if (self._draggingFrame._panelList.indexOf(panel) > -1) {
                 // Can not split the frame if it is the only panel inside.
                 if (self._draggingFrame._panelList.length === 1) {
                   return;
@@ -1381,7 +1390,13 @@ wcDocker.prototype = {
                   }
                 }
               }
-              panel = self.movePanel(self._draggingFrame.panel(), anchor.loc, panel, self._ghost.rect());
+              var movingPanel = null;
+              if (self._draggingFrameTab) {
+                movingPanel = self._draggingFrame.panel(parseInt($(self._draggingFrameTab).attr('id')));
+              } else {
+                movingPanel = self._draggingFrame.panel();
+              }
+              self.movePanel(movingPanel, anchor.loc, panel, self._ghost.rect());
               panel._parent.panel(panel._parent._panelList.length-1, true);
               // Dragging the entire frame.
               if (!self._draggingFrameTab) {
@@ -2589,6 +2604,7 @@ wcDocker.prototype = {
     if (this._placeholderPanel) {
       console.log('WARNING: wcDocker creating placeholder panel when one already exists');
     }
+
     this._placeholderPanel = new wcPanel(wcDocker.PANEL_PLACEHOLDER, {});
     this._placeholderPanel._isPlaceholder = true;
     this._placeholderPanel._parent = this;

@@ -160,7 +160,7 @@
   border: 1px solid #A44;
 }
 
-.wcMenuItem, .context-menu-item {
+.wcMenuItem, .context-menu-item, .context-menu-list {
   background-color: #622;
 }
 

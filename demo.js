@@ -152,7 +152,7 @@ $(document).ready(function() {
         $themeSelector.append('<option value="default">Default</option>');
         $themeSelector.append('<option value="bigRed">Big Red</option>');
         $themeSelector.append('<option value="shadow">Shadow</option>');
-        // $themeSelector.append('<option value="ideDark">ideDark</option>');
+        $themeSelector.append('<option value="ideDark">ideDark</option>');
         $themeSelector.val(_currentTheme);
 
         // Pre-configured layout configurations.
@@ -453,6 +453,13 @@ $(document).ready(function() {
 
         var iFrame = new wcIFrame($container, myPanel);
         iFrame.openURL('http://docker.api.webcabin.org/');
+
+        myPanel.startLoading('Loading...');
+        iFrame.onLoaded(function() {
+          setTimeout(function() {
+            myPanel.finishLoading();
+          }, 200);
+        });
 
         // Create a panel button that shows information about this panel.
         myPanel.addButton('Info', 'fa fa-question', '?', 'Show information about this panel.');

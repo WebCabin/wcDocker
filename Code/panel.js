@@ -13,9 +13,9 @@
  * @param {wcPanel~options} [options] - An options object passed from registration of the panel.
 */
 function wcPanel(type, options) {
+
   /**
    * An options object for the [panel]{@link wcPanel} constructor.
-   *
    * @typedef wcPanel~options
    * @property {String} [icon] - A CSS classname that represents the icon that should display on this panel's tab widget.
    * @property {String} [faicon] - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
@@ -24,7 +24,6 @@ function wcPanel(type, options) {
 
   /**
    * The outer container element of the panel.
-   *
    * @member {external:jQuery~Object}
    */
   this.$container = null;
@@ -32,6 +31,7 @@ function wcPanel(type, options) {
   this.$icon = null;
   this.$title = null;
   this.$titleText = null;
+  this.$loading = null;
 
   this._panelObject = null;
   this._initialized = false;
@@ -117,7 +117,6 @@ wcPanel.prototype = {
 
   /**
    * Retrieves the main [docker]{@link wcDocker} instance.
-   *
    * @returns {wcDocker} - The top level docker object.
    */
   docker: function() {
@@ -131,9 +130,7 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets the title for this panel.
    * Titles appear in the tab widget associated with the panel.
-   *
    * @param {String|Boolean} title - If supplied, sets the new title. If false, the title bar will be removed.
-   *
    * @returns {String|Boolean} - The current title.
    */
   title: function(title) {
@@ -158,7 +155,6 @@ wcPanel.prototype = {
    * Retrieves the registration info of the panel as declared from
    * [wcDocker.registerPanelType]{@link wcDocker#registerPanelType};
    * See [wcDocker.panelTypeInfo]{@link wcDocker#panelTypeInfo}.
-   *
    * @returns {wcDocker~registerOptions} - Registered options of the panel type.
    */
   info: function() {
@@ -167,7 +163,6 @@ wcPanel.prototype = {
 
   /**
    * Retrieves the panel [layout]{@link wcLayout} instance.
-   *
    * @returns {wcLayout} - The layout instance.
    */
   layout: function() {
@@ -177,7 +172,6 @@ wcPanel.prototype = {
   /**
    * Brings this panel into focus. If it is floating, it will be moved to the front
    * of all other panels.
-   *
    * @param {Boolean} [flash] - If true, in addition to bringing the panel into focus, it will also flash for the user.
    */
   focus: function(flash) {
@@ -195,7 +189,6 @@ wcPanel.prototype = {
 
   /**
    * Retrieves whether this panel can be seen by the user.
-   *
    * @returns {Boolean} - Visibility state.
    */
   isVisible: function() {
@@ -204,7 +197,6 @@ wcPanel.prototype = {
 
   /**
    * Creates a new custom button that will appear in the title bar when the panel is active.
-   *
    * @param {String} name               - The name of the button, to identify it later.
    * @param {String} className          - A CSS class name to apply to the button.
    * @param {String} text               - Text to apply to the button.
@@ -230,9 +222,7 @@ wcPanel.prototype = {
 
   /**
    * Removes a custom button from the panel.
-   *
    * @param {String} name - The name identifier for the button to remove.
-   *
    * @returns {Boolean} - Success or failure.
    */
   removeButton: function(name) {
@@ -256,10 +246,8 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets the current toggle state of a custom button that was
    * added using [wcPanel.addButton]{@link wcPanel#addButton}.
-   *
    * @param {String} name           - The name identifier of the button.
    * @param {Boolean} [toggleState] - If supplied, will assign a new toggle state to the button.
-   *
    * @returns {Boolean} - The current toggle state of the button.
    */
   buttonState: function(name, toggleState) {
@@ -284,10 +272,8 @@ wcPanel.prototype = {
 
   /**
    * Gets, or Sets the default position of the panel if it is floating. <b>Warning: after the panel has been initialized, this value no longer reflects the current position of the panel.</b>
-   *
    * @param {Number|String} [x] - If supplied, sets the horizontal position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
    * @param {Number|String} [y] - If supplied, sets the vertical position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
-   *
    * @returns {wcDocker~Coordinate} - The current default position of the panel.
    */
   initPos: function(x, y) {
@@ -313,10 +299,8 @@ wcPanel.prototype = {
 
   /**
    * Gets, or Sets the desired size of the panel. <b>Warning: after the panel has been initialized, this value no longer reflects the current size of the panel.</b>
-   *
    * @param {Number|String} [x] - If supplied, sets the desired initial horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
    * @param {Number|String} [y] - If supplied, sets the desired initial vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
-   *
    * @returns {wcDocker~Size} - The current initial size of the panel.
    */
   initSize: function(x, y) {
@@ -341,10 +325,8 @@ wcPanel.prototype = {
 
   /**
    * Gets, or Sets the minimum size constraint of the panel.
-   *
    * @param {Number|String} [x] - If supplied, sets the desired minimum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
    * @param {Number|String} [y] - If supplied, sets the desired minimum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
-   *
    * @returns {wcDocker~Size} - The current minimum size.
    */
   minSize: function(x, y) {
@@ -369,10 +351,8 @@ wcPanel.prototype = {
 
   /**
    * Gets, or Sets the maximum size constraint of the panel.
-   *
    * @param {Number|String} [x] - If supplied, sets the desired maximum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
    * @param {Number|String} [y] - If supplied, sets the desired maximum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
-   *
    * @returns {wcDocker~Size} - The current maximum size.
    */
   maxSize: function(x, y) {
@@ -397,7 +377,6 @@ wcPanel.prototype = {
 
   /**
    * Retrieves the width of the panel contents.
-   *
    * @returns {Number} - Panel width.
    */
   width: function() {
@@ -409,7 +388,6 @@ wcPanel.prototype = {
 
   /**
    * Retrieves the height of the panel contents.
-   *
    * @returns {Number} - Panel height.
    */
   height: function() {
@@ -449,10 +427,8 @@ wcPanel.prototype = {
 
   /**
    * Gets, or Sets whether the window is scrollable.
-   *
    * @param {Boolean} [x] - If supplied, assigns whether the window is scrollable in the horizontal direction.
    * @param {Boolean} [y] - If supplied, assigns whether the window is scrollable in the vertical direction.
-   *
    * @returns {wcDocker~Scrollable} - The current scrollable status.
    */
   scrollable: function(x, y) {
@@ -466,11 +442,9 @@ wcPanel.prototype = {
 
   /**
    * Gets, or Sets the scroll position of the panel's contents if it is scrollable; See [wcPanel.scrollable]{@link wcPanel#scrollable}).
-   *
    * @param {Number} [x]        - If supplied, sets the scroll horizontal position of the panel.
    * @param {Number} [y]        - If supplied, sets the scroll vertical position of the panel.
    * @param {Number} [duration] - If supplied, will animate the scroll movement with the supplied duration (in milliseconds).
-   *
    * @returns {wcDocker~Coordinate} The current scroll position.
    */
   scroll: function(x, y, duration) {
@@ -499,9 +473,7 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets whether this panel can be collapsed to the side or bottom.<br>
    * This only works if the collapse feature is enabled {@link wcDocker~Options}.
-   *
    * @param {Boolean} [enabled] - If supplied, assigns whether collapsing is enabled.
-   *
    * @returns {Boolean} - The current collapsible enabled state.
    */
   collapsible: function(enabled) {
@@ -515,9 +487,7 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets whether overflow on this panel is visible.
    * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
-   *
    * @param {Boolean} [visible] - If supplied, assigns whether overflow is visible.
-   *
    * @returns {Boolean} - The current overflow visibility.
    */
   overflowVisible: function(visible) {
@@ -531,9 +501,7 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets whether the contents of the panel are visible on resize.
    * Use this if the panel has extremely expensive contents which take a long time to resize.
-   *
    * @param {Boolean} [visible] - If supplied, assigns whether panel contents are visible during resize.
-   *
    * @returns {Boolean} - The current resize visibility.
    */
   resizeVisible: function(visible) {
@@ -547,9 +515,7 @@ wcPanel.prototype = {
   /**
    * Sets, or Gets the moveable status of the window.
    * Note: Other panels can not dock beside a non-moving panel as doing so could cause it to move.
-   *
    * @param {Boolean} [enabled] - If supplied, assigns whether this panel can be moved.
-   *
    * @returns {Boolean} - Whether the panel is moveable.
    */
   moveable: function(enabled) {
@@ -565,9 +531,7 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets whether this dock window can be closed by the user.
    * Note: The panel can still be closed programmatically.
-   *
    * @param {Boolean} [enabled] - If supplied, toggles whether it can be closed.
-   *
    * @returns {Boolean} the current closeable status.
    */
   closeable: function(enabled) {
@@ -591,11 +555,42 @@ wcPanel.prototype = {
   },
 
   /**
+   * Shows the loading screen.
+   * @param {String} [label] - An optional label to display.
+   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
+   */
+  startLoading: function(label, isSolid) {
+    if (!this.$loading) {
+      this.$loading = $('<div class="wcLoadingBackground"></div>');
+      if (isSolid) {
+        this.$loading.addClass('wcLoadingBackgroundSolid');
+      }
+      this.$container.append(this.$loading);
+
+      var $icon = $('<div class="wcLoadingIconContainer"><i class="wcLoadingIcon ' + this.docker()._options.loadingClass + '"></i></div>');
+      this.$loading.append($icon);
+
+      if (label) {
+        var $label = $('<span class="wcLoadingLabel">' + label + '</span>');
+        this.$loading.append($label);
+      }
+    }
+  },
+
+  /**
+   * Hides the loading screen.
+   */
+  finishLoading: function() {
+    if (this.$loading) {
+      this.$loading.remove();
+      this.$loading = null;
+    }
+  },
+
+  /**
    * Registers an [event]{@link wcDocker.EVENT} associated with this panel.
-   *
    * @param {String} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {wcDocker~onEvent} handler  - An event handler function to be called when the event is fired.
-   *
    * @returns {Boolean} - Event registration success or failure.
    */
   on: function(eventType, handler) {
@@ -617,7 +612,6 @@ wcPanel.prototype = {
 
   /**
    * Unregisters an [event]{@link wcDocker.EVENT} associated with this panel.
-   *
    * @param {wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
    */
@@ -643,7 +637,6 @@ wcPanel.prototype = {
 
   /**
    * Triggers an [event]{@link wcDocker.EVENT} of a given type to all panels, including itself.
-   *
    * @param {wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
    * @param {Object} [data]             - A custom data object to pass into all handlers.
    */
@@ -852,8 +845,12 @@ wcPanel.prototype = {
     
     if (this.$container) {
       this._layout.__container(this.$container);
+      if (this.$loading) {
+        this.$container.append(this.$loading);
+      }
     } else {
       this._layout.__container(null);
+      this.finishLoading();
     }
     return this.$container;
   },

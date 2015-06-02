@@ -40,6 +40,8 @@ function wcIFrame(container, panel) {
 
   this._boundEvents = [];
 
+  this._onLoadFuncs = [];
+
   this.__init();
 };
 
@@ -79,6 +81,14 @@ wcIFrame.prototype = {
 
     this.$iFrame[0].focus();
     this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+
+    var self = this;
+    this.$iFrame.load(function() {
+      for (var i = 0; i < self._onLoadFuncs.length; ++i) {
+        self._onLoadFuncs[i]();
+      }
+      self._onLoadFuncs = [];
+    });
   },
 
   /**
@@ -103,6 +113,14 @@ wcIFrame.prototype = {
 
     this.$iFrame[0].focus();
     this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+
+    var self = this;
+    this.$iFrame.load(function() {
+      for (var i = 0; i < self._onLoadFuncs.length; ++i) {
+        self._onLoadFuncs[i]();
+      }
+      self._onLoadFuncs = [];
+    });
   },
 
   /**
@@ -125,6 +143,22 @@ wcIFrame.prototype = {
     this.$iFrame[0].srcdoc = html;
     this.$iFrame[0].focus();
     this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+
+    var self = this;
+    this.$iFrame.load(function() {
+      for (var i = 0; i < self._onLoadFuncs.length; ++i) {
+        self._onLoadFuncs[i]();
+      }
+      self._onLoadFuncs = [];
+    });
+  },
+
+  /**
+   * Registers an event handler when the contents of this iFrame has loaded.
+   * @param {Function} onLoadedFunc - A function to call when the iFrame has loaded.
+   */
+  onLoaded: function(onLoadedFunc) {
+    this._onLoadFuncs.push(onLoadedFunc);
   },
 
   /**
