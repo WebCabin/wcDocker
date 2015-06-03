@@ -413,6 +413,10 @@ wcPanel.prototype = {
 
     this.$icon.removeClass();
     this.$icon.addClass('wcTabIcon ' + icon);
+
+    if (this._parent instanceof wcFrame) {
+      this._parent.__updateTabs();
+    }
   },
 
   /**
@@ -427,6 +431,10 @@ wcPanel.prototype = {
 
     this.$icon.removeClass();
     this.$icon.addClass('wcTabIcon fa fa-fw fa-' + icon);
+
+    if (this._parent instanceof wcFrame) {
+      this._parent.__updateTabs();
+    }
   },
 
   /**
