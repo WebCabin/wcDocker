@@ -86,6 +86,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 - Built in loading screens for both panels (`wcPanel.startLoading()` and `wcPanel.finishLoading()`), and the entire window (`wcDocker.startLoading()` and `wcDocker.finishLoading()`), and also included a new `wcDocker.EVENT.LOADED` event that is triggered once all panels have been initialized and have finished their loading screens if they've started one.
 - Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
 - Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the grid size changes.
+- Tab widgets now only show on panel frames that contain more than one panel.
 
 #### Version: 2.2.0 ####
 - Separated the default theme out of `wcDocker.css` (now use `wcDocker.css` with `Themes/default.css`).

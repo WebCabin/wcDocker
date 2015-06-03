@@ -15,6 +15,8 @@ $(document).ready(function() {
     var _savedLayout  = null;
     var _chatterIndex = 1;
 
+    myDocker.theme(_currentTheme);
+
     // A common function that uses the 'Info Panel' to show a given block of text.
     function showInfo(text) {
       var infoPanel = myDocker.addPanel('Info Panel', wcDocker.DOCK.MODAL, null);
