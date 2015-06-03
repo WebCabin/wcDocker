@@ -430,7 +430,7 @@ wcLayout.prototype = {
           loc: wcDocker.DOCK.STACKED,
           tab: wcDocker.TAB.TOP,
           item: this,
-          self: same === wcDocker.TAB.TOP || isTopper,
+          self: same === wcDocker.TAB.TOP || (isTopper && same),
         });
         return true;
       }

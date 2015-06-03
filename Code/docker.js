@@ -1394,8 +1394,10 @@ wcDocker.prototype = {
             if (anchor.tab && anchor.item._parent._parent == self._draggingFrame) {
               self._draggingFrame.tabOrientation(anchor.tab);
             } else {
-              var index = parseInt($(self._draggingFrameTab).attr('id'));
-              if (!self._draggingFrameTab) {
+              var index = 0;
+              if (self._draggingFrameTab) {
+                index = parseInt($(self._draggingFrameTab).attr('id'));
+              } else {
                 self._draggingFrame.panel(0);
               }
               var panel;
@@ -1423,7 +1425,7 @@ wcDocker.prototype = {
               } else {
                 movingPanel = self._draggingFrame.panel();
               }
-              self.movePanel(movingPanel, anchor.loc, panel, self._ghost.rect());
+              panel = self.movePanel(movingPanel, anchor.loc, panel, self._ghost.rect());
               panel._parent.panel(panel._parent._panelList.length-1, true);
               // Dragging the entire frame.
               if (!self._draggingFrameTab) {

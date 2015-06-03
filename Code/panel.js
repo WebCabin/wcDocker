@@ -146,6 +146,10 @@ wcPanel.prototype = {
       if (this.$icon) {
         this.$titleText.prepend(this.$icon);
       }
+
+      if (this._parent instanceof wcFrame) {
+        this._parent.__updateTabs();
+      }
     }
 
     return this._title;

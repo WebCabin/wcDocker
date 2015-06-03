@@ -489,6 +489,12 @@ $(document).ready(function() {
 
     myDocker.on(wcDocker.EVENT.LOADED, function() {
       myDocker.finishLoading(500);
+
+      var index = 1;
+      setInterval(function() {
+        tutorialPanel.title('Test - ' + index);
+        index += 1;
+      }, 1000);
     });
   }
 });
