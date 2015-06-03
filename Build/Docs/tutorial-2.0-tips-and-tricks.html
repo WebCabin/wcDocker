@@ -172,7 +172,24 @@ myPanel.layout().finishBatch();</code></pre><hr>
     // Add a stretched element that will push everything to the top of the layout.
     myPanel.layout().addItem($('&lt;div>'), 0, i+1).stretch(undefined, '100%');
   }
-});</code></pre>
+});</code></pre><hr>
+<h3>Loading Screens</h3><p>Sometimes panel content needs time to load, for this <a href="wcDocker.html">wcDocker</a> comes with a built in loading screen system.</p>
+<p>The loading screen system comes in two forms, an individual panel loader and a full screen loader.</p>
+<p>When an individual panel requires some loading time, you can use <a href="wcPanel.html#startLoading">wcPanel.startLoading()</a> and <a href="wcPanel.html#finishLoading">wcPanel.finishLoading()</a> to display and hide the loading screen for it.</p>
+<pre class="prettyprint source"><code>myPanel.startLoading();
+
+// Perform some loading stuff...
+
+myPanel.finishLoading(500);</code></pre><p>Similarly, you can use <a href="wcDocker.html#startLoading">wcDocker.startLoading()</a> and <a href="wcDocker.html#finishLoading">wcDocker.finishLoading()</a> to display a loading screen for the entire view. This is especially useful as an initial loading screen for the entire page.</p>
+<pre class="prettyprint source"><code>myDocker.startLoading('Loading...');
+
+// Initialize all panels for the view.
+
+// Register our loaded event, this will be triggered after all panels have been initialized and all panel loading screens have been finished.
+myDocker.on(wcDocker.EVENT.LOADED, function() {
+  myDocker.finishLoading(500);
+});</code></pre><p>Note that while the full screen loading screen is active, all individual panel loading screens will be invisible, so it is perfectly ok to use them together!</p>
+<p>Also note that the <a href="wcDocker.html#.EVENT">wcDocker.EVENT.LOADED</a> event will only be triggered after all panels have finished their individual loading screens (if they are using it).</p>
 </article>
 
 </section>
