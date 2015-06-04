@@ -3678,7 +3678,7 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets the title for this panel.
    * Titles appear in the tab widget associated with the panel.
-   * @param {String|Boolean} title - If supplied, sets the new title. If false, the title bar will be removed.
+   * @param {String|Boolean} title - If supplied, sets the new title (this can be html text). If false, the title bar will be removed.
    * @returns {String|Boolean} - The current title.
    */
   title: function(title) {
