@@ -16,9 +16,12 @@ wcDocker (Web Cabin Docker) is a responsive IDE interface designed for the devel
 ### [http://docker.api.webcabin.org](http://docker.api.webcabin.org) ###
   * View the API documentation.
 
+### [https://github.com/WebCabin/wcDocker](https://github.com/WebCabin/wcDocker) ###
+  * View the source code.
+
+
 ### [http://arpg.webcabin.org](http://arpg.webcabin.org) ###
   * Try out our upcoming project (currently in alpha development), a completely web based Action RPG Maker tool!  
-  
 
 ****
 ### Features ###
