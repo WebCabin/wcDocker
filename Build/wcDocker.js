@@ -3685,10 +3685,10 @@ wcPanel.prototype = {
     if (typeof title !== 'undefined') {
       if (title === false) {
         this._titleVisible = false;
-        this.$titleText.text(this._type);
+        this.$titleText.html(this._type);
       } else {
         this._title = title;
-        this.$titleText.text(title);
+        this.$titleText.html(title);
       }
 
       if (this.$icon) {
@@ -5026,7 +5026,7 @@ wcFrame.prototype = {
     });
 
     this._titleVisible = true;
-    this.$title.text('');
+    this.$title.html('');
 
     // Determine if the title and tabs are visible based on the panels inside.
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -5070,7 +5070,7 @@ wcFrame.prototype = {
       if (isVisible) {
         $tab && $tab.addClass('wcPanelTabActive');
         $tabContent.removeClass('wcPanelTabContentHidden');
-        this.$title.text(panel.title());
+        this.$title.html(panel.title());
         if (panel.$icon) {
           var $icon = panel.$icon.clone();
           this.$title.prepend($icon);

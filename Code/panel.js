@@ -137,10 +137,10 @@ wcPanel.prototype = {
     if (typeof title !== 'undefined') {
       if (title === false) {
         this._titleVisible = false;
-        this.$titleText.text(this._type);
+        this.$titleText.html(this._type);
       } else {
         this._title = title;
-        this.$titleText.text(title);
+        this.$titleText.html(title);
       }
 
       if (this.$icon) {

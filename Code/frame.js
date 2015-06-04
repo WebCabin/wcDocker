@@ -561,7 +561,7 @@ wcFrame.prototype = {
     });
 
     this._titleVisible = true;
-    this.$title.text('');
+    this.$title.html('');
 
     // Determine if the title and tabs are visible based on the panels inside.
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -605,7 +605,7 @@ wcFrame.prototype = {
       if (isVisible) {
         $tab && $tab.addClass('wcPanelTabActive');
         $tabContent.removeClass('wcPanelTabContentHidden');
-        this.$title.text(panel.title());
+        this.$title.html(panel.title());
         if (panel.$icon) {
           var $icon = panel.$icon.clone();
           this.$title.prepend($icon);
