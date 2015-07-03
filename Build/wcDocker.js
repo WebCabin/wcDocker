@@ -3748,6 +3748,29 @@ wcPanel.prototype = {
   },
 
   /**
+   * Retrieves whether this panel is floating.
+   * @returns {Boolean}
+   */
+  isFloating: function() {
+    if (this._parent instanceof wcFrame) {
+      return this._parent._isFloating;
+    }
+    return false;
+  },
+
+  /**
+   * Retrieves whether this panel is in focus.
+   * @return {Boolean}
+   */
+  isInFocus: function() {
+    var docker = this.docker();
+    if (docker && this._parent instanceof wcFrame) {
+      return this._parent === docker._focusFrame;
+    }
+    return false;
+  },
+
+  /**
    * Creates a new custom button that will appear in the title bar when the panel is active.
    * @param {String} name               - The name of the button, to identify it later.
    * @param {String} className          - A CSS class name to apply to the button.
@@ -7588,8 +7611,6 @@ function wcIFrame(container, panel) {
   this.$iFrame = null;
 
   this._window = null;
-  this._isAttached = true;
-  this._hasFocus = false;
   this._isDocking = false;
   this._isHovering = false;
 
@@ -7783,10 +7804,10 @@ wcIFrame.prototype = {
     this._boundEvents.push({event: wcDocker.EVENT.RESIZE_ENDED,       handler: this.__onMoveFinished.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.MOVED,              handler: this.__onMoved.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.RESIZED,            handler: this.__onMoved.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.ATTACHED,           handler: this.__onAttached.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.DETACHED,           handler: this.__onDetached.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS,         handler: this.__onGainFocus.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS,         handler: this.__onLostFocus.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.ATTACHED,           handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.DETACHED,           handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS,         handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS,         handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.CLOSED,             handler: this.__onClosed.bind(this)});
 
     for (var i = 0; i < this._boundEvents.length; ++i) {
@@ -7807,9 +7828,10 @@ wcIFrame.prototype = {
 
   __updateFrame: function() {
     if (this.$frame && this._panel) {
-      this.$frame.toggleClass('wcIFrameFloating', !this._isAttached);
-      if (!this._isAttached) {
-        this.$frame.toggleClass('wcIFrameFloatingFocus', this._hasFocus);
+      var floating = this._panel.isFloating();
+      this.$frame.toggleClass('wcIFrameFloating', floating);
+      if (floating) {
+        this.$frame.toggleClass('wcIFrameFloatingFocus', this._panel.isInFocus());
       } else {
         this.$frame.removeClass('wcIFrameFloatingFocus');
       }
@@ -7886,26 +7908,6 @@ wcIFrame.prototype = {
       this.$frame.css('width', width);
       this.$frame.css('height', height);
     }
-  },
-
-  __onAttached: function() {
-    this._isAttached = true;
-    this.__updateFrame();
-  },
-
-  __onDetached: function() {
-    this._isAttached = false;
-    this.__updateFrame();
-  },
-
-  __onGainFocus: function() {
-    this._hasFocus = true;
-    this.__updateFrame();
-  },
-
-  __onLostFocus: function() {
-    this._hasFocus = false;
-    this.__updateFrame();
   },
 
   __onClosed: function() {

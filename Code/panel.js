@@ -200,6 +200,29 @@ wcPanel.prototype = {
   },
 
   /**
+   * Retrieves whether this panel is floating.
+   * @returns {Boolean}
+   */
+  isFloating: function() {
+    if (this._parent instanceof wcFrame) {
+      return this._parent._isFloating;
+    }
+    return false;
+  },
+
+  /**
+   * Retrieves whether this panel is in focus.
+   * @return {Boolean}
+   */
+  isInFocus: function() {
+    var docker = this.docker();
+    if (docker && this._parent instanceof wcFrame) {
+      return this._parent === docker._focusFrame;
+    }
+    return false;
+  },
+
+  /**
    * Creates a new custom button that will appear in the title bar when the panel is active.
    * @param {String} name               - The name of the button, to identify it later.
    * @param {String} className          - A CSS class name to apply to the button.
