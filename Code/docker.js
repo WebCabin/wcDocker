@@ -2225,12 +2225,14 @@ wcDocker.prototype = {
         this._focusFrame.$frame.removeClass('wcFloatingFocus');
       }
 
-      this._focusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
-      if (this._focusFrame.isCollapser() && differentFrames) {
-        this._focusFrame.collapse();
-        this._focusFrame.panel(-1);
-      }
+      var oldFocusFrame = this._focusFrame;
       this._focusFrame = null;
+
+      oldFocusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
+      if (oldFocusFrame.isCollapser() && differentFrames) {
+        oldFocusFrame.collapse();
+        oldFocusFrame.panel(-1);
+      }
     }
 
     this._focusFrame = frame;

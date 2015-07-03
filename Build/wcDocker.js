@@ -2225,12 +2225,14 @@ wcDocker.prototype = {
         this._focusFrame.$frame.removeClass('wcFloatingFocus');
       }
 
-      this._focusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
-      if (this._focusFrame.isCollapser() && differentFrames) {
-        this._focusFrame.collapse();
-        this._focusFrame.panel(-1);
-      }
+      var oldFocusFrame = this._focusFrame;
       this._focusFrame = null;
+
+      oldFocusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
+      if (oldFocusFrame.isCollapser() && differentFrames) {
+        oldFocusFrame.collapse();
+        oldFocusFrame.panel(-1);
+      }
     }
 
     this._focusFrame = frame;
@@ -7815,6 +7817,8 @@ wcIFrame.prototype = {
     }
 
     $(window).blur(this.__onBlur.bind(this));
+    this.$focus.mousedown(this.__onFocus.bind(this));
+    // this.__updateFrame();
   },
 
   __clearFrame: function() {
@@ -7831,7 +7835,13 @@ wcIFrame.prototype = {
       var floating = this._panel.isFloating();
       this.$frame.toggleClass('wcIFrameFloating', floating);
       if (floating) {
-        this.$frame.toggleClass('wcIFrameFloatingFocus', this._panel.isInFocus());
+        var focus = this._panel.isInFocus();
+        this.$frame.toggleClass('wcIFrameFloatingFocus', focus);
+        if (focus) {
+          this.$focus.hide();
+        } else {
+          this.$focus.show();
+        }
       } else {
         this.$frame.removeClass('wcIFrameFloatingFocus');
       }
@@ -7859,8 +7869,12 @@ wcIFrame.prototype = {
 
   __onBlur: function() {
     if (this._isHovering) {
-      this.docker().__focus(this._panel._parent);
+      this.__onFocus();
     }
+  },
+
+  __onFocus: function() {
+    this.docker().__focus(this._panel._parent);
   },
 
   __onVisibilityChanged: function() {
