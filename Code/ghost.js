@@ -8,6 +8,11 @@ function wcGhost(rect, mouse, docker) {
   this._anchor = null;
   this._docker = docker;
 
+  this._outer = docker.__findInner();
+  if (this._outer instanceof wcSplitter) {
+    this._inner = this._outer.right();
+  }
+
   this.__init(rect, mouse);
 };
 

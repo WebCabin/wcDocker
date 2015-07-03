@@ -556,6 +556,10 @@ wcDocker.prototype = {
               parentSplitter._pane[1] = null;
             }
 
+            if (targetPanel === parentSplitter) {
+              targetPanel._shift = other;
+            }
+
             // Keep the item in a hidden transition container so as to not
             // destroy any event handlers that may be on it.
             other.__container(this.$transition);
@@ -2107,18 +2111,11 @@ wcDocker.prototype = {
   },
 
   /*
-   * Sets up the collapsers for the panel.<br>
-   * <b>Note: </b> This should be called AFTER you have initialized your panel layout, but BEFORE you add
-   * any static panels that you do not wish to be overlapped by the collapsers (such as file menu panels).
+   * Searches docked panels and splitters for a container that is within any static areas.
    */
-  __initCollapsers: function() {
-    // Initialize collapsers if it is enabled and not already initialized.
-    if (!this.isCollapseEnabled() || !$.isEmptyObject(this._collapser)) {
-      return;
-    }
-
+  __findInner: function() {
     function isPaneStatic(pane) {
-      if (pane && pane instanceof wcFrame && pane.panel() && !pane.panel().moveable()) {
+      if (pane && (pane instanceof wcFrame && pane.panel() && !pane.panel().moveable()) || (pane instanceof wcCollapser)) {
         return true;
       }
       return false;
@@ -2141,6 +2138,21 @@ wcDocker.prototype = {
       }
     }
 
+    return parent;
+  },
+
+  /*
+   * Sets up the collapsers for the panel.<br>
+   * <b>Note: </b> This should be called AFTER you have initialized your panel layout, but BEFORE you add
+   * any static panels that you do not wish to be overlapped by the collapsers (such as file menu panels).
+   */
+  __initCollapsers: function() {
+    // Initialize collapsers if it is enabled and not already initialized.
+    if (!this.isCollapseEnabled() || !$.isEmptyObject(this._collapser)) {
+      return;
+    }
+
+    var parent = this.__findInner();
     function __createCollapser(location) {
       this._collapser[location] = this.__addCollapser(location, parent);
       parent = this._collapser[location]._parent;
@@ -2383,6 +2395,10 @@ wcDocker.prototype = {
   //    targetPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, targetPanel, options) {
+    if (targetPanel && targetPanel._shift) {
+      targetPanel = targetPanel._shift;
+    }
+
     if (options) {
       var width = this.$container.width();
       var height = this.$container.height();

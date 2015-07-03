@@ -402,8 +402,14 @@ wcLayout.prototype = {
 
   // Checks if the mouse is in a valid anchor position for nesting another widget.
   // Params:
-  //    mouse     The current mouse position.
-  //    same      Whether the moving frame and this one are the same.
+  //    mouse                 The current mouse position.
+  //    same                  Whether we are hovering over the same panel that is being moved.
+  //    ghost                 An instance to the ghost object.
+  //    canSplit              Whether the original panel can be split.
+  //    $elem                 The container element for the target panel.
+  //    title                 Whether the panel has a title bar visible.
+  //    isTopper              Whether the item being dragged is the top title bar, as apposed to dragging a side or bottom tab/bar.
+  //    forceTabOrientation   Force a specific tab orientation.
   __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation) {
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
@@ -411,6 +417,72 @@ wcLayout.prototype = {
     var titleSize = $elem.find('.wcFrameTitleBar').height();
     if (!title) {
       titleSize = 0;
+    }
+
+    // First, test for edge anchoring.
+    if (ghost._outer) {
+      var outerWidth  = ghost._outer.$container.outerWidth();
+      var outerHeight = ghost._outer.$container.outerHeight();
+      var outerOffset = ghost._outer.$container.offset();
+
+      var EDGE_SIZE = 50;
+
+      // Left edge
+      if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
+          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + EDGE_SIZE) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.LEFT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Right edge
+      else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
+          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE && mouse.x <= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.RIGHT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Top edge
+      else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + EDGE_SIZE &&
+          mouse.x >= outerOffset.left && mouse.y <= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.TOP,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Bottom edge
+      else if (mouse.y >= outerOffset.top + outerHeight - EDGE_SIZE && mouse.y <= outerOffset.top + outerHeight &&
+          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top + outerHeight - (outerHeight/3) - 2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.BOTTOM,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
     }
 
     // If the target panel has a title, hovering over it (on all sides) will cause stacking
@@ -430,7 +502,7 @@ wcLayout.prototype = {
           loc: wcDocker.DOCK.STACKED,
           tab: wcDocker.TAB.TOP,
           item: this,
-          self: same === wcDocker.TAB.TOP || (isTopper && same),
+          self: same === wcDocker.TAB.TOP || (isTopper && same)
         });
         return true;
       }
@@ -450,7 +522,7 @@ wcLayout.prototype = {
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.BOTTOM,
             item: this,
-            self: same === wcDocker.TAB.BOTTOM,
+            self: same === wcDocker.TAB.BOTTOM
           });
           return true;
         }
@@ -468,7 +540,7 @@ wcLayout.prototype = {
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.LEFT,
             item: this,
-            self: same === wcDocker.TAB.LEFT,
+            self: same === wcDocker.TAB.LEFT
           });
           return true;
         }
@@ -486,7 +558,7 @@ wcLayout.prototype = {
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.RIGHT,
             item: this,
-            self: same === wcDocker.TAB.RIGHT,
+            self: same === wcDocker.TAB.RIGHT
           });
           return true;
         }
@@ -506,7 +578,7 @@ wcLayout.prototype = {
         h: height,
         loc: wcDocker.DOCK.TOP,
         item: this,
-        self: false,
+        self: false
       });
       return true;
     }
@@ -522,7 +594,7 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.TOP,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -537,7 +609,7 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.BOTTOM,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -553,7 +625,7 @@ wcLayout.prototype = {
           h: height,
           loc: wcDocker.DOCK.LEFT,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -567,7 +639,7 @@ wcLayout.prototype = {
           h: height,
           loc: wcDocker.DOCK.RIGHT,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -584,7 +656,7 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.TOP,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -599,7 +671,7 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.BOTTOM,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -610,7 +682,6 @@ wcLayout.prototype = {
   // Gets, or Sets a new container for this layout.
   // Params:
   //    $container          If supplied, sets a new container for this layout.
-  //    parent              If supplied, sets a new parent for this layout.
   // Returns:
   //    JQuery collection   The current container.
   __container: function($container) {
