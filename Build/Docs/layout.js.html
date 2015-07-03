@@ -503,7 +503,7 @@ wcLayout.prototype = {
 
       // Left edge
       if (mouse.y >= outerOffset.top &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight &amp;&amp;
-          mouse.x >= outerOffset.left &amp;&amp; mouse.x &lt;= outerOffset.left + EDGE_SIZE) {
+          mouse.x >= outerOffset.left + titleSize &amp;&amp; mouse.x &lt;= outerOffset.left + titleSize + EDGE_SIZE) {
         ghost.anchor(mouse, {
           x: outerOffset.left-2,
           y: outerOffset.top-2,
@@ -517,7 +517,7 @@ wcLayout.prototype = {
       }
       // Right edge
       else if (mouse.y >= outerOffset.top &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight &amp;&amp;
-          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth) {
+          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE - titleSize &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth - titleSize) {
         ghost.anchor(mouse, {
           x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
           y: outerOffset.top-2,
@@ -530,7 +530,7 @@ wcLayout.prototype = {
         return true;
       }
       // Top edge
-      else if (mouse.y >= outerOffset.top &amp;&amp; mouse.y &lt;= outerOffset.top + EDGE_SIZE &amp;&amp;
+      else if (mouse.y >= outerOffset.top + titleSize &amp;&amp; mouse.y &lt;= outerOffset.top + titleSize + EDGE_SIZE &amp;&amp;
           mouse.x >= outerOffset.left &amp;&amp; mouse.y &lt;= outerOffset.left + outerWidth) {
         ghost.anchor(mouse, {
           x: outerOffset.left-2,
@@ -544,7 +544,7 @@ wcLayout.prototype = {
         return true;
       }
       // Bottom edge
-      else if (mouse.y >= outerOffset.top + outerHeight - EDGE_SIZE &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight &amp;&amp;
+      else if (mouse.y >= outerOffset.top + outerHeight - titleSize - EDGE_SIZE &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight - titleSize &amp;&amp;
           mouse.x >= outerOffset.left &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth) {
         ghost.anchor(mouse, {
           x: outerOffset.left-2,

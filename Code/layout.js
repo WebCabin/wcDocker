@@ -429,7 +429,7 @@ wcLayout.prototype = {
 
       // Left edge
       if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
-          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + EDGE_SIZE) {
+          mouse.x >= outerOffset.left + titleSize && mouse.x <= outerOffset.left + titleSize + EDGE_SIZE) {
         ghost.anchor(mouse, {
           x: outerOffset.left-2,
           y: outerOffset.top-2,
@@ -443,7 +443,7 @@ wcLayout.prototype = {
       }
       // Right edge
       else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
-          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE && mouse.x <= outerOffset.left + outerWidth) {
+          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE - titleSize && mouse.x <= outerOffset.left + outerWidth - titleSize) {
         ghost.anchor(mouse, {
           x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
           y: outerOffset.top-2,
@@ -456,7 +456,7 @@ wcLayout.prototype = {
         return true;
       }
       // Top edge
-      else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + EDGE_SIZE &&
+      else if (mouse.y >= outerOffset.top + titleSize && mouse.y <= outerOffset.top + titleSize + EDGE_SIZE &&
           mouse.x >= outerOffset.left && mouse.y <= outerOffset.left + outerWidth) {
         ghost.anchor(mouse, {
           x: outerOffset.left-2,
@@ -470,7 +470,7 @@ wcLayout.prototype = {
         return true;
       }
       // Bottom edge
-      else if (mouse.y >= outerOffset.top + outerHeight - EDGE_SIZE && mouse.y <= outerOffset.top + outerHeight &&
+      else if (mouse.y >= outerOffset.top + outerHeight - titleSize - EDGE_SIZE && mouse.y <= outerOffset.top + outerHeight - titleSize &&
           mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
         ghost.anchor(mouse, {
           x: outerOffset.left-2,
