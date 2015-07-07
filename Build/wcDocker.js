@@ -125,7 +125,10 @@ wcDocker.EVENT = {
   LOADED               : 'dockerLoaded',
   /** When the panel is updated */
   UPDATED              : 'panelUpdated',
-  /** When the panel has changed its visibility */
+  /**
+   * When the panel has changed its visibility<br>
+   * This event is called with the current visibility state as the first parameter.
+   */
   VISIBILITY_CHANGED   : 'panelVisibilityChanged',
   /** When the user begins moving any panel from its current docked position */
   BEGIN_DOCK           : 'panelBeginDock',
@@ -143,17 +146,35 @@ wcDocker.EVENT = {
   ATTACHED             : 'panelAttached',
   /** When the panel has moved from a docked position to floating */
   DETACHED             : 'panelDetached',
-  /** When the user has started moving the panel (top-left coordinates changed) */
+  /**
+   * When the user has started moving the panel (top-left coordinates changed)<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVE_STARTED         : 'panelMoveStarted',
-  /** When the user has finished moving the panel */
+  /**
+   * When the user has finished moving the panel<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVE_ENDED           : 'panelMoveEnded',
-  /** When the top-left coordinates of the panel has changed */
+  /**
+   * When the top-left coordinates of the panel has changed<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVED                : 'panelMoved',
-  /** When the user has started resizing the panel (width or height changed) */
+  /**
+   * When the user has started resizing the panel (width or height changed)<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZE_STARTED       : 'panelResizeStarted',
-  /** When the user has finished resizing the panel */
+  /**
+   * When the user has finished resizing the panel<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZE_ENDED         : 'panelResizeEnded',
-  /** When the panels width or height has changed */
+  /**
+   * When the panels width or height has changed<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZED              : 'panelResized',
   /** When the contents of the panel has been scrolled */
   SCROLLED             : 'panelScrolled',
@@ -4420,9 +4441,9 @@ wcPanel.prototype = {
       if (!this._resizeData.timeout) {
         this._resizeData.timeout = true;
         setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
-        this.__trigger(wcDocker.EVENT.RESIZE_STARTED);
+        this.__trigger(wcDocker.EVENT.RESIZE_STARTED, {width: this._actualSize.x, height: this._actualSize.y});
       }
-      this.__trigger(wcDocker.EVENT.RESIZED);
+      this.__trigger(wcDocker.EVENT.RESIZED, {width: this._actualSize.x, height: this._actualSize.y});
     }
 
     var offset  = this.$container.offset();
@@ -4434,9 +4455,9 @@ wcPanel.prototype = {
       if (!this._moveData.timeout) {
         this._moveData.timeout = true;
         setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
-        this.__trigger(wcDocker.EVENT.MOVE_STARTED);
+        this.__trigger(wcDocker.EVENT.MOVE_STARTED, {x: this._actualPos.x, y: this._actualPos.y});
       }
-      this.__trigger(wcDocker.EVENT.MOVED);
+      this.__trigger(wcDocker.EVENT.MOVED, {x: this._actualPos.x, y: this._actualPos.y});
     }
   },
 
@@ -4445,7 +4466,7 @@ wcPanel.prototype = {
       setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
     } else {
       this._resizeData.timeout = false;
-      this.__trigger(wcDocker.EVENT.RESIZE_ENDED);
+      this.__trigger(wcDocker.EVENT.RESIZE_ENDED, {width: this._actualSize.x, height: this._actualSize.y});
     }
   },
 
@@ -4454,7 +4475,7 @@ wcPanel.prototype = {
       setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
     } else {
       this._moveData.timeout = false;
-      this.__trigger(wcDocker.EVENT.MOVE_ENDED);
+      this.__trigger(wcDocker.EVENT.MOVE_ENDED, {x: this._actualPos.x, y: this._actualPos.y});
     }
   },
 
@@ -4462,7 +4483,7 @@ wcPanel.prototype = {
     if (this._isVisible !== inView) {
       this._isVisible = inView;
 
-      this.__trigger(wcDocker.EVENT.VISIBILITY_CHANGED);
+      this.__trigger(wcDocker.EVENT.VISIBILITY_CHANGED, this._isVisible);
     }
   },
 

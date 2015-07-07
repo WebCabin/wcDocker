@@ -125,7 +125,10 @@ wcDocker.EVENT = {
   LOADED               : 'dockerLoaded',
   /** When the panel is updated */
   UPDATED              : 'panelUpdated',
-  /** When the panel has changed its visibility */
+  /**
+   * When the panel has changed its visibility<br>
+   * This event is called with the current visibility state as the first parameter.
+   */
   VISIBILITY_CHANGED   : 'panelVisibilityChanged',
   /** When the user begins moving any panel from its current docked position */
   BEGIN_DOCK           : 'panelBeginDock',
@@ -143,17 +146,35 @@ wcDocker.EVENT = {
   ATTACHED             : 'panelAttached',
   /** When the panel has moved from a docked position to floating */
   DETACHED             : 'panelDetached',
-  /** When the user has started moving the panel (top-left coordinates changed) */
+  /**
+   * When the user has started moving the panel (top-left coordinates changed)<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVE_STARTED         : 'panelMoveStarted',
-  /** When the user has finished moving the panel */
+  /**
+   * When the user has finished moving the panel<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVE_ENDED           : 'panelMoveEnded',
-  /** When the top-left coordinates of the panel has changed */
+  /**
+   * When the top-left coordinates of the panel has changed<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVED                : 'panelMoved',
-  /** When the user has started resizing the panel (width or height changed) */
+  /**
+   * When the user has started resizing the panel (width or height changed)<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZE_STARTED       : 'panelResizeStarted',
-  /** When the user has finished resizing the panel */
+  /**
+   * When the user has finished resizing the panel<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZE_ENDED         : 'panelResizeEnded',
-  /** When the panels width or height has changed */
+  /**
+   * When the panels width or height has changed<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZED              : 'panelResized',
   /** When the contents of the panel has been scrolled */
   SCROLLED             : 'panelScrolled',
