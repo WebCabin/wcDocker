@@ -131,9 +131,9 @@ wcDocker.EVENT = {
   BEGIN_DOCK           : 'panelBeginDock',
   /** When the user finishes moving or docking a panel */
   END_DOCK             : 'panelEndDock',
-  /** When the user brings this panel into focus */
+  /** When the user brings any panel within a tabbed frame into focus */
   GAIN_FOCUS           : 'panelGainFocus',
-  /** When the user leaves focus on this panel */
+  /** When the user leaves focus on any panel within a tabbed frame */
   LOST_FOCUS           : 'panelLostFocus',
   /** When the panel is being closed */
   CLOSED               : 'panelClosed',
