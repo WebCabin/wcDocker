@@ -3420,7 +3420,7 @@ wcLayout.prototype = {
       }
       // Top edge
       else if (mouse.y >= outerOffset.top + titleSize && mouse.y <= outerOffset.top + titleSize + EDGE_SIZE &&
-          mouse.x >= outerOffset.left && mouse.y <= outerOffset.left + outerWidth) {
+          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
         ghost.anchor(mouse, {
           x: outerOffset.left-2,
           y: outerOffset.top-2,
