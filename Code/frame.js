@@ -845,7 +845,7 @@ wcFrame.prototype = {
 
             var direction = '';
             var directionClass = '';
-            if (center.top > 0.05 && center.bottom > 0.95) {
+            if (center.top > 0.5 && center.bottom > 0.95) {
               direction = 'bottom.';
               directionClass = 'wcCollapseBottom';
             } else if (center.left <= 0.05) {
