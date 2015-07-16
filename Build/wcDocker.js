@@ -1480,7 +1480,11 @@ wcDocker.prototype = {
           var target = null;
           if (anchor) {
             loc = anchor.loc;
-            target = anchor.panel;
+            if (anchor.item) {
+              target = anchor.item._parent;
+            } else {
+              target = anchor.panel;
+            }
           }
           self.addPanel(self._creatingPanel, loc, target, self._ghost.rect());
         }
@@ -2417,7 +2421,9 @@ wcDocker.prototype = {
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, targetPanel, options) {
     if (targetPanel && targetPanel._shift) {
+      var target = targetPanel;
       targetPanel = targetPanel._shift;
+      target._shift = undefined;
     }
 
     if (options) {
@@ -5448,7 +5454,7 @@ wcFrame.prototype = {
 
             var direction = '';
             var directionClass = '';
-            if (center.top > 0.05 && center.bottom > 0.95) {
+            if (center.top > 0.5 && center.bottom > 0.95) {
               direction = 'bottom.';
               directionClass = 'wcCollapseBottom';
             } else if (center.left <= 0.05) {
