@@ -1078,7 +1078,11 @@ wcDocker.prototype = {
             } else {
               if (self._ghost && (myFrame)) {
                 var anchor = self._ghost.anchor();
-                var newPanel = self.addPanel(key, anchor.loc, myFrame.panel(), self._ghost.rect());
+                var target = myFrame.panel();
+                if (anchor.item) {
+                  target = anchor.item._parent;
+                }
+                var newPanel = self.addPanel(key, anchor.loc, target, self._ghost.rect());
                 newPanel.focus();
               }
             }
