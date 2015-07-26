@@ -334,8 +334,11 @@ wcFrame.prototype = {
           this._curTab--;
         }
 
-        this._panelList[i].__container(null);
-        this._panelList[i]._parent = null;
+        // Only null out the container if it is still attached to this frame.
+        if (this._panelList[i]._parent === this) {
+          this._panelList[i].__container(null);
+          this._panelList[i]._parent = null;
+        }
 
         this._panelList.splice(i, 1);
         break;

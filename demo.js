@@ -306,6 +306,7 @@ $(document).ready(function() {
     // system to communicate between multiple chat panels.
     myDocker.registerPanelType('Chat Panel', {
       faicon: 'comment-o',
+      isPersistent: true,
       onCreate: function(myPanel) {
         myPanel.layout().$table.css('padding', '10px');
 
@@ -360,6 +361,15 @@ $(document).ready(function() {
         myPanel.on(wcDocker.EVENT.BUTTON, function(data) {
           // Use the preivously defined common function to popup the Info Panel.
           showInfo('The chat panel demonstrates the use of the built-in event messaging system to broadcast information between panels.  Give yourself a name and then send a message, all chat panels will receive your message and display it.');
+        });
+
+        myPanel.on(wcDocker.EVENT.PERSISTENT_OPENED, function() {
+          console.log('PERSISTENT_OPENED');
+        });
+
+        myPanel.on(wcDocker.EVENT.PERSISTENT_CLOSED, function() {
+          console.log('PERSISTENT_CLOSED');
+
         });
       }
     });

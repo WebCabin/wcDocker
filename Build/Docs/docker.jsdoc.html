@@ -132,13 +132,14 @@
  * Options object for registering new panel types.
  * 
  * @typedef wcDocker~registerOptions
- * @property {wcDocker~onCreatePanel} options.onCreate - A function or an object constructor for the panel.
- * @property {String} [options.icon]                   - A CSS class name to draw an icon in the panels tab widget.
- * @property {String} [options.faicon]                 - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
- * @property {String|Boolean} [options.title]          - Assign a custom name to the panels tab. A false value will hide the tab entirely.
- * @property {Boolean} [options.isPrivate]             - If true, the user will not be able to create this panel type.
- * @property {Number} [options.limit]                  - Enforces a limited number of this panel type from being created by the user.
- * @property {wcPanel~options} [options.options]       - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
+ * @property {wcDocker~onCreatePanel} onCreate  - A function or an object constructor for the panel.
+ * @property {String} [icon]                    - A CSS class name to draw an icon in the panels tab widget.
+ * @property {String} [faicon]                  - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
+ * @property {String|Boolean} [title]           - Assign a custom name to the panels tab. A false value will hide the tab entirely.
+ * @property {Boolean} [isPrivate]              - If true, the user will not be able to create this panel type.
+ * @property {Boolean} [isPersistent]           - If true, when the user closes this panel, it will only be hidden instead of completely destroyed. When the user creates an instance of this panel, it will first attempt to un-hide an already existing panel before creating a new instance.
+ * @property {Number} [limit]                   - Enforces a limited number of this panel type from being created by the user.
+ * @property {wcPanel~options} [options]        - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
  */
 
  /**

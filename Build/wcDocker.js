@@ -42,6 +42,7 @@ function wcDocker(container, options) {
   this._frameList = [];
   this._floatingList = [];
   this._modalList = [];
+  this._persistentList = [];
   this._focusFrame = null;
   this._placeholderPanel = null;
   this._contextTimer = 0;
@@ -140,6 +141,10 @@ wcDocker.EVENT = {
   LOST_FOCUS           : 'panelLostFocus',
   /** When the panel is being closed */
   CLOSED               : 'panelClosed',
+  /** When a persistent panel is being hidden */
+  PERSISTENT_CLOSED    : 'panelPersistentClosed',
+  /** When a persistent panel is being shown */
+  PERSISTENT_OPENED    : 'panelPersistentOpened',
   /** When a custom button is clicked, See [wcPanel.addButton]{@link wcPanel#addButton} */
   BUTTON               : 'panelButton',
   /** When the panel has moved from floating to a docked position */
@@ -292,7 +297,7 @@ wcDocker.prototype = {
    * @version 3.0.0
    * @param {String} name                       - The name identifier for the new panel type.
    * @param {wcDocker~registerOptions} options  - An options object for describing the panel type.
-   * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options]{@link wcDocker~registerOptions} instead.
+   * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options.isPrivate]{@link wcDocker~registerOptions} instead.
    * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
    */
   registerPanelType: function(name, optionsOrCreateFunc, isPrivate) {
@@ -369,30 +374,45 @@ wcDocker.prototype = {
    * @returns {wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
    */
   addPanel: function(typeName, location, targetPanel, options) {
+    function __addPanel(panel) {
+      if (location === wcDocker.DOCK.STACKED) {
+        this.__addPanelGrouped(panel, targetPanel, options);
+      } else {
+        this.__addPanelAlone(panel, location, targetPanel, options);
+      }
+
+      if (this._placeholderPanel && panel.moveable() &&
+          location !== wcDocker.DOCK.FLOAT &&
+          location !== wcDocker.DOCK.MODAL) {
+        if (this.removePanel(this._placeholderPanel)) {
+          this._placeholderPanel = null;
+        }
+      }
+
+      this.__forceUpdate();
+    }
+
+    // Find out if we have a persistent version of this panel type first.
+    for (var a = 0; a < this._persistentList.length; ++a) {
+      if (this._persistentList[a]._type === typeName) {
+        var panel = this._persistentList.splice(a, 1)[0];
+        __addPanel.call(this, panel);
+        panel.__trigger(wcDocker.EVENT.PERSISTENT_OPENED);
+        return panel;
+      }
+    }
+
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
         var panelType = this._dockPanelTypeList[i];
+
         var panel = new wcPanel(typeName, panelType.options);
         panel._parent = this;
         panel.__container(this.$transition);
         var panelOptions = (panelType.options && panelType.options.options) || {};
         panel._panelObject = new panelType.options.onCreate(panel, panelOptions);
 
-        if (location === wcDocker.DOCK.STACKED) {
-          this.__addPanelGrouped(panel, targetPanel, options);
-        } else {
-          this.__addPanelAlone(panel, location, targetPanel, options);
-        }
-
-        if (this._placeholderPanel && panel.moveable() &&
-            location !== wcDocker.DOCK.FLOAT &&
-            location !== wcDocker.DOCK.MODAL) {
-          if (this.removePanel(this._placeholderPanel)) {
-            this._placeholderPanel = null;
-          }
-        }
-
-        this.__forceUpdate();
+        __addPanel.call(this, panel);
         return panel;
       }
     }
@@ -402,9 +422,10 @@ wcDocker.prototype = {
   /**
    * Removes a docked panel from the window.
    * @param {wcPanel} panel - The panel to remove.
+   * @param {Boolean} dontDestroy - If true, the panel itself will not be destroyed.
    * @returns {Boolean} - Success or failure.
    */
-  removePanel: function(panel) {
+  removePanel: function(panel, dontDestroy) {
     if (!panel) {
       return false;
     }
@@ -414,7 +435,16 @@ wcDocker.prototype = {
 
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
-      panel.__trigger(wcDocker.EVENT.CLOSED);
+      if (dontDestroy) {
+        panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
+
+        // Keep the panel in a hidden transition container so as to not
+        // destroy any event handlers that may be on it.
+        panel.__container(this.$transition);
+        panel._parent = null;
+      } else {
+        panel.__trigger(wcDocker.EVENT.CLOSED);
+      }
 
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.removePanel(panel) && !parentFrame.isCollapser()) {
@@ -491,9 +521,13 @@ wcDocker.prototype = {
         if (this._focusFrame === parentFrame) {
           this._focusFrame = null;
         }
+
         parentFrame.__destroy();
       }
-      panel.__destroy();
+
+      if (!dontDestroy) {
+        panel.__destroy();
+      }
       return true;
     }
     return false;
@@ -1691,7 +1725,15 @@ wcDocker.prototype = {
         var frame = self._frameList[i];
         if (frame.$close[0] === this) {
           var panel = frame.panel();
-          self.removePanel(panel);
+
+          // If the panel is persistent, instead of destroying it, add it to a persistent list instead.
+          var dontDestroy = false;
+          var panelOptions = self.panelTypeInfo(panel._type);
+          if (panelOptions && panelOptions.isPersistent) {
+            dontDestroy = true;
+            self._persistentList.push(panel);
+          }
+          self.removePanel(panel, dontDestroy);
           self.__update();
           return;
         }
@@ -4873,8 +4915,11 @@ wcFrame.prototype = {
           this._curTab--;
         }
 
-        this._panelList[i].__container(null);
-        this._panelList[i]._parent = null;
+        // Only null out the container if it is still attached to this frame.
+        if (this._panelList[i]._parent === this) {
+          this._panelList[i].__container(null);
+          this._panelList[i]._parent = null;
+        }
 
         this._panelList.splice(i, 1);
         break;
