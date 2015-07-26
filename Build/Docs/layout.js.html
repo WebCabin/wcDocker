@@ -493,72 +493,6 @@ wcLayout.prototype = {
       titleSize = 0;
     }
 
-    // First, test for edge anchoring.
-    if (ghost._outer) {
-      var outerWidth  = ghost._outer.$container.outerWidth();
-      var outerHeight = ghost._outer.$container.outerHeight();
-      var outerOffset = ghost._outer.$container.offset();
-
-      var EDGE_SIZE = 50;
-
-      // Left edge
-      if (mouse.y >= outerOffset.top &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight &amp;&amp;
-          mouse.x >= outerOffset.left + titleSize &amp;&amp; mouse.x &lt;= outerOffset.left + titleSize + EDGE_SIZE) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left-2,
-          y: outerOffset.top-2,
-          w: outerWidth/3,
-          h: outerHeight,
-          loc: wcDocker.DOCK.LEFT,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-      // Right edge
-      else if (mouse.y >= outerOffset.top &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight &amp;&amp;
-          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE - titleSize &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth - titleSize) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
-          y: outerOffset.top-2,
-          w: outerWidth/3,
-          h: outerHeight,
-          loc: wcDocker.DOCK.RIGHT,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-      // Top edge
-      else if (mouse.y >= outerOffset.top + titleSize &amp;&amp; mouse.y &lt;= outerOffset.top + titleSize + EDGE_SIZE &amp;&amp;
-          mouse.x >= outerOffset.left &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left-2,
-          y: outerOffset.top-2,
-          w: outerWidth,
-          h: outerHeight/3,
-          loc: wcDocker.DOCK.TOP,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-      // Bottom edge
-      else if (mouse.y >= outerOffset.top + outerHeight - titleSize - EDGE_SIZE &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight - titleSize &amp;&amp;
-          mouse.x >= outerOffset.left &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left-2,
-          y: outerOffset.top + outerHeight - (outerHeight/3) - 2,
-          w: outerWidth,
-          h: outerHeight/3,
-          loc: wcDocker.DOCK.BOTTOM,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-    }
-
     // If the target panel has a title, hovering over it (on all sides) will cause stacking
     // and also change the orientation of the tabs (if enabled).
     if (title) {
@@ -636,6 +570,72 @@ wcLayout.prototype = {
           });
           return true;
         }
+      }
+    }
+
+    // Test for edge anchoring.
+    if (ghost._outer) {
+      var outerWidth  = ghost._outer.$container.outerWidth();
+      var outerHeight = ghost._outer.$container.outerHeight();
+      var outerOffset = ghost._outer.$container.offset();
+
+      var EDGE_SIZE = 50;
+
+      // Left edge
+      if (mouse.y >= outerOffset.top &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight &amp;&amp;
+          mouse.x >= outerOffset.left + titleSize &amp;&amp; mouse.x &lt;= outerOffset.left + titleSize + EDGE_SIZE) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.LEFT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Right edge
+      else if (mouse.y >= outerOffset.top &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight &amp;&amp;
+          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE - titleSize &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth - titleSize) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.RIGHT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Top edge
+      else if (mouse.y >= outerOffset.top + titleSize &amp;&amp; mouse.y &lt;= outerOffset.top + titleSize + EDGE_SIZE &amp;&amp;
+          mouse.x >= outerOffset.left &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.TOP,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Bottom edge
+      else if (mouse.y >= outerOffset.top + outerHeight - titleSize - EDGE_SIZE &amp;&amp; mouse.y &lt;= outerOffset.top + outerHeight - titleSize &amp;&amp;
+          mouse.x >= outerOffset.left &amp;&amp; mouse.x &lt;= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top + outerHeight - (outerHeight/3) - 2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.BOTTOM,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
       }
     }
 
@@ -807,7 +807,7 @@ wcLayout.prototype = {
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
-			on 2015-07-16 using the <a
+			on 2015-07-26 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

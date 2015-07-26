@@ -3382,72 +3382,6 @@ wcLayout.prototype = {
       titleSize = 0;
     }
 
-    // First, test for edge anchoring.
-    if (ghost._outer) {
-      var outerWidth  = ghost._outer.$container.outerWidth();
-      var outerHeight = ghost._outer.$container.outerHeight();
-      var outerOffset = ghost._outer.$container.offset();
-
-      var EDGE_SIZE = 50;
-
-      // Left edge
-      if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
-          mouse.x >= outerOffset.left + titleSize && mouse.x <= outerOffset.left + titleSize + EDGE_SIZE) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left-2,
-          y: outerOffset.top-2,
-          w: outerWidth/3,
-          h: outerHeight,
-          loc: wcDocker.DOCK.LEFT,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-      // Right edge
-      else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
-          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE - titleSize && mouse.x <= outerOffset.left + outerWidth - titleSize) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
-          y: outerOffset.top-2,
-          w: outerWidth/3,
-          h: outerHeight,
-          loc: wcDocker.DOCK.RIGHT,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-      // Top edge
-      else if (mouse.y >= outerOffset.top + titleSize && mouse.y <= outerOffset.top + titleSize + EDGE_SIZE &&
-          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left-2,
-          y: outerOffset.top-2,
-          w: outerWidth,
-          h: outerHeight/3,
-          loc: wcDocker.DOCK.TOP,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-      // Bottom edge
-      else if (mouse.y >= outerOffset.top + outerHeight - titleSize - EDGE_SIZE && mouse.y <= outerOffset.top + outerHeight - titleSize &&
-          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
-        ghost.anchor(mouse, {
-          x: outerOffset.left-2,
-          y: outerOffset.top + outerHeight - (outerHeight/3) - 2,
-          w: outerWidth,
-          h: outerHeight/3,
-          loc: wcDocker.DOCK.BOTTOM,
-          item: ghost._inner,
-          self: false
-        });
-        return true;
-      }
-    }
-
     // If the target panel has a title, hovering over it (on all sides) will cause stacking
     // and also change the orientation of the tabs (if enabled).
     if (title) {
@@ -3525,6 +3459,72 @@ wcLayout.prototype = {
           });
           return true;
         }
+      }
+    }
+
+    // Test for edge anchoring.
+    if (ghost._outer) {
+      var outerWidth  = ghost._outer.$container.outerWidth();
+      var outerHeight = ghost._outer.$container.outerHeight();
+      var outerOffset = ghost._outer.$container.offset();
+
+      var EDGE_SIZE = 50;
+
+      // Left edge
+      if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
+          mouse.x >= outerOffset.left + titleSize && mouse.x <= outerOffset.left + titleSize + EDGE_SIZE) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.LEFT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Right edge
+      else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
+          mouse.x >= outerOffset.left + outerWidth - EDGE_SIZE - titleSize && mouse.x <= outerOffset.left + outerWidth - titleSize) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.RIGHT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Top edge
+      else if (mouse.y >= outerOffset.top + titleSize && mouse.y <= outerOffset.top + titleSize + EDGE_SIZE &&
+          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.TOP,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Bottom edge
+      else if (mouse.y >= outerOffset.top + outerHeight - titleSize - EDGE_SIZE && mouse.y <= outerOffset.top + outerHeight - titleSize &&
+          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top + outerHeight - (outerHeight/3) - 2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.BOTTOM,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
       }
     }
 
