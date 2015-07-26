@@ -35,6 +35,7 @@ function wcPanel(type, options) {
 
   this._panelObject = null;
   this._initialized = false;
+  this._collapseDirection = undefined;
 
   this._type = type;
   this._title = type;
@@ -189,6 +190,21 @@ wcPanel.prototype = {
         }
       }
     }
+  },
+
+  /**
+   * @callback wcPanel~CollapseDirection
+   * @see wcPanel#collapseDirection
+   * @param {wcDocker~Bounds} bounds - The bounds of this panel relative to the wcDocker container.
+   * @returns {wcDocker.DOCK} - A collapse direction to use, must only be LEFT, RIGHT, or BOTTOM
+   */
+
+  /**
+   * Gets, or Sets the collapse direction for this panel.
+   * @param {wcPanel~CollapseDirection|wcDocker.DOCK} direction - The collapse direction to use for this panel.<br>If this value is omitted, the default collapse direction will be used.
+   */
+  collapseDirection: function(direction) {
+    this._collapseDirection = direction;
   },
 
   /**

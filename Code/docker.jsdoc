@@ -22,6 +22,16 @@
  */
 
 /**
+ * A bounding structure
+ *
+ * @typedef {Object} wcDocker~Bounds
+ * @property {Number} top - The upper, or top bound (percentage value between 0 and 1).
+ * @property {Number} bottom - The lower, or bottom bound (percentage value between 0 and 1).
+ * @property {Number} left - The left bound (percentage value between 0 and 1).
+ * @property {Number} right - The right bound (percentage value between 0 and 1).
+ */
+
+/**
  * A coordinate structure.
  *
  * @typedef {Object} wcDocker~Coordinate

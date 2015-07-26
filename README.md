@@ -106,6 +106,19 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
       }
     });
     ```
+- The collapse direction button on a panel can now be overridden if the built in calculation does not meet your needs. See [wcPanel#collapseDirection](http://docker.api.webcabin.org/wcPanel.html#collapseDirection) for more information.
+    ```
+    // You can override the direction with your own calculation function callback
+    myPanel.collapseDirection(function(bounds) {
+      return wcDocker.DOCK.LEFT;
+    });
+
+    // Or you can set it to a static direction
+    myPanel.collapseDirection(wcDocker.DOCK.RIGHT);
+
+    // Or you can restore it back to the default calculation
+    myPanel.collapseDirection(false);
+    ```
 
 #### Version: 2.2.0 ####
 - Separated the default theme out of `wcDocker.css` (now use `wcDocker.css` with `Themes/default.css`).
