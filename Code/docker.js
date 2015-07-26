@@ -78,7 +78,9 @@ function wcDocker(container, options) {
     allowContextMenu: true,
     hideOnResize: false,
     allowCollapse: true,
-    responseRate: 10
+    responseRate: 10,
+    edgeAnchorSize: 50,
+    panelAnchorSize: '15%'
   };
 
   this._options = {};

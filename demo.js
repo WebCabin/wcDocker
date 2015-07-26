@@ -6,7 +6,7 @@ $(document).ready(function() {
   // Create an instance of our docker window and assign it to the document.
   var myDocker = new wcDocker('.dockerContainer', {
     allowDrawers: true,
-    responseRate: 10,
+    responseRate: 10
   });
   if (myDocker) {
 
