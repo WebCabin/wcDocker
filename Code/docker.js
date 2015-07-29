@@ -1417,7 +1417,7 @@ wcDocker.prototype = {
       if (mouse.which === 3) {
         return true;
       }
-      self.$container.removeClass('wcDisableSelection');
+      $('body').removeClass('wcDisableSelection');
       if (self._draggingFrame) {
         for (var i = 0; i < self._frameList.length; ++i) {
           self._frameList[i].__shadow(false);
@@ -1687,12 +1687,12 @@ wcDocker.prototype = {
 
     // on mousedown for .wcFrameButtonBar > .wcFrameButton
     function __onMouseSelectionBlocker() {
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
     };
 
     // on click for .wcCustomTab .wcFrameButton
     function __onClickCustomTabButton(event) {
-      self.$container.removeClass('wcDisableSelection');
+      $('body').removeClass('wcDisableSelection');
       for (var i = 0; i < self._tabList.length; ++i) {
         var customTab = self._tabList[i];
         if (customTab.$close[0] === this) {
@@ -1722,7 +1722,7 @@ wcDocker.prototype = {
 
     // on click for .wcFrameButtonBar > .wcFrameButton
     function __onClickPanelButton() {
-      self.$container.removeClass('wcDisableSelection');
+      $('body').removeClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
         if (frame.$close[0] === this) {
@@ -1842,7 +1842,7 @@ wcDocker.prototype = {
         return true;
       }
 
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
@@ -1866,7 +1866,7 @@ wcDocker.prototype = {
         return true;
       }
       
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$titleBar[0] == this ||
             self._frameList[i].$tabBar[0] == this) {
@@ -1953,7 +1953,7 @@ wcDocker.prototype = {
       if (mouse.which === 3) {
         return true;
       }
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i]._isFloating) {
           if (self._frameList[i].$top[0] == this) {
@@ -2013,7 +2013,7 @@ wcDocker.prototype = {
           w: 500,
           h: 500,
         };
-        self.$container.addClass('wcDisableSelection');
+        $('body').addClass('wcDisableSelection');
         self._ghost = new wcGhost(rect, mouse, self);
         self._ghost.update(mouse);
         self._ghost.anchor(mouse, self._ghost.anchor());
