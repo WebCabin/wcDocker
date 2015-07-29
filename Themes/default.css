@@ -19,8 +19,7 @@
 }
 
 .wcModalBlocker {
-  background-color: black;
-  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .wcPanelBackground {
@@ -32,11 +31,11 @@
 }
 
 .wcFrameFlasher {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .wcFrameShadower {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .wcFrameTitleBar {

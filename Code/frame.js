@@ -983,13 +983,13 @@ wcFrame.prototype = {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);
       $flasher.animate({
-        opacity: 0.25,
+        opacity: 1,
       },100)
       .animate({
         opacity: 0.0,
       },100)
       .animate({
-        opacity: 0.1,
+        opacity: 0.6,
       },50)
       .animate({
         opacity: 0.0,
