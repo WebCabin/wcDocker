@@ -532,6 +532,10 @@ html, body {
   display: block;
 }
 
+.wcDisableSelection .wcIFrameFocus {
+  display: block;
+}
+
 .wcIFrame.wcDrawer {
   z-index: 6;
 }

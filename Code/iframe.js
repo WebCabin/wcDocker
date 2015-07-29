@@ -237,8 +237,6 @@ wcIFrame.prototype = {
     }
 
     $(window).blur(this.__onBlur.bind(this));
-    this.$focus.mousedown(this.__onFocus.bind(this));
-    // this.__updateFrame();
   },
 
   __clearFrame: function() {
@@ -255,13 +253,7 @@ wcIFrame.prototype = {
       var floating = this._panel.isFloating();
       this.$frame.toggleClass('wcIFrameFloating', floating);
       if (floating) {
-        var focus = this._panel.isInFocus();
         this.$frame.toggleClass('wcIFrameFloatingFocus', focus);
-        if (focus) {
-          this.$focus.hide();
-        } else {
-          this.$focus.show();
-        }
       } else {
         this.$frame.removeClass('wcIFrameFloatingFocus');
       }
@@ -283,7 +275,7 @@ wcIFrame.prototype = {
     this._isHovering = true;
   },
 
-  __onHoverExit: function() {
+  __onHoverExit: function() { 
     this._isHovering = false;
   },
 
