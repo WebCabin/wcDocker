@@ -56,6 +56,13 @@ wcTabFrame.prototype = {
   },
 
   /**
+   * Manually update the contents of this tab frame.
+   */
+  update: function() {
+    this.__updateTabs();
+  },
+
+  /**
    * Destroys the widget.
    */
   destroy: function() {
@@ -380,11 +387,6 @@ wcTabFrame.prototype = {
     }
   },
 
-  // Updates the size of the frame.
-  update: function() {
-    this.__updateTabs();
-  },
-
   __updateTabs: function(autoFocus) {
     this.$tabScroll.empty();
 
@@ -568,11 +570,11 @@ wcTabFrame.prototype = {
       switch (this._tabOrientation) {
         case wcDocker.TAB.RIGHT:
         case wcDocker.TAB.LEFT:
-          this.$tabBar.css('width', this.$center.height());
+          this.$tabBar.css('width', this.$center.height() || '100%');
           break;
         case wcDocker.TAB.TOP:
         case wcDocker.TAB.BOTTOM:
-          this.$tabBar.css('width', this.$center.width());
+          this.$tabBar.css('width', this.$center.width() || '100%');
         default:
           break;
       }

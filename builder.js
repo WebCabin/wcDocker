@@ -12,8 +12,8 @@ function wcThemeBuilder(myPanel) {
 wcThemeBuilder.prototype = {
   clearControls: function() {
     this._frameIndex = [];
-    for (var i = 0; i < this._frames.length; ++i) {
-      this._frameIndex.push(this._frames[i].tab());
+    for (var i = this._frames.length-1; i >= 0; --i) {
+      this._frameIndex.unshift(this._frames[i].tab());
       this._frames[i].destroy();
     }
     this._frames = [];
@@ -23,43 +23,47 @@ wcThemeBuilder.prototype = {
     this.clearControls();
 
     this._panel.layout().clear();
-    // this._panel.layout().startBatch();
+    this._panel.layout().startBatch();
     this._panel.layout().$table.css('padding', '10px');
 
+    var row = 0;
     for (var i = 0; i < this._controls.length; ++i) {
       var control = this._controls[i];
       if (control.create) {
-        control.create.call(this, this._panel.layout(), control, 0);
+        control.create.call(this, this._panel.layout(), control, row);
+        row += 1;
       }
     }
 
-    // var self = this;
-    // var $reset = $('<button style="width:100%;" title="Reset attributes to the currently active theme.">Reset</button>');
-    // this._panel.layout().addItem($reset, 0, 2).stretch('33%', '');
-    // $reset.click(function() {
-    //   self.pull();
-    // });
+    var self = this;
+    var $reset = $('<button style="width:100%;" title="Reset attributes to the currently active theme.">Reset</button>');
+    this._panel.layout().addItem($reset, 0, row).stretch('33%', '');
+    $reset.click(function() {
+      self.pull(self._controls);
+      self.buildControls();
+    });
 
-    // var $apply = $('<button style="width:100%;" title="Apply these attributes to the theme.">Apply</button>');
-    // this._panel.layout().addItem($apply, 1, 2).stretch('33%', '');
-    // $apply.click(function() {
-    //   var themeData = self.build();
-    //   self.apply(themeData);
-    // });
+    var $apply = $('<button style="width:100%;" title="Apply these attributes to the theme.">Apply</button>');
+    this._panel.layout().addItem($apply, 1, row).stretch('33%', '');
+    $apply.click(function() {
+      var themeData = self.build();
+      self.apply(themeData);
+    });
 
-    // var $download = $('<button style="width:100%;" title="Download your custom theme.">Download</button>');
-    // this._panel.layout().addItem($download, 2, 2).stretch('33%', '');
-    // $download.click(function() {
-    //   var themeData = self.build();
-    //   console.log(themeData);
-    // });
+    var $download = $('<button style="width:100%;" title="Download your custom theme.">Download</button>');
+    this._panel.layout().addItem($download, 2, row).stretch('33%', '');
+    $download.click(function() {
+      var themeData = self.build();
+      console.log(themeData);
+    });
+
+    this._panel.layout().finishBatch();
     
     // Restore previous tab selections.
     for (var i = 0; i < this._frameIndex.length; ++i) {
       this._frames[i].tab(this._frameIndex[i]);
+      this._frames[i].update();
     }
-
-    // this._panel.layout().finishBatch();
   },
 
   addTabFrame: function(layout, control, row) {
@@ -68,6 +72,9 @@ wcThemeBuilder.prototype = {
     layout.addItem($tabArea, 0, row, 3).stretch('', '100%');
 
     var frame = new wcTabFrame($tabArea, this._panel);
+    if (control.orientation) {
+      frame.tabOrientation(control.orientation);
+    }
 
     // Iterate through each tab item.
     for (var i = 0; i < control.controls.length; ++i) {
@@ -83,11 +90,11 @@ wcThemeBuilder.prototype = {
 
   addTab: function(frame, control, row) {
     var layout = frame.addTab(control.name);
-    var row = 0;
 
-    // stackItem.layout.startBatch();
+    layout.startBatch();
 
     // Iterate through each control within this tab.
+    var row = 0;
     for (var i = 0; i < control.controls.length; ++i) {
       var subControl = control.controls[i];
       if (subControl.create) {
@@ -98,7 +105,7 @@ wcThemeBuilder.prototype = {
 
     // Finish out this tab area.
     layout.addItem('<div>', 0, row, 3).stretch('', '100%');
-    // stackItem.layout.finishBatch();
+    layout.finishBatch();
   },
 
   addSpacer: function(layout, control, row) {
@@ -298,9 +305,13 @@ wcThemeBuilder.prototype = {
     $style.text(themeData);
   },
 
-  pull: function() {
-    for (var i = 0; i < this._controls.length; ++i) {
-      var control = this._controls[i];
+  pull: function(controls) {
+    for (var i = 0; i < controls.length; ++i) {
+      var control = controls[i];
+
+      if (control.controls) {
+        this.pull(control.controls);
+      }
 
       if (!control.elem) {
         continue;
@@ -311,15 +322,13 @@ wcThemeBuilder.prototype = {
       control.value = $item.css(control.attribute.split(',')[0]);
       $item.remove();
     }
-
-    this.buildControls();
   },
 
   init: function() {
     this.initParts();
     var self = this;
     setTimeout(function() {
-      self.pull();
+      self.pull(self._controls);
       self.buildControls();
     }, 100);
 
@@ -411,11 +420,15 @@ wcThemeBuilder.prototype = {
           value: ''
         }, {
           create: this.addTabFrame,
+          orientation: wcDocker.TAB.TOP,
           controls: [{
             // Panel button normal state
             name: 'Normal State',
             create: this.addTab,
             controls: [{
+              name: 'Normal State',
+              create: this.addSpacer
+            }, {
               // Panel Button Normal Color
               selector: '.wcFrameButton',
               elem: '<div class="wcFrameButton"></div>',
@@ -457,6 +470,9 @@ wcThemeBuilder.prototype = {
             name: 'Hover State',
             create: this.addTab,
             controls: [{
+              name: 'Hover State',
+              create: this.addSpacer
+            }, {
               // Panel Button Color
               selector: '.wcFrameButton:hover, .wcFrameButtonHover',
               elem: '<div class="wcFrameButtonHover"></div>',
@@ -471,6 +487,9 @@ wcThemeBuilder.prototype = {
             name: 'Pressed State',
             create: this.addTab,
             controls: [{
+              name: 'Pressed State',
+              create: this.addSpacer
+            }, {
               // Panel Button Color
               selector: '.wcFrameButton:active, .wcFrameButtonActive',
               elem: '<div class="wcFrameButtonActive"></div>',
