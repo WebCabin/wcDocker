@@ -24,7 +24,7 @@ wcThemeBuilder.prototype = {
     // this._panel.layout().startBatch();
     this._panel.layout().$table.css('padding', '10px');
 
-    var $tabArea = $('<div style="width:100%;height:100%;"></div>');
+    var $tabArea = $('<div style="width:100%;height:100%;border:1px solid black;"></div>');
     this._panel.layout().addItem($tabArea, 0, 0, 3).stretch('', '100%');
     this._tabs = new wcTabFrame($tabArea, this._panel);
 
