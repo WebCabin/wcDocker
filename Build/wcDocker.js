@@ -438,8 +438,6 @@ wcDocker.prototype = {
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
       if (dontDestroy) {
-        panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
-
         // Keep the panel in a hidden transition container so as to not
         // destroy any event handlers that may be on it.
         panel.__container(this.$transition);
@@ -529,6 +527,8 @@ wcDocker.prototype = {
 
       if (!dontDestroy) {
         panel.__destroy();
+      } else {
+        panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
       }
       return true;
     }
@@ -4963,6 +4963,7 @@ wcFrame.prototype = {
         }
 
         this._panelList.splice(i, 1);
+        panel._isVisible = false;
         break;
       }
     }
@@ -8043,6 +8044,8 @@ wcIFrame.prototype = {
     this._boundEvents.push({event: wcDocker.EVENT.DETACHED,           handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS,         handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS,         handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_OPENED,  handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_CLOSED,  handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.CLOSED,             handler: this.__onClosed.bind(this)});
 
     for (var i = 0; i < this._boundEvents.length; ++i) {

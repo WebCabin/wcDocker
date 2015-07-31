@@ -438,8 +438,6 @@ wcDocker.prototype = {
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
       if (dontDestroy) {
-        panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
-
         // Keep the panel in a hidden transition container so as to not
         // destroy any event handlers that may be on it.
         panel.__container(this.$transition);
@@ -529,6 +527,8 @@ wcDocker.prototype = {
 
       if (!dontDestroy) {
         panel.__destroy();
+      } else {
+        panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
       }
       return true;
     }
