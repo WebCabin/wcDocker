@@ -8,6 +8,27 @@ function wcThemeBuilder(myPanel) {
 }
 
 wcThemeBuilder.prototype = {
+  buildControls: function() {
+    this._panel.layout().clear();
+    this._panel.layout().startBatch();
+
+    var $button = $('<button>Pull Current Theme Attributes</button>');
+    this._panel.layout().addItem($button, 0, 0, 4);
+    var self = this;
+    $button.click(function() {
+      self.pull();
+    });
+
+    for (var i = 0; i < this._controls.length; ++i) {
+      var control = this._controls[i];
+      control.create(control, i+1);
+    }
+
+    this._panel.layout().addItem('<div>', 0, this._controls.length+1, 4).stretch('', '100%');
+
+    this._panel.layout().finishBatch();
+  },
+
   addSpacer: function(control, index) {
     this._panel.layout().addItem('<div class="wcAttributeSpacer">' + control.name + '</div>', 0, index, 4).stretch('100%', '');
   },
@@ -18,8 +39,6 @@ wcThemeBuilder.prototype = {
     var $control = null;
     var self = this;
     
-    this._panel.layout().startBatch();
-
     $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
     this._panel.layout().addItem($label, 1, index).stretch('1%', '').css('text-align', 'right');
 
@@ -67,8 +86,6 @@ wcThemeBuilder.prototype = {
         $control.spectrum('disable');
       }
     }
-
-    this._panel.layout().finishBatch();
   },
 
   addPixelControl: function(control, index) {
@@ -143,17 +160,28 @@ wcThemeBuilder.prototype = {
     $style.text(styleData);
   },
 
+  pull: function() {
+    for (var i = 0; i < this._controls.length; ++i) {
+      var control = this._controls[i];
+
+      if (!control.elem) {
+        continue;
+      }
+
+      var $item = $(control.elem);
+      $('body').append($item);
+      control.value = $item.css(control.attribute);
+      $item.remove();
+    }
+
+    this.buildControls();
+  },
+
   init: function() {
     this._panel.layout().$table.css('padding', '10px');
 
     this.initParts();
-
-    for (var i = 0; i < this._controls.length; ++i) {
-      var control = this._controls[i];
-      control.create(control, i);
-    }
-
-    this._panel.layout().addItem('<div>', 0, this._controls.length, 4).stretch('', '100%');
+    this.buildControls();
 
     this._panel.on(wcDocker.EVENT.CLOSED, function() {
       var $customTheme = $('#wcCustomTheme');
@@ -166,77 +194,66 @@ wcThemeBuilder.prototype = {
   },
 
   initParts: function() {
-    this._controls.push({
+    this._controls = [{
+      // -------------------------------------------------------------------------
       name: 'Main',
       create: this.addSpacer.bind(this)
-    });
-
-    this._controls.push({
+    }, {
       selector: '.wcDocker, .wcPanelBackground',
+      elem: '<div class="wcDocker wcPanelBackground"></div>',
       name: 'Background Color',
       info: 'The background color to use.',
       create: this.addColorControl.bind(this),
       attribute: 'background-color',
       value: 'gray'
-    });
-
-    this._controls.push({
+    }, {
       selector: '.wcModalBlocker',
+      elem: '<div class="wcModalBlocker"></div>',
       name: 'Modal Blocker Color',
       info: 'The color of the fullscreen blocker element that appears when a modal panel is visible.',
       create: this.addColorControl.bind(this),
       attribute: 'background-color',
       value: 'rgba(0, 0, 0, 0.8)'
-    });
-
-
-
-    this._controls.push({
+    }, {
+      // -------------------------------------------------------------------------
       name: 'Panels',
       create: this.addSpacer.bind(this)
-    });
-
-    this._controls.push({
+    }, {
       selector: '.wcFrameFlasher',
+      elem: '<div class="wcFrameFlasher"></div>',
       name: 'Panel Flash Color',
       info: 'The color of the panel when it focus flashes.',
       create: this.addColorControl.bind(this),
       attribute: 'background-color',
       value: 'rgba(255, 255, 255, 0.25)'
-    });
-
-    this._controls.push({
+    }, {
       selector: '.wcFrameShadower',
+      elem: '<div class="wcFrameShadower"></div>',
       name: 'Panel Shadow Color',
       info: 'The color of the panel when it is being moved by the user.',
       create: this.addColorControl.bind(this),
       attribute: 'background-color',
       value: 'rgba(255, 255, 255, 0.25)'
-    });
-
-
-
-    this._controls.push({
+    }, {
+      // -------------------------------------------------------------------------
       name: 'Tabs',
       create: this.addSpacer.bind(this)
-    });
-
-    this._controls.push({
+    }, {
       selector: '.wcFrameTitleBar',
+      elem: '<div class="wcFrameTitleBar"></div>',
       name: 'Background Color',
       info: 'The color of the tab bar (behind the tabs).',
       create: this.addColorControl.bind(this),
       attribute: 'background-color',
       value: '#555'
-    });
-
-    this._controls.push({
+    }, {
       selector: '.wcFrameTitleBar',
+      elem: '<div class="wcFrameTitleBar"></div>',
       name: 'Height',
       info: 'The height of the title bar.',
       create: this.addPixelControl.bind(this),
       attribute: 'height',
       value: '17px'
-    });
+    }];
   }
 }
