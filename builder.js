@@ -58,11 +58,10 @@ wcThemeBuilder.prototype = {
     });
 
     this._panel.layout().finishBatch();
-    
+
     // Restore previous tab selections.
     for (var i = 0; i < this._frameIndex.length; ++i) {
       this._frames[i].tab(this._frameIndex[i]);
-      this._frames[i].update();
     }
   },
 
@@ -339,6 +338,15 @@ wcThemeBuilder.prototype = {
         $('.themeSelector').val('default').change();
         $customTheme.remove();
       }
+    });
+
+    this._panel.on(wcDocker.EVENT.CUSTOM_TAB_CHANGED, function() {
+      console.log('refreshing tabs');
+      setTimeout(function() {
+        for (var i = 0; i < self._frames.length; ++i) {
+          self._frames[i].update();
+        }
+      }, 0);
     });
   },
 
