@@ -448,6 +448,7 @@ $(document).ready(function() {
     // --------------------------------------------------------------------------------
     // Register the tutorial panel that links a frame to our API tutorial documentation.
     myDocker.registerPanelType('Tutorial Panel', {
+      isPersistent: true,
       faicon: 'graduation-cap',
       onCreate: function(myPanel) {
         var $container = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');

@@ -267,6 +267,7 @@ wcFrame.prototype = {
         }
 
         this._panelList.splice(i, 1);
+        panel._isVisible = false;
         break;
       }
     }

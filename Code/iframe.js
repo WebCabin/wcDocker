@@ -230,6 +230,8 @@ wcIFrame.prototype = {
     this._boundEvents.push({event: wcDocker.EVENT.DETACHED,           handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS,         handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS,         handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_OPENED,  handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_CLOSED,  handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.CLOSED,             handler: this.__onClosed.bind(this)});
 
     for (var i = 0; i < this._boundEvents.length; ++i) {
