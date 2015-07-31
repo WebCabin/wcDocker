@@ -159,10 +159,11 @@ wcTabFrame.prototype = {
    * Gets, or Sets the currently visible tab page.
    *
    * @param {Number} [index] - If supplied, sets the current tab page index.
+   * @param {Boolean} [scrollTo] - If true, will auto scroll the tab bar until the selected tab is visible.
    *
    * @returns {Number} - The index of the currently visible tab page.
    */
-  tab: function(index, autoFocus) {
+  tab: function(index, scrollTo) {
     if (typeof index !== 'undefined') {
       if (index > -1 && index < this._layoutList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
@@ -170,7 +171,7 @@ wcTabFrame.prototype = {
         this._curTab = index;
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + index + '"]').addClass('wcPanelTabActive');
         this.$center.children('.wcPanelTabContent[id="' + index + '"]').removeClass('wcPanelTabContentHidden');
-        this.__updateTabs(autoFocus);
+        this.__updateTabs(scrollTo);
 
         var name = this._layoutList[this._curTab].name;
         this._parent.__trigger(wcDocker.EVENT.CUSTOM_TAB_CHANGED, {obj: this, name: name, index: index});
@@ -387,7 +388,7 @@ wcTabFrame.prototype = {
     }
   },
 
-  __updateTabs: function(autoFocus) {
+  __updateTabs: function(scrollTo) {
     this.$tabScroll.empty();
 
     var getOffset = function($item) {
@@ -480,7 +481,7 @@ wcTabFrame.prototype = {
 
     var buttonSize = this.__onTabChange();
 
-    if (autoFocus) {
+    if (scrollTo) {
       for (var i = 0; i < tabPositions.length; ++i) {
         if (i === this._curTab) {
           var left = tabPositions[i];
