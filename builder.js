@@ -1,6 +1,10 @@
 function wcThemeBuilder(myPanel) {
   this._panel = myPanel;
   this._controls = [];
+  this._tabs = null;
+  this._curTab = null;
+  this._curRow = 0;
+  this._curTabIndex = 0;
 
   this.$part = $('<select style="width:100%">');
 
@@ -9,28 +13,70 @@ function wcThemeBuilder(myPanel) {
 
 wcThemeBuilder.prototype = {
   buildControls: function() {
-    this._panel.layout().clear();
-    this._panel.layout().startBatch();
+    if (this._tabs) {
+      this._curTabIndex = this._tabs.tab();
+      this._tabs.destroy();
+      this._tabs = null;
+      this._curTab = null;
+    }
 
-    var $button = $('<button>Pull Current Theme Attributes</button>');
-    this._panel.layout().addItem($button, 0, 0, 4);
+    this._panel.layout().clear();
+    // this._panel.layout().startBatch();
+    this._panel.layout().$table.css('padding', '10px');
+
+    var $tabArea = $('<div style="width:100%;height:100%;"></div>');
+    this._panel.layout().addItem($tabArea, 0, 0, 3).stretch('', '100%');
+    this._tabs = new wcTabFrame($tabArea, this._panel);
+
     var self = this;
+    var $button = $('<button style="width:100%;" style="Pull attributes from the currently active theme and apply them here.">Pull</button>');
+    this._panel.layout().addItem($button, 0, 1).stretch('33%', '');
     $button.click(function() {
       self.pull();
     });
 
+    var $apply = $('<button style="width:100%;" style="Apply all current attributes to the current theme.">Apply</button>');
+    this._panel.layout().addItem($apply, 1, 1).stretch('33%', '');
+    $apply.click(function() {
+      var themeData = self.build();
+      self.apply(themeData);
+    });
+
+    var $download = $('<button style="width:100%;" style="Download a copy of your custom theme.">Download</button>');
+    this._panel.layout().addItem($download, 2, 1).stretch('33%', '');
+    $download.click(function() {
+      var themeData = self.build();
+      console.log(themeData);
+    });
+    
+    this._curRow = 0;
     for (var i = 0; i < this._controls.length; ++i) {
       var control = this._controls[i];
-      control.create(control, i+1);
+      if (control.create) {
+        control.create.call(this, control, this._curRow);
+        this._curRow += 1;
+      }
     }
 
-    this._panel.layout().addItem('<div>', 0, this._controls.length+1, 4).stretch('', '100%');
+    this._curTab.addItem('<div>', 0, this._curRow, 4).stretch('', '100%');
+    this._curTab.finishBatch();
 
-    this._panel.layout().finishBatch();
+    this._tabs.tab(this._curTabIndex);
+    // this._panel.layout().finishBatch();
+  },
+
+  addTab: function(control, index) {
+    if (this._curTab) {
+      this._curTab.addItem('<div>', 0, this._curRow, 4).stretch('', '100%');
+      this._curTab.finishBatch();
+    }
+    this._curRow = -1;
+    this._curTab = this._tabs.addTab(control.name);
+    this._curTab.startBatch();
   },
 
   addSpacer: function(control, index) {
-    this._panel.layout().addItem('<div class="wcAttributeSpacer">' + control.name + '</div>', 0, index, 4).stretch('100%', '');
+    this._curTab.addItem('<div class="wcAttributeSpacer">' + control.name + '</div>', 0, index, 4).stretch('100%', '');
   },
 
   addColorControl: function(control, index) {
@@ -40,10 +86,10 @@ wcThemeBuilder.prototype = {
     var self = this;
     
     $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
-    this._panel.layout().addItem($label, 1, index).stretch('1%', '').css('text-align', 'right');
+    this._curTab.addItem($label, 1, index).stretch('1%', '').css('text-align', 'right');
 
     $control = $('<input style="width:100%;" title="' + control.info + '"/>');
-    this._panel.layout().addItem($control, 2, index, 2).stretch('100%', '');
+    this._curTab.addItem($control, 2, index, 2).stretch('100%', '');
     $control.spectrum({
       color: control.value,
       showAlpha: true,
@@ -67,19 +113,17 @@ wcThemeBuilder.prototype = {
       preferredFormat: 'rgb',
       change: function(color) {
         control.value = color.toRgbString();
-        self.build();
       }
     });
 
     if (control.isOptional) {
       $activator = $('<input type="checkbox" title="' + control.info + '"/>');
-      this._panel.layout().addItem($activator, 0, index).stretch('1%', '');
+      this._curTab.addItem($activator, 0, index).stretch('1%', '');
 
       $activator.attr('checked', control.isActive);
       $activator.change(function() {
         control.isActive = this.checked;
         $control.spectrum(this.checked? 'enable': 'disable');
-        self.build();
       });
 
       if (!control.isActive) {
@@ -95,10 +139,10 @@ wcThemeBuilder.prototype = {
     var self = this;
     
     $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
-    this._panel.layout().addItem($label, 1, index).stretch('1%', '').css('text-align', 'right');
+    this._curTab.addItem($label, 1, index).stretch('1%', '').css('text-align', 'right');
 
-    $control = $('<input style="width:100%;" title="' + control.info + '" type="number" step="1" min="1"/>');
-    this._panel.layout().addItem($control, 2, index, 2).stretch('100%', '');
+    $control = $('<input title="' + control.info + '" type="number" step="1" min="1"/>');
+    this._curTab.addItem($control, 2, index, 2).stretch('100%', '');
     $control.val(parseInt(control.value));
     $control.change(function() {
       control.value = $(this).val() + 'px';
@@ -106,13 +150,12 @@ wcThemeBuilder.prototype = {
 
     if (control.isOptional) {
       $activator = $('<input type="checkbox" title="' + control.info + '"/>');
-      this._panel.layout().addItem($activator, 0, index).stretch('1%', '');
+      this._curTab.addItem($activator, 0, index).stretch('1%', '');
 
       $activator.attr('checked', control.isActive);
       $activator.change(function() {
         control.isActive = this.checked;
         $control.attr('disabled', !this.checked);
-        self.build();
       });
 
       if (!control.isActive) {
@@ -139,25 +182,44 @@ wcThemeBuilder.prototype = {
         key: control.attribute,
         value: control.value
       });
+
+      if (control.also) {
+        for (var a = 0; a < control.also.length; ++a) {
+          var also = control.also[a];
+          if (!data.hasOwnProperty(also.selector)) {
+            data[also.selector] = [];
+          }
+
+          var alsoObj = data[also.selector];
+          alsoObj.push({
+            key: also.attribute,
+            value: control.valu
+          });
+        }
+      }
     }
 
-    var styleData = '';
+    var themeData = '';
     for (var selector in data) {
-      styleData += selector + ' {\n';
+      themeData += selector + ' {\n';
       for (var i = 0; i < data[selector].length; ++i) {
         var item = data[selector][i];
-        styleData += '  ' + item.key + ': ' + item.value + ';\n';
+        themeData += '  ' + item.key + ': ' + item.value + ';\n';
       }
-      styleData += '}\n\n';
+      themeData += '}\n\n';
     }
 
+    return themeData;
+  },
+
+  apply: function(themeData) {
     $('option.custom').show().attr('selected', 'selected');
     $('#wcTheme').remove();
     $('#wcCustomTheme').remove();
 
     var $style = $('<style id="wcCustomTheme"></style>');
     $('head').append($style);
-    $style.text(styleData);
+    $style.text(themeData);
   },
 
   pull: function() {
@@ -178,10 +240,12 @@ wcThemeBuilder.prototype = {
   },
 
   init: function() {
-    this._panel.layout().$table.css('padding', '10px');
-
     this.initParts();
-    this.buildControls();
+    var self = this;
+    setTimeout(function() {
+      self.pull();
+      self.buildControls();
+    }, 100);
 
     this._panel.on(wcDocker.EVENT.CLOSED, function() {
       var $customTheme = $('#wcCustomTheme');
@@ -195,65 +259,129 @@ wcThemeBuilder.prototype = {
 
   initParts: function() {
     this._controls = [{
-      // -------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------------------------------------------
       name: 'Main',
-      create: this.addSpacer.bind(this)
+      create: this.addTab
+    }, {
+      name: 'Main',
+      create: this.addSpacer
     }, {
       selector: '.wcDocker, .wcPanelBackground',
       elem: '<div class="wcDocker wcPanelBackground"></div>',
       name: 'Background Color',
       info: 'The background color to use.',
-      create: this.addColorControl.bind(this),
+      create: this.addColorControl,
       attribute: 'background-color',
-      value: 'gray'
+      value: ''
     }, {
       selector: '.wcModalBlocker',
       elem: '<div class="wcModalBlocker"></div>',
       name: 'Modal Blocker Color',
       info: 'The color of the fullscreen blocker element that appears when a modal panel is visible.',
-      create: this.addColorControl.bind(this),
+      create: this.addColorControl,
       attribute: 'background-color',
-      value: 'rgba(0, 0, 0, 0.8)'
+      value: ''
     }, {
-      // -------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------------------------------------------
       name: 'Panels',
-      create: this.addSpacer.bind(this)
+      create: this.addTab
+    }, {
+      name: 'Panels',
+      create: this.addSpacer
     }, {
       selector: '.wcFrameFlasher',
       elem: '<div class="wcFrameFlasher"></div>',
       name: 'Panel Flash Color',
       info: 'The color of the panel when it focus flashes.',
-      create: this.addColorControl.bind(this),
+      create: this.addColorControl,
       attribute: 'background-color',
-      value: 'rgba(255, 255, 255, 0.25)'
+      value: ''
     }, {
       selector: '.wcFrameShadower',
       elem: '<div class="wcFrameShadower"></div>',
       name: 'Panel Shadow Color',
       info: 'The color of the panel when it is being moved by the user.',
-      create: this.addColorControl.bind(this),
+      create: this.addColorControl,
       attribute: 'background-color',
-      value: 'rgba(255, 255, 255, 0.25)'
+      value: ''
     }, {
-      // -------------------------------------------------------------------------
+      name: 'Panel Buttons',
+      create: this.addSpacer
+    }, {
+      selector: '.wcFrameButton',
+      elem: '<div class="wcFrameTitle"></div>',
+      name: 'Normal Button Color',
+      info: 'The normal color of a panel button',
+      create: this.addColorControl,
+      attribute: 'background-color',
+      value: ''
+    }, {
+      selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+      elem: '<div class="wcFrameButtonHover"></div>',
+      name: 'Hover Button Color',
+      info: 'The hover color of a panel button',
+      create: this.addColorControl,
+      attribute: 'background-color',
+      value: ''
+    }, {
+      selector: '.wcFrameButton:active, .wcFrameButtonActive',
+      elem: '<div class="wcFrameButtonActive"></div>',
+      name: 'Pressed Button Color',
+      info: 'The pressed color of a panel button',
+      create: this.addColorControl,
+      attribute: 'bacgkround-color',
+      value: ''
+    }, {
+      // -----------------------------------------------------------------------------------------------------------------
       name: 'Tabs',
-      create: this.addSpacer.bind(this)
+      create: this.addTab
     }, {
-      selector: '.wcFrameTitleBar',
-      elem: '<div class="wcFrameTitleBar"></div>',
-      name: 'Background Color',
-      info: 'The color of the tab bar (behind the tabs).',
-      create: this.addColorControl.bind(this),
-      attribute: 'background-color',
-      value: '#555'
+      name: 'Tabs',
+      create: this.addSpacer
     }, {
       selector: '.wcFrameTitleBar',
       elem: '<div class="wcFrameTitleBar"></div>',
       name: 'Height',
-      info: 'The height of the title bar.',
-      create: this.addPixelControl.bind(this),
+      info: 'The height of the tab bar.',
+      create: this.addPixelControl,
       attribute: 'height',
-      value: '17px'
+      value: '',
+      also: [{
+        selector: '.wcFrameCenter',
+        attribute: 'top'
+      }]
+    }, {
+      selector: '.wcFrameTitleBar',
+      elem: '<div class="wcFrameTitleBar"></div>',
+      name: 'Background Bar Color',
+      info: 'The color of the tab bar (behind the tabs).',
+      create: this.addColorControl,
+      attribute: 'background-color',
+      value: ''
+    }, {
+      selector: '.wcFrameTitle',
+      elem: '<div class="wcFrameTitle"></div>',
+      name: 'Font Size',
+      info: 'The font size (in pixels)',
+      create: this.addPixelControl,
+      attribute: 'font-size',
+      value: ''
+    }, {
+      selector: '.wcFrameTitle',
+      attribute: 'font-size',
+      value: 'bold'
+    }, {
+      selector: '.wcFrameTitle',
+      attribute: 'font-align',
+      value: 'center'
+    }, {
+      selector: '.wcFrameTitle',
+      elem: '<div class="wcFrameTitle"></div>',
+      name: 'Font Color',
+      info: 'The normal color of tab items',
+      create: this.addColorControl,
+      attribute: 'background-color',
+      value: ''
     }];
   }
 }

@@ -46,13 +46,13 @@
   font-size: 17px;
 }
 
-.wcFrameButton:hover {
+.wcFrameButton:hover, .wcFrameButtonHover {
   border: 0px solid black;
   background-color: black;
   color: #CCC;
 }
 
-.wcFrameButton:active {
+.wcFrameButton:active, .wcFrameButtonActive {
   border: 0px solid black;
   background-color: black;
   color: #FFF;

@@ -44,12 +44,12 @@
   font-size: 15px;
 }
 
-.wcFrameButton:hover {
+.wcFrameButton:hover, .wcFrameButtonHover {
   border: 2px outset #633;
   background-color: #684040;
 }
 
-.wcFrameButton:active {
+.wcFrameButton:active, .wcFrameButtonActive {
   border: 2px inset #A55;
   background-color: #822;
 }

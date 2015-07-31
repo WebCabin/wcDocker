@@ -77,7 +77,7 @@ html, body {
   width: 23px;
 }
 
-.wcFrameButton:hover {
+.wcFrameButton:hover, .wcFrameButtonHover {
   background-color: #333;
   border: none;
   color: #fff;

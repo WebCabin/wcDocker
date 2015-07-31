@@ -151,7 +151,7 @@ wcTabFrame.prototype = {
   /**
    * Gets, or Sets the currently visible tab page.
    *
-   * @param {Number} index - If supplied, sets the current tab page index.
+   * @param {Number} [index] - If supplied, sets the current tab page index.
    *
    * @returns {Number} - The index of the currently visible tab page.
    */

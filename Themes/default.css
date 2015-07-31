@@ -59,11 +59,11 @@
   background-color: #555555;
 }
 
-.wcFrameButton:hover {
+.wcFrameButton:hover, .wcFrameButtonHover {
   background-color: #666;
 }
 
-.wcFrameButton:active {
+.wcFrameButton:active, .wcFrameButtonActive {
   border: 2px inset #444;
 }
 
