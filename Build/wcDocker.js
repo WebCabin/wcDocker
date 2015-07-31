@@ -452,6 +452,12 @@ wcDocker.prototype = {
         // the space until another one is created.
         if (lastPanel) {
           this.__addPlaceholder(parentFrame);
+
+          if (!dontDestroy) {
+            panel.__destroy();
+          } else {
+            panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
+          }
           return true;
         }
 
