@@ -151,11 +151,17 @@ $(document).ready(function() {
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
         var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
+        var $customOption     = $('<option class="custom" value="" style="display:none;">Custom</option>');
         $themeSelector.append('<option value="default">Default</option>');
         $themeSelector.append('<option value="bigRed">Big Red</option>');
         $themeSelector.append('<option value="shadow">Shadow</option>');
         $themeSelector.append('<option value="ideDark">ideDark</option>');
+        $themeSelector.append($customOption);
         $themeSelector.val(_currentTheme);
+
+        if ($('#wcCustomTheme').length) {
+          $customOption.show().attr('selected', 'selected');
+        }
 
         // Pre-configured layout configurations.
         var $saveButton       = $('<button style="width:100%;">Save Layout</button>');
@@ -180,14 +186,19 @@ $(document).ready(function() {
         // Bind an event to catch when the theme has been changed.
         $themeSelector.change(function() {
           _currentTheme = $themeSelector.find('option:selected').val();
-          myPanel.docker().theme(_currentTheme);
+          if (_currentTheme) {
+            myPanel.docker().theme(_currentTheme);
 
-          // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
-          $('.themeSelector').each(function() {
-            if (this !== $themeSelector[0]) {
-              $(this).val(_currentTheme);
-            }
-          });
+            // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
+            $('.themeSelector').each(function() {
+              if (this !== $themeSelector[0]) {
+                $(this).val(_currentTheme);
+              }
+            });
+
+            $('option.custom').hide();
+            $('#wcCustomTheme').remove();
+          }
         });
 
         // Disable the restore layout button if there are no layouts to restore.
@@ -448,7 +459,6 @@ $(document).ready(function() {
     // --------------------------------------------------------------------------------
     // Register the tutorial panel that links a frame to our API tutorial documentation.
     myDocker.registerPanelType('Tutorial Panel', {
-      isPersistent: true,
       faicon: 'graduation-cap',
       onCreate: function(myPanel) {
         var $container = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');

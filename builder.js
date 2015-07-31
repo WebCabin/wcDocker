@@ -1,7 +1,6 @@
 function wcThemeBuilder(myPanel) {
   this._panel = myPanel;
   this._controls = [];
-  this._currentRow = 0;
 
   this.$part = $('<select style="width:100%">');
 
@@ -9,30 +8,23 @@ function wcThemeBuilder(myPanel) {
 }
 
 wcThemeBuilder.prototype = {
-  addControls: function(controls) {
-    for (var i = 0; i < controls.length; ++i) {
-      controls[i].create(controls[i]);
-      this._currentRow++;
-    }
-
-    this._panel.layout().addItem('<div>', 0, this._currentRow, 4).stretch('', '100%');
+  addSpacer: function(control, index) {
+    this._panel.layout().addItem('<div class="wcAttributeSpacer">' + control.name + '</div>', 0, index, 4).stretch('100%', '');
   },
 
-  addSpacer: function(control) {
-    this._panel.layout().addItem('<div class="wcAttributeSpacer">' + control.name + '</div>', 0, this._currentRow, 4).stretch('100%', '');
-  },
-
-  addColorControl: function(control) {
+  addColorControl: function(control, index) {
     var $activator = null;
     var $label = null;
     var $control = null;
     var self = this;
     
+    this._panel.layout().startBatch();
+
     $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
-    this._panel.layout().addItem($label, 1, this._currentRow).stretch('1%', '').css('text-align', 'right');
+    this._panel.layout().addItem($label, 1, index).stretch('1%', '').css('text-align', 'right');
 
     $control = $('<input style="width:100%;" title="' + control.info + '"/>');
-    this._panel.layout().addItem($control, 2, this._currentRow, 2).stretch('100%', '');
+    this._panel.layout().addItem($control, 2, index, 2).stretch('100%', '');
     $control.spectrum({
       color: control.value,
       showAlpha: true,
@@ -62,7 +54,7 @@ wcThemeBuilder.prototype = {
 
     if (control.isOptional) {
       $activator = $('<input type="checkbox" title="' + control.info + '"/>');
-      this._panel.layout().addItem($activator, 0, this._currentRow).stretch('1%', '');
+      this._panel.layout().addItem($activator, 0, index).stretch('1%', '');
 
       $activator.attr('checked', control.isActive);
       $activator.change(function() {
@@ -75,19 +67,21 @@ wcThemeBuilder.prototype = {
         $control.spectrum('disable');
       }
     }
+
+    this._panel.layout().finishBatch();
   },
 
-  addPixelControl: function(control) {
+  addPixelControl: function(control, index) {
     var $activator = null;
     var $label = null;
     var $control = null;
     var self = this;
     
     $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
-    this._panel.layout().addItem($label, 1, this._currentRow).stretch('1%', '').css('text-align', 'right');
+    this._panel.layout().addItem($label, 1, index).stretch('1%', '').css('text-align', 'right');
 
     $control = $('<input style="width:100%;" title="' + control.info + '" type="number" step="1" min="1"/>');
-    this._panel.layout().addItem($control, 2, this._currentRow, 2).stretch('100%', '');
+    this._panel.layout().addItem($control, 2, index, 2).stretch('100%', '');
     $control.val(parseInt(control.value));
     $control.change(function() {
       control.value = $(this).val() + 'px';
@@ -95,7 +89,7 @@ wcThemeBuilder.prototype = {
 
     if (control.isOptional) {
       $activator = $('<input type="checkbox" title="' + control.info + '"/>');
-      this._panel.layout().addItem($activator, 0, this._currentRow).stretch('1%', '');
+      this._panel.layout().addItem($activator, 0, index).stretch('1%', '');
 
       $activator.attr('checked', control.isActive);
       $activator.change(function() {
@@ -111,7 +105,42 @@ wcThemeBuilder.prototype = {
   },
 
   build: function() {
-    // TODO:
+    var data = {};
+    for (var i = 0; i < this._controls.length; ++i) {
+      var control = this._controls[i];
+
+      if (!control.selector) {
+        continue;
+      }
+
+      if (!data.hasOwnProperty(control.selector)) {
+        data[control.selector] = [];
+      }
+
+      var obj = data[control.selector];
+      obj.push({
+        key: control.attribute,
+        value: control.value
+      });
+    }
+
+    var styleData = '';
+    for (var selector in data) {
+      styleData += selector + ' {\n';
+      for (var i = 0; i < data[selector].length; ++i) {
+        var item = data[selector][i];
+        styleData += '  ' + item.key + ': ' + item.value + ';\n';
+      }
+      styleData += '}\n\n';
+    }
+
+    $('option.custom').show().attr('selected', 'selected');
+    $('#wcTheme').remove();
+    $('#wcCustomTheme').remove();
+
+    var $style = $('<style id="wcCustomTheme"></style>');
+    $('head').append($style);
+    $style.text(styleData);
   },
 
   init: function() {
@@ -119,9 +148,21 @@ wcThemeBuilder.prototype = {
 
     this.initParts();
 
-    this._panel.layout().startBatch();
-    this.addControls(this._controls);
-    this._panel.layout().finishBatch();
+    for (var i = 0; i < this._controls.length; ++i) {
+      var control = this._controls[i];
+      control.create(control, i);
+    }
+
+    this._panel.layout().addItem('<div>', 0, this._controls.length, 4).stretch('', '100%');
+
+    this._panel.on(wcDocker.EVENT.CLOSED, function() {
+      var $customTheme = $('#wcCustomTheme');
+      if ($customTheme.length) {
+        $('option.custom').hide();
+        $('.themeSelector').val('default').change();
+        $customTheme.remove();
+      }
+    });
   },
 
   initParts: function() {
