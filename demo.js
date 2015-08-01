@@ -511,6 +511,7 @@ $(document).ready(function() {
     //   tabOrientation: wcDocker.TAB.BOTTOM
     // });
 
+    myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
     var themeBuilder = myDocker.addPanel('Theme Builder', wcDocker.DOCK.BOTTOM);
     var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.LEFT, themeBuilder);
 
