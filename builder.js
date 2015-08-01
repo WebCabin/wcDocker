@@ -3,6 +3,7 @@ function wcThemeBuilder(myPanel) {
   this._controls = [];
   this._frames = [];
   this._frameIndex = [];
+  this.$activeTheme = null;
 
   this._borderStyles = ['none', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset', 'initial', 'inherit'];
 
@@ -38,9 +39,9 @@ wcThemeBuilder.prototype = {
     }
 
     var self = this;
-    var $reset = $('<button style="width:100%;" title="Reset attributes to the currently active theme.">Reset</button>');
-    this._panel.layout().addItem($reset, 0, row).stretch('33%', '');
-    $reset.click(function() {
+    var $pull = $('<button style="width:100%;" title="Pull attributes from the currently active theme.">Pull</button>');
+    this._panel.layout().addItem($pull, 0, row).stretch('33%', '');
+    $pull.click(function() {
       self.pull(self._controls);
       self.buildControls();
     });
@@ -93,6 +94,8 @@ wcThemeBuilder.prototype = {
   addTab: function(frame, control, row) {
     var layout = frame.addTab(control.name);
     layout.$table.css('padding', '10px');
+    layout.gridAlternate(true);
+    layout.showGrid(true);
 
     layout.startBatch();
 
@@ -158,6 +161,7 @@ wcThemeBuilder.prototype = {
         } else {
           control.value = null;
         }
+        self.onChanged();
       }
     });
 
@@ -191,6 +195,7 @@ wcThemeBuilder.prototype = {
     $control.val(parseInt(control.value));
     $control.change(function() {
       control.value = $(this).val() + 'px';
+      self.onChanged();
     });
 
     if (control.isOptional) {
@@ -228,6 +233,7 @@ wcThemeBuilder.prototype = {
 
       $control.change(function() {
         control.value = $(this).val();
+        self.onChanged();
       });
 
       if (control.isOptional) {
@@ -276,7 +282,8 @@ wcThemeBuilder.prototype = {
       for (var a = 0; a < attrs.length; ++a) {
         obj.push({
           key: attrs[a],
-          value: control.value
+          value: control.value,
+          important: control.important
         });
       }
 
@@ -305,7 +312,11 @@ wcThemeBuilder.prototype = {
         themeData += selector + ' {\n';
         for (var i = 0; i < data[selector].length; ++i) {
           var item = data[selector][i];
-          themeData += '  ' + item.key + ': ' + item.value + ';\n';
+          themeData += '  ' + item.key + ': ' + item.value;
+          if (item.important) {
+            themeData += ' !important';
+          }
+          themeData += ';\n';
         }
         themeData += '}\n\n';
       }
@@ -319,9 +330,9 @@ wcThemeBuilder.prototype = {
     $('#wcTheme').remove();
     $('#wcCustomTheme').remove();
 
-    var $style = $('<style id="wcCustomTheme"></style>');
-    $('head').append($style);
-    $style.text(themeData);
+    this.$activeTheme = $('<style id="wcCustomTheme"></style>');
+    $('head').append(this.$activeTheme);
+    this.$activeTheme.text(themeData);
   },
 
   pull: function(controls) {
@@ -340,6 +351,15 @@ wcThemeBuilder.prototype = {
       $('body').append($item);
       control.value = $item.css(control.attribute.split(',')[0]);
       $item.remove();
+    }
+  },
+
+  onChanged: function() {
+    if (this.$activeTheme && this.$activeTheme.parent().length) {
+      var themeData = this.build();
+      this.apply(themeData);
+    } else {
+      this.$activeTheme = null;
     }
   },
 
@@ -642,6 +662,15 @@ wcThemeBuilder.prototype = {
           create: this.addListControl(this._borderStyles),
           attribute: 'border-style',
           value: ''
+        }, {
+          selector: '.wcLayoutGridAlternate tr:nth-child(even), .wcLayoutGridAltColor',
+          elem: '<div class="wcLayoutGridAltColor></div>',
+          name: 'Alternate Row Color',
+          info: 'When a layout grid alternate mode is enabled, this is the color to use for each alternate row',
+          create: this.addColorControl,
+          attribute: 'background-color',
+          value: '',
+          important: true
         }]
       }, {
         // -----------------------------------------------------------------------------------------------------------------
