@@ -55,6 +55,12 @@
  * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
  */
 
+/**
+ * @typedef {Object} wcDocker~FitContents
+ * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
+ * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
+ */
+
  /**
  * Options for adding a new panel.
  *

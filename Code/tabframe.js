@@ -302,7 +302,7 @@ wcTabFrame.prototype = {
   },
 
   /**
-   * Gets, or Sets whether overflow on a tab area is visible.
+   * Gets, or Sets whether overflow on a tab area is visible.<br>
    * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
    *
    * @param {Number} index        - The index of the tab page.
@@ -319,6 +319,49 @@ wcTabFrame.prototype = {
         this.__onTabChange();
       }
       return layout._overflowVisible;
+    }
+    return false;
+  },
+
+  /**
+   * Gets, or Sets whether the tab frame should fit to its contents.
+   * @version 3.0.0
+   *
+   * @param {Number} index  - The index of the tab page.
+   * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+   * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
+   *
+   * @returns {wcDocker~FitContents} - The current scrollable status of the tab page.
+   */
+  fitContents: function(index, x, y) {
+    if (index > -1 && index < this._layoutList.length) {
+      var layout = this._layoutList[index];
+
+      if (!layout.hasOwnProperty('_fitContents')) {
+        layout._fitContents = {
+          x: false,
+          y: false
+        };
+      }
+
+      var changed = false;
+      if (typeof x !== 'undefined') {
+        layout._fitContents.x = x;
+        changed = true;
+      }
+      if (typeof y !== 'undefined') {
+        layout._fitContents.y = y;
+        changed = true;
+      }
+
+      if (changed) {
+        this.__onTabChange();
+      }
+
+      return {
+        x: layout._fitContents.x,
+        y: layout._fitContents.y,
+      };
     }
     return false;
   },
@@ -576,6 +619,27 @@ wcTabFrame.prototype = {
         this.$tabBar.append(this.$tabLeft);
 
         buttonSize += this.$tabRight.outerWidth() + this.$tabLeft.outerWidth();
+      }
+
+      var fit = this.fitContents(this._curTab);
+      if (fit.x) {
+        var w = layout.$table.outerWidth();
+        if (this._tabOrientation === wcDocker.TAB.LEFT || this._tabOrientation === wcDocker.TAB.RIGHT) {
+          w += this.$tabScroll.height();
+        }
+        this.$container.css('width', w);
+      } else {
+        this.$container.css('width', '100%');
+      }
+
+      if (fit.y) {
+        var h = layout.$table.outerHeight();
+        if (this._tabOrientation === wcDocker.TAB.TOP || this._tabOrientation === wcDocker.TAB.BOTTOM) {
+          h += this.$tabScroll.height();
+        }
+        this.$container.css('height', h);
+      } else {
+        this.$container.css('height', '100%');
       }
 
       switch (this._tabOrientation) {
