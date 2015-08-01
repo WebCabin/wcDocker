@@ -76,7 +76,7 @@
 }
 
 .wcLayoutGridAlternate tr:nth-child(even), .wcLayoutGridAltColor {
-  background-color: rgba(200, 200, 200, 0.2) !important;
+  background-color: rgba(200, 200, 200, 0.2);
 }
 
 .wcPanelTab {
@@ -93,7 +93,7 @@
   padding-bottom: 0px;
 }
 
-.wcPanelTab:hover {
+.wcPanelTab:hover, .wcPanelTabHover {
   background-color: #AAA;
 }
 
@@ -104,7 +104,7 @@
   margin-top: 1px;
 }
 
-.wcPanelTabActive:hover {
+.wcPanelTabActive:hover, .wcPanelTabActiveHover {
   background-color: #CCC;
 }
 

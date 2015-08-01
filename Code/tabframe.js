@@ -70,6 +70,16 @@ wcTabFrame.prototype = {
   },
 
   /**
+   * Gets the total number of tabs in this frame.
+   * @version 3.0.0
+   *
+   * @returns {Number}
+   */
+  tabCount: function() {
+    return this._layoutList.length;
+  },
+
+  /**
    * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the tab frame.
    * @version 3.0.0
    *

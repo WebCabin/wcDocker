@@ -114,7 +114,7 @@
   padding-bottom: 0px;
 }
 
-.wcPanelTab:hover {
+.wcPanelTab:hover, .wcPanelTabHover {
   background-color: #AA8080;
 }
 
@@ -127,7 +127,7 @@
   line-height: 18px;
 }
 
-.wcPanelTabActive:hover {
+.wcPanelTabActive:hover, .wcPanelTabActiveHover {
   background-color: #C66;
 }
 

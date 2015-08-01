@@ -6,6 +6,7 @@ function wcThemeBuilder(myPanel) {
   this.$activeTheme = null;
 
   this._borderStyles = ['none', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset', 'initial', 'inherit'];
+  this._fontWeights = ['normal', 'bold', 'bolder', 'lighter', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'initial', 'inherit'];
 
   this.$part = $('<select style="width:100%">');
 
@@ -75,6 +76,7 @@ wcThemeBuilder.prototype = {
 
     var frame = new wcTabFrame($tabArea, this._panel);
     frame.moveable(false);
+
     if (control.orientation) {
       frame.tabOrientation(control.orientation);
     }
@@ -131,6 +133,15 @@ wcThemeBuilder.prototype = {
     $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
     layout.addItem($label, 1, row).stretch('1%', '').css('text-align', 'right');
 
+    function __setColor(color) {
+      if (color) {
+        control.value = color.toRgbString();
+      } else {
+        control.value = null;
+      }
+      self.onChanged();
+    };
+
     $control = $('<input style="width:100%;" title="' + control.info + '"/>');
     layout.addItem($control, 2, row).stretch('100%', '');
     $control.spectrum({
@@ -154,30 +165,56 @@ wcThemeBuilder.prototype = {
       maxSelectionSize: 8,
       localStorageKey: "theme.colors",
       clickoutFiresChange: false,
-      preferredFormat: 'rgb',
-      change: function(color) {
-        if (color) {
-          control.value = color.toRgbString();
-        } else {
-          control.value = null;
-        }
-        self.onChanged();
-      }
+      preferredFormat: 'hex3',
+      change: __setColor,
+      move:   __setColor,
+      hide:   __setColor
     });
 
-    if (control.isOptional) {
-      $activator = $('<input type="checkbox" title="' + control.info + '"/>');
-      layout.addItem($activator, 0, row).stretch('1%', '');
+    $activator = $('<input type="checkbox" title="' + control.info + '"/>');
+    layout.addItem($activator, 0, row).stretch('1%', '');
 
-      $activator.attr('checked', control.isActive);
-      $activator.change(function() {
-        control.isActive = this.checked;
-        $control.spectrum(this.checked? 'enable': 'disable');
-      });
+    $activator.attr('checked', !control.isDisabled);
+    $activator.change(function() {
+      control.isDisabled = !this.checked;
+      $control.spectrum(this.checked? 'enable': 'disable');
+      self.onChanged();
+    });
 
-      if (!control.isActive) {
-        $control.spectrum('disable');
-      }
+    if (control.isDisabled) {
+      $control.spectrum('disable');
+    }
+  },
+
+  addTextControl: function(layout, control, row) {
+    var $activator = null;
+    var $label = null;
+    var $control = null;
+    var self = this;
+    
+    $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
+    layout.addItem($label, 1, row).stretch('1%', '').css('text-align', 'right');
+
+    $control = $('<input title="' + control.info + '" type="text"/>');
+    layout.addItem($control, 2, row).stretch('100%', '');
+    $control.val(control.value);
+    $control.change(function() {
+      control.value = $(this).val();
+      self.onChanged();
+    });
+
+    $activator = $('<input type="checkbox" title="' + control.info + '"/>');
+    layout.addItem($activator, 0, row).stretch('1%', '');
+
+    $activator.attr('checked', !control.isDisabled);
+    $activator.change(function() {
+      control.isDisabled = !this.checked;
+      $control.attr('disabled', !this.checked);
+      self.onChanged();
+    });
+
+    if (control.isDisabled) {
+      $control.attr('disabled', true);
     }
   },
 
@@ -190,7 +227,7 @@ wcThemeBuilder.prototype = {
     $label = $('<label class="wcAttributeLabel" title="' + control.info + '">' + control.name + ':</label>');
     layout.addItem($label, 1, row).stretch('1%', '').css('text-align', 'right');
 
-    $control = $('<input title="' + control.info + '" type="number" step="1" min="1"/>');
+    $control = $('<input title="' + control.info + '" type="number" step="1"/>');
     layout.addItem($control, 2, row).stretch('100%', '');
     $control.val(parseInt(control.value));
     $control.change(function() {
@@ -198,19 +235,18 @@ wcThemeBuilder.prototype = {
       self.onChanged();
     });
 
-    if (control.isOptional) {
-      $activator = $('<input type="checkbox" title="' + control.info + '"/>');
-      layout.addItem($activator, 0, row).stretch('1%', '');
+    $activator = $('<input type="checkbox" title="' + control.info + '"/>');
+    layout.addItem($activator, 0, row).stretch('1%', '');
 
-      $activator.attr('checked', control.isActive);
-      $activator.change(function() {
-        control.isActive = this.checked;
-        $control.attr('disabled', !this.checked);
-      });
+    $activator.attr('checked', !control.isDisabled);
+    $activator.change(function() {
+      control.isDisabled = !this.checked;
+      $control.attr('disabled', !this.checked);
+      self.onChanged();
+    });
 
-      if (!control.isActive) {
-        $control.attr('disabled', true);
-      }
+    if (control.isDisabled) {
+      $control.attr('disabled', true);
     }
   },
 
@@ -236,19 +272,18 @@ wcThemeBuilder.prototype = {
         self.onChanged();
       });
 
-      if (control.isOptional) {
-        $activator = $('<input type="checkbox" title="' + control.info + '"/>');
-        layout.addItem($activator, 0, row).stretch('1%', '');
+      $activator = $('<input type="checkbox" title="' + control.info + '"/>');
+      layout.addItem($activator, 0, row).stretch('1%', '');
 
-        $activator.attr('checked', control.isActive);
-        $activator.change(function() {
-          control.isActive = this.checked;
-          $control.attr('disabled', !this.checked);
-        });
+      $activator.attr('checked', !control.isDisabled);
+      $activator.change(function() {
+        control.isDisabled = !this.checked;
+        $control.attr('disabled', !this.checked);
+        self.onChanged();
+      });
 
-        if (!control.isActive) {
-          $control.attr('disabled', true);
-        }
+      if (control.isDisabled) {
+        $control.attr('disabled', true);
       }
     };
   },
@@ -268,7 +303,7 @@ wcThemeBuilder.prototype = {
         this.build(data, control.controls);
       }
 
-      if (!control.selector || typeof control.value !== 'string') {
+      if (!control.selector || typeof control.value !== 'string' || control.isDisabled) {
         continue;
       }
 
@@ -333,6 +368,8 @@ wcThemeBuilder.prototype = {
     this.$activeTheme = $('<style id="wcCustomTheme"></style>');
     $('head').append(this.$activeTheme);
     this.$activeTheme.text(themeData);
+
+    this._panel.docker().__update();
   },
 
   pull: function(controls) {
@@ -349,7 +386,11 @@ wcThemeBuilder.prototype = {
 
       var $item = $(control.elem);
       $('body').append($item);
-      control.value = $item.css(control.attribute.split(',')[0]);
+      var attr = control.attribute.split(',')[0];
+      control.value = $item.css(attr);
+      if (typeof control.value === 'undefined') {
+        control.isDisabled = true;
+      }
       $item.remove();
     }
   },
@@ -381,7 +422,6 @@ wcThemeBuilder.prototype = {
     });
 
     this._panel.on(wcDocker.EVENT.CUSTOM_TAB_CHANGED, function() {
-      console.log('refreshing tabs');
       for (var i = 0; i < self._frames.length; ++i) {
         self._frames[i].update();
       }
@@ -400,9 +440,48 @@ wcThemeBuilder.prototype = {
           name: 'Main',
           create: this.addSpacer
         }, {
+          // Font Family
+          selector: '.wcDocker',
+          elem: '<div class="wcDocker"></div>',
+          name: 'Font Family',
+          info: 'The font family of standard text',
+          create: this.addTextControl,
+          attribute: 'font-family',
+          value: ''
+        }, {
+          // Font Weight
+          selector: '.wcDocker',
+          elem: '<div class="wcDocker"></div>',
+          name: 'Font Weight',
+          info: 'The font weight of the standard text',
+          create: this.addListControl(this._fontWeights),
+          attribute: 'font-weight',
+          value: ''
+        }, {
+          // Font Size
+          selector: '.wcDocker',
+          elem: '<div class="wcDocker"></div>',
+          name: 'Font Size',
+          info: 'The font size of standard text',
+          create: this.addPixelControl,
+          attribute: 'font-size',
+          value: ''
+        }, {
+          // Font Color
+          selector: '.wcDocker',
+          elem: '<div class="wcDocker"></div>',
+          name: 'Font Color',
+          info: 'The font color of standard text',
+          create: this.addColorControl,
+          attribute: 'color',
+          value: ''
+        }, {
+          name: '',
+          create: this.addSpacer
+        }, {
           // Background Color
           selector: '.wcDocker, .wcPanelBackground',
-          elem: '<div class="wcDocker wcPanelBackground"></div>',
+          elem: '<div class="wcDocker"></div>',
           name: 'Background Color',
           info: 'The background color to use.',
           create: this.addColorControl,
@@ -413,10 +492,209 @@ wcThemeBuilder.prototype = {
           selector: '.wcModalBlocker',
           elem: '<div class="wcModalBlocker"></div>',
           name: 'Modal Blocker Color',
-          info: 'The color of the fullscreen blocker element that appears when a modal panel is visible.',
+          info: 'The color of the fullscreen blocker element that appears when a modal panel is visible',
           create: this.addColorControl,
           attribute: 'background-color',
           value: ''
+        }, {
+          name: '',
+          create: this.addSpacer
+        }, {
+          // Ghost Color
+          selector: '.wcGhost',
+          elem: '<div class="wcGhost"></div>',
+          name: 'Ghost Color',
+          info: 'The ghost color, this is the overlay that shows where a moving panel is being moved',
+          create: this.addColorControl,
+          attribute: 'background-color',
+          value: ''
+        }, {
+        //   // Ghost Border Size
+        //   selector: '.wcGhost',
+        //   elem: '<div class="wcGhost"></div>',
+        //   name: 'Ghost Border Size',
+        //   info: 'The ghost border size',
+        //   create: this.addPixelControl,
+        //   attribute: 'border-width',
+        //   value: ''
+        // }, {
+        //   // Ghost Border Style
+        //   selector: '.wcGhost',
+        //   elem: '<div class="wcGhost"></div>',
+        //   name: 'Ghost Border Style',
+        //   info: 'The ghost border style',
+        //   create: this.addListControl(this._borderStyles),
+        //   attribute: 'border-style',
+        //   value: ''
+        // }, {
+        //   // Ghost Border Color
+        //   selector: '.wcGhost',
+        //   elem: '<div class="wcGhost"></div>',
+        //   name: 'Ghost Border Color',
+        //   info: 'The ghost border color',
+        //   create: this.addColorControl,
+        //   attribute: 'border-color',
+        //   value: ''
+        // }, {
+          // Ghost Border Radius
+          selector: '.wcGhost',
+          elem: '<div class="wcGhost"></div>',
+          name: 'Ghost Border Radius',
+          info: 'The ghost border radius',
+          create: this.addPixelControl,
+          attribute: 'border-radius',
+          value: ''
+        }]
+      }, {
+        // -----------------------------------------------------------------------------------------------------------------
+        name: 'Frames',
+        create: this.addTab,
+        controls: [{
+          name: 'Floating Frames',
+          create: this.addSpacer
+        }, {
+          // Floating Frame Edge Border Color
+          selector: '.wcFrameEdge',
+          elem: '<div class="wcFrameEdge"></div>',
+          name: 'Edge Color',
+          info: 'The color of a floating frame',
+          create: this.addColorControl,
+          attribute: 'background-color',
+          value: ''
+        }, {
+          // Floating Frame Edge Border Color
+          selector: '.wcFrameEdge',
+          elem: '<div class="wcFrameEdge"></div>',
+          name: 'Edge Border Color',
+          info: 'The border color of a floating frame',
+          create: this.addColorControl,
+          attribute: 'border-color',
+          value: ''
+        }, {
+          // Floating Frame Edge Border Size
+          selector: '.wcFrameEdge',
+          attribute: 'border-width',
+          value: '2'
+        }, {
+          // Floating Frame Edge Border style
+          selector: '.wcFrameEdge',
+          attribute: 'border-style',
+          value: 'solid'
+        }, {
+          name: '',
+          create: this.addSpacer
+        }, {
+          name: 'Splitter Frames',
+          create: this.addSpacer
+        }, {
+          create: this.addTabFrame,
+          controls: [{
+            name: 'Moveable',
+            create: this.addTab,
+            controls: [{
+              // Splitter Bar Size
+              selector: '.wcSplitterBarV',
+              elem: '<div class="wcSplitterBarV"></div>',
+              name: 'Splitter Size',
+              info: 'The size of a splitter bar',
+              create: this.addPixelControl,
+              attribute: 'width',
+              value: '',
+              also: [{
+                selector: '.wcSplitterBarH',
+                attribute: 'height'
+              }]
+            }, {
+              // Splitter Bar Color
+              selector: '.wcSplitterBar',
+              elem: '<div class="wcSplitterBar"></div>',
+              name: 'Splitter Color',
+              info: 'The color of a splitter bar',
+              create: this.addColorControl,
+              attribute: 'background-color',
+              value: ''
+            }, {
+              // Splitter Bar Border Size
+              selector: '.wcSplitterBar',
+              elem: '<div class="wcSplitterBar"></div>',
+              name: 'Splitter Border Size',
+              info: 'The border size of a splitter bar',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Splitter Bar Border Style
+              selector: '.wcSplitterBar',
+              elem: '<div class="wcSplitterBar"></div>',
+              name: 'Splitter Border Style',
+              info: 'The border style of a splitter bar',
+              create: this.addListControl(this._borderStyles),
+              attribute: 'border-style',
+              value: ''
+            }, {
+              // Splitter Bar Border Color
+              selector: '.wcSplitterBar',
+              elem: '<div class="wcSplitterBar"></div>',
+              name: 'Splitter Border Color',
+              info: 'The border color of a splitter bar',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }]
+          }, {
+            name: 'Static',
+            create: this.addTab,
+            controls: [{
+              // Static Splitter Bar Size
+              selector: '.wcSplitterBarV.wcSplitterBarStatic',
+              elem: '<div class="wcSplitterBarV wcSplitterBarStatic"></div>',
+              name: 'Splitter Size',
+              info: 'The size of a static splitter bar',
+              create: this.addPixelControl,
+              attribute: 'width',
+              value: '',
+              also: [{
+                selector: '.wcSplitterBarH.wcSplitterBarStatic',
+                attribute: 'height'
+              }]
+            }, {
+              // Static Splitter Bar Color
+              selector: '.wcSplitterBarStatic',
+              elem: '<div class="wcSplitterBarStatic"></div>',
+              name: 'Splitter Color',
+              info: 'The color of a static splitter bar',
+              create: this.addColorControl,
+              attribute: 'background-color',
+              value: ''
+            }, {
+              // Splitter Bar Border Size
+              selector: '.wcSplitterBarStatic',
+              elem: '<div class="wcSplitterBarStatic"></div>',
+              name: 'Splitter Border Size',
+              info: 'The border size of a static splitter bar',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Splitter Bar Border Style
+              selector: '.wcSplitterBarStatic',
+              elem: '<div class="wcSplitterBarStatic"></div>',
+              name: 'Splitter Border Style',
+              info: 'The border style of a static splitter bar',
+              create: this.addListControl(this._borderStyles),
+              attribute: 'border-style',
+              value: ''
+            }, {
+              // Splitter Bar Border Color
+              selector: '.wcSplitterBarStatic',
+              elem: '<div class="wcSplitterBarStatic"></div>',
+              name: 'Splitter Border Color',
+              info: 'The border color of a static splitter bar',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }]
+          }]
         }]
       }, {
         // -----------------------------------------------------------------------------------------------------------------
@@ -444,27 +722,6 @@ wcThemeBuilder.prototype = {
           attribute: 'background-color',
           value: ''
         }, {
-          name: 'Panel Buttons',
-          create: this.addSpacer
-        }, {
-          // Panel Button Size
-          selector: '.wcFrameButton',
-          elem: '<div class="wcFrameButton"></div>',
-          name: 'Button Size',
-          info: 'The pixel size of the button squared',
-          create: this.addPixelControl,
-          attribute: 'width,height',
-          value: ''
-        }, {
-          // Panel Font Size
-          selector: '.wcFrameButton',
-          elem: '<div class="wcFrameButton"></div>',
-          name: 'Button Font Size',
-          info: 'Font size of the button contents (if it uses text instead of an image)',
-          create: this.addPixelControl,
-          attribute: 'font-size',
-          value: ''
-        }, {
           name: '',
           create: this.addSpacer
         }, {
@@ -478,14 +735,44 @@ wcThemeBuilder.prototype = {
               name: 'Normal State',
               create: this.addSpacer
             }, {
-              // Normal Button Text Color
+              // Panel Button Size
               selector: '.wcFrameButton',
               elem: '<div class="wcFrameButton"></div>',
-              name: 'Button Text Color',
-              info: 'The normal text color of a panel button',
+              name: 'Button Size',
+              info: 'The normal size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'width,height',
+              value: ''
+            }, {
+              // Panel Button Font Size
+              selector: '.wcFrameButton',
+              elem: '<div class="wcFrameButton"></div>',
+              name: 'Button Font Size',
+              info: 'The normal font size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'font-size',
+              value: ''
+            }, {
+              // Panel Button Font Weight
+              selector: '.wcFrameButton',
+              elem: '<div class="wcFrameButton"></div>',
+              name: 'Button Font Weight',
+              info: 'The normal font weight of a panel button',
+              create: this.addListControl(this._fontWeights),
+              attribute: 'font-weight',
+              value: ''
+            }, {
+              // Normal Button Font Color
+              selector: '.wcFrameButton',
+              elem: '<div class="wcFrameButton"></div>',
+              name: 'Button Font Color',
+              info: 'The normal font color of a panel button',
               create: this.addColorControl,
               attribute: 'color',
               value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
             }, {
               // Normal Button Color
               selector: '.wcFrameButton',
@@ -496,14 +783,8 @@ wcThemeBuilder.prototype = {
               attribute: 'background-color',
               value: ''
             }, {
-              // Normal Button Border Color
-              selector: '.wcFrameButton',
-              elem: '<div class="wcFrameButton"></div>',
-              name: 'Button Border Color',
-              info: 'The normal border color of a panel button',
-              create: this.addColorControl,
-              attribute: 'border-color',
-              value: ''
+              name: '',
+              create: this.addSpacer
             }, {
               // Normal Button Border Size
               selector: '.wcFrameButton',
@@ -522,6 +803,15 @@ wcThemeBuilder.prototype = {
               create: this.addListControl(this._borderStyles),
               attribute: 'border-style',
               value: ''
+            }, {
+              // Normal Button Border Color
+              selector: '.wcFrameButton',
+              elem: '<div class="wcFrameButton"></div>',
+              name: 'Button Border Color',
+              info: 'The normal border color of a panel button',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
             }]
           }, {
             // Panel button hover state
@@ -531,36 +821,60 @@ wcThemeBuilder.prototype = {
               name: 'Hover State',
               create: this.addSpacer
             }, {
-              // Hover Button Text Color
+              // Hover Button Size
               selector: '.wcFrameButton:hover, .wcFrameButtonHover',
-              elem: '<div class="wcFrameButtonHover"></div>',
-              name: 'Button Text Color',
-              info: 'The hover text color of a panel button',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
+              name: 'Button Size',
+              info: 'The hover size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'width,height',
+              value: ''
+            }, {
+              // Hover Button Font Size
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
+              name: 'Button Font Size',
+              info: 'The hover font size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'font-size',
+              value: ''
+            }, {
+              // Hover Button Font Weight
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
+              name: 'Button Font Weight',
+              info: 'The hover font weight of a panel button',
+              create: this.addListControl(this._fontWeights),
+              attribute: 'font-weight',
+              value: ''
+            }, {
+              // Hover Button Font Color
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
+              name: 'Button Font Color',
+              info: 'The hover font color of a panel button',
               create: this.addColorControl,
               attribute: 'color',
               value: ''
             }, {
+              name: '',
+              create: this.addSpacer
+            }, {
               // Hover Button Color
               selector: '.wcFrameButton:hover, .wcFrameButtonHover',
-              elem: '<div class="wcFrameButtonHover"></div>',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
               name: 'Button Color',
               info: 'The hover color of a panel button',
               create: this.addColorControl,
               attribute: 'background-color',
               value: ''
             }, {
-              // Hover Button Border Color
-              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
-              elem: '<div class="wcFrameButtonHover"></div>',
-              name: 'Button Border Color',
-              info: 'The hover border color of a panel button',
-              create: this.addColorControl,
-              attribute: 'border-color',
-              value: ''
+              name: '',
+              create: this.addSpacer
             }, {
               // Hover Button Border Size
               selector: '.wcFrameButton:hover, .wcFrameButtonHover',
-              elem: '<div class="wcFrameButtonHover"></div>',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
               name: 'Button Border Size',
               info: 'The hover border size of a panel button',
               create: this.addPixelControl,
@@ -569,64 +883,106 @@ wcThemeBuilder.prototype = {
             }, {
               // Hover Button Border Style
               selector: '.wcFrameButton:hover, .wcFrameButtonHover',
-              elem: '<div class="wcFrameButtonHover"></div>',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
               name: 'Button Border Style',
               info: 'The hover border style of a panel button',
               create: this.addListControl(this._borderStyles),
               attribute: 'border-style',
               value: ''
+            }, {
+              // Hover Button Border Color
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButton wcFrameButtonHover"></div>',
+              name: 'Button Border Color',
+              info: 'The hover border color of a panel button',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
             }]
           }, {
-            // Panel button pressed state
-            name: 'Pressed State',
+            // Panel button active state
+            name: 'Active State',
             create: this.addTab,
             controls: [{
-              name: 'Pressed State',
+              name: 'Active State',
               create: this.addSpacer
             }, {
-              // Pressed Button Text Color
+              // Active Button Size
               selector: '.wcFrameButton:active, .wcFrameButtonActive',
-              elem: '<div class="wcFrameButtonActive"></div>',
-              name: 'Button Text Color',
-              info: 'The pressed text color of a panel button',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
+              name: 'Button Size',
+              info: 'The active size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'width,height',
+              value: ''
+            }, {
+              // Active Button Font Size
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
+              name: 'Button Font Size',
+              info: 'The active font size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'font-size',
+              value: ''
+            }, {
+              // Active Button Font Weight
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
+              name: 'Button Font Weight',
+              info: 'The active font weight of a panel button',
+              create: this.addListControl(this._fontWeights),
+              attribute: 'font-weight',
+              value: ''
+            }, {
+              // Active Button Font Color
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
+              name: 'Button Font Color',
+              info: 'The active font color of a panel button',
               create: this.addColorControl,
               attribute: 'color',
               value: ''
             }, {
-              // Pressed Button Color
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Active Button Color
               selector: '.wcFrameButton:active, .wcFrameButtonActive',
-              elem: '<div class="wcFrameButtonActive"></div>',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
               name: 'Button Color',
-              info: 'The pressed color of a panel button',
+              info: 'The active color of a panel button',
               create: this.addColorControl,
               attribute: 'background-color',
               value: ''
             }, {
-              // Pressed Button Border Color
-              selector: '.wcFrameButton:active, .wcFrameButtonActive',
-              elem: '<div class="wcFrameButtonActive"></div>',
-              name: 'Button Border Color',
-              info: 'The pressed border color of a panel button',
-              create: this.addColorControl,
-              attribute: 'border-color',
-              value: ''
+              name: '',
+              create: this.addSpacer
             }, {
-              // Pressed Button Border Size
+              // Active Button Border Size
               selector: '.wcFrameButton:active, .wcFrameButtonActive',
-              elem: '<div class="wcFrameButtonActive"></div>',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
               name: 'Button Border Size',
-              info: 'The pressed border size of a panel button',
+              info: 'The active border size of a panel button',
               create: this.addPixelControl,
               attribute: 'border-width',
               value: ''
             }, {
-              // Pressed Button Border Style
+              // Active Button Border Style
               selector: '.wcFrameButton:active, .wcFrameButtonActive',
-              elem: '<div class="wcFrameButtonActive"></div>',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
               name: 'Button Border Style',
-              info: 'The pressed border style of a panel button',
+              info: 'The active border style of a panel button',
               create: this.addListControl(this._borderStyles),
               attribute: 'border-style',
+              value: ''
+            }, {
+              // Active Button Border Color
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButton wcFrameButtonActive"></div>',
+              name: 'Button Border Color',
+              info: 'The active border color of a panel button',
+              create: this.addColorControl,
+              attribute: 'border-color',
               value: ''
             }]
           }]
@@ -639,14 +995,7 @@ wcThemeBuilder.prototype = {
           name: 'Layout',
           create: this.addSpacer
         }, {
-          selector: '.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td',
-          elem: '<div class="wcLayoutGrid"></div>',
-          name: 'Grid Border Color',
-          info: 'When a layout grid is visible, this is the color of the grid lines',
-          create: this.addColorControl,
-          attribute: 'border-color',
-          value: ''
-        }, {
+          // Layout grid border width
           selector: '.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td',
           elem: '<div class="wcLayoutGrid"></div>',
           name: 'Grid Border Size',
@@ -655,6 +1004,7 @@ wcThemeBuilder.prototype = {
           attribute: 'border-width',
           value: ''
         }, {
+          // Layout grid border style
           selector: '.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td',
           elem: '<div class="wcLayoutGrid"></div>',
           name: 'Grid Border Style',
@@ -663,9 +1013,22 @@ wcThemeBuilder.prototype = {
           attribute: 'border-style',
           value: ''
         }, {
+          // Layout grid border color
+          selector: '.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td',
+          elem: '<div class="wcLayoutGrid"></div>',
+          name: 'Grid Border Color',
+          info: 'When a layout grid is visible, this is the color of the grid lines',
+          create: this.addColorControl,
+          attribute: 'border-color',
+          value: ''
+        }, {
+          name: '',
+          create: this.addSpacer
+        }, {
+          // Layout grid alternate color
           selector: '.wcLayoutGridAlternate tr:nth-child(even), .wcLayoutGridAltColor',
-          elem: '<div class="wcLayoutGridAltColor></div>',
-          name: 'Alternate Row Color',
+          elem: '<div class="wcLayoutGridAltColor"></div>',
+          name: 'Grid Alternate Color',
           info: 'When a layout grid alternate mode is enabled, this is the color to use for each alternate row',
           create: this.addColorControl,
           attribute: 'background-color',
@@ -677,13 +1040,14 @@ wcThemeBuilder.prototype = {
         name: 'Tabs',
         create: this.addTab,
         controls: [{
-          name: 'Tabs',
+          name: 'Tab Bar',
           create: this.addSpacer
         }, {
+          // Tab bar height
           selector: '.wcFrameTitleBar',
           elem: '<div class="wcFrameTitleBar"></div>',
-          name: 'Height',
-          info: 'The height of the tab bar.',
+          name: 'Size',
+          info: 'The size of the tab bar.',
           create: this.addPixelControl,
           attribute: 'height',
           value: '',
@@ -692,37 +1056,514 @@ wcThemeBuilder.prototype = {
             attribute: 'top'
           }]
         }, {
+          // Tab bar top offset
+          selector: '.wcFrameTitle',
+          elem: '<div class="wcFrameTitle"></div>',
+          name: 'Top Offset',
+          info: 'The top offset of the tab bar',
+          create: this.addPixelControl,
+          attribute: 'padding-top',
+          value: ''
+        }, {
+          // Tab bar color
           selector: '.wcFrameTitleBar',
           elem: '<div class="wcFrameTitleBar"></div>',
-          name: 'Background Bar Color',
-          info: 'The color of the tab bar (behind the tabs).',
+          name: 'Background Color',
+          info: 'The color of the tab bar',
           create: this.addColorControl,
           attribute: 'background-color',
           value: ''
         }, {
+          // Tab bar font size
           selector: '.wcFrameTitle',
           elem: '<div class="wcFrameTitle"></div>',
           name: 'Font Size',
-          info: 'The font size (in pixels)',
+          info: 'The font size of the tab bar',
           create: this.addPixelControl,
           attribute: 'font-size',
           value: ''
         }, {
+          // Tab bar Font Weight
           selector: '.wcFrameTitle',
-          attribute: 'font-size',
+          elem: '<div class="wcFrameTitle"></div>',
+          name: 'Font Weight',
+          info: 'The font weight of a tab bar',
+          create: this.addListControl(this._fontWeights),
+          attribute: 'font-weight',
+          value: ''
+        }, {
+          // Hidden tab bar bold font weight
+          selector: '.wcFrameTitle',
+          attribute: 'font-weight',
           value: 'bold'
         }, {
+          // Hidden tab bar center text
           selector: '.wcFrameTitle',
-          attribute: 'font-align',
+          attribute: 'text-align',
           value: 'center'
         }, {
+          // Tab bar font color
           selector: '.wcFrameTitle',
           elem: '<div class="wcFrameTitle"></div>',
           name: 'Font Color',
-          info: 'The normal color of tab items',
+          info: 'The color of the tab bar',
           create: this.addColorControl,
-          attribute: 'background-color',
+          attribute: 'color',
           value: ''
+        }, {
+          name: '',
+          create: this.addSpacer
+        }, {
+          create: this.addTabFrame,
+          controls: [{
+            name: 'Normal State',
+            create: this.addTab,
+            controls: [{
+              name: 'Normal State',
+              create: this.addSpacer
+            }, {
+              // Normal tab item Font Size
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Font Size',
+              info: 'The normal font size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'font-size',
+              value: ''
+            }, {
+              // Normal Tab Font Weight
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Font Weight',
+              info: 'The normal font weight of a tab item',
+              create: this.addListControl(this._fontWeights),
+              attribute: 'font-weight',
+              value: ''
+            }, {
+              // Normal tab item Font Color
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Font Color',
+              info: 'The normal font color of a tab item',
+              create: this.addColorControl,
+              attribute: 'color',
+              value: ''
+            }, {
+              // Normal tab item text padding
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Text Padding',
+              info: 'The normal padding between text and tab border',
+              create: this.addPixelControl,
+              attribute: 'padding-left,padding-right',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Normal tab item top padding
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Top Offset',
+              info: 'The normal top offset of a tab item',
+              create: this.addPixelControl,
+              attribute: 'margin-top',
+              value: ''
+            }, {
+              // Normal tab item spacing
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Spacing',
+              info: 'The normal spacing between tab items',
+              create: this.addPixelControl,
+              attribute: 'margin-right',
+              value: ''
+            }, {
+              // Normal tab item color
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Color',
+              info: 'The normal color of a tab item',
+              create: this.addColorControl,
+              attribute: 'background-color',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Normal tab item border size
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Border Size',
+              info: 'The normal border size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Normal tab item border style
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Border Style',
+              info: 'The normal border style of a tab item',
+              create: this.addListControl(this._borderStyles),
+              attribute: 'border-style',
+              value: ''
+            }, {
+              // Normal tab item border radius
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Border Radius',
+              info: 'The normal border radius of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-top-left-radius,border-top-right-radius',
+              value: ''
+            }, {
+              // Normal tab item border color
+              selector: '.wcPanelTab',
+              elem: '<div class="wcPanelTab"></div>',
+              name: 'Tab Border Color',
+              info: 'The normal border color of a tab item',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }]
+          }, {
+            name: 'Hover State',
+            create: this.addTab,
+            controls: [{
+              name: 'Hover State',
+              create: this.addSpacer
+            }, {
+              // Hover tab item Font Size
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Font Size',
+              info: 'The hover font size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'font-size',
+              value: ''
+            }, {
+              // Hover Tab Font Weight
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Font Weight',
+              info: 'The hover font weight of a tab item',
+              create: this.addListControl(this._fontWeights),
+              attribute: 'font-weight',
+              value: ''
+            }, {
+              // Hover tab item Font Color
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Font Color',
+              info: 'The hover font color of a tab item',
+              create: this.addColorControl,
+              attribute: 'color',
+              value: ''
+            }, {
+              // Hover tab item text padding
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Text Padding',
+              info: 'The hover padding between text and tab border',
+              create: this.addPixelControl,
+              attribute: 'padding-left,padding-right',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Hover tab item top padding
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Top Offset',
+              info: 'The hover top offset of a tab item',
+              create: this.addPixelControl,
+              attribute: 'margin-top',
+              value: ''
+            }, {
+              // Hover tab item spacing
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Spacing',
+              info: 'The hover spacing between tab items',
+              create: this.addPixelControl,
+              attribute: 'margin-right',
+              value: ''
+            }, {
+              // Hover tab item color
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Color',
+              info: 'The hover color of a tab item',
+              create: this.addColorControl,
+              attribute: 'background-color',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Hover tab item border size
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Border Size',
+              info: 'The hover border size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Hover tab item border style
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Border Style',
+              info: 'The hover border style of a tab item',
+              create: this.addListControl(this._borderStyles),
+              attribute: 'border-style',
+              value: ''
+            }, {
+              // Hover tab item border radius
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Border Radius',
+              info: 'The hover border radius of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-top-left-radius,border-top-right-radius',
+              value: ''
+            }, {
+              // Hover tab item border color
+              selector: '.wcPanelTab:hover, .wcPanelTabHover',
+              elem: '<div class="wcPanelTab wcPanelTabHover"></div>',
+              name: 'Tab Border Color',
+              info: 'The hover border color of a tab item',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }]
+          }, {
+            name: 'Active State',
+            create: this.addTab,
+            controls: [{
+              name: 'Active State',
+              create: this.addSpacer
+            }, {
+              // Active tab item Font Size
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Font Size',
+              info: 'The active font size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'font-size',
+              value: ''
+            }, {
+              // Active Tab Font Weight
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Font Weight',
+              info: 'The active font weight of a tab item',
+              create: this.addListControl(this._fontWeights),
+              attribute: 'font-weight',
+              value: ''
+            }, {
+              // Active tab item Font Color
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Font Color',
+              info: 'The active font color of a tab item',
+              create: this.addColorControl,
+              attribute: 'color',
+              value: ''
+            }, {
+              // Active tab item text padding
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Text Padding',
+              info: 'The active padding between text and tab border',
+              create: this.addPixelControl,
+              attribute: 'padding-left,padding-right',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Active tab item top padding
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Top Offset',
+              info: 'The active top offset of a tab item',
+              create: this.addPixelControl,
+              attribute: 'margin-top',
+              value: ''
+            }, {
+              // Active tab item spacing
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Spacing',
+              info: 'The active spacing between tab items',
+              create: this.addPixelControl,
+              attribute: 'margin-right',
+              value: ''
+            }, {
+              // Active tab item color
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Color',
+              info: 'The active color of a tab item',
+              create: this.addColorControl,
+              attribute: 'background-color',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Active tab item border size
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Border Size',
+              info: 'The active border size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Active tab item border style
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Border Style',
+              info: 'The active border style of a tab item',
+              create: this.addListControl(this._borderStyles),
+              attribute: 'border-style',
+              value: ''
+            }, {
+              // Active tab item border radius
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Border Radius',
+              info: 'The active border radius of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-top-left-radius,border-top-right-radius',
+              value: ''
+            }, {
+              // Active tab item border color
+              selector: '.wcPanelTabActive',
+              elem: '<div class="wcPanelTab wcPanelTabActive"></div>',
+              name: 'Tab Border Color',
+              info: 'The active border color of a tab item',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }]
+          }, {
+            name: 'Active Hover State',
+            create: this.addTab,
+            controls: [{
+              name: 'Active Hover State',
+              create: this.addSpacer
+            }, {
+              // Active Hover tab item Font Size
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Font Size',
+              info: 'The active hover font size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'font-size',
+              value: ''
+            }, {
+              // Active Hover Tab Font Weight
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Font Weight',
+              info: 'The active hover font weight of a tab item',
+              create: this.addListControl(this._fontWeights),
+              attribute: 'font-weight',
+              value: ''
+            }, {
+              // Active Hover tab item Font Color
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Font Color',
+              info: 'The active hover font color of a tab item',
+              create: this.addColorControl,
+              attribute: 'color',
+              value: ''
+            }, {
+              // Active Hover tab item text padding
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Text Padding',
+              info: 'The active hover padding between text and tab border',
+              create: this.addPixelControl,
+              attribute: 'padding-left,padding-right',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Active Hover tab item top padding
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Top Offset',
+              info: 'The active hover top offset of a tab item',
+              create: this.addPixelControl,
+              attribute: 'margin-top',
+              value: ''
+            }, {
+              // Active Hover tab item spacing
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Spacing',
+              info: 'The active hover spacing between tab items',
+              create: this.addPixelControl,
+              attribute: 'margin-right',
+              value: ''
+            }, {
+              // Active Hover tab item color
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Color',
+              info: 'The active hover color of a tab item',
+              create: this.addColorControl,
+              attribute: 'background-color',
+              value: ''
+            }, {
+              name: '',
+              create: this.addSpacer
+            }, {
+              // Active Hover tab item border size
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Border Size',
+              info: 'The active hover border size of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Active Hover tab item border style
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Border Style',
+              info: 'The active hover border style of a tab item',
+              create: this.addListControl(this._borderStyles),
+              attribute: 'border-style',
+              value: ''
+            }, {
+              // Active Hover tab item border radius
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Border Radius',
+              info: 'The active hover border radius of a tab item',
+              create: this.addPixelControl,
+              attribute: 'border-top-left-radius,border-top-right-radius',
+              value: ''
+            }, {
+              // Active Hover tab item border color
+              selector: '.wcPanelTabActive:hover, .wcPanelTabActiveHover',
+              elem: '<div class="wcPanelTab wcPanelTabActive wcPanelTabActiveHover"></div>',
+              name: 'Tab Border Color',
+              info: 'The active hover border color of a tab item',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }]
+          }]
         }]
       }]
     }];

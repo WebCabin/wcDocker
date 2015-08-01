@@ -102,7 +102,7 @@
   padding-right: 5px;
 }
 
-.wcPanelTab:hover {
+.wcPanelTab:hover, .wcPanelTabHover {
   background-color: #777;
 }
 
@@ -116,7 +116,7 @@
   font-weight: normal;
 }
 
-.wcPanelTabActive:hover {
+.wcPanelTabActive:hover, .wcPanelTabActiveHover {
   color: #DDD;
   background-color: #444;
 }

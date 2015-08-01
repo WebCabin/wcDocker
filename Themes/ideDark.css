@@ -111,7 +111,7 @@ html, body {
   padding-bottom: 0px;
 }
 
-.wcPanelTab:hover {
+.wcPanelTab:hover, .wcPanelTabHover {
 
 }
 
@@ -124,7 +124,7 @@ html, body {
   padding-top: 2.5px;
 }
 
-.wcPanelTabActive:hover {
+.wcPanelTabActive:hover, .wcPanelTabActiveHover {
   padding-top: 2.5px;
 }
 
