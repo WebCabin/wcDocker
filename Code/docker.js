@@ -1598,9 +1598,11 @@ wcDocker.prototype = {
         self._draggingFrame.__resize(self._draggingFrameSizer, mouse);
         self._draggingFrame.__update();
       } else if (self._draggingCustomTabFrame) {
-        var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
-        if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
-          self._draggingFrameTab = self._draggingCustomTabFrame.moveTab(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
+        if (self._draggingCustomTabFrame.moveable()) {
+          var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
+          if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+            self._draggingFrameTab = self._draggingCustomTabFrame.moveTab(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
+          }
         }
       } else if (self._ghost) {
         if (self._draggingFrame) {
