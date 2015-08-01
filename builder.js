@@ -4,6 +4,8 @@ function wcThemeBuilder(myPanel) {
   this._frames = [];
   this._frameIndex = [];
 
+  this._borderStyles = ['none', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset', 'initial', 'inherit'];
+
   this.$part = $('<select style="width:100%">');
 
   this.init();
@@ -71,6 +73,7 @@ wcThemeBuilder.prototype = {
     layout.addItem($tabArea, 0, row, 3).stretch('', '100%');
 
     var frame = new wcTabFrame($tabArea, this._panel);
+    frame.moveable(false);
     if (control.orientation) {
       frame.tabOrientation(control.orientation);
     }
@@ -89,6 +92,7 @@ wcThemeBuilder.prototype = {
 
   addTab: function(frame, control, row) {
     var layout = frame.addTab(control.name);
+    layout.$table.css('padding', '10px');
 
     layout.startBatch();
 
@@ -108,7 +112,11 @@ wcThemeBuilder.prototype = {
   },
 
   addSpacer: function(layout, control, row) {
-    layout.addItem('<div class="wcAttributeSpacer">' + control.name + '</div>', 0, row, 3).stretch('100%', '');
+    if (control.name) {
+      layout.addItem('<div class="wcAttributeSpacerSolid">' + control.name + '</div>', 0, row, 3).stretch('100%', '');
+    } else {
+      layout.addItem('<div class="wcAttributeSpacer"></div>', 0, row, 3).stretch('100%', '');
+    }
   },
 
   addColorControl: function(layout, control, row) {
@@ -437,6 +445,9 @@ wcThemeBuilder.prototype = {
           attribute: 'font-size',
           value: ''
         }, {
+          name: '',
+          create: this.addSpacer
+        }, {
           create: this.addTabFrame,
           orientation: wcDocker.TAB.TOP,
           controls: [{
@@ -488,7 +499,7 @@ wcThemeBuilder.prototype = {
               elem: '<div class="wcFrameButton"></div>',
               name: 'Button Border Style',
               info: 'The normal border style of a panel button',
-              create: this.addListControl(['inset', 'solid', 'outset']),
+              create: this.addListControl(this._borderStyles),
               attribute: 'border-style',
               value: ''
             }]
@@ -541,7 +552,7 @@ wcThemeBuilder.prototype = {
               elem: '<div class="wcFrameButtonHover"></div>',
               name: 'Button Border Style',
               info: 'The hover border style of a panel button',
-              create: this.addListControl(['inset', 'solid', 'outset']),
+              create: this.addListControl(this._borderStyles),
               attribute: 'border-style',
               value: ''
             }]
@@ -594,11 +605,43 @@ wcThemeBuilder.prototype = {
               elem: '<div class="wcFrameButtonActive"></div>',
               name: 'Button Border Style',
               info: 'The pressed border style of a panel button',
-              create: this.addListControl(['inset', 'solid', 'outset']),
+              create: this.addListControl(this._borderStyles),
               attribute: 'border-style',
               value: ''
             }]
           }]
+        }]
+      }, {
+        // -----------------------------------------------------------------------------------------------------------------
+        name: 'Layout',
+        create: this.addTab,
+        controls: [{
+          name: 'Layout',
+          create: this.addSpacer
+        }, {
+          selector: '.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td',
+          elem: '<div class="wcLayoutGrid"></div>',
+          name: 'Grid Border Color',
+          info: 'When a layout grid is visible, this is the color of the grid lines',
+          create: this.addColorControl,
+          attribute: 'border-color',
+          value: ''
+        }, {
+          selector: '.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td',
+          elem: '<div class="wcLayoutGrid"></div>',
+          name: 'Grid Border Size',
+          info: 'When a layout grid is visible, this is the size of the grid lines',
+          create: this.addPixelControl,
+          attribute: 'border-width',
+          value: ''
+        }, {
+          selector: '.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td',
+          elem: '<div class="wcLayoutGrid"></div>',
+          name: 'Grid Border Style',
+          info: 'When a layout grid is visible, this is the style of the grid lines',
+          create: this.addListControl(this._borderStyles),
+          attribute: 'border-style',
+          value: ''
         }]
       }, {
         // -----------------------------------------------------------------------------------------------------------------
