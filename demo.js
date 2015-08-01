@@ -512,6 +512,7 @@ $(document).ready(function() {
     // });
 
     var themeBuilder = myDocker.addPanel('Theme Builder', wcDocker.DOCK.BOTTOM);
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.LEFT, themeBuilder);
 
     myDocker.on(wcDocker.EVENT.LOADED, function() {
       myDocker.finishLoading(500);

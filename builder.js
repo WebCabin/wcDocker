@@ -239,10 +239,20 @@ wcThemeBuilder.prototype = {
     };
   },
 
-  build: function() {
-    var data = {};
-    for (var i = 0; i < this._controls.length; ++i) {
-      var control = this._controls[i];
+  build: function(data, controls) {
+    var isRoot = false;
+    if (!data) {
+      data = {};
+      controls = this._controls;
+      isRoot = true;
+    }
+
+    for (var i = 0; i < controls.length; ++i) {
+      var control = controls[i];
+
+      if (control.controls) {
+        this.build(data, control.controls);
+      }
 
       if (!control.selector || typeof control.value !== 'string') {
         continue;
@@ -281,17 +291,19 @@ wcThemeBuilder.prototype = {
       }
     }
 
-    var themeData = '';
-    for (var selector in data) {
-      themeData += selector + ' {\n';
-      for (var i = 0; i < data[selector].length; ++i) {
-        var item = data[selector][i];
-        themeData += '  ' + item.key + ': ' + item.value + ';\n';
+    if (isRoot) {
+      var themeData = '';
+      for (var selector in data) {
+        themeData += selector + ' {\n';
+        for (var i = 0; i < data[selector].length; ++i) {
+          var item = data[selector][i];
+          themeData += '  ' + item.key + ': ' + item.value + ';\n';
+        }
+        themeData += '}\n\n';
       }
-      themeData += '}\n\n';
-    }
 
-    return themeData;
+      return themeData;
+    }
   },
 
   apply: function(themeData) {
@@ -342,11 +354,9 @@ wcThemeBuilder.prototype = {
 
     this._panel.on(wcDocker.EVENT.CUSTOM_TAB_CHANGED, function() {
       console.log('refreshing tabs');
-      setTimeout(function() {
-        for (var i = 0; i < self._frames.length; ++i) {
-          self._frames[i].update();
-        }
-      }, 0);
+      for (var i = 0; i < self._frames.length; ++i) {
+        self._frames[i].update();
+      }
     });
   },
 
@@ -437,7 +447,16 @@ wcThemeBuilder.prototype = {
               name: 'Normal State',
               create: this.addSpacer
             }, {
-              // Panel Button Normal Color
+              // Normal Button Text Color
+              selector: '.wcFrameButton',
+              elem: '<div class="wcFrameButton"></div>',
+              name: 'Button Text Color',
+              info: 'The normal text color of a panel button',
+              create: this.addColorControl,
+              attribute: 'color',
+              value: ''
+            }, {
+              // Normal Button Color
               selector: '.wcFrameButton',
               elem: '<div class="wcFrameButton"></div>',
               name: 'Button Color',
@@ -446,31 +465,31 @@ wcThemeBuilder.prototype = {
               attribute: 'background-color',
               value: ''
             }, {
-              // Button Border Size
+              // Normal Button Border Color
+              selector: '.wcFrameButton',
+              elem: '<div class="wcFrameButton"></div>',
+              name: 'Button Border Color',
+              info: 'The normal border color of a panel button',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }, {
+              // Normal Button Border Size
               selector: '.wcFrameButton',
               elem: '<div class="wcFrameButton"></div>',
               name: 'Button Border Size',
-              info: 'The size of the buttons border',
+              info: 'The normal border size of a panel button',
               create: this.addPixelControl,
               attribute: 'border-width',
               value: ''
             }, {
-              // Button Border Style
+              // Normal Button Border Style
               selector: '.wcFrameButton',
               elem: '<div class="wcFrameButton"></div>',
               name: 'Button Border Style',
-              info: 'The style of the buttons border',
+              info: 'The normal border style of a panel button',
               create: this.addListControl(['inset', 'solid', 'outset']),
               attribute: 'border-style',
-              value: ''
-            }, {
-              // Button Border Color
-              selector: '.wcFrameButton',
-              elem: '<div class="wcFrameButton"></div>',
-              name: 'Button Border Color',
-              info: 'The normal color of the buttons border',
-              create: this.addColorControl,
-              attribute: 'border-color',
               value: ''
             }]
           }, {
@@ -481,13 +500,49 @@ wcThemeBuilder.prototype = {
               name: 'Hover State',
               create: this.addSpacer
             }, {
-              // Panel Button Color
+              // Hover Button Text Color
               selector: '.wcFrameButton:hover, .wcFrameButtonHover',
               elem: '<div class="wcFrameButtonHover"></div>',
-              name: 'Hover Button Color',
+              name: 'Button Text Color',
+              info: 'The hover text color of a panel button',
+              create: this.addColorControl,
+              attribute: 'color',
+              value: ''
+            }, {
+              // Hover Button Color
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButtonHover"></div>',
+              name: 'Button Color',
               info: 'The hover color of a panel button',
               create: this.addColorControl,
               attribute: 'background-color',
+              value: ''
+            }, {
+              // Hover Button Border Color
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButtonHover"></div>',
+              name: 'Button Border Color',
+              info: 'The hover border color of a panel button',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }, {
+              // Hover Button Border Size
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButtonHover"></div>',
+              name: 'Button Border Size',
+              info: 'The hover border size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Hover Button Border Style
+              selector: '.wcFrameButton:hover, .wcFrameButtonHover',
+              elem: '<div class="wcFrameButtonHover"></div>',
+              name: 'Button Border Style',
+              info: 'The hover border style of a panel button',
+              create: this.addListControl(['inset', 'solid', 'outset']),
+              attribute: 'border-style',
               value: ''
             }]
           }, {
@@ -498,13 +553,49 @@ wcThemeBuilder.prototype = {
               name: 'Pressed State',
               create: this.addSpacer
             }, {
-              // Panel Button Color
+              // Pressed Button Text Color
               selector: '.wcFrameButton:active, .wcFrameButtonActive',
               elem: '<div class="wcFrameButtonActive"></div>',
-              name: 'Pressed Button Color',
+              name: 'Button Text Color',
+              info: 'The pressed text color of a panel button',
+              create: this.addColorControl,
+              attribute: 'color',
+              value: ''
+            }, {
+              // Pressed Button Color
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButtonActive"></div>',
+              name: 'Button Color',
               info: 'The pressed color of a panel button',
               create: this.addColorControl,
-              attribute: 'bacgkround-color',
+              attribute: 'background-color',
+              value: ''
+            }, {
+              // Pressed Button Border Color
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButtonActive"></div>',
+              name: 'Button Border Color',
+              info: 'The pressed border color of a panel button',
+              create: this.addColorControl,
+              attribute: 'border-color',
+              value: ''
+            }, {
+              // Pressed Button Border Size
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButtonActive"></div>',
+              name: 'Button Border Size',
+              info: 'The pressed border size of a panel button',
+              create: this.addPixelControl,
+              attribute: 'border-width',
+              value: ''
+            }, {
+              // Pressed Button Border Style
+              selector: '.wcFrameButton:active, .wcFrameButtonActive',
+              elem: '<div class="wcFrameButtonActive"></div>',
+              name: 'Button Border Style',
+              info: 'The pressed border style of a panel button',
+              create: this.addListControl(['inset', 'solid', 'outset']),
+              attribute: 'border-style',
               value: ''
             }]
           }]
