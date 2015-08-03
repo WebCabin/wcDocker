@@ -1188,7 +1188,7 @@ wcDocker.prototype = {
           },
           animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
           reposition: false,
-          autoHide: true,
+          // autoHide: true,
           zIndex: 200,
           items: items,
         };

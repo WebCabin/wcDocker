@@ -11,11 +11,11 @@
 }
 
 .wcFrameFlasher {
-  background-color: red;
+  background-color: rgba(255, 0, 0, 0.25);
 }
 
 .wcFrameShadower {
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .wcFrameTitleBar {
@@ -44,12 +44,12 @@
   font-size: 15px;
 }
 
-.wcFrameButton:hover {
+.wcFrameButton:hover, .wcFrameButtonHover {
   border: 2px outset #633;
   background-color: #684040;
 }
 
-.wcFrameButton:active {
+.wcFrameButton:active, .wcFrameButtonActive {
   border: 2px inset #A55;
   background-color: #822;
 }
@@ -104,17 +104,13 @@
   margin-right: 1px;
   margin-top: 5px;
   font-size: 15px;
-  -webkit-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
-  -moz-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
-  -ms-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
-  -o-box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
   box-shadow: inset 0px 2px 4px rgba(0,0,0,0.5);
   padding-left: 2px;
   padding-right: 2px;
   padding-bottom: 0px;
 }
 
-.wcPanelTab:hover {
+.wcPanelTab:hover, .wcPanelTabHover {
   background-color: #AA8080;
 }
 
@@ -127,7 +123,7 @@
   line-height: 18px;
 }
 
-.wcPanelTabActive:hover {
+.wcPanelTabActive:hover, .wcPanelTabActiveHover {
   background-color: #C66;
 }
 
@@ -136,24 +132,24 @@
   border-radius: 6px;
 }
 
-::-webkit-scrollbar {
+.wcScrollbar, ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
   background-color: #A55;
 }
 
-::-webkit-scrollbar-corner {
+.wcScrollbarCorner, ::-webkit-scrollbar-corner {
   background-color: #A55;
 }
 
-::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+.wcScrollbarTrack, ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb {
+.wcScrollbarThumb, ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
 }
 
 .wcMenuList, .context-menu-list {

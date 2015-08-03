@@ -56,10 +56,29 @@ wcTabFrame.prototype = {
   },
 
   /**
+   * Manually update the contents of this tab frame.
+   */
+  update: function() {
+    var scrollTop = this.$center.scrollTop();
+    this.__updateTabs();
+    this.$center.scrollTop(scrollTop);
+  },
+
+  /**
    * Destroys the widget.
    */
   destroy: function() {
     this.__destroy();
+  },
+
+  /**
+   * Gets the total number of tabs in this frame.
+   * @version 3.0.0
+   *
+   * @returns {Number}
+   */
+  tabCount: function() {
+    return this._layoutList.length;
   },
 
   /**
@@ -151,11 +170,12 @@ wcTabFrame.prototype = {
   /**
    * Gets, or Sets the currently visible tab page.
    *
-   * @param {Number} index - If supplied, sets the current tab page index.
+   * @param {Number} [index] - If supplied, sets the current tab page index.
+   * @param {Boolean} [scrollTo] - If true, will auto scroll the tab bar until the selected tab is visible.
    *
    * @returns {Number} - The index of the currently visible tab page.
    */
-  tab: function(index, autoFocus) {
+  tab: function(index, scrollTo) {
     if (typeof index !== 'undefined') {
       if (index > -1 && index < this._layoutList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
@@ -163,7 +183,7 @@ wcTabFrame.prototype = {
         this._curTab = index;
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + index + '"]').addClass('wcPanelTabActive');
         this.$center.children('.wcPanelTabContent[id="' + index + '"]').removeClass('wcPanelTabContentHidden');
-        this.__updateTabs(autoFocus);
+        this.__updateTabs(scrollTo);
 
         var name = this._layoutList[this._curTab].name;
         this._parent.__trigger(wcDocker.EVENT.CUSTOM_TAB_CHANGED, {obj: this, name: name, index: index});
@@ -284,7 +304,7 @@ wcTabFrame.prototype = {
   },
 
   /**
-   * Gets, or Sets whether overflow on a tab area is visible.
+   * Gets, or Sets whether overflow on a tab area is visible.<br>
    * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
    *
    * @param {Number} index        - The index of the tab page.
@@ -301,6 +321,49 @@ wcTabFrame.prototype = {
         this.__onTabChange();
       }
       return layout._overflowVisible;
+    }
+    return false;
+  },
+
+  /**
+   * Gets, or Sets whether the tab frame should fit to its contents.
+   * @version 3.0.0
+   *
+   * @param {Number} index  - The index of the tab page.
+   * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+   * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
+   *
+   * @returns {wcDocker~FitContents} - The current scrollable status of the tab page.
+   */
+  fitContents: function(index, x, y) {
+    if (index > -1 && index < this._layoutList.length) {
+      var layout = this._layoutList[index];
+
+      if (!layout.hasOwnProperty('_fitContents')) {
+        layout._fitContents = {
+          x: false,
+          y: false
+        };
+      }
+
+      var changed = false;
+      if (typeof x !== 'undefined') {
+        layout._fitContents.x = x;
+        changed = true;
+      }
+      if (typeof y !== 'undefined') {
+        layout._fitContents.y = y;
+        changed = true;
+      }
+
+      if (changed) {
+        this.__onTabChange();
+      }
+
+      return {
+        x: layout._fitContents.x,
+        y: layout._fitContents.y,
+      };
     }
     return false;
   },
@@ -380,12 +443,7 @@ wcTabFrame.prototype = {
     }
   },
 
-  // Updates the size of the frame.
-  update: function() {
-    this.__updateTabs();
-  },
-
-  __updateTabs: function(autoFocus) {
+  __updateTabs: function(scrollTo) {
     this.$tabScroll.empty();
 
     var getOffset = function($item) {
@@ -478,7 +536,7 @@ wcTabFrame.prototype = {
 
     var buttonSize = this.__onTabChange();
 
-    if (autoFocus) {
+    if (scrollTo) {
       for (var i = 0; i < tabPositions.length; ++i) {
         if (i === this._curTab) {
           var left = tabPositions[i];
@@ -565,14 +623,35 @@ wcTabFrame.prototype = {
         buttonSize += this.$tabRight.outerWidth() + this.$tabLeft.outerWidth();
       }
 
+      var fit = this.fitContents(this._curTab);
+      if (fit.x) {
+        var w = layout.$table.outerWidth();
+        if (this._tabOrientation === wcDocker.TAB.LEFT || this._tabOrientation === wcDocker.TAB.RIGHT) {
+          w += this.$tabScroll.height();
+        }
+        this.$container.css('width', w);
+      } else {
+        this.$container.css('width', '100%');
+      }
+
+      if (fit.y) {
+        var h = layout.$table.outerHeight();
+        if (this._tabOrientation === wcDocker.TAB.TOP || this._tabOrientation === wcDocker.TAB.BOTTOM) {
+          h += this.$tabScroll.height();
+        }
+        this.$container.css('height', h);
+      } else {
+        this.$container.css('height', '100%');
+      }
+
       switch (this._tabOrientation) {
         case wcDocker.TAB.RIGHT:
         case wcDocker.TAB.LEFT:
-          this.$tabBar.css('width', this.$center.height());
+          this.$tabBar.css('width', this.$center.height() || '100%');
           break;
         case wcDocker.TAB.TOP:
         case wcDocker.TAB.BOTTOM:
-          this.$tabBar.css('width', this.$center.width());
+          this.$tabBar.css('width', this.$center.width() || '100%');
         default:
           break;
       }
