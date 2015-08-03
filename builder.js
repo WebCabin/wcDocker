@@ -124,7 +124,14 @@ wcThemeBuilder.prototype = {
   },
 
   addTabFrame: function(layout, control, row) {
-    var $tabArea = $('<div style="width:100%;height:100%;"></div>');
+    var $tabArea = null;
+    if (control.stretch) {
+      $tabArea = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');
+      layout.addItem($tabArea, 0, row, 3).stretch('', '100%');
+    } else {
+      $tabArea = $('<div>');
+      layout.addItem($tabArea, 0, row, 3).css('height', 'auto');
+    }
 
     // layout.addItem($tabArea, 0, row, 3).css('height', 'fit');
 
@@ -134,12 +141,6 @@ wcThemeBuilder.prototype = {
 
     if (control.orientation) {
       frame.tabOrientation(control.orientation);
-    }
-
-    if (control.stretch) {
-      layout.addItem($tabArea, 0, row, 3).stretch('', '100%');
-    } else {
-      layout.addItem($tabArea, 0, row, 3).css('height', 'auto');
     }
 
     // Iterate through each tab item.
