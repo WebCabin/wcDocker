@@ -7813,7 +7813,7 @@ wcTabFrame.prototype = {
         }
         this.$container.css('width', w);
       } else {
-        this.$container.css('width', '100%');
+        this.$container.css('width', '');
       }
 
       if (fit.y) {
