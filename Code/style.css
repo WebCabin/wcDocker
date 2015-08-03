@@ -501,7 +501,9 @@ html, body {
 }
 
 .wcMenuSubMenu {
-  float: right;
+  position: absolute;
+  right: 3px;
+  top: 3px;
 }
 
 .wcIFrame, .wcIFrame iframe {
@@ -526,6 +528,10 @@ html, body {
   bottom: 0px;
   z-index: 2;
   display: none;
+}
+
+.wcDisableSelection .wcIFrameFocus {
+  display: block;
 }
 
 .wcDisableSelection .wcIFrameFocus {
@@ -569,12 +575,15 @@ html, body {
   cursor: move;
 }
 
-.wcLoadingBackground {
+.wcLoadingContainer, .wcLoadingBackground {
   position: absolute;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
+}
+
+.wcLoadingContainer {
   z-index: 10;
 }
 

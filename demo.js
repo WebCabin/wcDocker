@@ -6,7 +6,7 @@ $(document).ready(function() {
   // Create an instance of our docker window and assign it to the document.
   var myDocker = new wcDocker('.dockerContainer', {
     allowDrawers: true,
-    responseRate: 10,
+    responseRate: 10
   });
   if (myDocker) {
 
@@ -14,6 +14,8 @@ $(document).ready(function() {
     var _showingInfo  = true;
     var _savedLayout  = null;
     var _chatterIndex = 1;
+
+    myDocker.theme(_currentTheme);
 
     // A common function that uses the 'Info Panel' to show a given block of text.
     function showInfo(text) {
@@ -149,11 +151,17 @@ $(document).ready(function() {
         // Create our theme dropdown menu.
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
         var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
+        var $customOption     = $('<option class="custom" value="" style="display:none;">Custom</option>');
         $themeSelector.append('<option value="default">Default</option>');
         $themeSelector.append('<option value="bigRed">Big Red</option>');
         $themeSelector.append('<option value="shadow">Shadow</option>');
         $themeSelector.append('<option value="ideDark">ideDark</option>');
+        $themeSelector.append($customOption);
         $themeSelector.val(_currentTheme);
+
+        if ($('#wcCustomTheme').length) {
+          $customOption.show().attr('selected', 'selected');
+        }
 
         // Pre-configured layout configurations.
         var $saveButton       = $('<button style="width:100%;">Save Layout</button>');
@@ -178,14 +186,19 @@ $(document).ready(function() {
         // Bind an event to catch when the theme has been changed.
         $themeSelector.change(function() {
           _currentTheme = $themeSelector.find('option:selected').val();
-          myPanel.docker().theme(_currentTheme);
+          if (_currentTheme) {
+            myPanel.docker().theme(_currentTheme);
 
-          // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
-          $('.themeSelector').each(function() {
-            if (this !== $themeSelector[0]) {
-              $(this).val(_currentTheme);
-            }
-          });
+            // In case there are multiple control panels, make sure every theme selector are updated with the new theme.
+            $('.themeSelector').each(function() {
+              if (this !== $themeSelector[0]) {
+                $(this).val(_currentTheme);
+              }
+            });
+
+            $('option.custom').hide();
+            $('#wcCustomTheme').remove();
+          }
         });
 
         // Disable the restore layout button if there are no layouts to restore.
@@ -446,6 +459,7 @@ $(document).ready(function() {
     // --------------------------------------------------------------------------------
     // Register the tutorial panel that links a frame to our API tutorial documentation.
     myDocker.registerPanelType('Tutorial Panel', {
+      isPersistent: true,
       faicon: 'graduation-cap',
       onCreate: function(myPanel) {
         var $container = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');
@@ -456,9 +470,7 @@ $(document).ready(function() {
 
         myPanel.startLoading('Loading...');
         iFrame.onLoaded(function() {
-          setTimeout(function() {
-            myPanel.finishLoading();
-          }, 200);
+          myPanel.finishLoading(250);
         });
 
         // Create a panel button that shows information about this panel.
@@ -471,21 +483,39 @@ $(document).ready(function() {
     });
 
     // --------------------------------------------------------------------------------
+    // Register the theme builder panel.
+    myDocker.registerPanelType('Theme Builder', {
+      faicon: 'map',
+      onCreate: wcThemeBuilder
+    });
+
+    // --------------------------------------------------------------------------------
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
+    myDocker.startLoading('Loading...');
     var tutorialPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.LEFT);
 
-    var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h:'20%'});
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.RIGHT, null, {w:'25%'});
+    var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h: '20%'});
+    var themeBuilder = myDocker.addPanel('Theme Builder', wcDocker.DOCK.RIGHT, null, {w: '25%'});
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
     
     var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.RIGHT, chatPanel1);
+
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.STACKED, themeBuilder, {
+      tabOrientation: wcDocker.TAB.TOP
+    });
+
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.TOP, themeBuilder, {h: '200px'});
     var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
       tabOrientation: wcDocker.TAB.BOTTOM
     });
-    var batchPanel = myDocker.addPanel('Creation Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
-    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.BOTTOM, controlPanel);
+
+    var creationPanel = myDocker.addPanel('Creation Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
+
+    myDocker.on(wcDocker.EVENT.LOADED, function() {
+      myDocker.finishLoading(500);
+    });
   }
 });

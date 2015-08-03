@@ -16,9 +16,12 @@ wcDocker (Web Cabin Docker) is a responsive IDE interface designed for the devel
 ### [http://docker.api.webcabin.org](http://docker.api.webcabin.org) ###
   * View the API documentation.
 
+### [https://github.com/WebCabin/wcDocker](https://github.com/WebCabin/wcDocker) ###
+  * View the source code.
+
+
 ### [http://arpg.webcabin.org](http://arpg.webcabin.org) ###
   * Try out our upcoming project (currently in alpha development), a completely web based Action RPG Maker tool!  
-  
 
 ****
 ### Features ###
@@ -43,26 +46,26 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
  - Themes are no longer linked directly to the page using the &lt;link&gt; tag, instead use wcDocker.theme().
  - If your themes are not found in the "Themes" folder, you will need to assign the correct path when you construct your wcDocker instance.
 
-     ```
-     new wcDocker(domNode, {themePath: 'New/theme/folder'});
-     ```
+    ```
+    new wcDocker(domNode, {themePath: 'New/theme/folder'});
+    ```
  - All `wcDocker.DOCK`, `wcDocker.EVENT`, and `wcDocker.ORIENTATION` enumerations have changed slightly, instead of each being one variable, they are broken into objects.
  
-     ```
-     // OLD format...
-     wcDocker.DOCK_LEFT;
-     wcDocker.EVENT_BUTTON;
-     wcDocker.ORIENTATION_HORIZONTAL;
+    ```
+    // OLD format...
+    wcDocker.DOCK_LEFT;
+    wcDocker.EVENT_BUTTON;
+    wcDocker.ORIENTATION_HORIZONTAL;
      
-     // NEW format...
-     wcDocker.DOCK.LEFT;
-     wcDocker.EVENT.BUTTON;
-     wcDocker.ORIENTATION.HORIZONTAL;
+    // NEW format...
+    wcDocker.DOCK.LEFT;
+    wcDocker.EVENT.BUTTON;
+    wcDocker.ORIENTATION.HORIZONTAL;
 
-     // Notice how each used to be one variable name...
-     // Now they each are an object with the same enumeration inside them,
-     // just replace the first '_' with a '.' and they should work fine again!
-     ```
+    // Notice how each used to be one variable name...
+    // Now they each are an object with the same enumeration inside them,
+    // just replace the first '_' with a '.' and they should work fine again!
+    ```
 
  - `wcLayout's` are slightly different, `wcLayout.addItem()` and `wcLayout.item()` no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
  - The following functions are now `deprecated` and will be removed in an upcoming version:
@@ -72,20 +75,50 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 - **`Collapsible panels:`** Panels can now be collapsed to the side or bottom of the screen, where they become a slide-out drawer above the main layout.
 - **`Panel creation elements:`** Instead of relying on the context-menu controls to add new panels, you can now add the CSS class **`"wcCreatePanel"`** to any dom element along with the data attribute **`"panel"`** and wcDocker will treat it as a panel creation control. A user will then be able to drag-drop that element into their view to create new panels of the specified type.
 
-     ```
-     {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
-     ```
+    ```
+    {@lang xml}<span class="wcCreatePanel" data-panel="My Custom Panel Type">Create My Custom Panel Type</span>
+    ```
 - **`Tab orientation:`** Tab controls displayed on panels and the custom tab widget can now be oriented to the left, right, or bottom edges (browser must support css transforms).
 
-     ```
-     myDocker.addPanel('Some Panel', wcDocker.DOCK.STACKED, parentPanel, {tabOrientation: wcDocker.TAB.BOTTOM});
+    ```
+    myDocker.addPanel('Some Panel', wcDocker.DOCK.STACKED, parentPanel, {tabOrientation: wcDocker.TAB.BOTTOM});
 
-     var myCustomTabFrame = new wcTabFrame(domElem, myPanel);
-     myCustomTabFrame.tabOrientation(wcDocker.TAB.LEFT);
-     ```
-- Built in loading screens for both panels, and the entire window.
+    var myCustomTabFrame = new wcTabFrame(domElem, myPanel);
+    myCustomTabFrame.tabOrientation(wcDocker.TAB.LEFT);
+    ```
+- Built in loading screens for both panels (`wcPanel.startLoading()` and `wcPanel.finishLoading()`), and the entire window (`wcDocker.startLoading()` and `wcDocker.finishLoading()`), and also included a new `wcDocker.EVENT.LOADED` event that is triggered once all panels have been initialized and have finished their loading screens if they've started one.
 - Great improvements to splitter bar movement, moving one splitter no longer causes others to move (unless it explicitly pushes them).
 - Improvements to the wcLayout object, css changes to the table cells and rows are now persistent even if the grid size changes.
+- Tab widgets now only show on panel frames that contain more than one panel.
+- Panels can now be registered as `persistent`.
+  - When the user closes a persistent panel, it is hidden instead of destroyed.
+  - When the user adds that panel back into their view, if there are any previously hidden panels of that type, it will be shown instead of creating a new panel instance.
+    ```
+    myDocker.registerPanelType('persistent panel', {
+      isPersistent: true,
+      onCreate: function(myPanel) {
+        myPanel.on(wcDocker.EVENT.PERSISTENT_CLOSED, function() {
+          // The user has closed this panel, but instead of being destroyed, it is only hidden.
+        });
+        myPanel.on(wcDocker.EVENT.PERSISTENT_OPENED, function() {
+          // The user added this panel type, but actually only re-shown this persistent version of the panel instead.
+        });
+      }
+    });
+    ```
+- The collapse direction button on a panel can now be overridden if the built in calculation does not meet your needs. See [wcPanel#collapseDirection](http://docker.api.webcabin.org/wcPanel.html#collapseDirection) for more information.
+    ```
+    // You can override the direction with your own calculation function callback
+    myPanel.collapseDirection(function(bounds) {
+      return wcDocker.DOCK.LEFT;
+    });
+
+    // Or you can set it to a static direction
+    myPanel.collapseDirection(wcDocker.DOCK.RIGHT);
+
+    // Or you can restore it back to the default calculation
+    myPanel.collapseDirection(false);
+    ```
 
 #### Version: 2.2.0 ####
 - Separated the default theme out of `wcDocker.css` (now use `wcDocker.css` with `Themes/default.css`).

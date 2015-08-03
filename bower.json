@@ -30,7 +30,8 @@
   "dependencies": {
     "jquery": "1.11.1",
     "jQuery-contextMenu": "1.6.6",
-    "font-awesome": "4.2.0"
+    "font-awesome": "4.4.0",
+    "FileSaver": "master"
   },
   "license": "MIT"
 }

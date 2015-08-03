@@ -260,10 +260,14 @@ wcFrame.prototype = {
           this._curTab--;
         }
 
-        this._panelList[i].__container(null);
-        this._panelList[i]._parent = null;
+        // Only null out the container if it is still attached to this frame.
+        if (this._panelList[i]._parent === this) {
+          this._panelList[i].__container(null);
+          this._panelList[i]._parent = null;
+        }
 
         this._panelList.splice(i, 1);
+        panel._isVisible = false;
         break;
       }
     }
@@ -561,7 +565,7 @@ wcFrame.prototype = {
     });
 
     this._titleVisible = true;
-    this.$title.text('');
+    this.$title.html('');
 
     // Determine if the title and tabs are visible based on the panels inside.
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -605,7 +609,7 @@ wcFrame.prototype = {
       if (isVisible) {
         $tab && $tab.addClass('wcPanelTabActive');
         $tabContent.removeClass('wcPanelTabContentHidden');
-        this.$title.text(panel.title());
+        this.$title.html(panel.title());
         if (panel.$icon) {
           var $icon = panel.$icon.clone();
           this.$title.prepend($icon);
@@ -828,44 +832,68 @@ wcFrame.prototype = {
             this.$collapse.attr('title', 'Dock this collapsed panel back into the main layout.');
             buttonSize += this.$collapse.outerWidth();
           } else {
-            // Collapse
-            // Determine the direction to collapse based on the frame center.
-            var $inner = docker.$container;
-            if (!$.isEmptyObject(docker._collapser) && docker._collapser.hasOwnProperty(wcDocker.DOCK.RIGHT)) {
-              // Get the inner contents element not taken up by the collapsible drawers.
-              $inner = docker._collapser[wcDocker.DOCK.RIGHT]._parent.$pane[0];
+            var direction = wcDocker.DOCK.BOTTOM;
+            if (panel._collapseDirection === wcDocker.DOCK.LEFT ||
+                panel._collapseDirection === wcDocker.DOCK.RIGHT ||
+                panel._collapseDirection === wcDocker.DOCK.BOTTOM) {
+              // Static collapse direction.
+              direction = panel._collapseDirection;
+            } else {
+              // Determine the direction to collapse based on the frame center.
+              var $inner = docker.$container;
+              if (!$.isEmptyObject(docker._collapser) && docker._collapser.hasOwnProperty(wcDocker.DOCK.RIGHT)) {
+                // Get the inner contents element not taken up by the collapsible drawers.
+                $inner = docker._collapser[wcDocker.DOCK.RIGHT]._parent.$pane[0];
+              }
+
+              var outer = $inner.offset();
+              var bounds = this.$container.offset();
+              bounds.right  = (bounds.left + this.$container.width() - outer.left) / $inner.width();
+              bounds.bottom = (bounds.top + this.$container.height() - outer.top) / $inner.height();
+              bounds.top    = (bounds.top - outer.top) / $inner.height();
+              bounds.left   = (bounds.left - outer.left) / $inner.width();
+
+              if (typeof panel._collapseDirection === 'function') {
+                // Custom collapse handler.
+                direction = panel._collapseDirection(bounds);
+              } else {
+                // Default collapse calculation.
+                if (bounds.top > 0.5 && bounds.bottom > 0.95) {
+                  direction = wcDocker.DOCK.BOTTOM;
+                } else if (bounds.left <= 0.05) {
+                  direction = wcDocker.DOCK.LEFT;
+                } else if (bounds.right >= 0.95) {
+                  direction = wcDocker.DOCK.RIGHT;
+                } else if (bounds.bottom > 0.95) {
+                  direction = wcDocker.DOCK.BOTTOM;
+                }
+              }
             }
 
-            var outer = $inner.offset();
-            var center = this.$container.offset();
-            center.right  = (center.left + this.$container.width() - outer.left) / $inner.width();
-            center.bottom = (center.top + this.$container.height() - outer.top) / $inner.height();
-            center.top    = (center.top - outer.top) / $inner.height();
-            center.left   = (center.left - outer.left) / $inner.width();
-
-            var direction = '';
+            var directionLabel = '';
             var directionClass = '';
-            if (center.top > 0.05 && center.bottom > 0.95) {
-              direction = 'bottom.';
-              directionClass = 'wcCollapseBottom';
-            } else if (center.left <= 0.05) {
-              direction = 'left side.';
-              directionClass = 'wcCollapseLeft';
-            } else if (center.right >= 0.95) {
-              direction = 'right side.';
-              directionClass = 'wcCollapseRight';
-            } else if (center.bottom > 0.95) {
-              direction = 'bottom.';
-              directionClass = 'wcCollapseBottom';
+            switch (direction) {
+              case wcDocker.DOCK.LEFT:
+                directionLabel = 'left side.';
+                directionClass = 'wcCollapseLeft';
+                break;
+              case wcDocker.DOCK.RIGHT:
+                directionLabel = 'right side.';
+                directionClass = 'wcCollapseRight';
+                break;
+              case wcDocker.DOCK.BOTTOM:
+                directionLabel = 'bottom.';
+                directionClass = 'wcCollapseBottom';
+                break;
             }
 
-            if (direction) {
+            if (directionLabel) {
               var $icon = this.$collapse.children('div');
               $icon[0].className = 'fa fa-sign-in';
               $icon.addClass(directionClass);
               $icon.addClass('wcCollapsible');
               this.$collapse.show();
-              this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
+              this.$collapse.attr('title', 'Collapse this panel into the ' + directionLabel);
               buttonSize += this.$collapse.outerWidth();
             }
           }
@@ -956,13 +984,13 @@ wcFrame.prototype = {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);
       $flasher.animate({
-        opacity: 0.25,
+        opacity: 1,
       },100)
       .animate({
         opacity: 0.0,
       },100)
       .animate({
-        opacity: 0.1,
+        opacity: 0.6,
       },50)
       .animate({
         opacity: 0.0,

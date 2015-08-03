@@ -42,6 +42,7 @@ function wcDocker(container, options) {
   this._frameList = [];
   this._floatingList = [];
   this._modalList = [];
+  this._persistentList = [];
   this._focusFrame = null;
   this._placeholderPanel = null;
   this._contextTimer = 0;
@@ -77,7 +78,9 @@ function wcDocker(container, options) {
     allowContextMenu: true,
     hideOnResize: false,
     allowCollapse: true,
-    responseRate: 10
+    responseRate: 10,
+    edgeAnchorSize: 50,
+    panelAnchorSize: '15%'
   };
 
   this._options = {};
@@ -121,37 +124,64 @@ wcDocker.DOCK = {
 wcDocker.EVENT = {
   /** When the panel is initialized */ 
   INIT                 : 'panelInit',
+  /** When all panels have finished loading */
+  LOADED               : 'dockerLoaded',
   /** When the panel is updated */
   UPDATED              : 'panelUpdated',
-  /** When the panel has changed its visibility */
+  /**
+   * When the panel has changed its visibility<br>
+   * This event is called with the current visibility state as the first parameter.
+   */
   VISIBILITY_CHANGED   : 'panelVisibilityChanged',
   /** When the user begins moving any panel from its current docked position */
   BEGIN_DOCK           : 'panelBeginDock',
   /** When the user finishes moving or docking a panel */
   END_DOCK             : 'panelEndDock',
-  /** When the user brings this panel into focus */
+  /** When the user brings any panel within a tabbed frame into focus */
   GAIN_FOCUS           : 'panelGainFocus',
-  /** When the user leaves focus on this panel */
+  /** When the user leaves focus on any panel within a tabbed frame */
   LOST_FOCUS           : 'panelLostFocus',
   /** When the panel is being closed */
   CLOSED               : 'panelClosed',
+  /** When a persistent panel is being hidden */
+  PERSISTENT_CLOSED    : 'panelPersistentClosed',
+  /** When a persistent panel is being shown */
+  PERSISTENT_OPENED    : 'panelPersistentOpened',
   /** When a custom button is clicked, See [wcPanel.addButton]{@link wcPanel#addButton} */
   BUTTON               : 'panelButton',
   /** When the panel has moved from floating to a docked position */
   ATTACHED             : 'panelAttached',
   /** When the panel has moved from a docked position to floating */
   DETACHED             : 'panelDetached',
-  /** When the user has started moving the panel (top-left coordinates changed) */
+  /**
+   * When the user has started moving the panel (top-left coordinates changed)<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVE_STARTED         : 'panelMoveStarted',
-  /** When the user has finished moving the panel */
+  /**
+   * When the user has finished moving the panel<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVE_ENDED           : 'panelMoveEnded',
-  /** When the top-left coordinates of the panel has changed */
+  /**
+   * When the top-left coordinates of the panel has changed<br>
+   * This event is called with an object of the current {x, y} position as the first parameter.
+   */
   MOVED                : 'panelMoved',
-  /** When the user has started resizing the panel (width or height changed) */
+  /**
+   * When the user has started resizing the panel (width or height changed)<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZE_STARTED       : 'panelResizeStarted',
-  /** When the user has finished resizing the panel */
+  /**
+   * When the user has finished resizing the panel<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZE_ENDED         : 'panelResizeEnded',
-  /** When the panels width or height has changed */
+  /**
+   * When the panels width or height has changed<br>
+   * This event is called with an object of the current {width, height} size as the first parameter.
+   */
   RESIZED              : 'panelResized',
   /** When the contents of the panel has been scrolled */
   SCROLLED             : 'panelScrolled',
@@ -269,7 +299,7 @@ wcDocker.prototype = {
    * @version 3.0.0
    * @param {String} name                       - The name identifier for the new panel type.
    * @param {wcDocker~registerOptions} options  - An options object for describing the panel type.
-   * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options]{@link wcDocker~registerOptions} instead.
+   * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options.isPrivate]{@link wcDocker~registerOptions} instead.
    * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
    */
   registerPanelType: function(name, optionsOrCreateFunc, isPrivate) {
@@ -346,30 +376,45 @@ wcDocker.prototype = {
    * @returns {wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
    */
   addPanel: function(typeName, location, targetPanel, options) {
+    function __addPanel(panel) {
+      if (location === wcDocker.DOCK.STACKED) {
+        this.__addPanelGrouped(panel, targetPanel, options);
+      } else {
+        this.__addPanelAlone(panel, location, targetPanel, options);
+      }
+
+      if (this._placeholderPanel && panel.moveable() &&
+          location !== wcDocker.DOCK.FLOAT &&
+          location !== wcDocker.DOCK.MODAL) {
+        if (this.removePanel(this._placeholderPanel)) {
+          this._placeholderPanel = null;
+        }
+      }
+
+      this.__forceUpdate();
+    }
+
+    // Find out if we have a persistent version of this panel type first.
+    for (var a = 0; a < this._persistentList.length; ++a) {
+      if (this._persistentList[a]._type === typeName) {
+        var panel = this._persistentList.splice(a, 1)[0];
+        __addPanel.call(this, panel);
+        panel.__trigger(wcDocker.EVENT.PERSISTENT_OPENED);
+        return panel;
+      }
+    }
+
     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
       if (this._dockPanelTypeList[i].name === typeName) {
         var panelType = this._dockPanelTypeList[i];
+
         var panel = new wcPanel(typeName, panelType.options);
         panel._parent = this;
         panel.__container(this.$transition);
         var panelOptions = (panelType.options && panelType.options.options) || {};
         panel._panelObject = new panelType.options.onCreate(panel, panelOptions);
 
-        if (location === wcDocker.DOCK.STACKED) {
-          this.__addPanelGrouped(panel, targetPanel, options);
-        } else {
-          this.__addPanelAlone(panel, location, targetPanel, options);
-        }
-
-        if (this._placeholderPanel && panel.moveable() &&
-            location !== wcDocker.DOCK.FLOAT &&
-            location !== wcDocker.DOCK.MODAL) {
-          if (this.removePanel(this._placeholderPanel)) {
-            this._placeholderPanel = null;
-          }
-        }
-
-        this.__forceUpdate();
+        __addPanel.call(this, panel);
         return panel;
       }
     }
@@ -379,9 +424,10 @@ wcDocker.prototype = {
   /**
    * Removes a docked panel from the window.
    * @param {wcPanel} panel - The panel to remove.
+   * @param {Boolean} dontDestroy - If true, the panel itself will not be destroyed.
    * @returns {Boolean} - Success or failure.
    */
-  removePanel: function(panel) {
+  removePanel: function(panel, dontDestroy) {
     if (!panel) {
       return false;
     }
@@ -391,7 +437,14 @@ wcDocker.prototype = {
 
     var parentFrame = panel._parent;
     if (parentFrame instanceof wcFrame) {
-      panel.__trigger(wcDocker.EVENT.CLOSED);
+      if (dontDestroy) {
+        // Keep the panel in a hidden transition container so as to not
+        // destroy any event handlers that may be on it.
+        panel.__container(this.$transition);
+        panel._parent = null;
+      } else {
+        panel.__trigger(wcDocker.EVENT.CLOSED);
+      }
 
       // If no more panels remain in this frame, remove the frame.
       if (!parentFrame.removePanel(panel) && !parentFrame.isCollapser()) {
@@ -399,6 +452,12 @@ wcDocker.prototype = {
         // the space until another one is created.
         if (lastPanel) {
           this.__addPlaceholder(parentFrame);
+
+          if (!dontDestroy) {
+            panel.__destroy();
+          } else {
+            panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
+          }
           return true;
         }
 
@@ -468,9 +527,15 @@ wcDocker.prototype = {
         if (this._focusFrame === parentFrame) {
           this._focusFrame = null;
         }
+
         parentFrame.__destroy();
       }
-      panel.__destroy();
+
+      if (!dontDestroy) {
+        panel.__destroy();
+      } else {
+        panel.__trigger(wcDocker.EVENT.PERSISTENT_CLOSED);
+      }
       return true;
     }
     return false;
@@ -552,6 +617,10 @@ wcDocker.prototype = {
             } else {
               other = parentSplitter.pane(1);
               parentSplitter._pane[1] = null;
+            }
+
+            if (targetPanel === parentSplitter) {
+              targetPanel._shift = other;
             }
 
             // Keep the item in a hidden transition container so as to not
@@ -650,15 +719,21 @@ wcDocker.prototype = {
   /**
    * Shows the loading screen.
    * @param {String} [label] - An optional label to display.
-   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
+   * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
+   * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
    */
-  startLoading: function(label, isSolid) {
+  startLoading: function(label, opacity, textOpacity) {
     if (!this.$loading) {
-      this.$loading = $('<div class="wcLoadingBackground"></div>');
-      if (isSolid) {
-        this.$loading.addClass('wcLoadingBackgroundSolid');
-      }
+      this.$loading = $('<div class="wcLoadingContainer"></div>');
       this.$outer.append(this.$loading);
+
+      var $background = $('<div class="wcLoadingBackground"></div>');
+      if (typeof opacity !== 'number') {
+        opacity = 0.4;
+      }
+
+      $background.css('opacity', opacity);
+      this.$loading.append($background);
 
       var $icon = $('<div class="wcLoadingIconContainer"><i class="wcLoadingIcon ' + this._options.loadingClass + '"></i></div>');
       this.$loading.append($icon);
@@ -667,16 +742,35 @@ wcDocker.prototype = {
         var $label = $('<span class="wcLoadingLabel">' + label + '</span>');
         this.$loading.append($label);
       }
+
+      if (typeof textOpacity !== 'number') {
+        textOpacity = 1;
+      }
+
+      $icon.css('opacity', textOpacity);
+
+      if ($label) {
+        $label.css('opacity', textOpacity);
+      }
     }
   },
 
   /**
    * Hides the loading screen.
+   * @param {Number} [fadeDuration=0] - The fade out duration for the loading screen.
    */
-  finishLoading: function() {
+  finishLoading: function(fadeDuration) {
     if (this.$loading) {
-      this.$loading.remove();
-      this.$loading = null;
+      if (fadeDuration > 0) {
+        var self = this;
+        this.$loading.fadeOut(fadeDuration, function() {
+          self.$loading.remove();
+          self.$loading = null;
+        });
+      } else {
+        this.$loading.remove();
+        this.$loading = null;
+      }
     }
   },
 
@@ -1026,7 +1120,11 @@ wcDocker.prototype = {
             } else {
               if (self._ghost && (myFrame)) {
                 var anchor = self._ghost.anchor();
-                var newPanel = self.addPanel(key, anchor.loc, myFrame.panel(), self._ghost.rect());
+                var target = myFrame.panel();
+                if (anchor.item) {
+                  target = anchor.item._parent;
+                }
+                var newPanel = self.addPanel(key, anchor.loc, target, self._ghost.rect());
                 newPanel.focus();
               }
             }
@@ -1090,7 +1188,7 @@ wcDocker.prototype = {
           },
           animation: {duration: 250, show: 'fadeIn', hide: 'fadeOut'},
           reposition: false,
-          autoHide: true,
+          // autoHide: true,
           zIndex: 200,
           items: items,
         };
@@ -1325,7 +1423,7 @@ wcDocker.prototype = {
       if (mouse.which === 3) {
         return true;
       }
-      self.$container.removeClass('wcDisableSelection');
+      $('body').removeClass('wcDisableSelection');
       if (self._draggingFrame) {
         for (var i = 0; i < self._frameList.length; ++i) {
           self._frameList[i].__shadow(false);
@@ -1367,8 +1465,10 @@ wcDocker.prototype = {
             if (anchor.tab && anchor.item._parent._parent == self._draggingFrame) {
               self._draggingFrame.tabOrientation(anchor.tab);
             } else {
-              var index = parseInt($(self._draggingFrameTab).attr('id'));
-              if (!self._draggingFrameTab) {
+              var index = 0;
+              if (self._draggingFrameTab) {
+                index = parseInt($(self._draggingFrameTab).attr('id'));
+              } else {
                 self._draggingFrame.panel(0);
               }
               var panel;
@@ -1396,7 +1496,7 @@ wcDocker.prototype = {
               } else {
                 movingPanel = self._draggingFrame.panel();
               }
-              self.movePanel(movingPanel, anchor.loc, panel, self._ghost.rect());
+              panel = self.movePanel(movingPanel, anchor.loc, panel, self._ghost.rect());
               panel._parent.panel(panel._parent._panelList.length-1, true);
               // Dragging the entire frame.
               if (!self._draggingFrameTab) {
@@ -1426,7 +1526,11 @@ wcDocker.prototype = {
           var target = null;
           if (anchor) {
             loc = anchor.loc;
-            target = anchor.panel;
+            if (anchor.item) {
+              target = anchor.item._parent;
+            } else {
+              target = anchor.panel;
+            }
           }
           self.addPanel(self._creatingPanel, loc, target, self._ghost.rect());
         }
@@ -1494,9 +1598,11 @@ wcDocker.prototype = {
         self._draggingFrame.__resize(self._draggingFrameSizer, mouse);
         self._draggingFrame.__update();
       } else if (self._draggingCustomTabFrame) {
-        var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
-        if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
-          self._draggingFrameTab = self._draggingCustomTabFrame.moveTab(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
+        if (self._draggingCustomTabFrame.moveable()) {
+          var $hoverTab = $(event.target).hasClass('wcPanelTab')? $(event.target): $(event.target).parents('.wcPanelTab');
+          if (self._draggingFrameTab && $hoverTab && $hoverTab.length && self._draggingFrameTab !== event.target) {
+            self._draggingFrameTab = self._draggingCustomTabFrame.moveTab(parseInt($(self._draggingFrameTab).attr('id')), parseInt($hoverTab.attr('id')));
+          }
         }
       } else if (self._ghost) {
         if (self._draggingFrame) {
@@ -1589,12 +1695,12 @@ wcDocker.prototype = {
 
     // on mousedown for .wcFrameButtonBar > .wcFrameButton
     function __onMouseSelectionBlocker() {
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
     };
 
     // on click for .wcCustomTab .wcFrameButton
     function __onClickCustomTabButton(event) {
-      self.$container.removeClass('wcDisableSelection');
+      $('body').removeClass('wcDisableSelection');
       for (var i = 0; i < self._tabList.length; ++i) {
         var customTab = self._tabList[i];
         if (customTab.$close[0] === this) {
@@ -1624,12 +1730,20 @@ wcDocker.prototype = {
 
     // on click for .wcFrameButtonBar > .wcFrameButton
     function __onClickPanelButton() {
-      self.$container.removeClass('wcDisableSelection');
+      $('body').removeClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         var frame = self._frameList[i];
         if (frame.$close[0] === this) {
           var panel = frame.panel();
-          self.removePanel(panel);
+
+          // If the panel is persistent, instead of destroying it, add it to a persistent list instead.
+          var dontDestroy = false;
+          var panelOptions = self.panelTypeInfo(panel._type);
+          if (panelOptions && panelOptions.isPersistent) {
+            dontDestroy = true;
+            self._persistentList.push(panel);
+          }
+          self.removePanel(panel, dontDestroy);
           self.__update();
           return;
         }
@@ -1736,7 +1850,7 @@ wcDocker.prototype = {
         return true;
       }
 
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
       for (var i = 0; i < self._splitterList.length; ++i) {
         if (self._splitterList[i].$bar[0] === this) {
           self._draggingSplitter = self._splitterList[i];
@@ -1760,7 +1874,7 @@ wcDocker.prototype = {
         return true;
       }
       
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$titleBar[0] == this ||
             self._frameList[i].$tabBar[0] == this) {
@@ -1847,7 +1961,7 @@ wcDocker.prototype = {
       if (mouse.which === 3) {
         return true;
       }
-      self.$container.addClass('wcDisableSelection');
+      $('body').addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i]._isFloating) {
           if (self._frameList[i].$top[0] == this) {
@@ -1907,7 +2021,7 @@ wcDocker.prototype = {
           w: 500,
           h: 500,
         };
-        self.$container.addClass('wcDisableSelection');
+        $('body').addClass('wcDisableSelection');
         self._ghost = new wcGhost(rect, mouse, self);
         self._ghost.update(mouse);
         self._ghost.anchor(mouse, self._ghost.anchor());
@@ -1959,6 +2073,38 @@ wcDocker.prototype = {
         }
       }
     };
+  },
+
+  // Test for load completion.
+  __testLoadFinished: function() {
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        // Skip if any panels are not initialized yet.
+        if (panel._isVisible && !panel._initialized) {
+          return;
+        }
+
+        // Skip if any panels still have a loading screen.
+        if (panel.$loading) {
+          return;
+        }
+      }
+    }
+
+    // If we reach this point, all existing panels are initialized and loaded!
+    this.trigger(wcDocker.EVENT.LOADED);
+
+    // Now unregister all loaded events so they do not fire again.
+    this.off(wcDocker.EVENT.LOADED);
+    for (var i = 0; i < this._frameList.length; ++i) {
+      var frame = this._frameList[i];
+      for (var a = 0; a < frame._panelList.length; ++a) {
+        var panel = frame._panelList[a];
+        panel.off(wcDocker.EVENT.LOADED);
+      }
+    }
   },
 
   // Test for browser compatability issues.
@@ -2046,18 +2192,11 @@ wcDocker.prototype = {
   },
 
   /*
-   * Sets up the collapsers for the panel.<br>
-   * <b>Note: </b> This should be called AFTER you have initialized your panel layout, but BEFORE you add
-   * any static panels that you do not wish to be overlapped by the collapsers (such as file menu panels).
+   * Searches docked panels and splitters for a container that is within any static areas.
    */
-  __initCollapsers: function() {
-    // Initialize collapsers if it is enabled and not already initialized.
-    if (!this.isCollapseEnabled() || !$.isEmptyObject(this._collapser)) {
-      return;
-    }
-
+  __findInner: function() {
     function isPaneStatic(pane) {
-      if (pane && pane instanceof wcFrame && pane.panel() && !pane.panel().moveable()) {
+      if (pane && (pane instanceof wcFrame && pane.panel() && !pane.panel().moveable()) || (pane instanceof wcCollapser)) {
         return true;
       }
       return false;
@@ -2080,6 +2219,21 @@ wcDocker.prototype = {
       }
     }
 
+    return parent;
+  },
+
+  /*
+   * Sets up the collapsers for the panel.<br>
+   * <b>Note: </b> This should be called AFTER you have initialized your panel layout, but BEFORE you add
+   * any static panels that you do not wish to be overlapped by the collapsers (such as file menu panels).
+   */
+  __initCollapsers: function() {
+    // Initialize collapsers if it is enabled and not already initialized.
+    if (!this.isCollapseEnabled() || !$.isEmptyObject(this._collapser)) {
+      return;
+    }
+
+    var parent = this.__findInner();
     function __createCollapser(location) {
       this._collapser[location] = this.__addCollapser(location, parent);
       parent = this._collapser[location]._parent;
@@ -2164,12 +2318,14 @@ wcDocker.prototype = {
         this._focusFrame.$frame.removeClass('wcFloatingFocus');
       }
 
-      this._focusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
-      if (this._focusFrame.isCollapser() && differentFrames) {
-        this._focusFrame.collapse();
-        this._focusFrame.panel(-1);
-      }
+      var oldFocusFrame = this._focusFrame;
       this._focusFrame = null;
+
+      oldFocusFrame.__trigger(wcDocker.EVENT.LOST_FOCUS);
+      if (oldFocusFrame.isCollapser() && differentFrames) {
+        oldFocusFrame.collapse();
+        oldFocusFrame.panel(-1);
+      }
     }
 
     this._focusFrame = frame;
@@ -2320,6 +2476,12 @@ wcDocker.prototype = {
   //    targetPanel   An optional panel to 'split', if not supplied the
   //                  new panel will split the center window.
   __addPanelAlone: function(panel, location, targetPanel, options) {
+    if (targetPanel && targetPanel._shift) {
+      var target = targetPanel;
+      targetPanel = targetPanel._shift;
+      target._shift = undefined;
+    }
+
     if (options) {
       var width = this.$container.width();
       var height = this.$container.height();
@@ -2658,6 +2820,11 @@ function wcGhost(rect, mouse, docker) {
   this._anchorMouse = false;
   this._anchor = null;
   this._docker = docker;
+
+  this._outer = docker.__findInner();
+  if (this._outer instanceof wcSplitter) {
+    this._inner = this._outer.right();
+  }
 
   this.__init(rect, mouse);
 };
@@ -3250,9 +3417,16 @@ wcLayout.prototype = {
 
   // Checks if the mouse is in a valid anchor position for nesting another widget.
   // Params:
-  //    mouse     The current mouse position.
-  //    same      Whether the moving frame and this one are the same.
+  //    mouse                 The current mouse position.
+  //    same                  Whether we are hovering over the same panel that is being moved.
+  //    ghost                 An instance to the ghost object.
+  //    canSplit              Whether the original panel can be split.
+  //    $elem                 The container element for the target panel.
+  //    title                 Whether the panel has a title bar visible.
+  //    isTopper              Whether the item being dragged is the top title bar, as apposed to dragging a side or bottom tab/bar.
+  //    forceTabOrientation   Force a specific tab orientation.
   __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation) {
+    var docker = this._parent.docker();
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
     var offset = $elem.offset();
@@ -3260,6 +3434,30 @@ wcLayout.prototype = {
     if (!title) {
       titleSize = 0;
     }
+
+    function __getAnchorSizes(value, w, h) {
+      if (typeof value === 'number' || (typeof value === 'string' && value.indexOf('px', value.length - 2) !== -1)) {
+        // Pixel sizing.
+        value = parseInt(value);
+        return {
+          x: value,
+          y: value
+        };
+      } else if (typeof value === 'string' && value.indexOf('%', value.length - 1) !== -1) {
+        value = parseInt(value) / 100;
+        // Percentage sizing.
+        return {
+          x: w * value,
+          y: h * value
+        };
+      } else {
+        // Invalid value.
+        return {x: 0, y: 0};
+      }
+    }
+
+    var edgeAnchor  = __getAnchorSizes(docker._options.edgeAnchorSize, docker.$container.outerWidth(), docker.$container.outerHeight());
+    var panelAnchor = __getAnchorSizes(docker._options.panelAnchorSize, width, height);
 
     // If the target panel has a title, hovering over it (on all sides) will cause stacking
     // and also change the orientation of the tabs (if enabled).
@@ -3278,12 +3476,12 @@ wcLayout.prototype = {
           loc: wcDocker.DOCK.STACKED,
           tab: wcDocker.TAB.TOP,
           item: this,
-          self: same === wcDocker.TAB.TOP || isTopper,
+          self: same === wcDocker.TAB.TOP || (isTopper && same)
         });
         return true;
       }
       // Any other tab orientation is only valid if tab orientation is enabled.
-      else if (this._parent.docker()._canOrientTabs) {
+      else if (docker._canOrientTabs) {
         // Bottom bar
         if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.BOTTOM) &&
             mouse.y >= offset.top + height - titleSize && mouse.y <= offset.top + height &&
@@ -3298,7 +3496,7 @@ wcLayout.prototype = {
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.BOTTOM,
             item: this,
-            self: same === wcDocker.TAB.BOTTOM,
+            self: same === wcDocker.TAB.BOTTOM
           });
           return true;
         }
@@ -3316,7 +3514,7 @@ wcLayout.prototype = {
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.LEFT,
             item: this,
-            self: same === wcDocker.TAB.LEFT,
+            self: same === wcDocker.TAB.LEFT
           });
           return true;
         }
@@ -3334,10 +3532,74 @@ wcLayout.prototype = {
             loc: wcDocker.DOCK.STACKED,
             tab: wcDocker.TAB.RIGHT,
             item: this,
-            self: same === wcDocker.TAB.RIGHT,
+            self: same === wcDocker.TAB.RIGHT
           });
           return true;
         }
+      }
+    }
+
+    // Test for edge anchoring.
+    if (ghost._outer) {
+      var outerWidth  = ghost._outer.$container.outerWidth();
+      var outerHeight = ghost._outer.$container.outerHeight();
+      var outerOffset = ghost._outer.$container.offset();
+
+      // Left edge
+      if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
+          mouse.x >= outerOffset.left + titleSize && mouse.x <= outerOffset.left + titleSize + edgeAnchor.x) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.LEFT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Right edge
+      else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
+          mouse.x >= outerOffset.left + outerWidth - edgeAnchor.x - titleSize && mouse.x <= outerOffset.left + outerWidth - titleSize) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left + outerWidth - (outerWidth/3) - 2,
+          y: outerOffset.top-2,
+          w: outerWidth/3,
+          h: outerHeight,
+          loc: wcDocker.DOCK.RIGHT,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Top edge
+      else if (mouse.y >= outerOffset.top + titleSize && mouse.y <= outerOffset.top + titleSize + edgeAnchor.y &&
+          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top-2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.TOP,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
+      }
+      // Bottom edge
+      else if (mouse.y >= outerOffset.top + outerHeight - titleSize - edgeAnchor.y && mouse.y <= outerOffset.top + outerHeight - titleSize &&
+          mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
+        ghost.anchor(mouse, {
+          x: outerOffset.left-2,
+          y: outerOffset.top + outerHeight - (outerHeight/3) - 2,
+          w: outerWidth,
+          h: outerHeight/3,
+          loc: wcDocker.DOCK.BOTTOM,
+          item: ghost._inner,
+          self: false
+        });
+        return true;
       }
     }
 
@@ -3354,14 +3616,14 @@ wcLayout.prototype = {
         h: height,
         loc: wcDocker.DOCK.TOP,
         item: this,
-        self: false,
+        self: false
       });
       return true;
     }
 
     if (width < height) {
       // Top docking.
-      if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
+      if (mouse.y >= offset.top && mouse.y <= offset.top + titleSize + panelAnchor.y &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left-2,
@@ -3370,13 +3632,13 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.TOP,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
 
       // Bottom side docking.
-      if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
+      if (mouse.y >= offset.top + height - panelAnchor.y - titleSize && mouse.y <= offset.top + height &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left-2,
@@ -3385,7 +3647,7 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.BOTTOM,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -3393,7 +3655,7 @@ wcLayout.prototype = {
 
     // Left side docking
     if (mouse.y >= offset.top && mouse.y <= offset.top + height) {
-      if (mouse.x >= offset.left && mouse.x <= offset.left + width*0.25) {
+      if (mouse.x >= offset.left && mouse.x <= offset.left + panelAnchor.x + titleSize) {
         ghost.anchor(mouse, {
           x: offset.left-2,
           y: offset.top-2,
@@ -3401,13 +3663,13 @@ wcLayout.prototype = {
           h: height,
           loc: wcDocker.DOCK.LEFT,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
 
       // Right side docking
-      if (mouse.x >= offset.left + width*0.75 && mouse.x <= offset.left + width) {
+      if (mouse.x >= offset.left + width - panelAnchor.x - titleSize && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left + width*0.5-2,
           y: offset.top-2,
@@ -3415,7 +3677,7 @@ wcLayout.prototype = {
           h: height,
           loc: wcDocker.DOCK.RIGHT,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -3423,7 +3685,7 @@ wcLayout.prototype = {
 
     if (width >= height) {
       // Top docking.
-      if (mouse.y >= offset.top && mouse.y <= offset.top + height*0.25 &&
+      if (mouse.y >= offset.top && mouse.y <= offset.top + panelAnchor.y + titleSize &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left-2,
@@ -3432,13 +3694,13 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.TOP,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
 
       // Bottom side docking.
-      if (mouse.y >= offset.top + height*0.75 && mouse.y <= offset.top + height &&
+      if (mouse.y >= offset.top + height - panelAnchor.y - titleSize && mouse.y <= offset.top + height &&
           mouse.x >= offset.left && mouse.x <= offset.left + width) {
         ghost.anchor(mouse, {
           x: offset.left-2,
@@ -3447,7 +3709,7 @@ wcLayout.prototype = {
           h: height*0.5,
           loc: wcDocker.DOCK.BOTTOM,
           item: this,
-          self: false,
+          self: false
         });
         return true;
       }
@@ -3458,7 +3720,6 @@ wcLayout.prototype = {
   // Gets, or Sets a new container for this layout.
   // Params:
   //    $container          If supplied, sets a new container for this layout.
-  //    parent              If supplied, sets a new parent for this layout.
   // Returns:
   //    JQuery collection   The current container.
   __container: function($container) {
@@ -3522,6 +3783,7 @@ function wcPanel(type, options) {
 
   this._panelObject = null;
   this._initialized = false;
+  this._collapseDirection = undefined;
 
   this._type = type;
   this._title = type;
@@ -3617,21 +3879,25 @@ wcPanel.prototype = {
   /**
    * Gets, or Sets the title for this panel.
    * Titles appear in the tab widget associated with the panel.
-   * @param {String|Boolean} title - If supplied, sets the new title. If false, the title bar will be removed.
+   * @param {String|Boolean} title - If supplied, sets the new title (this can be html text). If false, the title bar will be removed.
    * @returns {String|Boolean} - The current title.
    */
   title: function(title) {
     if (typeof title !== 'undefined') {
       if (title === false) {
         this._titleVisible = false;
-        this.$titleText.text(this._type);
+        this.$titleText.html(this._type);
       } else {
         this._title = title;
-        this.$titleText.text(title);
+        this.$titleText.html(title);
       }
 
       if (this.$icon) {
         this.$titleText.prepend(this.$icon);
+      }
+
+      if (this._parent instanceof wcFrame) {
+        this._parent.__updateTabs();
       }
     }
 
@@ -3666,7 +3932,7 @@ wcPanel.prototype = {
     if (docker) {
       docker.__focus(this._parent, flash);
       for (var i = 0; i < this._parent._panelList.length; ++i) {
-        if (this._parent._panelList[i] === this) {
+        if (this._parent._panelList[i] === this && this._parent._curTab !== i) {
           this._parent.panel(i);
           break;
         }
@@ -3675,11 +3941,49 @@ wcPanel.prototype = {
   },
 
   /**
+   * @callback wcPanel~CollapseDirection
+   * @see wcPanel#collapseDirection
+   * @param {wcDocker~Bounds} bounds - The bounds of this panel relative to the wcDocker container.
+   * @returns {wcDocker.DOCK} - A collapse direction to use, must only be LEFT, RIGHT, or BOTTOM
+   */
+
+  /**
+   * Gets, or Sets the collapse direction for this panel.
+   * @param {wcPanel~CollapseDirection|wcDocker.DOCK} direction - The collapse direction to use for this panel.<br>If this value is omitted, the default collapse direction will be used.
+   */
+  collapseDirection: function(direction) {
+    this._collapseDirection = direction;
+  },
+
+  /**
    * Retrieves whether this panel can be seen by the user.
    * @returns {Boolean} - Visibility state.
    */
   isVisible: function() {
     return this._isVisible;
+  },
+
+  /**
+   * Retrieves whether this panel is floating.
+   * @returns {Boolean}
+   */
+  isFloating: function() {
+    if (this._parent instanceof wcFrame) {
+      return this._parent._isFloating;
+    }
+    return false;
+  },
+
+  /**
+   * Retrieves whether this panel is in focus.
+   * @return {Boolean}
+   */
+  isInFocus: function() {
+    var docker = this.docker();
+    if (docker && this._parent instanceof wcFrame) {
+      return this._parent === docker._focusFrame;
+    }
+    return false;
   },
 
   /**
@@ -3896,6 +4200,10 @@ wcPanel.prototype = {
 
     this.$icon.removeClass();
     this.$icon.addClass('wcTabIcon ' + icon);
+
+    if (this._parent instanceof wcFrame) {
+      this._parent.__updateTabs();
+    }
   },
 
   /**
@@ -3910,6 +4218,10 @@ wcPanel.prototype = {
 
     this.$icon.removeClass();
     this.$icon.addClass('wcTabIcon fa fa-fw fa-' + icon);
+
+    if (this._parent instanceof wcFrame) {
+      this._parent.__updateTabs();
+    }
   },
 
   /**
@@ -4044,15 +4356,20 @@ wcPanel.prototype = {
   /**
    * Shows the loading screen.
    * @param {String} [label] - An optional label to display.
-   * @param {Boolean} [isSolid] - If true, the loading screen will be fully opaque and none of the background will be visible.
+   * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
+   * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
    */
-  startLoading: function(label, isSolid) {
+  startLoading: function(label, opacity, textOpacity) {
     if (!this.$loading) {
-      this.$loading = $('<div class="wcLoadingBackground"></div>');
-      if (isSolid) {
-        this.$loading.addClass('wcLoadingBackgroundSolid');
-      }
+      this.$loading = $('<div class="wcLoadingContainer"></div>');
       this.$container.append(this.$loading);
+
+      var $background = $('<div class="wcLoadingBackground"></div>');
+      if (typeof opacity !== 'number') {
+        opacity = 0.4;
+      }
+
+      this.$loading.append($background);
 
       var $icon = $('<div class="wcLoadingIconContainer"><i class="wcLoadingIcon ' + this.docker()._options.loadingClass + '"></i></div>');
       this.$loading.append($icon);
@@ -4061,16 +4378,45 @@ wcPanel.prototype = {
         var $label = $('<span class="wcLoadingLabel">' + label + '</span>');
         this.$loading.append($label);
       }
+
+      if (typeof textOpacity !== 'number') {
+        textOpacity = 1;
+      }
+
+      // Override opacity values if the global loading screen is active.
+      if (this.docker().$loading) {
+        opacity = 0;
+        textOpacity = 0;
+      }
+
+      $background.css('opacity', opacity);
+      $icon.css('opacity', textOpacity);
+
+      if ($label) {
+        $label.css('opacity', textOpacity);
+      }
     }
   },
 
   /**
    * Hides the loading screen.
+   * @param {Number} [fadeDuration=0] - If supplied, assigns a fade out duration for the loading screen.
    */
-  finishLoading: function() {
+  finishLoading: function(fadeDuration) {
     if (this.$loading) {
-      this.$loading.remove();
-      this.$loading = null;
+      if (fadeDuration > 0) {
+        var self = this;
+        this.$loading.fadeOut(fadeDuration, function() {
+          self.$loading.remove();
+          self.$loading = null;
+          self.docker().__testLoadFinished();
+        });
+      } else {
+        this.$loading.remove();
+        this.$loading = null;
+        this.docker().__testLoadFinished();
+      }
+
     }
   },
 
@@ -4160,6 +4506,9 @@ wcPanel.prototype = {
 
   // Updates the size of the layout.
   __update: function() {
+    var docker = this.docker();
+    if (!docker) return;
+
     this._layout.__update();
     if (!this.$container) {
       return;
@@ -4176,10 +4525,12 @@ wcPanel.prototype = {
       var self = this;
       setTimeout(function() {
         self.__trigger(wcDocker.EVENT.INIT);
-      }, 0);
-    }
 
-    this.__trigger(wcDocker.EVENT.UPDATED);
+        docker.__testLoadFinished();
+      }, 0);
+    } else {
+      this.__trigger(wcDocker.EVENT.UPDATED);
+    }
 
     var width   = this.$container.width();
     var height  = this.$container.height();
@@ -4191,9 +4542,9 @@ wcPanel.prototype = {
       if (!this._resizeData.timeout) {
         this._resizeData.timeout = true;
         setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
-        this.__trigger(wcDocker.EVENT.RESIZE_STARTED);
+        this.__trigger(wcDocker.EVENT.RESIZE_STARTED, {width: this._actualSize.x, height: this._actualSize.y});
       }
-      this.__trigger(wcDocker.EVENT.RESIZED);
+      this.__trigger(wcDocker.EVENT.RESIZED, {width: this._actualSize.x, height: this._actualSize.y});
     }
 
     var offset  = this.$container.offset();
@@ -4205,9 +4556,9 @@ wcPanel.prototype = {
       if (!this._moveData.timeout) {
         this._moveData.timeout = true;
         setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
-        this.__trigger(wcDocker.EVENT.MOVE_STARTED);
+        this.__trigger(wcDocker.EVENT.MOVE_STARTED, {x: this._actualPos.x, y: this._actualPos.y});
       }
-      this.__trigger(wcDocker.EVENT.MOVED);
+      this.__trigger(wcDocker.EVENT.MOVED, {x: this._actualPos.x, y: this._actualPos.y});
     }
   },
 
@@ -4216,7 +4567,7 @@ wcPanel.prototype = {
       setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
     } else {
       this._resizeData.timeout = false;
-      this.__trigger(wcDocker.EVENT.RESIZE_ENDED);
+      this.__trigger(wcDocker.EVENT.RESIZE_ENDED, {width: this._actualSize.x, height: this._actualSize.y});
     }
   },
 
@@ -4225,7 +4576,7 @@ wcPanel.prototype = {
       setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
     } else {
       this._moveData.timeout = false;
-      this.__trigger(wcDocker.EVENT.MOVE_ENDED);
+      this.__trigger(wcDocker.EVENT.MOVE_ENDED, {x: this._actualPos.x, y: this._actualPos.y});
     }
   },
 
@@ -4233,7 +4584,7 @@ wcPanel.prototype = {
     if (this._isVisible !== inView) {
       this._isVisible = inView;
 
-      this.__trigger(wcDocker.EVENT.VISIBILITY_CHANGED);
+      this.__trigger(wcDocker.EVENT.VISIBILITY_CHANGED, this._isVisible);
     }
   },
 
@@ -4613,10 +4964,14 @@ wcFrame.prototype = {
           this._curTab--;
         }
 
-        this._panelList[i].__container(null);
-        this._panelList[i]._parent = null;
+        // Only null out the container if it is still attached to this frame.
+        if (this._panelList[i]._parent === this) {
+          this._panelList[i].__container(null);
+          this._panelList[i]._parent = null;
+        }
 
         this._panelList.splice(i, 1);
+        panel._isVisible = false;
         break;
       }
     }
@@ -4914,7 +5269,7 @@ wcFrame.prototype = {
     });
 
     this._titleVisible = true;
-    this.$title.text('');
+    this.$title.html('');
 
     // Determine if the title and tabs are visible based on the panels inside.
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -4958,7 +5313,7 @@ wcFrame.prototype = {
       if (isVisible) {
         $tab && $tab.addClass('wcPanelTabActive');
         $tabContent.removeClass('wcPanelTabContentHidden');
-        this.$title.text(panel.title());
+        this.$title.html(panel.title());
         if (panel.$icon) {
           var $icon = panel.$icon.clone();
           this.$title.prepend($icon);
@@ -5181,44 +5536,68 @@ wcFrame.prototype = {
             this.$collapse.attr('title', 'Dock this collapsed panel back into the main layout.');
             buttonSize += this.$collapse.outerWidth();
           } else {
-            // Collapse
-            // Determine the direction to collapse based on the frame center.
-            var $inner = docker.$container;
-            if (!$.isEmptyObject(docker._collapser) && docker._collapser.hasOwnProperty(wcDocker.DOCK.RIGHT)) {
-              // Get the inner contents element not taken up by the collapsible drawers.
-              $inner = docker._collapser[wcDocker.DOCK.RIGHT]._parent.$pane[0];
+            var direction = wcDocker.DOCK.BOTTOM;
+            if (panel._collapseDirection === wcDocker.DOCK.LEFT ||
+                panel._collapseDirection === wcDocker.DOCK.RIGHT ||
+                panel._collapseDirection === wcDocker.DOCK.BOTTOM) {
+              // Static collapse direction.
+              direction = panel._collapseDirection;
+            } else {
+              // Determine the direction to collapse based on the frame center.
+              var $inner = docker.$container;
+              if (!$.isEmptyObject(docker._collapser) && docker._collapser.hasOwnProperty(wcDocker.DOCK.RIGHT)) {
+                // Get the inner contents element not taken up by the collapsible drawers.
+                $inner = docker._collapser[wcDocker.DOCK.RIGHT]._parent.$pane[0];
+              }
+
+              var outer = $inner.offset();
+              var bounds = this.$container.offset();
+              bounds.right  = (bounds.left + this.$container.width() - outer.left) / $inner.width();
+              bounds.bottom = (bounds.top + this.$container.height() - outer.top) / $inner.height();
+              bounds.top    = (bounds.top - outer.top) / $inner.height();
+              bounds.left   = (bounds.left - outer.left) / $inner.width();
+
+              if (typeof panel._collapseDirection === 'function') {
+                // Custom collapse handler.
+                direction = panel._collapseDirection(bounds);
+              } else {
+                // Default collapse calculation.
+                if (bounds.top > 0.5 && bounds.bottom > 0.95) {
+                  direction = wcDocker.DOCK.BOTTOM;
+                } else if (bounds.left <= 0.05) {
+                  direction = wcDocker.DOCK.LEFT;
+                } else if (bounds.right >= 0.95) {
+                  direction = wcDocker.DOCK.RIGHT;
+                } else if (bounds.bottom > 0.95) {
+                  direction = wcDocker.DOCK.BOTTOM;
+                }
+              }
             }
 
-            var outer = $inner.offset();
-            var center = this.$container.offset();
-            center.right  = (center.left + this.$container.width() - outer.left) / $inner.width();
-            center.bottom = (center.top + this.$container.height() - outer.top) / $inner.height();
-            center.top    = (center.top - outer.top) / $inner.height();
-            center.left   = (center.left - outer.left) / $inner.width();
-
-            var direction = '';
+            var directionLabel = '';
             var directionClass = '';
-            if (center.top > 0.05 && center.bottom > 0.95) {
-              direction = 'bottom.';
-              directionClass = 'wcCollapseBottom';
-            } else if (center.left <= 0.05) {
-              direction = 'left side.';
-              directionClass = 'wcCollapseLeft';
-            } else if (center.right >= 0.95) {
-              direction = 'right side.';
-              directionClass = 'wcCollapseRight';
-            } else if (center.bottom > 0.95) {
-              direction = 'bottom.';
-              directionClass = 'wcCollapseBottom';
+            switch (direction) {
+              case wcDocker.DOCK.LEFT:
+                directionLabel = 'left side.';
+                directionClass = 'wcCollapseLeft';
+                break;
+              case wcDocker.DOCK.RIGHT:
+                directionLabel = 'right side.';
+                directionClass = 'wcCollapseRight';
+                break;
+              case wcDocker.DOCK.BOTTOM:
+                directionLabel = 'bottom.';
+                directionClass = 'wcCollapseBottom';
+                break;
             }
 
-            if (direction) {
+            if (directionLabel) {
               var $icon = this.$collapse.children('div');
               $icon[0].className = 'fa fa-sign-in';
               $icon.addClass(directionClass);
               $icon.addClass('wcCollapsible');
               this.$collapse.show();
-              this.$collapse.attr('title', 'Collapse this panel into the ' + direction);
+              this.$collapse.attr('title', 'Collapse this panel into the ' + directionLabel);
               buttonSize += this.$collapse.outerWidth();
             }
           }
@@ -5309,13 +5688,13 @@ wcFrame.prototype = {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);
       $flasher.animate({
-        opacity: 0.25,
+        opacity: 1,
       },100)
       .animate({
         opacity: 0.0,
       },100)
       .animate({
-        opacity: 0.1,
+        opacity: 0.6,
       },50)
       .animate({
         opacity: 0.0,
@@ -6859,10 +7238,29 @@ wcTabFrame.prototype = {
   },
 
   /**
+   * Manually update the contents of this tab frame.
+   */
+  update: function() {
+    var scrollTop = this.$center.scrollTop();
+    this.__updateTabs();
+    this.$center.scrollTop(scrollTop);
+  },
+
+  /**
    * Destroys the widget.
    */
   destroy: function() {
     this.__destroy();
+  },
+
+  /**
+   * Gets the total number of tabs in this frame.
+   * @version 3.0.0
+   *
+   * @returns {Number}
+   */
+  tabCount: function() {
+    return this._layoutList.length;
   },
 
   /**
@@ -6954,11 +7352,12 @@ wcTabFrame.prototype = {
   /**
    * Gets, or Sets the currently visible tab page.
    *
-   * @param {Number} index - If supplied, sets the current tab page index.
+   * @param {Number} [index] - If supplied, sets the current tab page index.
+   * @param {Boolean} [scrollTo] - If true, will auto scroll the tab bar until the selected tab is visible.
    *
    * @returns {Number} - The index of the currently visible tab page.
    */
-  tab: function(index, autoFocus) {
+  tab: function(index, scrollTo) {
     if (typeof index !== 'undefined') {
       if (index > -1 && index < this._layoutList.length) {
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + this._curTab + '"]').removeClass('wcPanelTabActive');
@@ -6966,7 +7365,7 @@ wcTabFrame.prototype = {
         this._curTab = index;
         this.$tabBar.find('> .wcTabScroller > .wcPanelTab[id="' + index + '"]').addClass('wcPanelTabActive');
         this.$center.children('.wcPanelTabContent[id="' + index + '"]').removeClass('wcPanelTabContentHidden');
-        this.__updateTabs(autoFocus);
+        this.__updateTabs(scrollTo);
 
         var name = this._layoutList[this._curTab].name;
         this._parent.__trigger(wcDocker.EVENT.CUSTOM_TAB_CHANGED, {obj: this, name: name, index: index});
@@ -7087,7 +7486,7 @@ wcTabFrame.prototype = {
   },
 
   /**
-   * Gets, or Sets whether overflow on a tab area is visible.
+   * Gets, or Sets whether overflow on a tab area is visible.<br>
    * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
    *
    * @param {Number} index        - The index of the tab page.
@@ -7104,6 +7503,49 @@ wcTabFrame.prototype = {
         this.__onTabChange();
       }
       return layout._overflowVisible;
+    }
+    return false;
+  },
+
+  /**
+   * Gets, or Sets whether the tab frame should fit to its contents.
+   * @version 3.0.0
+   *
+   * @param {Number} index  - The index of the tab page.
+   * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+   * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
+   *
+   * @returns {wcDocker~FitContents} - The current scrollable status of the tab page.
+   */
+  fitContents: function(index, x, y) {
+    if (index > -1 && index < this._layoutList.length) {
+      var layout = this._layoutList[index];
+
+      if (!layout.hasOwnProperty('_fitContents')) {
+        layout._fitContents = {
+          x: false,
+          y: false
+        };
+      }
+
+      var changed = false;
+      if (typeof x !== 'undefined') {
+        layout._fitContents.x = x;
+        changed = true;
+      }
+      if (typeof y !== 'undefined') {
+        layout._fitContents.y = y;
+        changed = true;
+      }
+
+      if (changed) {
+        this.__onTabChange();
+      }
+
+      return {
+        x: layout._fitContents.x,
+        y: layout._fitContents.y,
+      };
     }
     return false;
   },
@@ -7183,12 +7625,7 @@ wcTabFrame.prototype = {
     }
   },
 
-  // Updates the size of the frame.
-  update: function() {
-    this.__updateTabs();
-  },
-
-  __updateTabs: function(autoFocus) {
+  __updateTabs: function(scrollTo) {
     this.$tabScroll.empty();
 
     var getOffset = function($item) {
@@ -7281,7 +7718,7 @@ wcTabFrame.prototype = {
 
     var buttonSize = this.__onTabChange();
 
-    if (autoFocus) {
+    if (scrollTo) {
       for (var i = 0; i < tabPositions.length; ++i) {
         if (i === this._curTab) {
           var left = tabPositions[i];
@@ -7368,14 +7805,35 @@ wcTabFrame.prototype = {
         buttonSize += this.$tabRight.outerWidth() + this.$tabLeft.outerWidth();
       }
 
+      var fit = this.fitContents(this._curTab);
+      if (fit.x) {
+        var w = layout.$table.outerWidth();
+        if (this._tabOrientation === wcDocker.TAB.LEFT || this._tabOrientation === wcDocker.TAB.RIGHT) {
+          w += this.$tabScroll.height();
+        }
+        this.$container.css('width', w);
+      } else {
+        this.$container.css('width', '100%');
+      }
+
+      if (fit.y) {
+        var h = layout.$table.outerHeight();
+        if (this._tabOrientation === wcDocker.TAB.TOP || this._tabOrientation === wcDocker.TAB.BOTTOM) {
+          h += this.$tabScroll.height();
+        }
+        this.$container.css('height', h);
+      } else {
+        this.$container.css('height', '100%');
+      }
+
       switch (this._tabOrientation) {
         case wcDocker.TAB.RIGHT:
         case wcDocker.TAB.LEFT:
-          this.$tabBar.css('width', this.$center.height());
+          this.$tabBar.css('width', this.$center.height() || '100%');
           break;
         case wcDocker.TAB.TOP:
         case wcDocker.TAB.BOTTOM:
-          this.$tabBar.css('width', this.$center.width());
+          this.$tabBar.css('width', this.$center.width() || '100%');
         default:
           break;
       }
@@ -7476,8 +7934,6 @@ function wcIFrame(container, panel) {
   this.$iFrame = null;
 
   this._window = null;
-  this._isAttached = true;
-  this._hasFocus = false;
   this._isDocking = false;
   this._isHovering = false;
 
@@ -7671,10 +8127,12 @@ wcIFrame.prototype = {
     this._boundEvents.push({event: wcDocker.EVENT.RESIZE_ENDED,       handler: this.__onMoveFinished.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.MOVED,              handler: this.__onMoved.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.RESIZED,            handler: this.__onMoved.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.ATTACHED,           handler: this.__onAttached.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.DETACHED,           handler: this.__onDetached.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS,         handler: this.__onGainFocus.bind(this)});
-    this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS,         handler: this.__onLostFocus.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.ATTACHED,           handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.DETACHED,           handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS,         handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS,         handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_OPENED,  handler: this.__updateFrame.bind(this)});
+    this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_CLOSED,  handler: this.__updateFrame.bind(this)});
     this._boundEvents.push({event: wcDocker.EVENT.CLOSED,             handler: this.__onClosed.bind(this)});
 
     for (var i = 0; i < this._boundEvents.length; ++i) {
@@ -7695,9 +8153,10 @@ wcIFrame.prototype = {
 
   __updateFrame: function() {
     if (this.$frame && this._panel) {
-      this.$frame.toggleClass('wcIFrameFloating', !this._isAttached);
-      if (!this._isAttached) {
-        this.$frame.toggleClass('wcIFrameFloatingFocus', this._hasFocus);
+      var floating = this._panel.isFloating();
+      this.$frame.toggleClass('wcIFrameFloating', floating);
+      if (floating) {
+        this.$frame.toggleClass('wcIFrameFloatingFocus', focus);
       } else {
         this.$frame.removeClass('wcIFrameFloatingFocus');
       }
@@ -7719,14 +8178,18 @@ wcIFrame.prototype = {
     this._isHovering = true;
   },
 
-  __onHoverExit: function() {
+  __onHoverExit: function() { 
     this._isHovering = false;
   },
 
   __onBlur: function() {
     if (this._isHovering) {
-      this.docker().__focus(this._panel._parent);
+      this.__onFocus();
     }
+  },
+
+  __onFocus: function() {
+    this.docker().__focus(this._panel._parent);
   },
 
   __onVisibilityChanged: function() {
@@ -7774,26 +8237,6 @@ wcIFrame.prototype = {
       this.$frame.css('width', width);
       this.$frame.css('height', height);
     }
-  },
-
-  __onAttached: function() {
-    this._isAttached = true;
-    this.__updateFrame();
-  },
-
-  __onDetached: function() {
-    this._isAttached = false;
-    this.__updateFrame();
-  },
-
-  __onGainFocus: function() {
-    this._hasFocus = true;
-    this.__updateFrame();
-  },
-
-  __onLostFocus: function() {
-    this._hasFocus = false;
-    this.__updateFrame();
   },
 
   __onClosed: function() {
