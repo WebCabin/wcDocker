@@ -493,27 +493,26 @@ $(document).ready(function() {
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
     // by creating the center panel and work your way outwards in all directions.
-    // myDocker.startLoading('Loading...');
-    // var tutorialPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.LEFT);
+    myDocker.startLoading('Loading...');
+    var tutorialPanel = myDocker.addPanel('Tutorial Panel', wcDocker.DOCK.LEFT);
 
-    // var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h:'20%'});
-    // var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.RIGHT, null, {w:'25%'});
-
-    // myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
-    
-    // var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.RIGHT, chatPanel1);
-    // var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
-    //   tabOrientation: wcDocker.TAB.BOTTOM
-    // });
-    // var batchPanel = myDocker.addPanel('Creation Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
-    // var themeBuilder = myDocker.addPanel('Theme Builder', wcDocker.DOCK.BOTTOM, controlPanel);
-    // var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.STACKED, themeBuilder, {
-    //   tabOrientation: wcDocker.TAB.BOTTOM
-    // });
+    var chatPanel1 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.BOTTOM, null, {h: '20%'});
+    var themeBuilder = myDocker.addPanel('Theme Builder', wcDocker.DOCK.RIGHT, null, {w: '25%'});
 
     myDocker.addPanel('Top Panel', wcDocker.DOCK.TOP);
-    var themeBuilder = myDocker.addPanel('Theme Builder', wcDocker.DOCK.BOTTOM);
-    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.LEFT, themeBuilder);
+    
+    var chatPanel2 = myDocker.addPanel('Chat Panel', wcDocker.DOCK.RIGHT, chatPanel1);
+
+    var widgetPanel = myDocker.addPanel('Widget Panel', wcDocker.DOCK.STACKED, themeBuilder, {
+      tabOrientation: wcDocker.TAB.TOP
+    });
+
+    var controlPanel = myDocker.addPanel('Control Panel', wcDocker.DOCK.TOP, themeBuilder, {h: '200px'});
+    var batchPanel = myDocker.addPanel('Batch Panel', wcDocker.DOCK.STACKED, controlPanel, {
+      tabOrientation: wcDocker.TAB.BOTTOM
+    });
+
+    var creationPanel = myDocker.addPanel('Creation Panel', wcDocker.DOCK.LEFT, wcDocker.COLLAPSED, {w: '25%'});
 
     myDocker.on(wcDocker.EVENT.LOADED, function() {
       myDocker.finishLoading(500);

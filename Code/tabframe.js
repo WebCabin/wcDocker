@@ -59,7 +59,9 @@ wcTabFrame.prototype = {
    * Manually update the contents of this tab frame.
    */
   update: function() {
+    var scrollTop = this.$center.scrollTop();
     this.__updateTabs();
+    this.$center.scrollTop(scrollTop);
   },
 
   /**

@@ -126,27 +126,24 @@
   border-radius: 0px;
 }
 
-::-webkit-scrollbar {
+.wcScrollbar, ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
   background-color: black;
 }
 
-::-webkit-scrollbar-corner {
+.wcScrollbarCorner, ::-webkit-scrollbar-corner {
   background-color: #111;
 }
 
-::-webkit-scrollbar-track {
-  /*-webkit-box-shadow: inset 0 0 0 rgba(0,0,0,0.5);*/
+.wcScrollbarTrack, ::-webkit-scrollbar-track {
   border-radius: 0px;
   background-color: #111;
 }
 
-::-webkit-scrollbar-thumb {
+.wcScrollbarThumb, ::-webkit-scrollbar-thumb {
   border-radius: 2px;
   background-color: #666;
-  /*border: 2px outset gray;*/
-  /*-webkit-box-shadow: inset 0 0 0 rgba(0,0,0,0.7);*/
 }
 
 .wcMenuList, .context-menu-list {
