@@ -6,6 +6,11 @@ Here at Web Cabin, we sincerely believe that anyone with the proper tools can be
 
 
 ****
+### New! ###
+
+I've create a new theme builder panel that appears right on the [demonstration front page](http://docker.webcabin.org)! Build your own custom themes live within the page view!
+
+****
 ### What is wcDocker? ###
 
 wcDocker (Web Cabin Docker) is a responsive IDE interface designed for the developer at heart!  Compartmentalize your environment into smaller components, put each of those parts into a docker panel, and organize your environment however you like, whenever you like!
