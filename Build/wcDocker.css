@@ -501,7 +501,9 @@ html, body {
 }
 
 .wcMenuSubMenu {
-  float: right;
+  position: absolute;
+  right: 3px;
+  top: 3px;
 }
 
 .wcIFrame, .wcIFrame iframe {
