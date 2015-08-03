@@ -641,7 +641,7 @@ wcTabFrame.prototype = {
         }
         this.$container.css('height', h);
       } else {
-        this.$container.css('height', '100%');
+        this.$container.css('height', '');
       }
 
       switch (this._tabOrientation) {
