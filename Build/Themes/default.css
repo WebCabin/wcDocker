@@ -269,13 +269,23 @@
   margin-top: 4px;
 }
 
-.wcMobile .wcSplitterBarV.wcSplitterBar:not(.wcSplitterBarStatic) {
+.wcMobile .wcSplitterBarV.wcSplitterBar {
   width: 12px;
   border-width: 3px;
 }
-.wcMobile .wcSplitterBarH.wcSplitterBar:not(.wcSplitterBarStatic) {
+.wcMobile .wcSplitterBarH.wcSplitterBar {
   height: 12px;
   border-width: 3px;
+}
+
+.wcMobile .wcSplitterBarV.wcSplitterBarStatic {
+  width: 0px;
+  border: 1px outset darkgray;
+}
+
+.wcMobile .wcSplitterBarH.wcSplitterBarStatic {
+  height: 0px;
+  border: 1px outset darkgray;
 }
 
 .wcMobile .wcInput, .wcMobile input,
