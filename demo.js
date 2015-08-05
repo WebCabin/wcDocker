@@ -198,6 +198,7 @@ $(document).ready(function() {
 
             $('option.custom').hide();
             $('#wcCustomTheme').remove();
+            $('.wcCustomThemeApplied').removeClass('wcButtonActive');
           }
         });
 
