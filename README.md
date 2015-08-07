@@ -73,7 +73,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
     ```
 
  - `wcLayout's` have changed in the following ways:
-    - The original layout class has been renamed to wcLayoutTable, and another type of layout now exists as wcLayoutSimple.
+    - The original layout class has been renamed to [wcLayoutTable](http://docker.api.webcabin.org/wcLayoutTable.html), and another type of layout now exists as [wcLayoutSimple](http://docker.api.webcabin.org/wcLayoutSimple.html).
     - `wcLayoutTable.addItem()` and `wcLayoutTable.item()` no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayoutTable.html#~tableItem) that can be used to make alterations to that cell.
     - To use the simple layout on your panel, include the layout option when registering your panel:
         ```

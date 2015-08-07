@@ -1,6 +1,6 @@
 /**
  * @class
- * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+ * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter} 
  * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
  *
  * @constructor

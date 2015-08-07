@@ -3027,7 +3027,7 @@ wcGhost.prototype = {
 };
 /**
  * @class
- * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+ * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter} 
  * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
  *
  * @constructor
@@ -3435,7 +3435,7 @@ wcLayoutSimple.prototype = {
 };
 /**
  * @class
- * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+ * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter} 
  * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
  *
  * @constructor
