@@ -77,9 +77,19 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
     - `wcLayoutTable.addItem()` and `wcLayoutTable.item()` no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayoutTable.html#~tableItem) that can be used to make alterations to that cell.
     - To use the simple layout on your panel, include the layout option when registering your panel:
         ```
-        myDocker.registerPanelType('my simple panel', {
+        myDocker.registerPanelType('Simple Panel', {
+          // Use the simple splitter for the entire panel.
           layout: wcDocker.LAYOUT.SIMPLE,
-          create: function(myPanel) {...}
+          onCreate: function(myPanel) {
+
+            // Create a splitter widget with simple splitters.
+            var splitter = new wcSplitter($someContainer, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
+            splitter.initLayouts(wcDocker.LAYOUT.SIMPLE, wcDocker.LAYOUT.SIMPLE);
+
+            // Create a tab frame widget with a tab that uses a simple layout.
+            var tabFrame = new wcTabFrame($someContainer, myPanel);
+            tabFrame.addTab('Custom Tab 1', 0, wcDocker.LAYOUT.SIMPLE).addItem($someItem);
+          }
         });
         ```
  - The following functions are now `deprecated` and will be removed in an upcoming version:
