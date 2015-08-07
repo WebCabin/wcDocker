@@ -117,6 +117,18 @@ wcDocker.DOCK = {
 };
 
 /**
+ * Enumerated Layout types.
+ * @version 3.0.0
+ * @enum {String}
+ */
+wcDocker.LAYOUT = {
+  /** Contains a single div item without management using a {@link wcLayoutSimple}, it is up to you to populate it however you wish. */
+  SIMPLE                : 'wcLayoutSimple',
+  /** Manages a table grid layout using {@link wcLayoutTable}, this is the default layout used if none is specified. **/
+  TABLE                 : 'wcLayoutTable'
+}
+
+/**
  * Enumerated Internal events
  * @version 3.0.0
  * @enum {String}

@@ -27,7 +27,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
+					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayoutSimple.html">wcLayoutSimple</a></li><li><a href="wcLayoutTable.html">wcLayoutTable</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
 				</ul>
 			</li>
 			
@@ -77,8 +77,8 @@
     <h3>Themes</h3><p>Assigning a theme to use with <a href="wcDocker.html">wcDocker</a> is as simple as calling a function.</p>
 <pre class="prettyprint source"><code>myDocker.theme('shadow');</code></pre><p>In this case, <code>shadow</code> is the name of a theme <code>shadow.css</code> found in the themes folder.</p>
 <hr>
-<h3>Using the Layout Table Item</h3><p>the <a href="wcLayout.html">wcLayout</a> object makes it easy to organize the contents of your <a href="wcPanel.html">wcPanel</a>. But, sometimes you need to make some style changes to the table cells themselves! <a href="wcLayout.html#item">wcLayout.item</a> and <a href="wcLayout.html#addItem">wcLayout.addItem</a> both return you a handy <a href="wcLayout.html#~tableItem">tableItem</a> object which contains convenient methods for styling!</p>
-<pre class="prettyprint source"><code>myPanel.addItem(domNode).css('text-align', 'right').css('border', '1px solid black').stretch('100%', '100%');</code></pre><p>Here we are using the tableItem.css and [tableItem.stretch]{@link wcLayout~tableItem_stretch} functions, which can be chained!  The first provides a way to add normal style attributes to the cell while the second provides a more reliable way to set your table cell sizes.</p>
+<h3>Using the Layout Table Item</h3><p>the <a href="wcLayoutTable.html">wcLayoutTable</a> object makes it easy to organize the contents of your <a href="wcPanel.html">wcPanel</a>. But, sometimes you need to make some style changes to the table cells themselves! <a href="wcLayoutTable.html#item">wcLayoutTable.item</a> and <a href="wcLayoutTable.html#addItem">wcLayoutTable.addItem</a> both return you a handy <a href="wcLayoutTable.html#~tableItem">tableItem</a> object which contains convenient methods for styling!</p>
+<pre class="prettyprint source"><code>myPanel.addItem(domNode).css('text-align', 'right').css('border', '1px solid black').stretch('100%', '100%');</code></pre><p>Here we are using the tableItem.css and [tableItem.stretch]{@link wcLayoutTable~tableItem_stretch} functions, which can be chained!  The first provides a way to add normal style attributes to the cell while the second provides a more reliable way to set your table cell sizes.</p>
 <hr>
 <h3>Event System</h3><p>The event system is critical for communication between your panels.  Often times you will need this to ensure all your panels integrate properly and intuitively.</p>
 <p>For example: One panel may be dedicated to showing the properties of an object, while another panel may be responsible for displaying and allowing the user to select an object.  If communication did not exist between the two panels, when an object is selected, the property panel would never know to show its properties.</p>
@@ -107,7 +107,7 @@ myPanel.on(wcDocker.EVENT.RESTORE_LAYOUT, function(data) {
   // When a layout is being restored, you can retrieve those custom values if they exist.
   somePanelValueToRestore = data.someValue;
 });</code></pre><hr>
-<h3>Batch Operations</h3><p>Adding elements into the <a href="wcLayout.html">wcLayout</a> is not a problem in most cases, except when you need to add them in large quantities. Every time an item is added into the layout it causes the document to re-calculate and render. To improve performance, the layout can be put into a batch mode process, where it will queue all additions and add them all in a single operation.</p>
+<h3>Batch Operations</h3><p>Adding elements into the <a href="wcLayoutTable.html">wcLayoutTable</a> is not a problem in most cases, except when you need to add them in large quantities. Every time an item is added into the layout it causes the document to re-calculate and render. To improve performance, the layout can be put into a batch mode process, where it will queue all additions and add them all in a single operation.</p>
 <pre class="prettyprint source"><code>myPanel.layout().startBatch();
 for (var i = 0; i &lt; 1000; ++i) {
   myPanel.layout().addItem($('div'), 0, i);
@@ -216,7 +216,7 @@ myDocker.on(wcDocker.EVENT.LOADED, function() {
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
-			on 2015-08-03 using the <a
+			on 2015-08-07 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

@@ -1,8 +1,7 @@
 /**
  * @class
  * The public interface for the docking panel, it contains a number of convenience
- * functions and a [layout]{@link wcLayout} that can be filled with a custom arrangement
- * of elements.
+ * functions and layout that manages the contents of the panel.
  *
  * @constructor
  * @description
@@ -167,8 +166,8 @@ wcPanel.prototype = {
   },
 
   /**
-   * Retrieves the panel [layout]{@link wcLayout} instance.
-   * @returns {wcLayout} - The layout instance.
+   * Retrieves the layout instance.
+   * @returns {wcLayoutSimple|wcLayoutTable} - The layout instance.
    */
   layout: function() {
     return this._layout;
@@ -739,7 +738,8 @@ wcPanel.prototype = {
 
   // Initialize
   __init: function() {
-    this._layout = new wcLayout(this.$container, this);
+    var layoutClass = (this._options && this._options.layout) || 'wcLayoutTable';
+    this._layout = new window[layoutClass](this.$container, this);
     this.$title = $('<div class="wcPanelTab">');
     this.$titleText = $('<div>' + this._title + '</div>');
     this.$title.append(this.$titleText);

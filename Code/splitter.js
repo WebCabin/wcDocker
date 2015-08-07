@@ -7,7 +7,7 @@
  *
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this splitter.
- * @param {wcLayout|wcSplitter|wcDocker} parent   - The splitter's parent object.
+ * @param {wcLayoutSimple|wcLayoutTable|wcSplitter|wcDocker} parent   - The splitter's parent object.
  * @param {wcDocker.ORIENTATION} orientation      - The orientation of the splitter bar.
 */
 function wcSplitter(container, parent, orientation) {
@@ -49,12 +49,19 @@ wcSplitter.prototype = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Initializes the two [panes]{@link wcSplitter#$pane} of the splitter with its own [layouts]{@link wcLayout}.
+   * Initializes the two [panes]{@link wcSplitter#$pane} of the splitter with its own layouts.<br>
    * This should be used to initialize the splitter when creating one for use inside your panel.
+   *
+   * @param {wcDocker.LAYOUT} [topLeftLayout=wcDocker.LAYOUT.TABLE] - The type of layout to use for the top or left pane.
+   * @param {wcDocker.LAYOUT} [bottomRightLayout=wcDocker.LAYOUT.TABLE] - The type of layout to use for the bottom or right pane.
    */
-  initLayouts: function() {
-    var layout0 = new wcLayout(this.$pane[0], this);
-    var layout1 = new wcLayout(this.$pane[1], this);
+  initLayouts: function(topLeftLayout, bottomRightLayout) {
+    var layoutClass = topLeftLayout || 'wcLayoutTable';
+    var layout0 = new window[layoutClass](this.$pane[0], this);
+
+    layoutClass = bottomRightLayout || 'wcLayoutTable';
+    var layout1 = new window[layoutClass](this.$pane[1], this);
+
     this.pane(0, layout0);
     this.pane(1, layout1);
   },
@@ -246,9 +253,9 @@ wcSplitter.prototype = {
    * Gets, or Sets the element associated with a pane.
    *
    * @param {Number} index - The index of the pane, only 0 and 1 are valid.
-   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   * @param {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
    *
-   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   * @returns {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   pane: function(index, item) {
     if (index >= 0 && index < 2) {
@@ -277,9 +284,9 @@ wcSplitter.prototype = {
   /**
    * Gets, or Sets the element associated with the left side pane (for horizontal layouts).
    *
-   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   * @param {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
    *
-   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   * @returns {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   left: function(item) {
     return this.pane(0, item);
@@ -288,9 +295,9 @@ wcSplitter.prototype = {
   /**
    * Gets, or Sets the element associated with the right side pane (for horizontal layouts).
    *
-   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   * @param {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
    *
-   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   * @returns {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   right: function(item) {
     return this.pane(1, item);
@@ -299,9 +306,9 @@ wcSplitter.prototype = {
   /**
    * Gets, or Sets the element associated with the top pane (for vertical layouts).
    *
-   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   * @param {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
    *
-   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   * @returns {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   top: function(item) {
     return this.pane(0, item);
@@ -310,9 +317,9 @@ wcSplitter.prototype = {
   /**
    * Gets, or Sets the element associated with the bottom pane (for vertical layouts).
    *
-   * @param {wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+   * @param {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
    *
-   * @returns {wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+   * @returns {wcLayoutSimple|wcLayoutTable|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
    */
   bottom: function(item) {
     return this.pane(1, item);

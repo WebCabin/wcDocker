@@ -198,6 +198,7 @@ $(document).ready(function() {
 
             $('option.custom').hide();
             $('#wcCustomTheme').remove();
+            $('.wcCustomThemeApplied').removeClass('wcButtonActive');
           }
         });
 
@@ -265,7 +266,7 @@ $(document).ready(function() {
 
         // Initialize this splitter with a layout in each pane.  This can be done manually, but
         // it is more convenient this way.
-        splitter.initLayouts();
+        splitter.initLayouts(wcDocker.LAYOUT.SIMPLE, wcDocker.LAYOUT.SIMPLE);
 
         // By default, the splitter splits down the middle, but the position can be assigned manually by giving it a percentage value from 0-1.
         splitter.pos(0.5);
@@ -275,18 +276,18 @@ $(document).ready(function() {
         splitter.top().addItem($subScene);
 
         var subSplitter = new wcSplitter($subScene, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
-        subSplitter.initLayouts();
+        subSplitter.initLayouts(wcDocker.LAYOUT.SIMPLE, wcDocker.LAYOUT.SIMPLE);
         subSplitter.pos(0.25);
 
         // Now create a tab widget and put that into one of the sub splits.
         var $tabArea = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;">');
         subSplitter.right().addItem($tabArea);
         var tabFrame = new wcTabFrame($tabArea, myPanel);
-        tabFrame.addTab('Custom Tab 1').addItem($('<div class="info" style="border:2px solid black;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
-        tabFrame.addTab('Custom Tab 2').addItem($('<div class="info" style="border:2px solid black;margin:20px;">Each tab has its own layout, and can be configured however you wish.</div>'));
-        tabFrame.addTab('Custom Tab 3').addItem($('<div class="info" style="border:2px solid black;margin:20px;">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
-        tabFrame.addTab('Custom Tab 4').addItem($('<div class="info" style="border:2px solid black;margin:20px;">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
-        tabFrame.addTab('Custom Tab 5').addItem($('<div class="info" style="border:2px solid black;margin:20px;">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
+        tabFrame.addTab('Custom Tab 1', -1, wcDocker.LAYOUT.SIMPLE).addItem($('<div class="info" style="border:2px solid black;margin:20px;">This is a custom tab widget, designed to follow the current theme.  You can put this inside a containing element anywhere inside your panel.<br><br>Continue with the other tabs for more information...</div>'));
+        tabFrame.addTab('Custom Tab 2', -1, wcDocker.LAYOUT.SIMPLE).addItem($('<div class="info" style="border:2px solid black;margin:20px;">Each tab has its own layout, and can be configured however you wish.</div>'));
+        tabFrame.addTab('Custom Tab 3', -1, wcDocker.LAYOUT.SIMPLE).addItem($('<div class="info" style="border:2px solid black;margin:20px;">These tabs can "optionally" be re-orderable by the user, try to change the tab ordering by dragging them.</div>'));
+        tabFrame.addTab('Custom Tab 4', -1, wcDocker.LAYOUT.SIMPLE).addItem($('<div class="info" style="border:2px solid black;margin:20px;">By default, tabs are not closeable, but we have enabled this one just for the sake of this demo.</div>'));
+        tabFrame.addTab('Custom Tab 5', -1, wcDocker.LAYOUT.SIMPLE).addItem($('<div class="info" style="border:2px solid black;margin:20px;">Besides a tab being closeable, other options exist for each tab, whether they have a scrollable contents, or if elements can be visible outside of its boundaries, and more.</div>'));
         tabFrame.closeable(3, true); // 0 based index 3 is actually Custom Tab 4
         tabFrame.faicon(0, 'gears')
 
@@ -461,6 +462,7 @@ $(document).ready(function() {
     myDocker.registerPanelType('Tutorial Panel', {
       isPersistent: true,
       faicon: 'graduation-cap',
+      layout: wcDocker.LAYOUT.SIMPLE,
       onCreate: function(myPanel) {
         var $container = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');
         myPanel.layout().addItem($container);

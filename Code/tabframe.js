@@ -106,12 +106,14 @@ wcTabFrame.prototype = {
    * Adds a new tabbed page into the widget.
    *
    * @param {String} name    - The name of the new tab page.
-   * @param {Number} [index] - If supplied, will insert the new tab page at the given tab index.
+   * @param {Number} [index] - If supplied and above -1, will insert the new tab page at the given tab index, otherwise the new tab is appended to the end.
+   * @param {wcDocker.LAYOUT} [layout] - If supplied, will set the type of layout to use for this tab.
    *
-   * @returns {wcLayout} - The layout of the newly created tab page.
+   * @returns {wcLayoutSimple|wcLayoutTable} - The layout of the newly created tab page.
    */
-  addTab: function(name, index) {
-    var newLayout = new wcLayout('.wcDockerTransition', this._parent);
+  addTab: function(name, index, layout) {
+    var layoutClass = layout || 'wcLayoutTable';
+    var newLayout = new window[layoutClass]('.wcDockerTransition', this._parent);
     newLayout.name = name;
     newLayout._scrollable = {
       x: true,
@@ -124,7 +126,7 @@ wcTabFrame.prototype = {
     newLayout._closeable = false;
     newLayout._overflowVisible = false;
 
-    if (typeof index === 'undefined') {
+    if (typeof index === 'undefined' || index <= -1) {
       this._layoutList.push(newLayout);
     } else {
       this._layoutList.splice(index, 0, newLayout);
@@ -198,7 +200,7 @@ wcTabFrame.prototype = {
    *
    * @param {Number} index - The tab page index to retrieve.
    *
-   * @returns {wcLayout|Boolean} - The layout of the found tab page, or false.
+   * @returns {wcLayoutSimple|wcLayoutTable|Boolean} - The layout of the found tab page, or false.
    */
   layout: function(index) {
     if (index > -1 && index < this._layoutList.length) {
@@ -631,7 +633,7 @@ wcTabFrame.prototype = {
         }
         this.$container.css('width', w);
       } else {
-        this.$container.css('width', '100%');
+        this.$container.css('width', '');
       }
 
       if (fit.y) {
@@ -641,7 +643,7 @@ wcTabFrame.prototype = {
         }
         this.$container.css('height', h);
       } else {
-        this.$container.css('height', '100%');
+        this.$container.css('height', '');
       }
 
       switch (this._tabOrientation) {
