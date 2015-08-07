@@ -77,6 +77,7 @@
  * 
  * @typedef wcDocker~registerOptions
  * @property {wcDocker~onCreatePanel} onCreate  - A function or an object constructor for the panel.
+ * @property {wcDocker.LAYOUT} [layout=wcDocker.LAYOUT.TABLE] - If supplied, overrides the default layout used for this panel.
  * @property {String} [icon]                    - A CSS class name to draw an icon in the panels tab widget.
  * @property {String} [faicon]                  - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
  * @property {String|Boolean} [title]           - Assign a custom name to the panels tab. A false value will hide the tab entirely.

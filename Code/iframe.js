@@ -15,7 +15,7 @@
  *
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
- * @param {wcLayout|wcSplitter|wcDocker} parent   - The layout's parent object.
+ * @param {wcPanel} parent - The iframes's parent panel.
  */
 function wcIFrame(container, panel) {
 

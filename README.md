@@ -72,10 +72,18 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
     // just replace the first '_' with a '.' and they should work fine again!
     ```
 
- - `wcLayout's` are slightly different, `wcLayout.addItem()` and `wcLayout.item()` no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayout.html#~tableItem) that can be used to make alterations to that cell.
+ - `wcLayout's` have changed in the following ways:
+    - The original layout class has been renamed to wcLayoutTable, and another type of layout now exists as wcLayoutSimple.
+    - `wcLayoutTable.addItem()` and `wcLayoutTable.item()` no longer return a jQuery object. Instead, they return a [layout table item](http://docker.api.webcabin.org/wcLayoutTable.html#~tableItem) that can be used to make alterations to that cell.
+    - To use the simple layout on your panel, include the layout option when registering your panel:
+        ```
+        myDocker.registerPanelType('my simple panel', {
+          layout: wcDocker.LAYOUT.SIMPLE,
+          create: function(myPanel) {...}
+        });
+        ```
  - The following functions are now `deprecated` and will be removed in an upcoming version:
    - `wcDocker.basicMenu()`, renamed to `wcDocker.menu()`.
-   - `wcLayout.scene()`, please use the `wcLayout.$table` jQuery element instead.
 
 - **`Collapsible panels:`** Panels can now be collapsed to the side or bottom of the screen, where they become a slide-out drawer above the main layout.
 - **`Panel creation elements:`** Instead of relying on the context-menu controls to add new panels, you can now add the CSS class **`"wcCreatePanel"`** to any dom element along with the data attribute **`"panel"`** and wcDocker will treat it as a panel creation control. A user will then be able to drag-drop that element into their view to create new panels of the specified type.

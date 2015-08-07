@@ -59,7 +59,8 @@ concat({
   src: [
     '../Code/docker.js',
     '../Code/ghost.js',
-    '../Code/layout.js',
+    '../Code/layoutsimple.js',
+    '../Code/layouttable.js',
     '../Code/panel.js',
     '../Code/frame.js',
     '../Code/splitter.js',

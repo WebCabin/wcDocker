@@ -27,7 +27,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayout.html">wcLayout</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
+					<li><a href="wcCollapser.html">wcCollapser</a></li><li><a href="wcDocker.html">wcDocker</a></li><li><a href="wcDrawer.html">wcDrawer</a></li><li><a href="wcFrame.html">wcFrame</a></li><li><a href="wcIFrame.html">wcIFrame</a></li><li><a href="wcLayoutSimple.html">wcLayoutSimple</a></li><li><a href="wcLayoutTable.html">wcLayoutTable</a></li><li><a href="wcPanel.html">wcPanel</a></li><li><a href="wcSplitter.html">wcSplitter</a></li><li><a href="wcTabFrame.html">wcTabFrame</a></li>
 				</ul>
 			</li>
 			
@@ -358,12 +358,15 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addTab"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>addTab</b>(name, <span class="optional">index</span>)</toc>
+    <h4 class="name" id="addTab"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>addTab</b>(name, <span class="optional">index</span>, <span class="optional">layout</span>)</toc>
         
         >
         
         <i><small>
-<span class="param-type"><a href="wcLayout.html">wcLayout</a></span>
+<span class="param-type"><a href="wcLayoutSimple.html">wcLayoutSimple</a></span>
+|
+
+<span class="param-type"><a href="wcLayoutTable.html">wcLayoutTable</a></span>
 
 </small></i>
         
@@ -469,7 +472,40 @@
 
             
 
-            <td class="description last">If supplied, will insert the new tab page at the given tab index.</td>
+            <td class="description last">If supplied and above -1, will insert the new tab page at the given tab index, otherwise the new tab is appended to the end.</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="wcDocker.html#.LAYOUT">wcDocker.LAYOUT</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If supplied, will set the type of layout to use for this tab.</td>
         </tr>
 
 	
@@ -481,7 +517,10 @@
     
     
 <h5>Returns: 
-<span class="param-type"><a href="wcLayout.html">wcLayout</a></span>
+<span class="param-type"><a href="wcLayoutSimple.html">wcLayoutSimple</a></span>
+|
+
+<span class="param-type"><a href="wcLayoutTable.html">wcLayoutTable</a></span>
 
 </h5>
     
@@ -537,13 +576,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-113">line 113</a>
+     <a href="tabframe.js.html#sunlight-1-line-114">line 114</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-113">line 113</a>
+				 <a href="tabframe.js.html#sunlight-1-line-114">line 114</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -741,13 +780,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-258">line 258</a>
+     <a href="tabframe.js.html#sunlight-1-line-260">line 260</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-258">line 258</a>
+				 <a href="tabframe.js.html#sunlight-1-line-260">line 260</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -1111,13 +1150,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-396">line 396</a>
+     <a href="tabframe.js.html#sunlight-1-line-398">line 398</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-396">line 396</a>
+				 <a href="tabframe.js.html#sunlight-1-line-398">line 398</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -1355,13 +1394,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-338">line 338</a>
+     <a href="tabframe.js.html#sunlight-1-line-340">line 340</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-338">line 338</a>
+				 <a href="tabframe.js.html#sunlight-1-line-340">line 340</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -1520,13 +1559,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-377">line 377</a>
+     <a href="tabframe.js.html#sunlight-1-line-379">line 379</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-377">line 377</a>
+				 <a href="tabframe.js.html#sunlight-1-line-379">line 379</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -1550,7 +1589,10 @@
         >
         
         <i><small>
-<span class="param-type"><a href="wcLayout.html">wcLayout</a></span>
+<span class="param-type"><a href="wcLayoutSimple.html">wcLayoutSimple</a></span>
+|
+
+<span class="param-type"><a href="wcLayoutTable.html">wcLayoutTable</a></span>
 |
 
 <span class="param-type">Boolean</span>
@@ -1628,7 +1670,10 @@
     
     
 <h5>Returns: 
-<span class="param-type"><a href="wcLayout.html">wcLayout</a></span>
+<span class="param-type"><a href="wcLayoutSimple.html">wcLayoutSimple</a></span>
+|
+
+<span class="param-type"><a href="wcLayoutTable.html">wcLayoutTable</a></span>
 |
 
 <span class="param-type">Boolean</span>
@@ -1687,13 +1732,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-203">line 203</a>
+     <a href="tabframe.js.html#sunlight-1-line-205">line 205</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-203">line 203</a>
+				 <a href="tabframe.js.html#sunlight-1-line-205">line 205</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -1860,13 +1905,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-243">line 243</a>
+     <a href="tabframe.js.html#sunlight-1-line-245">line 245</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-243">line 243</a>
+				 <a href="tabframe.js.html#sunlight-1-line-245">line 245</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2044,13 +2089,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-218">line 218</a>
+     <a href="tabframe.js.html#sunlight-1-line-220">line 220</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-218">line 218</a>
+				 <a href="tabframe.js.html#sunlight-1-line-220">line 220</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2248,13 +2293,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-315">line 315</a>
+     <a href="tabframe.js.html#sunlight-1-line-317">line 317</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-315">line 315</a>
+				 <a href="tabframe.js.html#sunlight-1-line-317">line 317</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2409,13 +2454,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-149">line 149</a>
+     <a href="tabframe.js.html#sunlight-1-line-151">line 151</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-149">line 149</a>
+				 <a href="tabframe.js.html#sunlight-1-line-151">line 151</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2646,13 +2691,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-280">line 280</a>
+     <a href="tabframe.js.html#sunlight-1-line-282">line 282</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-280">line 280</a>
+				 <a href="tabframe.js.html#sunlight-1-line-282">line 282</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2852,13 +2897,13 @@
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="tabframe.js.html">tabframe.js</a>,
-     <a href="tabframe.js.html#sunlight-1-line-178">line 178</a>
+     <a href="tabframe.js.html#sunlight-1-line-180">line 180</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="tabframe.js.html">tabframe.js</a>,
-				 <a href="tabframe.js.html#sunlight-1-line-178">line 178</a>
+				 <a href="tabframe.js.html#sunlight-1-line-180">line 180</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -3297,7 +3342,7 @@
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a>
-			on 2015-08-05 using the <a
+			on 2015-08-07 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>
