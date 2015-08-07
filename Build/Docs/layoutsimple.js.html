@@ -74,14 +74,14 @@
 		<pre
 			class="sunlight-highlight-javascript linenums">/**
  * @class
- * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
- * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
+ * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+ * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
  *
  * @constructor
  * @description
  * &lt;b>&lt;i>PRIVATE&lt;/i> - &lt;u>This should never be constructed directly by the user&lt;/u>&lt;/b>
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
- * @param {wcLayoutSimple|wcLayoutTable|wcSplitter|wcDocker} parent   - The layout's parent object.
+ * @param {wcLayoutSimple|wcLayoutTable|wcSplitter|wcDocker} parent - The layout's parent object.
  */
 function wcLayoutSimple(container, parent) {
   /**
