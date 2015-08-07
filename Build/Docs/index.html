@@ -145,11 +145,11 @@ wcDocker.ORIENTATION.HORIZONTAL;
 <li><code>wcLayoutTable.addItem()</code> and <code>wcLayoutTable.item()</code> no longer return a jQuery object. Instead, they return a <a href="http://docker.api.webcabin.org/wcLayoutTable.html#~tableItem">layout table item</a> that can be used to make alterations to that cell.</li>
 <li><p>To use the simple layout on your panel, include the layout option when registering your panel:</p>
 <pre class="prettyprint source"><code>  myDocker.registerPanelType('Simple Panel', {
-    // Use the simple splitter for the entire panel.
+    // Use the simple layout for the entire panel.
     layout: wcDocker.LAYOUT.SIMPLE,
     onCreate: function(myPanel) {
 
-      // Create a splitter widget with simple splitters.
+      // Create a splitter widget with simple layouts.
       var splitter = new wcSplitter($someContainer, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
       splitter.initLayouts(wcDocker.LAYOUT.SIMPLE, wcDocker.LAYOUT.SIMPLE);
 

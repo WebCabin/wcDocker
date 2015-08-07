@@ -78,11 +78,11 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
     - To use the simple layout on your panel, include the layout option when registering your panel:
         ```
         myDocker.registerPanelType('Simple Panel', {
-          // Use the simple splitter for the entire panel.
+          // Use the simple layout for the entire panel.
           layout: wcDocker.LAYOUT.SIMPLE,
           onCreate: function(myPanel) {
 
-            // Create a splitter widget with simple splitters.
+            // Create a splitter widget with simple layouts.
             var splitter = new wcSplitter($someContainer, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
             splitter.initLayouts(wcDocker.LAYOUT.SIMPLE, wcDocker.LAYOUT.SIMPLE);
 
