@@ -1,13 +1,13 @@
 /**
  * @class
- * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
- * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
+ * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter} 
+ * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
  *
  * @constructor
  * @description
  * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
- * @param {wcLayoutSimple|wcLayoutTable|wcSplitter|wcDocker} parent   - The layout's parent object.
+ * @param {wcLayoutSimple|wcLayoutTable|wcSplitter|wcDocker} parent - The layout's parent object.
  */
 function wcLayoutSimple(container, parent) {
   /**
