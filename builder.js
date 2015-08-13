@@ -145,7 +145,7 @@ wcThemeBuilder.prototype = {
   addTabFrame: function(layout, control, row, showMobile) {
     var $tabArea = null;
     if (control.stretch) {
-      $tabArea = $('<div style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;"></div>');
+      $tabArea = $('<div class="wcFullSized"></div>');
       layout.addItem($tabArea, 0, row, 4).stretch('', '100%').css('position', 'relative');
     } else {
       $tabArea = $('<div>');

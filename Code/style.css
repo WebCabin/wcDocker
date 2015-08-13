@@ -611,6 +611,11 @@ html, body {
   text-align: center;
 }
 
+.wcFullSized {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .fa-pulse {
   -webkit-animation: fa-spin 1s infinite steps(8);
   animation: fa-spin 1s infinite steps(8);
