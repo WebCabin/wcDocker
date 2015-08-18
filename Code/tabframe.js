@@ -627,7 +627,7 @@ wcTabFrame.prototype = {
 
       var fit = this.fitContents(this._curTab);
       if (fit.x) {
-        var w = layout.$table.outerWidth();
+        var w = layout.scene().outerWidth();
         if (this._tabOrientation === wcDocker.TAB.LEFT || this._tabOrientation === wcDocker.TAB.RIGHT) {
           w += this.$tabScroll.height();
         }
@@ -637,7 +637,7 @@ wcTabFrame.prototype = {
       }
 
       if (fit.y) {
-        var h = layout.$table.outerHeight();
+        var h = layout.scene().outerHeight();
         if (this._tabOrientation === wcDocker.TAB.TOP || this._tabOrientation === wcDocker.TAB.BOTTOM) {
           h += this.$tabScroll.height();
         }

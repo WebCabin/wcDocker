@@ -1957,7 +1957,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel() && self._frameList[i].panel().layout().$table[0] == this) {
+        if (self._frameList[i].panel() && self._frameList[i].panel().layout().scene()[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);

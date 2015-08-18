@@ -201,7 +201,7 @@ wcLayoutSimple.prototype = {
     }
 
     // Test for edge anchoring.
-    if (allowEdges && ghost._outer) {
+    if (allowEdges && ghost._outer && ghost._inner) {
       var outerWidth  = ghost._outer.$container.outerWidth();
       var outerHeight = ghost._outer.$container.outerHeight();
       var outerOffset = ghost._outer.$container.offset();

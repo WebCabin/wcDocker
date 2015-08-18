@@ -1957,7 +1957,7 @@ wcDocker.prototype = {
         return true;
       }
       for (var i = 0; i < self._frameList.length; ++i) {
-        if (self._frameList[i].panel() && self._frameList[i].panel().layout().$table[0] == this) {
+        if (self._frameList[i].panel() && self._frameList[i].panel().layout().scene()[0] == this) {
           setTimeout(function() {
             self.__focus(self._frameList[i]);
           }, 10);
@@ -3228,7 +3228,7 @@ wcLayoutSimple.prototype = {
     }
 
     // Test for edge anchoring.
-    if (allowEdges && ghost._outer) {
+    if (allowEdges && ghost._outer && ghost._inner) {
       var outerWidth  = ghost._outer.$container.outerWidth();
       var outerHeight = ghost._outer.$container.outerHeight();
       var outerOffset = ghost._outer.$container.offset();
@@ -3961,7 +3961,7 @@ wcLayoutTable.prototype = {
     }
 
     // Test for edge anchoring.
-    if (allowEdges && ghost._outer) {
+    if (allowEdges && ghost._outer && ghost._inner) {
       var outerWidth  = ghost._outer.$container.outerWidth();
       var outerHeight = ghost._outer.$container.outerHeight();
       var outerOffset = ghost._outer.$container.offset();
@@ -8238,7 +8238,7 @@ wcTabFrame.prototype = {
 
       var fit = this.fitContents(this._curTab);
       if (fit.x) {
-        var w = layout.$table.outerWidth();
+        var w = layout.scene().outerWidth();
         if (this._tabOrientation === wcDocker.TAB.LEFT || this._tabOrientation === wcDocker.TAB.RIGHT) {
           w += this.$tabScroll.height();
         }
@@ -8248,7 +8248,7 @@ wcTabFrame.prototype = {
       }
 
       if (fit.y) {
-        var h = layout.$table.outerHeight();
+        var h = layout.scene().outerHeight();
         if (this._tabOrientation === wcDocker.TAB.TOP || this._tabOrientation === wcDocker.TAB.BOTTOM) {
           h += this.$tabScroll.height();
         }
