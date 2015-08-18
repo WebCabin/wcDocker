@@ -31,7 +31,7 @@ wcGhost.prototype = {
       if (position.x > rect.x && position.y > rect.y 
         && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
-        if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true)) {
+        if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
           this.anchor(position, null);
         } else {
           this._anchor.panel = this._docker._floatingList[i].panel();
@@ -45,7 +45,7 @@ wcGhost.prototype = {
       if (position.x > rect.x && position.y > rect.y 
         && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
-        if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true)) {
+        if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
           this.anchor(position, null);
         } else {
           this._anchor.panel = this._docker._frameList[i].panel();

@@ -1087,7 +1087,7 @@ wcDocker.prototype = {
           if (myFrame && !myFrame._isFloating && myFrame.panel().moveable()) {
             var rect = myFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false);
+            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false, false);
             self._ghost.$ghost.hide();
           }
         }
@@ -1623,13 +1623,13 @@ wcDocker.prototype = {
           var found = false;
 
           // Check anchoring with self.
-          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper)) {
+          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper, !self.__isLastFrame(self._draggingFrame))) {
             self._draggingFrame.__shadow(true);
             self.__focus();
             if (!forceFloat) {
               for (var i = 0; i < self._frameList.length; ++i) {
                 if (self._frameList[i] !== self._draggingFrame) {
-                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper)) {
+                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper, !self.__isLastFrame(self._draggingFrame))) {
                     self._draggingFrame.__shadow(true);
                     return;
                   }
@@ -1925,7 +1925,7 @@ wcDocker.prototype = {
             self._draggingFrameTopper = $(event.target).parents('.wcFrameTopper').length > 0;
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper);
+            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper, !self.__isLastFrame(self._draggingFrame));
             self.trigger(wcDocker.EVENT.BEGIN_DOCK);
           }
           break;

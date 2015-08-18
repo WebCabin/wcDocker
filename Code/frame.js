@@ -1051,15 +1051,16 @@ wcFrame.prototype = {
 
   // Checks if the mouse is in a valid anchor position for docking a panel.
   // Params:
-  //    mouse     The current mouse position.
-  //    same      Whether the moving frame and this one are the same.
-  //    ghost     The ghost object.
-  //    canSplit  Whether the frame can be split
-  //    isTopper  Whether the user is dragging the topper (top title bar).
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper) {
+  //    mouse       The current mouse position.
+  //    same        Whether the moving frame and this one are the same.
+  //    ghost       The ghost object.
+  //    canSplit    Whether the frame can be split
+  //    isTopper    Whether the user is dragging the topper (top title bar).
+  //    allowEdges  Whether to allow edge docking.
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper, allowEdges) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && !this.isCollapser() && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
+      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && !this.isCollapser() && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined, allowEdges);
     }
     return false;
   },

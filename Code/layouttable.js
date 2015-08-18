@@ -409,7 +409,8 @@ wcLayoutTable.prototype = {
   //    title                 Whether the panel has a title bar visible.
   //    isTopper              Whether the item being dragged is the top title bar, as apposed to dragging a side or bottom tab/bar.
   //    forceTabOrientation   Force a specific tab orientation.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation) {
+  //    allowEdges            Whether to allow edge docking.
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation, allowEdges) {
     var docker = this._parent.docker();
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
@@ -524,7 +525,7 @@ wcLayoutTable.prototype = {
     }
 
     // Test for edge anchoring.
-    if (ghost._outer) {
+    if (allowEdges && ghost._outer) {
       var outerWidth  = ghost._outer.$container.outerWidth();
       var outerHeight = ghost._outer.$container.outerHeight();
       var outerOffset = ghost._outer.$container.offset();
