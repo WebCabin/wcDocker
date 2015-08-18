@@ -1087,7 +1087,7 @@ wcDocker.prototype = {
           if (myFrame && !myFrame._isFloating && myFrame.panel().moveable()) {
             var rect = myFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false);
+            myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false, false);
             self._ghost.$ghost.hide();
           }
         }
@@ -1623,13 +1623,13 @@ wcDocker.prototype = {
           var found = false;
 
           // Check anchoring with self.
-          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper)) {
+          if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper, !self.__isLastFrame(self._draggingFrame))) {
             self._draggingFrame.__shadow(true);
             self.__focus();
             if (!forceFloat) {
               for (var i = 0; i < self._frameList.length; ++i) {
                 if (self._frameList[i] !== self._draggingFrame) {
-                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper)) {
+                  if (self._frameList[i].__checkAnchorDrop(mouse, false, self._ghost, true, self._draggingFrameTopper, !self.__isLastFrame(self._draggingFrame))) {
                     self._draggingFrame.__shadow(true);
                     return;
                   }
@@ -1925,7 +1925,7 @@ wcDocker.prototype = {
             self._draggingFrameTopper = $(event.target).parents('.wcFrameTopper').length > 0;
             var rect = self._draggingFrame.__rect();
             self._ghost = new wcGhost(rect, mouse, self);
-            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper);
+            self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, true, self._draggingFrameTopper, !self.__isLastFrame(self._draggingFrame));
             self.trigger(wcDocker.EVENT.BEGIN_DOCK);
           }
           break;
@@ -2856,7 +2856,7 @@ wcGhost.prototype = {
       if (position.x > rect.x && position.y > rect.y 
         && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
-        if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true)) {
+        if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
           this.anchor(position, null);
         } else {
           this._anchor.panel = this._docker._floatingList[i].panel();
@@ -2870,7 +2870,7 @@ wcGhost.prototype = {
       if (position.x > rect.x && position.y > rect.y 
         && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
-        if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true)) {
+        if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
           this.anchor(position, null);
         } else {
           this._anchor.panel = this._docker._frameList[i].panel();
@@ -3112,7 +3112,8 @@ wcLayoutSimple.prototype = {
   //    title                 Whether the panel has a title bar visible.
   //    isTopper              Whether the item being dragged is the top title bar, as apposed to dragging a side or bottom tab/bar.
   //    forceTabOrientation   Force a specific tab orientation.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation) {
+  //    allowEdges            Whether to allow edge docking.
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation, allowEdges) {
     var docker = this._parent.docker();
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
@@ -3227,7 +3228,7 @@ wcLayoutSimple.prototype = {
     }
 
     // Test for edge anchoring.
-    if (ghost._outer) {
+    if (allowEdges && ghost._outer) {
       var outerWidth  = ghost._outer.$container.outerWidth();
       var outerHeight = ghost._outer.$container.outerHeight();
       var outerOffset = ghost._outer.$container.offset();
@@ -3844,7 +3845,8 @@ wcLayoutTable.prototype = {
   //    title                 Whether the panel has a title bar visible.
   //    isTopper              Whether the item being dragged is the top title bar, as apposed to dragging a side or bottom tab/bar.
   //    forceTabOrientation   Force a specific tab orientation.
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation) {
+  //    allowEdges            Whether to allow edge docking.
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation, allowEdges) {
     var docker = this._parent.docker();
     var width = $elem.outerWidth();
     var height = $elem.outerHeight();
@@ -3959,7 +3961,7 @@ wcLayoutTable.prototype = {
     }
 
     // Test for edge anchoring.
-    if (ghost._outer) {
+    if (allowEdges && ghost._outer) {
       var outerWidth  = ghost._outer.$container.outerWidth();
       var outerHeight = ghost._outer.$container.outerHeight();
       var outerOffset = ghost._outer.$container.offset();
@@ -6174,15 +6176,16 @@ wcFrame.prototype = {
 
   // Checks if the mouse is in a valid anchor position for docking a panel.
   // Params:
-  //    mouse     The current mouse position.
-  //    same      Whether the moving frame and this one are the same.
-  //    ghost     The ghost object.
-  //    canSplit  Whether the frame can be split
-  //    isTopper  Whether the user is dragging the topper (top title bar).
-  __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper) {
+  //    mouse       The current mouse position.
+  //    same        Whether the moving frame and this one are the same.
+  //    ghost       The ghost object.
+  //    canSplit    Whether the frame can be split
+  //    isTopper    Whether the user is dragging the topper (top title bar).
+  //    allowEdges  Whether to allow edge docking.
+  __checkAnchorDrop: function(mouse, same, ghost, canSplit, isTopper, allowEdges) {
     var panel = this.panel();
     if (panel && panel.moveable()) {
-      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && !this.isCollapser() && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined);
+      return panel.layout().__checkAnchorDrop(mouse, same && this._tabOrientation, ghost, (!this._isFloating && !this.isCollapser() && canSplit), this.$frame, panel.moveable() && panel.title(), isTopper, this.isCollapser()? this._tabOrientation: undefined, allowEdges);
     }
     return false;
   },
