@@ -11,6 +11,7 @@
  * @property {Number} [responseRate=10] - This determines how often updates are performed (in milliseconds).
  * @property {Number|String} [edgeAnchorSize=50] - Determines the size of the anchor points when docking a panel to the outer edge of the window.
  * @property {Number|String} [panelAnchorSize='15%'] - Determines the size of the anchor points when docking a panel along the side of another panel.
+ * @property {Number} [moveStartDelay=300] - The time delay (in milliseconds) before a panel drag operation will start.
  */
 
 /**
