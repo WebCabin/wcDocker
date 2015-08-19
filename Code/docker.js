@@ -80,7 +80,8 @@ function wcDocker(container, options) {
     allowCollapse: true,
     responseRate: 10,
     edgeAnchorSize: 50,
-    panelAnchorSize: '15%'
+    panelAnchorSize: '15%',
+    moveStartDelay: 300
   };
 
   this._options = {};
@@ -1600,6 +1601,9 @@ wcDocker.prototype = {
 
       lastMouseMove = new Date().getTime();
 
+      if (t - lastLButtonDown < self._options.moveStartDelay)
+        return;
+
       if (self._draggingSplitter) {
         self._draggingSplitter.__moveBar(mouse);
       } else if (self._draggingFrameSizer) {
@@ -1875,6 +1879,7 @@ wcDocker.prototype = {
       return true;
     };
 
+    var lastLButtonDown = 0;
     // on mousedown for .wcFrameTitleBar
     function __onMouseDownFrameTitle(event) {
       var mouse = self.__mouse(event);
@@ -1886,6 +1891,8 @@ wcDocker.prototype = {
         return true;
       }
       
+      lastLButtonDown = new Date().getTime();
+
       $('body').addClass('wcDisableSelection');
       for (var i = 0; i < self._frameList.length; ++i) {
         if (self._frameList[i].$titleBar[0] == this ||
