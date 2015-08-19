@@ -82,8 +82,8 @@ function wcDocker(container, options) {
     moveStartDelay: 300,
     edgeAnchorSize: 50,
     panelAnchorSize: '15%',
-    detachToWidth: 600,
-    detachToHeight: 400
+    detachToWidth: '50%',
+    detachToHeight: '50%'
   };
 
   this._options = {};

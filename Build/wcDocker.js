@@ -79,9 +79,11 @@ function wcDocker(container, options) {
     hideOnResize: false,
     allowCollapse: true,
     responseRate: 10,
+    moveStartDelay: 300,
     edgeAnchorSize: 50,
     panelAnchorSize: '15%',
-    moveStartDelay: 300
+    detachToWidth: '50%',
+    detachToHeight: '50%'
   };
 
   this._options = {};
@@ -2921,6 +2923,13 @@ wcGhost.prototype = {
         return;
       }
 
+      if(this._docker._draggingFrame && this._docker._draggingFrame.$container) {
+        var detachToWidth = this._docker._draggingFrame._panelList[0]._options.detachToWidth || this._docker._options.detachToWidth || this._rect.w;
+        var detachToHeight = this._docker._draggingFrame._panelList[0]._options.detachToHeight || this._docker._options.detachToHeight || this._rect.h;
+        this._rect.w = this._docker.__stringToPixel(detachToWidth, this._docker.$container.width());
+        this._rect.h = this._docker.__stringToPixel(detachToHeight, this._docker.$container.height());
+      }
+
       this._anchor = null;
       this.$ghost.show();
       this.$ghost.stop().animate({
@@ -3032,6 +3041,7 @@ wcGhost.prototype = {
     });
   },
 };
+
 /**
  * @class
  * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter} 
@@ -4195,6 +4205,8 @@ function wcPanel(type, options) {
    * @property {String} [icon] - A CSS classname that represents the icon that should display on this panel's tab widget.
    * @property {String} [faicon] - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
    * @property {String|Boolean} [title] - A custom title to display for this panel, if false, title bar will not be shown.
+   * @property {Number|String} [detachToWidth=600] - Determines the new width when the panel is detached (0 = Don't change). Can be a pixel value, or a string with a 'px' or '%' suffix.
+   * @property {Number|String} [detachToHeight=400] - Determines the new height when the panel is detached (0 = Don't change).  Can be a pixel value, or a string with a 'px' or '%' suffix.
    */
 
   /**
@@ -5130,6 +5142,7 @@ wcPanel.prototype = {
     this._parent = null;
   },
 };
+
 /**
  * @class
  * The frame is a [panel]{@link wcPanel} container.

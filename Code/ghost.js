@@ -90,14 +90,10 @@ wcGhost.prototype = {
       }
 
       if(this._docker._draggingFrame && this._docker._draggingFrame.$container) {
-        var r = {
-          w: this._docker._draggingFrame.$container.width(),
-          h: this._docker._draggingFrame.$container.height()
-        };
-        var detachToWidth = this._docker._draggingFrame._panelList[0]._options.detachToWidth || this._docker._options.detachToWidth;
-        var detachToHeight = this._docker._draggingFrame._panelList[0]._options.detachToHeight || this._docker._options.detachToHeight;
-        this._rect.w = this._docker.__stringToPixel( detachToWidth || this._rect.w, r.w);
-        this._rect.h = this._docker.__stringToPixel( detachToHeight || this._rect.h, r.h);
+        var detachToWidth = this._docker._draggingFrame._panelList[0]._options.detachToWidth || this._docker._options.detachToWidth || this._rect.w;
+        var detachToHeight = this._docker._draggingFrame._panelList[0]._options.detachToHeight || this._docker._options.detachToHeight || this._rect.h;
+        this._rect.w = this._docker.__stringToPixel(detachToWidth, this._docker.$container.width());
+        this._rect.h = this._docker.__stringToPixel(detachToHeight, this._docker.$container.height());
       }
 
       this._anchor = null;
