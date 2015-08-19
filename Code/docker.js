@@ -80,7 +80,9 @@ function wcDocker(container, options) {
     allowCollapse: true,
     responseRate: 10,
     edgeAnchorSize: 50,
-    panelAnchorSize: '15%'
+    panelAnchorSize: '15%',
+    detachToWidth: 600,
+    detachToHeight: 400
   };
 
   this._options = {};
