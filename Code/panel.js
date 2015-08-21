@@ -888,7 +888,7 @@ wcPanel.prototype = {
     // this._scrollable.y = data.scrollable.y;
     // this._moveable = data.moveable;
     // this._closeable = data.closeable;
-    // this.resizeVisible(data.resizeVisible)
+    // this.resizeVisible(data.resizeVisible);
     this.__trigger(wcDocker.EVENT.RESTORE_LAYOUT, data.customData);
   },
 
@@ -902,8 +902,9 @@ wcPanel.prototype = {
     }
 
     if (this._events[eventType]) {
-      for (var i = 0; i < this._events[eventType].length; ++i) {
-        this._events[eventType][i].call(this, data);
+      var events = this._events[eventType].slice(0);
+      for (var i = 0; i < events.length; ++i) {
+        events[i].call(this, data);
       }
     }
   },

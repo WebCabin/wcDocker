@@ -2374,8 +2374,9 @@ wcDocker.prototype = {
     }
 
     if (this._events[eventName]) {
-      for (var i = 0; i < this._events[eventName].length; ++i) {
-        this._events[eventName][i].call(this, data);
+      var events = this._events[eventName].slice(0);
+      for (var i = 0; i < events.length; ++i) {
+        events[i].call(this, data);
       }
     }
   },
