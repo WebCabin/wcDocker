@@ -6,7 +6,7 @@ define([], function () {
     /**
      * Enumerated Docking positions.
      * @version 3.0.0
-     * @memberOf {wcDocker}
+     * @memberOf {module:wcDocker}
      * @enum {String}
      */
     wcDocker.DOCK = {
@@ -127,9 +127,12 @@ define([], function () {
      * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
      * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
      * @constant {String}
-     * @memberOf module:wcDocker
+     * @global
+     * @name wcDocker.COLLAPSED
+     * @public
      */
     wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
+
 
     /**
      * Used for the splitter bar orientation.
@@ -142,6 +145,15 @@ define([], function () {
         /** Left and Right panes */
         HORIZONTAL: true
     };
+    /**
+     * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
+     * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
+     * @constant {String}
+     * @global
+     * @name wcDocker.COLLAPSED
+     * @public
+     */
+    wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
 
     /**
      * Used to determine the position of tabbed widgets for stacked panels.<br>
