@@ -1,3 +1,4 @@
+/** @module wcPanel */
 define([
     "dcl/dcl",
     "./types",
@@ -6,13 +7,14 @@ define([
     "./base"
 ], function (dcl, wcDocker,wcLayoutSimple,wcLayoutTable,base) {
 
+    /**
+     * @class wcPanel
+     * The public interface for the docking panel, it contains a number of convenience
+     * functions and layout that manages the contents of the panel.
+     */
     var Module = dcl(base, {
         declaredClass:'wcPanel',
         /**
-         * @class
-         * The public interface for the docking panel, it contains a number of convenience
-         * functions and layout that manages the contents of the panel.
-         *
          * @constructor
          * @description
          * <b><i>PRIVATE</i> - Use [wcDocker.addPanel]{@link wcDocker#addPanel}, [wcDocker.removePanel]{@link wcDocker#removePanel}, and
