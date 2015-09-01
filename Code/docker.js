@@ -14,7 +14,7 @@
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
  */
-
+/** @module wcDocker */
 define([
     "dcl/dcl",
     "./types",
@@ -24,18 +24,18 @@ define([
     './frame',
     './collapser',
     './drawer',
+    './iframe',
     './base'
-], function (dcl,wcDocker,wcPanel,wcGhost,wcSplitter,wcFrame,wcCollapser,wcDrawer,base) {
-
+], function (dcl,wcDocker,wcPanel,wcGhost,wcSplitter,wcFrame,wcCollapser,wcDrawer,wcIFrame,base) {
+    /**
+     * @class module:wcDocker
+     * The main docker instance.  This manages all of the docking panels and user input.
+     * There should only be one instance of this, although it is not enforced.<br>
+     * See {@tutorial getting-started}
+     */
     var Module = dcl(base,{
-
         /**
-         * @class
-         * The main docker instance.  This manages all of the docking panels and user input.
-         * There should only be one instance of this, although it is not enforced.<br>
-         * See {@tutorial getting-started}
-         *
-         * @constructor
+         * @memberOf module:wcDocker
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element to store the contents of wcDocker.
          * @param {wcDocker~Options} [options] - Options for constructing the instance.
          */
