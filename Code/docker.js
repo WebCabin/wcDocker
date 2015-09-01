@@ -46,7 +46,7 @@ define([
         /**
          * @memberOf wcDocker
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element to store the contents of wcDocker.
-         * @param {wcDocker~Options} [options] - Options for constructing the instance.
+         * @param {module:wcDocker~Options} [options] - Options for constructing the instance.
          */
         constructor: function (container, options) {
 
@@ -182,7 +182,7 @@ define([
          * Registers a new docking panel type to be used later.
          * @version 3.0.0
          * @param {String} name                       - The name identifier for the new panel type.
-         * @param {wcDocker~registerOptions} options  - An options object for describing the panel type.
+         * @param {module:wcDocker~registerOptions} options  - An options object for describing the panel type.
          * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options.isPrivate]{@link wcDocker~registerOptions} instead.
          * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
          */
@@ -239,7 +239,7 @@ define([
         /**
          * Retrieves the options data associated with a given panel type when it was registered.
          * @param {String} typeName - The name identifier of the panel.
-         * @returns {wcDocker~registerOptions} - Registered options of the panel type, or false if the panel was not found.
+         * @returns {module:wcDocker~registerOptions} - Registered options of the panel type, or false if the panel was not found.
          */
         panelTypeInfo: function (typeName) {
             for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
@@ -254,10 +254,10 @@ define([
          * Add a new docked panel to the docker instance.<br>
          * <b>Note:</b> It is best to use {@link wcDocker.COLLAPSED} after you have added your other docked panels, as it may ensure proper placement.
          * @param {String} typeName                           - The name identifier of the panel to create.
-         * @param {wcDocker.DOCK} location                    - The docking location to place this panel.
-         * @param {wcPanel|module:wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
-         * @param {wcDocker~PanelOptions} [options]           - Other options for panel placement.
-         * @returns {wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
+         * @param {module:wcDocker.DOCK} location                    - The docking location to place this panel.
+         * @param {module:wcPanel|module:wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
+         * @param {module:wcDocker~PanelOptions} [options]           - Other options for panel placement.
+         * @returns {module:wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
          */
         addPanel: function (typeName, location, targetPanel, options) {
             function __addPanel(panel) {
@@ -307,7 +307,7 @@ define([
 
         /**
          * Removes a docked panel from the window.
-         * @param {wcPanel} panel - The panel to remove.
+         * @param {module:wcPanel} panel - The panel to remove.
          * @param {Boolean} dontDestroy - If true, the panel itself will not be destroyed.
          * @returns {Boolean} - Success or failure.
          */
@@ -427,11 +427,11 @@ define([
 
         /**
          * Moves a docking panel from its current location to another.
-         * @param {wcPanel} panel                             - The panel to move.
-         * @param {wcDocker.DOCK} location                    - The new docking location of the panel.
-         * @param {wcPanel|wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
-         * @param {wcDocker~PanelOptions} [options]           - Other options for panel placement.
-         * @returns {wcPanel|Boolean} - The panel that was created, or false on failure.
+         * @param {module:wcPanel} panel                             - The panel to move.
+         * @param {module:wcDocker.DOCK} location                    - The new docking location of the panel.
+         * @param {module:wcPanel|wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
+         * @param {module:wcDocker~PanelOptions} [options]           - Other options for panel placement.
+         * @returns {module:wcPanel|Boolean} - The panel that was created, or false on failure.
          */
         movePanel: function (panel, location, targetPanel, options) {
             var lastPanel = this.__isLastPanel(panel);
@@ -583,7 +583,7 @@ define([
         /**
          * Finds all instances of a given panel type.
          * @param {String} [typeName] - The name identifier for the panel. If not supplied, all panels are retrieved.
-         * @returns {wcPanel[]} - A list of all panels found of the given type.
+         * @returns {module:wcPanel[]} - A list of all panels found of the given type.
          */
         findPanels: function (typeName) {
             var result = [];
@@ -660,8 +660,8 @@ define([
 
         /**
          * Registers a global [event]{@link wcDocker.EVENT}.
-         * @param {wcDocker.EVENT} eventType        - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
-         * @param {wcDocker~event:onEvent} handler  - A handler function to be called for the event.
+         * @param {module:wcDocker.EVENT} eventType        - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+         * @param {module:wcDocker~event:onEvent} handler  - A handler function to be called for the event.
          * @returns {Boolean} Success or failure that the event has been registered.
          */
         on: function (eventType, handler) {
@@ -683,8 +683,8 @@ define([
 
         /**
          * Unregisters a global [event]{@link wcDocker.EVENT}.
-         * @param {wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
-         * @param {wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
+         * @param {module:wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+         * @param {module:wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
          */
         off: function (eventType, handler) {
             if (typeof eventType === 'undefined') {
@@ -708,7 +708,7 @@ define([
         /**
          * Trigger an [event]{@link wcDocker.EVENT} on all panels.
          * @fires wcDocker~event:onEvent
-         * @param {wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+         * @param {module:wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
          * @param {Object} [data]             - A custom data object to be passed along with the event.
          */
         trigger: function (eventName, data) {
