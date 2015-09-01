@@ -8,6 +8,7 @@ define([], function () {
      * @version 3.0.0
      * @memberOf module:wcDocker
      * @enum {String} module:wcDocker.DOCK
+     * @constant {String} module:wcDocker.DOCK
      */
     wcDocker.DOCK = {
         /** A floating panel that blocks input until closed */
