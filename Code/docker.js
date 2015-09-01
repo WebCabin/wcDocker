@@ -2734,7 +2734,6 @@ wcDocker.prototype = {
                 splitter.scrollable(0, false, false);
                 splitter.scrollable(1, false, false);
                 collapser = new wcCollapser(this.$transition, splitter, location);
-
                 switch (location) {
                     case wcDocker.DOCK.TOP:
                     case wcDocker.DOCK.LEFT:
