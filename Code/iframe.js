@@ -323,7 +323,7 @@ define([
          *
          * @returns {wcDocker} - The top level docker object.
          */
-        docker: function () {
+        __docker: function () {
             var parent = this._parent;
             while (parent && !(parent.instanceOf('wcDocker'))) {
 
@@ -334,7 +334,7 @@ define([
         __onMoved: function () {
             if (this.$frame && this._panel) {
                 // Size, position, and show the frame once the move is finished.
-                var docker = this.docker();
+                var docker = this.docker();//in base
                 if(docker) {
                     var dockerPos = docker.$container.offset();
                     var pos = this.$container.offset();
