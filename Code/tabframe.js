@@ -1,8 +1,10 @@
 define([
     "dcl/dcl",
-    "./types"
-], function (dcl, wcDocker) {
-    var Module = dcl(null, {
+    "./types",
+    "./base"
+], function (dcl, wcDocker,base) {
+
+    var Module = dcl(base, {
 
         LEFT_TAB_BUFFER: 15,
 
@@ -46,20 +48,6 @@ define([
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         *
-         * @returns {wcDocker} - The top level docker object.
-         */
-        docker: function () {
-            var parent = this._parent;
-            while (parent && !(parent instanceof wcDocker)) {
-                parent = parent._parent;
-            }
-            return parent;
-        },
-
         /**
          * Manually update the contents of this tab frame.
          */

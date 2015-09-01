@@ -6,8 +6,9 @@
 define([
     "dcl/dcl",
     "./types",
-    "./frame"
-], function (dcl, wcDocker,wcFrame) {
+    "./frame",
+    "./base"
+], function (dcl, wcDocker,wcFrame,base) {
     /**
      * @class
      * A collapsable container for carrying panels.<br>
@@ -20,7 +21,7 @@ define([
      * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
      * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
      */
-    var Module = dcl(null,{
+    var Module = dcl(base,{
         /*
          A docker container for carrying its own arrangement of docked panels as a slide out drawer.
          */
@@ -41,19 +42,6 @@ define([
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         *
-         * @returns {wcDocker} - The top level docker object.
-         */
-        docker: function () {
-            var parent = this._parent;
-            while (parent && !(parent instanceof wcDocker)) {
-                parent = parent._parent;
-            }
-            return parent;
-        },
         /**
          * Collapses the drawer to its respective side wall.
          */

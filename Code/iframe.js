@@ -1,9 +1,10 @@
 define([
     "dcl/dcl",
-    "./types"
-], function (dcl, wcDocker) {
+    "./types",
+    "./base"
+], function (dcl, wcDocker,base) {
 
-    var Module = dcl(null, {
+    var Module = dcl(base, {
         /**
          * @class
          * The wcIFrame widget makes it easier to include an iFrame element into your panel.
@@ -49,22 +50,8 @@ define([
             this.__init();
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-// Public Functions
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         *
-         * @returns {wcDocker} - The top level docker object.
-         */
-        docker: function () {
-            var parent = this._panel;
-            while (parent && !(parent instanceof wcDocker)) {
-                parent = parent._parent;
-            }
-            return parent;
-        },
-
+        // Public Functions
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
         /**
          * Opens a given URL address into the iFrame.
          *

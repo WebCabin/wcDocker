@@ -1,7 +1,8 @@
 define([
     "dcl/dcl",
-    "./types"
-], function (dcl, wcDocker) {
+    "./types",
+    "./base"
+], function (dcl, wcDocker,base) {
 
     /**
      * @class
@@ -19,7 +20,7 @@ define([
     /*
      A docker container for carrying its own arrangement of docked panels as a slide out drawer.
      */
-    return dcl(null, {
+    return dcl(base, {
 
         constructor: function (container, parent, position) {
 
@@ -38,20 +39,6 @@ define([
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         *
-         * @returns {wcDocker} - The top level docker object.
-         */
-        docker: function () {
-            var parent = this._parent;
-            while (parent && !(parent instanceof wcDocker)) {
-                parent = parent._parent;
-            }
-            return parent;
-        },
-
         /**
          * Collapses the drawer to its respective side wall.
          */

@@ -122,19 +122,6 @@ define([
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         * @returns {wcDocker} - The top level docker object.
-         */
-        __docker: function () {
-            var parent = this._parent;
-            while (parent && !(parent instanceof wcDocker)) {
-                parent = parent._parent;
-            }
-            return parent;
-        },
-
         /**
          * Gets, or Sets the title for this panel.
          * Titles appear in the tab widget associated with the panel.

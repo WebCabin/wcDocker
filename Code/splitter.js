@@ -1,8 +1,9 @@
 define([
     "dcl/dcl",
-    "./types"
-], function (dcl, wcDocker) {
-    var Module = dcl(null, {
+    "./types",
+    "./base"
+], function (dcl, wcDocker,base) {
+    var Module = dcl(base, {
         /**
          * @class
          * Splits an area in two, dividing it with a resize-able splitter bar. This is the same class
@@ -60,19 +61,6 @@ define([
 
             this.pane(0, layout0);
             this.pane(1, layout1);
-        },
-
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         *
-         * @returns {wcDocker} - The top level docker object.
-         */
-        docker: function () {
-            var parent = this._parent;
-            while (parent && !(parent instanceof wcDocker)) {
-                parent = parent._parent;
-            }
-            return parent;
         },
 
         /**

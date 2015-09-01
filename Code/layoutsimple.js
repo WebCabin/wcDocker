@@ -2,6 +2,7 @@ define([
     "dcl/dcl",
     "./types"
 ], function (dcl, wcDocker) {
+
     var Module = dcl(null, {
         /**
          * @class

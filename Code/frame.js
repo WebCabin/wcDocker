@@ -5,6 +5,9 @@ define([
 ], function (dcl, wcDocker,base) {
 
     var Module = dcl(base, {
+
+        LEFT_TAB_BUFFER: 15,
+
         /**
          * @class
          * The frame is a [panel]{@link wcPanel} container.
@@ -89,25 +92,10 @@ define([
 
             this.__init();
         },
-        LEFT_TAB_BUFFER: 15,
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// Public Functions
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         *
-         * @returns {wcDocker} - The top level docker object.
-         */
-        __docker: function () {
-            var _d = this.getDocker();
-            var parent = this._parent;
-            while (parent && !(parent instanceof wcDocker)) {
-                parent = parent._parent;
-            }
-            return parent;
-        },
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Public Functions
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
          * Gets, or Sets the position of the frame.
