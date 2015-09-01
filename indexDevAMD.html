@@ -22,23 +22,42 @@
     <script src="bower_components/requirejs/require.js"></script>
 
     <script type="text/javascript">
+
+        //setup require-js
         require.config({
             baseUrl: "./bower_components",
             packages: [
                 {
                     name: 'dcl',
-                    location: './dcl'//points to bower_components/dcl
+                    location: './dcl'   //points to bower_components/dcl
                 },
                 {
                     name: 'wcDocker',
                     location: '../Code'
                 }
-
             ]
         });
+
+
     </script>
 
     <script type="text/javascript">
+
+
+
+        //setup demo module
+        require.config({
+            config: {
+
+                'wcDocker/samples/demoAMD':{
+                    //  enable/disable theme builder
+                    themeBuilder: true,
+                    //  enable/disable tutorials
+                    tutorials:false
+                }
+            }
+        });
+
 
         try {
             //require demo
