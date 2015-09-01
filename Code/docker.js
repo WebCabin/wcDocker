@@ -14,7 +14,6 @@
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
  */
-
 /** @module wcDocker */
 define([
     "dcl/dcl",
@@ -47,7 +46,7 @@ define([
          * */
         COLLAPSED : '__wcDockerCollapsedPanel',
         /**
-         * @memberOf module:wcDocker
+         * @memberOf wcDocker
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element to store the contents of wcDocker.
          * @param {wcDocker~Options} [options] - Options for constructing the instance.
          */
