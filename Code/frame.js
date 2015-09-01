@@ -2,7 +2,8 @@ define([
     "dcl/dcl",
     "./types"
 ], function (dcl, wcDocker) {
-    return dcl(null, {
+
+    var Module = dcl(null, {
         /**
          * @class
          * The frame is a [panel]{@link wcPanel} container.
@@ -1220,5 +1221,9 @@ define([
             this._parent = null;
         }
     });
+
+    window['wcFrame'] = Module;
+
+    return Module;
 });
 
