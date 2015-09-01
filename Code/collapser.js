@@ -10,6 +10,7 @@
  * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
  * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
  */
+
 /*
  A docker container for carrying its own arrangement of docked panels as a slide out drawer.
  */

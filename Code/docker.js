@@ -2730,6 +2730,7 @@ wcDocker.prototype = {
                 }
             }
 
+
             if (splitter) {
 
                 splitter.scrollable(0, false, false);
