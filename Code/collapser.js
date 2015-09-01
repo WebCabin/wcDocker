@@ -20,8 +20,8 @@ define([
     /*
      A docker container for carrying its own arrangement of docked panels as a slide out drawer.
      */
-    return dcl(base, {
-
+    var Module = dcl(base, {
+        declaredClass:'wcCollapser',
         constructor: function (container, parent, position) {
 
             this.$container = $(container);
@@ -181,5 +181,10 @@ define([
             this.__container(null);
             this._parent = null;
         }
-    })
+    });
+
+    window['wcCollapser'] = Module;
+
+    return Module;
+
 });

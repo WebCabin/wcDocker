@@ -4,6 +4,7 @@ define([
 ], function (dcl, wcDocker) {
 
     var Module = dcl(null, {
+        declaredClass:'wcGhost',
         /*
          A ghost object that follows the mouse around during dock movement.
          */

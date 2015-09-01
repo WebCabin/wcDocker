@@ -1,8 +1,3 @@
-/**
- * @module wcDocker/Drawer
- * @private
- */
-
 define([
     "dcl/dcl",
     "./types",
@@ -22,6 +17,9 @@ define([
      * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
      */
     var Module = dcl(base,{
+
+        declaredClass:'wcCollapser',
+
         /*
          A docker container for carrying its own arrangement of docked panels as a slide out drawer.
          */

@@ -4,6 +4,9 @@ define([
 ], function (dcl, wcDocker) {
 
     var Module = dcl(null, {
+
+        declaredClass:'wcLayoutSimple',
+
         /**
          * @class
          * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}

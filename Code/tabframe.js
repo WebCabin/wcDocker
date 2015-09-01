@@ -6,6 +6,8 @@ define([
 
     var Module = dcl(base, {
 
+        declaredClass:'wcTabFrame',
+
         LEFT_TAB_BUFFER: 15,
 
         /**

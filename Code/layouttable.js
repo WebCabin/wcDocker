@@ -4,6 +4,7 @@ define([
 ], function (dcl, wcDocker) {
 
     var Module = dcl(null, {
+        declaredClass:'wcLayoutTable',
         /**
          * @class
          * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}

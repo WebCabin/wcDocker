@@ -7,6 +7,7 @@ define([
 ], function (dcl, wcDocker,wcLayoutSimple,wcLayoutTable,base) {
 
     var Module = dcl(base, {
+        declaredClass:'wcPanel',
         /**
          * @class
          * The public interface for the docking panel, it contains a number of convenience

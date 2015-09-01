@@ -5,6 +5,8 @@ define([
 ], function (dcl, wcDocker,base) {
 
     var Module = dcl(base, {
+
+        declaredClass:'wcIFrame',
         /**
          * @class
          * The wcIFrame widget makes it easier to include an iFrame element into your panel.
@@ -316,19 +318,36 @@ define([
                 this.__focusFix();
             }
         },
+        /**
+         * Retrieves the main [docker]{@link wcDocker} instance.
+         *
+         * @returns {wcDocker} - The top level docker object.
+         */
+        docker: function () {
+            var parent = this._parent;
+            while (parent && !(parent.instanceOf('wcDocker'))) {
 
+                parent = parent._parent;
+            }
+            return parent;
+        },
         __onMoved: function () {
             if (this.$frame && this._panel) {
                 // Size, position, and show the frame once the move is finished.
-                var dockerPos = this.docker().$container.offset();
-                var pos = this.$container.offset();
-                var width = this.$container.width();
-                var height = this.$container.height();
+                var docker = this.docker();
+                if(docker) {
+                    var dockerPos = docker.$container.offset();
+                    var pos = this.$container.offset();
+                    var width = this.$container.width();
+                    var height = this.$container.height();
 
-                this.$frame.css('top', pos.top - dockerPos.top);
-                this.$frame.css('left', pos.left - dockerPos.left);
-                this.$frame.css('width', width);
-                this.$frame.css('height', height);
+                    this.$frame.css('top', pos.top - dockerPos.top);
+                    this.$frame.css('left', pos.left - dockerPos.left);
+                    this.$frame.css('width', width);
+                    this.$frame.css('height', height);
+                }else{
+                    console.error('have no docker');
+                }
             }
         },
         __onClosed: function () {

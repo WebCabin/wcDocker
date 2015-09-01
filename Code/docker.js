@@ -29,7 +29,6 @@ define([
 
     var Module = dcl(base,{
 
-        declaredClass:'wcDocker',
         /**
          * @class
          * The main docker instance.  This manages all of the docking panels and user input.
@@ -42,6 +41,7 @@ define([
          */
         constructor: function (container, options) {
 
+            this.declaredClass = 'wcDocker';
             this.$outer = $(container);
             this.$container = $('<div class="wcDocker">');
             this.$transition = $('<div class="wcDockerTransition">');

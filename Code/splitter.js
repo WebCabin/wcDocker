@@ -4,6 +4,7 @@ define([
     "./base"
 ], function (dcl, wcDocker,base) {
     var Module = dcl(base, {
+        declaredClass:'wcSplitter',
         /**
          * @class
          * Splits an area in two, dividing it with a resize-able splitter bar. This is the same class
