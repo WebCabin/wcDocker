@@ -23,10 +23,12 @@ define([
     './splitter',
     './frame',
     './collapser',
-    './drawer'
-], function (dcl, wcDocker,wcPanel,wcGhost,wcSplitter,wcFrame,wcCollapser,wcDrawer) {
+    './drawer',
+    './base'
+], function (dcl,wcDocker,wcPanel,wcGhost,wcSplitter,wcFrame,wcCollapser,wcDrawer,base) {
 
-    var Module = dcl(null, {
+    var Module = dcl(base,{
+
         declaredClass:'wcDocker',
         /**
          * @class
@@ -2434,8 +2436,11 @@ define([
 
             if (targetPanel) {
                 var parentSplitter = targetPanel._parent;
+
                 var splitterChild = targetPanel;
-                while (!(parentSplitter instanceof wcSplitter || parentSplitter instanceof wcDocker)) {
+
+                //AMD-Port : parentSplitter instanceof wcDocker :
+                while (!(parentSplitter instanceof wcSplitter || parentSplitter.instanceOf(null,'wcDocker'))) {
                     splitterChild = parentSplitter;
                     parentSplitter = parentSplitter._parent;
                 }
@@ -2578,13 +2583,21 @@ define([
             if (parent) {
                 var parentSplitter = parent._parent;
                 var splitterChild = parent;
-                while (!(parentSplitter instanceof wcSplitter || parentSplitter instanceof wcDocker)) {
+                var _d = dcl;
+
+
+                //parentSplitter.instanceOf(null,'wcDocker');
+
+                //AMD-PORT:
+                while (!(parentSplitter instanceof wcSplitter || parentSplitter.instanceOf(null,'wcDocker'))){
                     splitterChild = parentSplitter;
                     parentSplitter = parentSplitter._parent;
                 }
 
                 var splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
-                if (parentSplitter instanceof wcDocker) {
+
+                //AMD-PORT: //if (parentSplitter instanceof wcDocker) { :
+                if (parentSplitter.instanceOf(null,'wcDocker')){
                     this._root = splitter;
                     splitter.__container(this.$container);
                 }
@@ -2686,6 +2699,12 @@ define([
         }
     });
 
+    //merge types into module
+    for(var prop in wcDocker){
+        Module[prop] = wcDocker[prop];
+    }
+
+    //export to global
     window['wcDocker'] = Module;
 
     return Module;
