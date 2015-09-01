@@ -6,9 +6,7 @@ define([], function () {
     /**
      * Enumerated Docking positions.
      * @version 3.0.0
-     * @memberOf module:wcDocker
-     * @enum {String} module:wcDocker.DOCK
-     * @constant {String} module:wcDocker.DOCK
+     * @enum {String}
      */
     wcDocker.DOCK = {
         /** A floating panel that blocks input until closed */

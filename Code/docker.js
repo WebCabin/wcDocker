@@ -35,6 +35,31 @@ define([
      * See {@tutorial getting-started}
      */
     var Module = dcl(base,{
+
+        /**
+         * Enumerated Docking positions.
+         * @version 3.0.0
+         * @memberOf module:wcDocker
+         * @enum {String} module:wcDocker.DOCK
+         * @todo for some reason, jsDoc wants it here. The actual enum is in ./types
+         */
+        DOCK : {
+            /** A floating panel that blocks input until closed */
+            MODAL: 'modal',
+            /** A floating panel */
+            FLOAT: 'float',
+            /** Docks to the top of a target or window */
+            TOP: 'top',
+            /** Docks to the left of a target or window */
+            LEFT: 'left',
+            /** Docks to the right of a target or window */
+            RIGHT: 'right',
+            /** Docks to the bottom of a target or window */
+            BOTTOM: 'bottom',
+            /** Docks as another tabbed item along with the target */
+            STACKED: 'stacked'
+        },
+
         /**
          *
          * @memberOf module:wcDocker
@@ -242,7 +267,6 @@ define([
             }
             return false;
         },
-
         /**
          * Add a new docked panel to the docker instance.<br>
          * <b>Note:</b> It is best to use {@link wcDocker.COLLAPSED} after you have added your other docked panels, as it may ensure proper placement.
