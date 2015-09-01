@@ -67,7 +67,7 @@ concat({
     '../Code/collapser.js',
     '../Code/drawer.js',
     '../Code/tabframe.js',
-    '../Code/iframe.js',
+    '../Code/iframe.js'
   ],
   dest: '../Build/wcDocker.js',
 });

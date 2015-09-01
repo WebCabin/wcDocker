@@ -114,11 +114,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: [
-                            "./views/Grid.js",
-                            "./views/BlockGrid.js",
-                            "./BlockActions.js",
-                            "../xide/types/Types.js",
-                            "./types/Types.js",
+                            "./Code/*.js",
                             "!./node_modules"
                         ]
 
@@ -133,7 +129,6 @@ module.exports = function (grunt) {
                         ],
                         src: [
                             ".",
-                            "../xide/types/Types.js",
                             "./README.md",
                             "./package.json"
                         ],

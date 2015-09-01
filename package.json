@@ -12,7 +12,9 @@
         "grunt-contrib-less": "~0.8.3",
         "grunt-contrib-uglify": "~0.2.2",
         "grunt-shell":"1.1.2",
-        "jsdoc-amddcl": "git://github.com/mc007/jsdoc-amddcl#master"
+        "jsdoc-amddcl": "git://github.com/mc007/jsdoc-amddcl#master",
+        "jsdoc": "<=3.3.0",
+        "ink-docstrap": "git+https://github.com/WebCabin/docstrap.git"
     },
     "licenses": [
         {
