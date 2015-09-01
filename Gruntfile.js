@@ -115,6 +115,7 @@ module.exports = function (grunt) {
                     {
                         src: [
                             "./Code/*.js",
+                            "./README.md",
                             "!./node_modules"
                         ]
 
