@@ -36,10 +36,22 @@
 
         require([
             "dcl/dcl",
-            "wcDocker/collapser"
-        ],function(dcl,collapser){
+            "wcDocker/samples/demoAMD"
+            /*
+            "wcDocker/collapser",
+            "wcDocker/drawer"*/
+        ],function(dcl,docker){
 
-            console.log(collapser);
+            /*
+            try {
+                var _docker = new docker('.dockerContainer');
+
+            }catch(e){
+                console.error('error constructing class ' + e);
+                console.dir(e.stack);
+            }
+            */
+            //console.log(collapser);
         });
     </script>
 

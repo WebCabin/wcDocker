@@ -491,6 +491,7 @@ $(document).ready(function() {
       onCreate: wcThemeBuilder
     });
 
+
     // --------------------------------------------------------------------------------
     // Here we actually add all of our registered panels into our document.
     // The order that each panel is added makes a difference.  In general, start
