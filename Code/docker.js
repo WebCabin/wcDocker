@@ -36,15 +36,8 @@ define([
      */
     var Module = dcl(base,{
         /**
-         * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
-         * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
-         * @constant {String} module:wcDocker.COLLAPSED
-         * @static
-         * @member
-         * */
-        COLLAPSED : '__wcDockerCollapsedPanel',
-        /**
-         * @memberOf wcDocker
+         *
+         * @memberOf module:wcDocker
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element to store the contents of wcDocker.
          * @param {module:wcDocker~Options} [options] - Options for constructing the instance.
          */

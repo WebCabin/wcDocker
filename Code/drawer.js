@@ -11,7 +11,7 @@ define([
      * A collapsable container for carrying panels.<br>
      *
      * @version 3.0.0
-     * @description <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
+     * @description <b><i>PRIVATE<i> - Handled internally by [docker]{@link module:wcDocker} and <u>should never be constructed by the user.</u></b>
      */
     var Module = dcl(base,{
 
@@ -20,7 +20,7 @@ define([
          *
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
          * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
-         * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
+         * @param {module:wcDocker.DOCK} position      - A docking position to place this drawer.
          */
         constructor:function (container, parent, position) {
             this.$container = $(container);
@@ -144,7 +144,7 @@ define([
         /**
          * The minimum size constraint for the drawer area.
          *
-         * @returns {wcDocker~Size} - The minimum size.
+         * @returns {module:wcDocker~Size} - The minimum size.
          */
         minSize: function () {
             if (this._expanded) {
@@ -161,7 +161,7 @@ define([
         /**
          * The maximum size constraint for the drawer area.
          *
-         * @returns {wcDocker~Size} - The maximum size.
+         * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
             var isHorizontal = (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) ? true : false;

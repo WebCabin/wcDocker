@@ -1,22 +1,23 @@
+/** @module wcTabFrame */
 define([
     "dcl/dcl",
     "./types",
     "./base"
 ], function (dcl, wcDocker,base) {
 
+    /**
+     * @class
+     * A tab widget container, usable inside a panel to break up multiple elements into separate tabbed pages.
+     */
     var Module = dcl(base, {
 
         declaredClass:'wcTabFrame',
 
         LEFT_TAB_BUFFER: 15,
-
         /**
-         * @class
-         * A tab widget container, usable inside a panel to break up multiple elements into separate tabbed pages.
-         *
-         * @constructor
+         * @memberOf module:wcTabFrame
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
-         * @param {wcPanel} parent - The parent panel object for this widget.
+         * @param {module:wcPanel} parent - The parent panel object for this widget.
          */
         constructor:function(container, parent) {
             /**
@@ -80,9 +81,9 @@ define([
          * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the tab frame.
          * @version 3.0.0
          *
-         * @param {wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
+         * @param {module:wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
          *
-         * @returns {wcDocker.TAB} - The current orientation.
+         * @returns {module:wcDocker.TAB} - The current orientation.
          */
         tabOrientation: function (orientation) {
             if (orientation !== undefined) {
@@ -102,9 +103,9 @@ define([
          *
          * @param {String} name    - The name of the new tab page.
          * @param {Number} [index] - If supplied and above -1, will insert the new tab page at the given tab index, otherwise the new tab is appended to the end.
-         * @param {wcDocker.LAYOUT} [layout] - If supplied, will set the type of layout to use for this tab.
+         * @param {module:wcDocker.LAYOUT} [layout] - If supplied, will set the type of layout to use for this tab.
          *
-         * @returns {wcLayoutSimple|wcLayoutTable} - The layout of the newly created tab page.
+         * @returns {module:wcLayoutSimple|wcLayoutTable} - The layout of the newly created tab page.
          */
         addTab: function (name, index, layout) {
             var layoutClass = layout || 'wcLayoutTable';
@@ -195,7 +196,7 @@ define([
          *
          * @param {Number} index - The tab page index to retrieve.
          *
-         * @returns {wcLayoutSimple|wcLayoutTable|Boolean} - The layout of the found tab page, or false.
+         * @returns {module:wcLayoutSimple|wcLayoutTable|Boolean} - The layout of the found tab page, or false.
          */
         layout: function (index) {
             if (index > -1 && index < this._layoutList.length) {
@@ -272,7 +273,7 @@ define([
          * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
          * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
          *
-         * @returns {wcDocker~Scrollable} - The current scrollable status of the tab page.
+         * @returns {module:wcDocker~Scrollable} - The current scrollable status of the tab page.
          */
         scrollable: function (index, x, y) {
             if (index > -1 && index < this._layoutList.length) {
@@ -330,7 +331,7 @@ define([
          * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
          * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
          *
-         * @returns {wcDocker~FitContents} - The current scrollable status of the tab page.
+         * @returns {module:wcDocker~FitContents} - The current scrollable status of the tab page.
          */
         fitContents: function (index, x, y) {
             if (index > -1 && index < this._layoutList.length) {

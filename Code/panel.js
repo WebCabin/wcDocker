@@ -8,25 +8,25 @@ define([
 ], function (dcl, wcDocker,wcLayoutSimple,wcLayoutTable,base) {
 
     /**
-     * @class wcPanel
+     * @class module:wcPanel
      * The public interface for the docking panel, it contains a number of convenience
      * functions and layout that manages the contents of the panel.
      */
     var Module = dcl(base, {
         declaredClass:'wcPanel',
         /**
-         * @constructor
+         * @memberOf module:wcPanel
          * @description
-         * <b><i>PRIVATE</i> - Use [wcDocker.addPanel]{@link wcDocker#addPanel}, [wcDocker.removePanel]{@link wcDocker#removePanel}, and
-         * [wcDocker.movePanel]{@link wcDocker#movePanel} to manage panels, <u>this should never be constructed directly
+         * <b><i>PRIVATE</i> - Use [wcDocker.addPanel]{@link module:wcDocker#addPanel}, [wcDocker.removePanel]{@link module:wcDocker#removePanel}, and
+         * [wcDocker.movePanel]{@link module:wcDocker#movePanel} to manage panels, <u>this should never be constructed directly
          * by the user.</u></b>
          * @param {String} type - The name identifier for the panel.
-         * @param {wcPanel~options} [options] - An options object passed from registration of the panel.
+         * @param {module:wcPanel~options} [options] - An options object passed from registration of the panel.
          */
         constructor: function (type, options) {
             /**
-             * An options object for the [panel]{@link wcPanel} constructor.
-             * @typedef wcPanel~options
+             * An options object for the [panel]{@link module:wcPanel} constructor.
+             * @typedef module:wcPanel~options
              * @property {String} [icon] - A CSS classname that represents the icon that should display on this panel's tab widget.
              * @property {String} [faicon] - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
              * @property {String|Boolean} [title] - A custom title to display for this panel, if false, title bar will not be shown.
@@ -155,9 +155,9 @@ define([
 
         /**
          * Retrieves the registration info of the panel as declared from
-         * [wcDocker.registerPanelType]{@link wcDocker#registerPanelType};
-         * See [wcDocker.panelTypeInfo]{@link wcDocker#panelTypeInfo}.
-         * @returns {wcDocker~registerOptions} - Registered options of the panel type.
+         * [wcDocker.registerPanelType]{@link module:wcDocker#registerPanelType};
+         * See [wcDocker.panelTypeInfo]{@link module:wcDocker#panelTypeInfo}.
+         * @returns {module:wcDocker~registerOptions} - Registered options of the panel type.
          */
         info: function () {
             return this.docker().panelTypeInfo(this._type);
@@ -165,7 +165,7 @@ define([
 
         /**
          * Retrieves the layout instance.
-         * @returns {wcLayoutSimple|wcLayoutTable} - The layout instance.
+         * @returns {module:wcLayoutSimple|wcLayoutTable} - The layout instance.
          */
         layout: function () {
             return this._layout;
@@ -192,13 +192,13 @@ define([
         /**
          * @callback wcPanel~CollapseDirection
          * @see wcPanel#collapseDirection
-         * @param {wcDocker~Bounds} bounds - The bounds of this panel relative to the wcDocker container.
-         * @returns {wcDocker.DOCK} - A collapse direction to use, must only be LEFT, RIGHT, or BOTTOM
+         * @param {module:wcDocker~Bounds} bounds - The bounds of this panel relative to the wcDocker container.
+         * @returns {module:wcDocker.DOCK} - A collapse direction to use, must only be LEFT, RIGHT, or BOTTOM
          */
 
         /**
          * Gets, or Sets the collapse direction for this panel.
-         * @param {wcPanel~CollapseDirection|wcDocker.DOCK} direction - The collapse direction to use for this panel.<br>If this value is omitted, the default collapse direction will be used.
+         * @param {module:wcPanel~CollapseDirection|wcDocker.DOCK} direction - The collapse direction to use for this panel.<br>If this value is omitted, the default collapse direction will be used.
          */
         collapseDirection: function (direction) {
             this._collapseDirection = direction;
@@ -285,7 +285,7 @@ define([
 
         /**
          * Gets, or Sets the current toggle state of a custom button that was
-         * added using [wcPanel.addButton]{@link wcPanel#addButton}.
+         * added using [wcPanel.addButton]{@link module:wcPanel#addButton}.
          * @param {String} name           - The name identifier of the button.
          * @param {Boolean} [toggleState] - If supplied, will assign a new toggle state to the button.
          * @returns {Boolean} - The current toggle state of the button.
@@ -314,7 +314,7 @@ define([
          * Gets, or Sets the default position of the panel if it is floating. <b>Warning: after the panel has been initialized, this value no longer reflects the current position of the panel.</b>
          * @param {Number|String} [x] - If supplied, sets the horizontal position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the vertical position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
-         * @returns {wcDocker~Coordinate} - The current default position of the panel.
+         * @returns {module:wcDocker~Coordinate} - The current default position of the panel.
          */
         initPos: function (x, y) {
             if (typeof x !== 'undefined') {
@@ -341,7 +341,7 @@ define([
          * Gets, or Sets the desired size of the panel. <b>Warning: after the panel has been initialized, this value no longer reflects the current size of the panel.</b>
          * @param {Number|String} [x] - If supplied, sets the desired initial horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired initial vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
-         * @returns {wcDocker~Size} - The current initial size of the panel.
+         * @returns {module:wcDocker~Size} - The current initial size of the panel.
          */
         initSize: function (x, y) {
             if (typeof x !== 'undefined') {
@@ -367,7 +367,7 @@ define([
          * Gets, or Sets the minimum size constraint of the panel.
          * @param {Number|String} [x] - If supplied, sets the desired minimum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired minimum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
-         * @returns {wcDocker~Size} - The current minimum size.
+         * @returns {module:wcDocker~Size} - The current minimum size.
          */
         minSize: function (x, y) {
             if (typeof x !== 'undefined') {
@@ -393,7 +393,7 @@ define([
          * Gets, or Sets the maximum size constraint of the panel.
          * @param {Number|String} [x] - If supplied, sets the desired maximum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired maximum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
-         * @returns {wcDocker~Size} - The current maximum size.
+         * @returns {module:wcDocker~Size} - The current maximum size.
          */
         maxSize: function (x, y) {
             if (typeof x !== 'undefined') {
@@ -477,7 +477,7 @@ define([
          * Gets, or Sets whether the window is scrollable.
          * @param {Boolean} [x] - If supplied, assigns whether the window is scrollable in the horizontal direction.
          * @param {Boolean} [y] - If supplied, assigns whether the window is scrollable in the vertical direction.
-         * @returns {wcDocker~Scrollable} - The current scrollable status.
+         * @returns {module:wcDocker~Scrollable} - The current scrollable status.
          */
         scrollable: function (x, y) {
             if (typeof x !== 'undefined') {
@@ -489,11 +489,11 @@ define([
         },
 
         /**
-         * Gets, or Sets the scroll position of the panel's contents if it is scrollable; See [wcPanel.scrollable]{@link wcPanel#scrollable}).
+         * Gets, or Sets the scroll position of the panel's contents if it is scrollable; See [wcPanel.scrollable]{@link module:wcPanel#scrollable}).
          * @param {Number} [x]        - If supplied, sets the scroll horizontal position of the panel.
          * @param {Number} [y]        - If supplied, sets the scroll vertical position of the panel.
          * @param {Number} [duration] - If supplied, will animate the scroll movement with the supplied duration (in milliseconds).
-         * @returns {wcDocker~Coordinate} The current scroll position.
+         * @returns {module:wcDocker~Coordinate} The current scroll position.
          */
         scroll: function (x, y, duration) {
             if (!this.$container) {
@@ -520,7 +520,7 @@ define([
 
         /**
          * Gets, or Sets whether this panel can be collapsed to the side or bottom.<br>
-         * This only works if the collapse feature is enabled {@link wcDocker~Options}.
+         * This only works if the collapse feature is enabled {@link module:wcDocker~Options}.
          * @param {Boolean} [enabled] - If supplied, assigns whether collapsing is enabled.
          * @returns {Boolean} - The current collapsible enabled state.
          */
@@ -670,9 +670,9 @@ define([
         },
 
         /**
-         * Registers an [event]{@link wcDocker.EVENT} associated with this panel.
-         * @param {String} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
-         * @param {wcDocker~onEvent} handler  - An event handler function to be called when the event is fired.
+         * Registers an [event]{@link module:wcDocker.EVENT} associated with this panel.
+         * @param {String} eventType          - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
+         * @param {module:wcDocker~onEvent} handler  - An event handler function to be called when the event is fired.
          * @returns {Boolean} - Event registration success or failure.
          */
         on: function (eventType, handler) {
@@ -693,9 +693,9 @@ define([
         },
 
         /**
-         * Unregisters an [event]{@link wcDocker.EVENT} associated with this panel.
-         * @param {wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
-         * @param {wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
+         * Unregisters an [event]{@link module:wcDocker.EVENT} associated with this panel.
+         * @param {module:wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
+         * @param {module:wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
          */
         off: function (eventType, handler) {
             if (typeof eventType === 'undefined') {
@@ -718,8 +718,8 @@ define([
         },
 
         /**
-         * Triggers an [event]{@link wcDocker.EVENT} of a given type to all panels, including itself.
-         * @param {wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+         * Triggers an [event]{@link module:wcDocker.EVENT} of a given type to all panels, including itself.
+         * @param {module:wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
          * @param {Object} [data]             - A custom data object to pass into all handlers.
          */
         trigger: function (eventType, data) {

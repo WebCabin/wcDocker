@@ -1,28 +1,30 @@
+/** @module wcIFrame */
 define([
     "dcl/dcl",
     "./types",
     "./base"
 ], function (dcl, wcDocker,base) {
 
+    /**
+     * @class module:wcIFrame
+     * The wcIFrame widget makes it easier to include an iFrame element into your panel.
+     * Because an iFrame's contents is cleared whenever it is moved in the DOM heirarchy
+     * (and changing a panels docking position causes DOM movement), special care must
+     * be taken when using them.<br><br>
+     *
+     * This will create an iFrame element and place it in a static (non-changing) DOM
+     * location. It will then sync its size and position to match the container area of
+     * this wcIFrame widget. It works rather well, but has its limitations. Since the
+     * iFrame is essentially on top of the window, it can not be only partially hidden.
+     * If the wcIFrame container is partially hidden outside the bounds of the panel,
+     * the iFrame will not be hidden.
+     * {@tutorial 3.0-widgets}
+     */
     var Module = dcl(base, {
 
         declaredClass:'wcIFrame',
         /**
-         * @class
-         * The wcIFrame widget makes it easier to include an iFrame element into your panel.
-         * Because an iFrame's contents is cleared whenever it is moved in the DOM heirarchy
-         * (and changing a panels docking position causes DOM movement), special care must
-         * be taken when using them.<br><br>
-         *
-         * This will create an iFrame element and place it in a static (non-changing) DOM
-         * location. It will then sync its size and position to match the container area of
-         * this wcIFrame widget. It works rather well, but has its limitations. Since the
-         * iFrame is essentially on top of the window, it can not be only partially hidden.
-         * If the wcIFrame container is partially hidden outside the bounds of the panel,
-         * the iFrame will not be hidden.
-         * {@tutorial 3.0-widgets}
-         *
-         * @constructor
+         * @memberOf module:wcIFrame
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
          * @param {wcPanel} parent - The iframes's parent panel.
          */

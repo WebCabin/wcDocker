@@ -1,25 +1,25 @@
+/** @module wcFrame */
 define([
     "dcl/dcl",
     "./types",
     "./base"
 ], function (dcl, wcDocker,base) {
 
+    /**
+     * @class module:wcFrame
+     * The frame is a [panel]{@link module:wcPanel} container.
+     * Each panel appears as a tabbed item inside a frame.
+     */
     var Module = dcl(base, {
 
         declaredClass:'wcFrame',
-
         LEFT_TAB_BUFFER: 15,
-
         /**
-         * @class
-         * The frame is a [panel]{@link wcPanel} container.
-         * Each panel appears as a tabbed item inside a frame.
-         *
-         * @constructor
+         * @memberOf module:wcFrame
          * @description
-         * <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
+         * <b><i>PRIVATE<i> - Handled internally by [docker]{@link module:wcDocker} and <u>should never be constructed by the user.</u></b>
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this frame.
-         * @param {wcSplitter|wcDocker} parent  - The frames parent object.
+         * @param {module:wcSplitter|wcDocker} parent  - The frames parent object.
          * @param {Boolean} isFloating          - If true, the frame will be a floating window.
          */
         constructor: function (container, parent, isFloating) {
@@ -106,7 +106,7 @@ define([
          * @param {Number} [y]        - If supplied, assigns a new vertical position.
          * @param {Boolean} [pixels]  - If true, the coordinates passed in will be treated as a pixel position rather than a percentage.
          *
-         * @returns {wcDocker~Coordinate} - The current position of the frame. If the pixel parameter was true, the position will be in pixels.
+         * @returns {module:wcDocker~Coordinate} - The current position of the frame. If the pixel parameter was true, the position will be in pixels.
          */
         pos: function (x, y, pixels) {
             var width = this.$container.width();
@@ -132,7 +132,7 @@ define([
         /**
          * Gets the initially desired size of the panel.
          *
-         * @returns {wcDocker~Size} - The initially desired size.
+         * @returns {module:wcDocker~Size} - The initially desired size.
          */
         initSize: function () {
             var size = {
@@ -158,7 +158,7 @@ define([
         /**
          * Gets the minimum size of the frame.
          *
-         * @returns {wcDocker~Size} - The minimum size of the frame.
+         * @returns {module:wcDocker~Size} - The minimum size of the frame.
          */
         minSize: function () {
             var size = {
@@ -176,7 +176,7 @@ define([
         /**
          * Gets the maximum size of the frame.
          *
-         * @returns {wcDocker~Size} - The maximum size of the frame.
+         * @returns {module:wcDocker~Size} - The maximum size of the frame.
          */
         maxSize: function () {
             var size = {
@@ -195,9 +195,9 @@ define([
          * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the frame.
          * @version 3.0.0
          *
-         * @param {wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
+         * @param {module:wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
          *
-         * @returns {wcDocker.TAB} - The current orientation.
+         * @returns {module:wcDocker.TAB} - The current orientation.
          */
         tabOrientation: function (orientation) {
             if (orientation !== undefined) {
@@ -215,7 +215,7 @@ define([
         /**
          * Adds a given panel as a new tab item to the frame.
          *
-         * @param {wcPanel} panel         - The panel to add.
+         * @param {module:wcPanel} panel         - The panel to add.
          * @param {Number} [index]        - Insert index.
          */
         addPanel: function (panel, index) {
@@ -243,7 +243,7 @@ define([
         /**
          * Removes a given panel from the frame.
          *
-         * @param {wcPanel} panel - The panel to remove.
+         * @param {module:wcPanel} panel - The panel to remove.
          *
          * @returns {Boolean} - True if any panels still remain after the removal.
          */
@@ -282,7 +282,7 @@ define([
          * Gets, or Sets the currently visible panel.
          * @param {Number} [tabIndex] - If supplied, sets the current panel index.
          * @param {Boolean} [autoFocus] - If true, this tab will be focused (brought to front).
-         * @returns {wcPanel} - The currently visible panel.
+         * @returns {module:wcPanel} - The currently visible panel.
          */
         panel: function (tabIndex, autoFocus) {
             if (typeof tabIndex !== 'undefined') {

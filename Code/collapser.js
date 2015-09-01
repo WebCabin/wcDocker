@@ -11,15 +11,15 @@ define([
      * @class module:wcCollapser
      * @version 3.0.0
      * @description A docker container for carrying its own arrangement of docked panels as a slide out drawer.<br/>
-     * <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
+     * <b><i>PRIVATE<i> - Handled internally by [docker]{@link module:wcDocker} and <u>should never be constructed by the user.</u></b>
      */
     var Module = dcl(base, {
         declaredClass:'wcCollapser',
         /**
          * @memberOf module:wcCollapser
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
-         * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
-         * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
+         * @param {module:wcSplitter|wcDocker} parent  - The drawer's parent object.
+         * @param {module:wcDocker.DOCK} position      - A docking position to place this drawer.
          */
         constructor: function (container, parent, position) {
 
@@ -64,7 +64,7 @@ define([
         /**
          * The minimum size constraint for the side bar area.
          *
-         * @returns {wcDocker~Size} - The minimum size.
+         * @returns {module:wcDocker~Size} - The minimum size.
          */
         minSize: function () {
             return {x: this._size, y: this._size};
@@ -73,7 +73,7 @@ define([
         /**
          * The maximum size constraint for the side bar area.
          *
-         * @returns {wcDocker~Size} - The maximum size.
+         * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
             var isHorizontal = (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) ? true : false;

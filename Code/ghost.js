@@ -1,13 +1,15 @@
+/** @module wcGhost **/
 define([
     "dcl/dcl",
     "./types"
 ], function (dcl, wcDocker) {
 
+    /**
+     * @class module:wcGhost
+     * A ghost object that follows the mouse around during dock movement.
+     */
     var Module = dcl(null, {
         declaredClass:'wcGhost',
-        /*
-         A ghost object that follows the mouse around during dock movement.
-         */
         constructor: function (rect, mouse, docker) {
             this.$ghost = null;
             this._rect;

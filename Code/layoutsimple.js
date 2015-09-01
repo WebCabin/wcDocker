@@ -1,18 +1,19 @@
+/** @module wcLayoutSimple */
 define([
     "dcl/dcl",
     "./types"
 ], function (dcl, wcDocker) {
 
+    /**
+     * @class
+     * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+     * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
+     */
     var Module = dcl(null, {
 
         declaredClass:'wcLayoutSimple',
-
         /**
-         * @class
-         * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
-         * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
-         *
-         * @constructor
+         * @memberOf module:wcLayoutSimple
          * @description
          * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.

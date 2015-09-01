@@ -6,8 +6,8 @@ define([], function () {
     /**
      * Enumerated Docking positions.
      * @version 3.0.0
-     * @memberOf {module:wcDocker}
-     * @enum {String}
+     * @memberOf module:wcDocker
+     * @enum {String} module:wcDocker.DOCK
      */
     wcDocker.DOCK = {
         /** A floating panel that blocks input until closed */
@@ -28,6 +28,7 @@ define([], function () {
 
     /**
      * Enumerated Layout wcDocker.
+     * @memberOf module:wcDocker
      * @version 3.0.0
      * @enum {String}
      */
@@ -40,6 +41,7 @@ define([], function () {
 
     /**
      * Enumerated Internal events
+     * @memberOf module:wcDocker
      * @version 3.0.0
      * @enum {String}
      */
@@ -119,6 +121,7 @@ define([], function () {
 
     /**
      * The name of the placeholder panel.
+     * @memberOf module:wcDocker
      * @constant {String}
      */
     wcDocker.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
@@ -126,18 +129,17 @@ define([], function () {
     /**
      * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
      * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
-     * @constant {String}
-     * @global
-     * @name wcDocker.COLLAPSED
-     * @public
+     * @constant {String} module:wcDocker.COLLAPSED
+     * @memberOf module:wcDocker
+     * @static
      */
     wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
-
 
     /**
      * Used for the splitter bar orientation.
      * @version 3.0.0
-     * @enum {Boolean}
+     * @enum {Boolean}  module:wcDocker.ORIENTATION
+     * @memberOf module:wcDocker
      */
     wcDocker.ORIENTATION = {
         /** Top and Bottom panes */
@@ -146,20 +148,11 @@ define([], function () {
         HORIZONTAL: true
     };
     /**
-     * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
-     * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
-     * @constant {String}
-     * @global
-     * @name wcDocker.COLLAPSED
-     * @public
-     */
-    wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
-
-    /**
      * Used to determine the position of tabbed widgets for stacked panels.<br>
      * <b>Note:</b> Not supported on IE8 or below.
      * @version 3.0.0
-     * @enum {String}
+     * @enum {String} module:wcDocker.TAB
+     * @memberOf module:wcDocker
      */
     wcDocker.TAB = {
         /** The default, puts tabs at the top of the frame */

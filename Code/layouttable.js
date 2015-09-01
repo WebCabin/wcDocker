@@ -1,16 +1,18 @@
+/** @module wcLayoutTable */
 define([
     "dcl/dcl",
     "./types"
 ], function (dcl, wcDocker) {
 
+    /**
+     * @class module:wcLayoutTable
+     * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+     * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
+     */
     var Module = dcl(null, {
         declaredClass:'wcLayoutTable',
         /**
-         * @class
-         * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
-         * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
-         *
-         * @constructor
+         * @memberOf module:wcLayoutTable
          * @description
          * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
