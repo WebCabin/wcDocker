@@ -30,10 +30,6 @@ define([
     /**
      * @class
      *
-     * @augments module:wcBase
-     * @lends module:wcBase
-     * @extends module:wcBase
-     *
      * The main docker instance.  This manages all of the docking panels and user input.
      * There should only be one instance of this, although it is not enforced.<br>
      * See {@tutorial getting-started}
