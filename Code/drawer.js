@@ -1,3 +1,4 @@
+/** @module wcDrawer */
 define([
     "dcl/dcl",
     "./types",
@@ -5,23 +6,21 @@ define([
     "./base"
 ], function (dcl, wcDocker,wcFrame,base) {
     /**
-     * @class
+     * A docker container for carrying its own arrangement of docked panels as a slide out drawer.
+     * @class module:wcDrawer
      * A collapsable container for carrying panels.<br>
      *
      * @version 3.0.0
-     * @constructor
-     * @description
-     * <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
-     * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
-     * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
-     * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
+     * @description <b><i>PRIVATE<i> - Handled internally by [docker]{@link wcDocker} and <u>should never be constructed by the user.</u></b>
      */
     var Module = dcl(base,{
 
         declaredClass:'wcCollapser',
-
-        /*
-         A docker container for carrying its own arrangement of docked panels as a slide out drawer.
+        /**
+         *
+         * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
+         * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
+         * @param {wcDocker.DOCK} position      - A docking position to place this drawer.
          */
         constructor:function (container, parent, position) {
             this.$container = $(container);

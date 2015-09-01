@@ -1,18 +1,15 @@
-/**
- * @module wcDocker/types
- * @private
- */
 define([], function () {
 
     //stub
-    var types = {};
+    var wcDocker = {};
 
     /**
      * Enumerated Docking positions.
      * @version 3.0.0
+     * @memberOf {wcDocker}
      * @enum {String}
      */
-    types.DOCK = {
+    wcDocker.DOCK = {
         /** A floating panel that blocks input until closed */
         MODAL: 'modal',
         /** A floating panel */
@@ -30,11 +27,11 @@ define([], function () {
     };
 
     /**
-     * Enumerated Layout types.
+     * Enumerated Layout wcDocker.
      * @version 3.0.0
      * @enum {String}
      */
-    types.LAYOUT = {
+    wcDocker.LAYOUT = {
         /** Contains a single div item without management using a {@link wcLayoutSimple}, it is up to you to populate it however you wish. */
         SIMPLE: 'wcLayoutSimple',
         /** Manages a table grid layout using {@link wcLayoutTable}, this is the default layout used if none is specified. **/
@@ -46,7 +43,7 @@ define([], function () {
      * @version 3.0.0
      * @enum {String}
      */
-    types.EVENT = {
+    wcDocker.EVENT = {
         /** When the panel is initialized */
         INIT: 'panelInit',
         /** When all panels have finished loading */
@@ -124,21 +121,22 @@ define([], function () {
      * The name of the placeholder panel.
      * @constant {String}
      */
-    types.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
+    wcDocker.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
 
     /**
      * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
      * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
      * @constant {String}
+     * @memberOf module:wcDocker
      */
-    types.COLLAPSED = '__wcDockerCollapsedPanel';
+    wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
 
     /**
      * Used for the splitter bar orientation.
      * @version 3.0.0
      * @enum {Boolean}
      */
-    types.ORIENTATION = {
+    wcDocker.ORIENTATION = {
         /** Top and Bottom panes */
         VERTICAL: false,
         /** Left and Right panes */
@@ -151,7 +149,7 @@ define([], function () {
      * @version 3.0.0
      * @enum {String}
      */
-    types.TAB = {
+    wcDocker.TAB = {
         /** The default, puts tabs at the top of the frame */
         TOP: 'top',
         /** Puts tabs on the left side of the frame */
@@ -162,6 +160,6 @@ define([], function () {
         BOTTOM: 'bottom'
     };
 
-    return types;
+    return wcDocker;
 
 });

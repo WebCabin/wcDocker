@@ -1,13 +1,16 @@
+/** @module wcBase */
 define([
     "dcl/dcl"
 ], function (dcl) {
 
+    /**
+     * Base class for all docker classes
+     * @class module:wcBase
+     */
     return dcl(null,{
-
         /**
-         * Dcl
-         * @param who
-         * @param what
+         * @param who {object}
+         * @param what {string}
          * @returns {boolean}
          */
         instanceOf:function(who,what){

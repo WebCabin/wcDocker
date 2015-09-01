@@ -14,6 +14,7 @@
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
  */
+
 /** @module wcDocker */
 define([
     "dcl/dcl",
@@ -28,7 +29,9 @@ define([
     './base'
 ], function (dcl,wcDocker,wcPanel,wcGhost,wcSplitter,wcFrame,wcCollapser,wcDrawer,wcIFrame,base) {
     /**
-     * @class module:wcDocker
+     * @class
+     *
+     * @augments module:wcBase
      * The main docker instance.  This manages all of the docking panels and user input.
      * There should only be one instance of this, although it is not enforced.<br>
      * See {@tutorial getting-started}
