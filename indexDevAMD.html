@@ -9,23 +9,29 @@
     <!-- External Modules -->
     <link rel="stylesheet" type="text/css" href="bower_components/jQuery-contextMenu/src/jquery.contextMenu.css"/>
     <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.css"/>
+
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
     <script src="bower_components/jQuery-contextMenu/src/jquery.contextMenu.js"></script>
     <script src="bower_components/jQuery-contextMenu/src/jquery.ui.position.js"></script>
+
+    <!--Moved before require-js, otherwise it crashes -->
+    <script src='Code/ext/spectrum.js'/>
+
     <script src="bower_components/FileSaver/FileSaver.min.js"></script>
     <script src="bower_components/requirejs/require.js"></script>
 
     <script type="text/javascript">
         require.config({
-            baseUrl: "./",
+            baseUrl: "./bower_components",
             packages: [
                 {
                     name: 'dcl',
-                    location: './bower_components/dcl'
+                    location: './dcl'//points to bower_components/dcl
                 },
                 {
                     name: 'wcDocker',
-                    location: './Code'
+                    location: '../Code'
                 }
 
             ]
@@ -34,26 +40,19 @@
 
     <script type="text/javascript">
 
-        require([
-            "dcl/dcl",
-            "wcDocker/samples/demoAMD"
-            /*
-            "wcDocker/collapser",
-            "wcDocker/drawer"*/
-        ],function(dcl,docker){
+        try {
+            //require demo
+            require([
+                "wcDocker/samples/demoAMD"
+            ], function () {
 
-            /*
-            try {
-                var _docker = new docker('.dockerContainer');
-
-            }catch(e){
-                console.error('error constructing class ' + e);
-                console.dir(e.stack);
-            }
-            */
-            //console.log(collapser);
-        });
+            });
+        }catch(e){
+            console.error('error loading demo ' + e , e);
+            console.dir(e.stack);
+        }
     </script>
+
 
     <!-- Core Modules -->
     <!--script src="Code/docker.js"></script>
@@ -68,19 +67,16 @@
     <script src="Code/tabframe.js"></script>
     <script src="Code/iframe.js"></script-->
     <link rel="stylesheet" type="text/css" href="Code/style.css"/>
-
     <!-- Demo specific files -->
     <link rel="stylesheet" type="text/css" href="builder.css"/>
     <link rel='stylesheet' href='Code/ext/spectrum.css'/>
 
-    <!--script src='Code/ext/spectrum.js'></script-->
     <!--script src="builder.js"></script-->
     <!--script src="demoAMD.js"></script-->
 
 
 </head>
 <body style="background-color:white;">
-<div class="dockerContainer"
-     style="position:absolute;left:0px;right:0px;top:0px;bottom:0px;border:3px solid black"></div>
+<div class="dockerContainer" style="position:absolute;left:0;right:0;top:0;bottom:0;border:3px solid black"></div>
 </body>
 </html>
