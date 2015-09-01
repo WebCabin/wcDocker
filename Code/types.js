@@ -2,9 +2,7 @@
  * @module wcDocker/types
  * @private
  */
-define([
-    "dcl/dcl"
-], function (dcl) {
+define([], function () {
 
     //stub
     var types = {};

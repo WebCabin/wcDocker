@@ -1,6 +1,6 @@
 /**
  * @class
- * A tab widget container, useable inside a panel to break up multiple elements into separate tabbed pages.
+ * A tab widget container, usable inside a panel to break up multiple elements into separate tabbed pages.
  *
  * @constructor
  * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
