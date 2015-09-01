@@ -42,7 +42,6 @@ define([
          * @constant {String} module:wcDocker.COLLAPSED
          * @static
          * @member
-         * @name module:wcDocker.COLLAPSED
          * */
         COLLAPSED : '__wcDockerCollapsedPanel',
         /**
