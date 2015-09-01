@@ -246,6 +246,7 @@ wcDrawer.prototype = {
     // Saves the current panel configuration into a meta
     // object that can be used later to restore it.
     __save: function () {
+
         var data = {};
         data.closeSize = this._closeSize;
         data.frame = this._frame.__save();

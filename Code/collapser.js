@@ -14,6 +14,7 @@
  A docker container for carrying its own arrangement of docked panels as a slide out drawer.
  */
 function wcCollapser(container, parent, position) {
+
     this.$container = $(container);
     this.$frame = null;
 

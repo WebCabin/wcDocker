@@ -57,32 +57,31 @@ function wcFrame(container, parent, isFloating) {
   this._resizeData = {
     time: -1,
     timeout: false,
-    delta: 150,
+    delta: 150
   };
 
   this._pos = {
     x: 0.5,
-    y: 0.5,
+    y: 0.5
   };
 
   this._size = {
     x: 400,
-    y: 400,
+    y: 400
   };
 
   this._lastSize = {
     x: 400,
-    y: 400,
+    y: 400
   };
 
   this._anchorMouse = {
     x: 0,
-    y: 0,
+    y: 0
   };
 
   this.__init();
-};
-
+}
 wcFrame.prototype = {
   LEFT_TAB_BUFFER: 15,
 
@@ -141,7 +140,7 @@ wcFrame.prototype = {
   initSize: function() {
     var size = {
       x: -1,
-      y: -1,
+      y: -1
     };
 
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -167,7 +166,7 @@ wcFrame.prototype = {
   minSize: function() {
     var size = {
       x: 0,
-      y: 0,
+      y: 0
     };
 
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -185,7 +184,7 @@ wcFrame.prototype = {
   maxSize: function() {
     var size = {
       x: Infinity,
-      y: Infinity,
+      y: Infinity
     };
 
     for (var i = 0; i < this._panelList.length; ++i) {
@@ -489,15 +488,15 @@ wcFrame.prototype = {
     var data = {};
     data.type = 'wcFrame';
     data.floating = this._isFloating;
-    data.isFocus = this.$frame.hasClass('wcFloatingFocus')
+    data.isFocus = this.$frame.hasClass('wcFloatingFocus');
     data.tabOrientation = this._tabOrientation;
     data.pos = {
       x: this._pos.x,
-      y: this._pos.y,
+      y: this._pos.y
     };
     data.size = {
       x: this._size.x,
-      y: this._size.y,
+      y: this._size.y
     };
     data.tab = this._curTab;
     data.panels = [];
@@ -600,7 +599,7 @@ wcFrame.prototype = {
       if (panel.isVisible() !== isVisible) {
         visibilityChanged.push({
           panel: panel,
-          isVisible: isVisible,
+          isVisible: isVisible
         });
       }
 
@@ -984,17 +983,17 @@ wcFrame.prototype = {
       var $flasher = $('<div class="wcFrameFlasher">');
       this.$frame.append($flasher);
       $flasher.animate({
-        opacity: 1,
+        opacity: 1
       },100)
       .animate({
-        opacity: 0.0,
-      },100)
+        opacity: 0.0
+          },100)
       .animate({
-        opacity: 0.6,
-      },50)
+        opacity: 0.6
+          },50)
       .animate({
-        opacity: 0.0,
-      },50)
+        opacity: 0.0
+          },50)
       .queue(function(next) {
         $flasher.remove();
         next();
@@ -1082,7 +1081,7 @@ wcFrame.prototype = {
 
     var pos = {
       x: (this._pos.x * width) - this._size.x/2,
-      y: (this._pos.y * height) - this._size.y/2,
+      y: (this._pos.y * height) - this._size.y/2
     };
 
     for (var i = 0; i < edges.length; ++i) {
@@ -1145,14 +1144,14 @@ wcFrame.prototype = {
         this.$shadower = $('<div class="wcFrameShadower">');
         this.$frame.append(this.$shadower);
         this.$shadower.animate({
-          opacity: 0.5,
+          opacity: 0.5
         }, 300);
       }
     } else {
       if (this.$shadower) {
         var self = this;
         this.$shadower.animate({
-          opacity: 0.0,
+          opacity: 0.0
         }, 300)
         .queue(function(next) {
           self.$shadower.remove();
@@ -1177,7 +1176,7 @@ wcFrame.prototype = {
       x: offset.left,
       y: offset.top,
       w: width,
-      h: height,
+      h: height
     };
   },
 
@@ -1215,5 +1214,5 @@ wcFrame.prototype = {
     }
     this.__container(null);
     this._parent = null;
-  },
+  }
 };

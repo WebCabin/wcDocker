@@ -2731,6 +2731,7 @@ wcDocker.prototype = {
             }
 
             if (splitter) {
+
                 splitter.scrollable(0, false, false);
                 splitter.scrollable(1, false, false);
                 collapser = new wcCollapser(this.$transition, splitter, location);
