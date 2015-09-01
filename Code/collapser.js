@@ -1,5 +1,5 @@
 /**
- * @module wcDocker/types
+ * @module wcDocker/Collapser
  * @private
  */
 define([
