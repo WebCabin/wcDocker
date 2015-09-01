@@ -40,9 +40,10 @@ define([
         /**
          * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
          * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
-         * @constant {String} module:wcDocker#COLLAPSED
+         * @constant {String} module:wcDocker.COLLAPSED
          * @static
          * @member
+         * @name module:wcDocker.COLLAPSED
          * */
         COLLAPSED : '__wcDockerCollapsedPanel',
         /**
@@ -257,7 +258,7 @@ define([
          * <b>Note:</b> It is best to use {@link wcDocker.COLLAPSED} after you have added your other docked panels, as it may ensure proper placement.
          * @param {String} typeName                           - The name identifier of the panel to create.
          * @param {wcDocker.DOCK} location                    - The docking location to place this panel.
-         * @param {wcPanel|module:wcDocker#COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
+         * @param {wcPanel|module:wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
          * @param {wcDocker~PanelOptions} [options]           - Other options for panel placement.
          * @returns {wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
          */
