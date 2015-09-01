@@ -211,8 +211,9 @@ define([
             });
         }
     });
+
+    window['wcGhost'] = Module;
+
+    return Module;
+
 });
-
-window['wcGhost'] = Module;
-
-return Module;

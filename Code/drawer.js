@@ -5,9 +5,9 @@
 
 define([
     "dcl/dcl",
-    "./types"
-], function (dcl, wcDocker) {
-
+    "./types",
+    "./frame"
+], function (dcl, wcDocker,wcFrame) {
     /**
      * @class
      * A collapsable container for carrying panels.<br>

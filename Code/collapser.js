@@ -1,7 +1,3 @@
-/**
- * @module wcDocker/Collapser
- * @private
- */
 define([
     "dcl/dcl",
     "./types"

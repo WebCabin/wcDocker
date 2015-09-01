@@ -27,6 +27,7 @@ define([
 ], function (dcl, wcDocker,wcPanel,wcGhost,wcSplitter,wcFrame,wcCollapser,wcDrawer) {
 
     var Module = dcl(null, {
+        declaredClass:'wcDocker',
         /**
          * @class
          * The main docker instance.  This manages all of the docking panels and user input.

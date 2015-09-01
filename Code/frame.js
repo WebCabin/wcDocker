@@ -1,9 +1,10 @@
 define([
     "dcl/dcl",
-    "./types"
-], function (dcl, wcDocker) {
+    "./types",
+    "./base"
+], function (dcl, wcDocker,base) {
 
-    var Module = dcl(null, {
+    var Module = dcl(base, {
         /**
          * @class
          * The frame is a [panel]{@link wcPanel} container.
@@ -99,7 +100,8 @@ define([
          *
          * @returns {wcDocker} - The top level docker object.
          */
-        docker: function () {
+        __docker: function () {
+            var _d = this.getDocker();
             var parent = this._parent;
             while (parent && !(parent instanceof wcDocker)) {
                 parent = parent._parent;
