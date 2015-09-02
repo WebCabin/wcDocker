@@ -8,19 +8,15 @@
 
 #### Open issues:
 
-1. Code/iframe::docker() not returning a docker instance
+- Code/iframe::docker() not returning a docker instance
 
-1.1 to reproduce or fix it: grab a fresh copy and enable
-    in indexDev.html "tutorials" = true
+to reproduce or fix it: grab a fresh copy and enable in indexDev.html "tutorials" = true
 
-2. index.html: for some reason ./demo.js is evaluated before ./Build/wcDocker.js
 
-I had to put a delay in demo.js
+- index.html: for some reason ./demo.js is evaluated before ./Build/wcDocker.js
 
-However, the very same demo exists also as AMD version in Code/samples/demoAMD.js
+I had to put a delay in demo.js. However, the very same demo exists also as AMD version in Code/samples/demoAMD.js
 which is used by indexDev.html
-
-
 
 
 
