@@ -208,12 +208,12 @@ module.exports = function (grunt) {
         },
 
         // !! This is the name of the task ('requirejs')
-        requirejs: {
+        _requirejs: {
             compile: {
 
                 // !! You can drop your app.build.js config wholesale into 'options'
                 options: {
-                    appDir: "app",
+                    /*appDir: "app",*/
                     baseUrl: "./",
                     dir:'build',
                     _optimize: 'uglify2',
@@ -228,6 +228,31 @@ module.exports = function (grunt) {
                     logLevel: 0,
                     findNestedDependencies: true,
                     fileExclusionRegExp: /^\./,
+                    inlineText: true
+                }
+            }
+        },
+        requirejs: {
+            compile: {
+
+                // !! You can drop your app.build.js config wholesale into 'options'
+                options: {
+                    appDir: "./app",
+                    baseUrl: "./",
+                    dir:'build',
+                    optimize: 'uglify2',
+                    _optimize: 'none',
+                    mainConfigFile:'./main.js',
+                    optimizeCss:'none',
+                    logLevel: 0,
+                    include:[
+                        'bower_components/dcl'
+                    ],
+                    modules:[{
+                        name:'demo'
+                    }],
+                    /*findNestedDependencies: true,*/
+                    fileExclusionRegExp: /^\.|node_modules|Compiler|build/,
                     inlineText: true
                 }
             }
