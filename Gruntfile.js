@@ -213,10 +213,11 @@ module.exports = function (grunt) {
 
                 // !! You can drop your app.build.js config wholesale into 'options'
                 options: {
-                    appDir: ".",
-                    baseUrl: ".",
+                    appDir: "app",
+                    baseUrl: "./",
                     dir:'build',
-                    optimize: 'uglify2',
+                    _optimize: 'uglify2',
+                    optimize: 'none',
                     mainConfigFile:'./main.js',
                     optimizeCss:'none',
                     modules:[
