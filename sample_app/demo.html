@@ -1,0 +1,23 @@
+﻿<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+        <script src="./jquery.min.js"></script>
+		<script src="./bower_components/requirejs/require.js"></script>
+		<script type="text/javascript">
+			var build = window.location.search.substring(1);
+			build = build ? "-" + build : "";
+			require(["requirejs-config" + build], function(){
+				require(["boot"], function(boot){
+					boot.log();
+				});
+			});
+		</script>
+	</head>
+	<body class="superhero">
+		<div id="main"></div>
+        <button is="d-button" class="d-button-success">Button</button>
+        <button is="d-button" class="d-button-info">Button</button>
+        <button is="d-button" class="d-button-warning">Button</button>
+        <button is="d-button" class="d-button-danger">Button</button>
+	</body>
+</html>

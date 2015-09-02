@@ -1,0 +1,16 @@
+{
+  "name": "grunt-amd-build-test",
+  "description": "A test project for Grunt plugin to build AMD applications.",
+  "version": "0.1.0-dev",
+  "dependencies": {
+    "clean-css": "2.2.x",
+    "grunt": "0.4.x",
+    "grunt-amd-build": "git://github.com/ibm-js/grunt-amd-build.git#master",
+    "grunt-contrib-requirejs":"latest",
+    "grunt-contrib-clean": "0.6.x",
+    "grunt-contrib-concat": "0.5.x",
+    "grunt-contrib-copy": "0.5.x",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-closure-compiler":"latest"
+  }
+}
