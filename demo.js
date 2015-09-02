@@ -2,6 +2,10 @@
   Welcome to the Demo for the Web Cabin Docker!
 */
 $(document).ready(function() {
+
+  setTimeout(function(){
+
+
   // --------------------------------------------------------------------------------
   // Create an instance of our docker window and assign it to the document.
   var myDocker = new wcDocker('.dockerContainer', {
@@ -521,4 +525,5 @@ $(document).ready(function() {
       myDocker.finishLoading(500);
     });
   }
+  },2000);
 });

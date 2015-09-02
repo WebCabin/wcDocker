@@ -232,7 +232,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-        requirejs: {
+        __requirejsWorking: {
             compile: {
 
                 // !! You can drop your app.build.js config wholesale into 'options'
@@ -254,6 +254,48 @@ module.exports = function (grunt) {
                     /*findNestedDependencies: true,*/
                     fileExclusionRegExp: /^\.|node_modules|Compiler|build/,
                     inlineText: true
+                }
+            }
+        },
+
+        requirejs: {
+            compileDemo: {
+                // !! You can drop your app.build.js config wholesale into 'options'
+                options: {
+                    baseUrl: 'apps',
+
+                    out: 'build/demo.js',
+                    optimize: 'none',
+                    name: 'libs/almond',
+                    include: ['demo'],
+                    exclude: [],
+                    stubModules: [],
+                    wrap: true,
+
+                    paths: {
+                        "wcDocker":"../Code/",
+                        "dcl":"../bower_components/dcl"
+                    }
+
+                }
+            },
+            compileLib: {
+                // !! You can drop your app.build.js config wholesale into 'options'
+                options: {
+                    baseUrl: 'apps',
+                    out: 'build/lib.js',
+                    optimize: 'uglify2',
+                    name: 'libs/almond',
+                    include: ['wcDockerLibrary'],
+                    exclude: [],
+                    stubModules: [],
+                    wrap: true,
+
+                    paths: {
+                        "wcDocker":"../Code/",
+                        "dcl":"../bower_components/dcl"
+                    }
+
                 }
             }
         },
