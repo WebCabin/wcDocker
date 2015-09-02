@@ -258,6 +258,119 @@ module.exports = function (grunt) {
             }
         },
 
+        __requirejsA: {
+            options: {
+                'appDir': 'app',
+                'dir': 'build',
+                'mainConfigFile': 'app/common.js',
+                'optimize': 'uglify2',
+                'normalizeDirDefines': 'skip',
+                'skipDirOptimize': true
+            },
+            centralized: {
+                options: {
+                    'modules': [{
+                        'name': 'common',
+                        'include': [
+                            'hello/main'
+                        ]
+                    }
+                    ]
+                }
+            },
+            centralizedAlmond: {
+                options: {
+                    almond: true,
+                    replaceRequireScript: [{
+                        files: ['build/hello.html'],
+                        module: 'common',
+                        modulePath: 'common'
+                    }, {
+                        files: ['build/world.html'],
+                        module: 'common',
+                        modulePath: 'common'
+                    }],
+                    'modules': [{
+                        'name': 'common',
+                        'include': ['jquery',
+                            'underscore',
+                            'backbone',
+                            'text',
+                            'app/hello/main',
+                            'app/world/main',
+                        ],
+                    },
+                    ],
+                }
+            },
+            independent: {
+                options: {
+                    replaceRequireScript: [{
+                        files: ['build/hello.html'],
+                        module: 'app/hello/main',
+                        modulePath: 'app/hello/main'
+                    }, {
+                        files: ['build/world.html'],
+                        module: 'app/world/main',
+                        modulePath: 'app/world/main'
+                    }],
+                    'modules': [{
+                        name: 'app/hello/main',
+                        include: ['backbone', 'common'],
+                    }, {
+                        name: 'app/world/main',
+                        include: ['backbone', 'common'],
+                    }
+                    ],
+                }
+            },
+            independentAlmond: {
+                options: {
+                    almond: true,
+                    wrap: true,
+                    replaceRequireScript: [{
+                        files: ['build/hello.html'],
+                        module: 'app/hello/main',
+                        modulePath: 'app/hello/main'
+                    }, {
+                        files: ['build/world.html'],
+                        module: 'app/world/main',
+                        modulePath: 'app/world/main'
+                    }],
+                    'modules': [{
+                        name: 'app/hello/main',
+                        include: ['backbone'],
+                        insertRequire: ['app/hello/main']
+                    }, {
+                        name: 'app/world/main',
+                        include: ['backbone'],
+                        insertRequire: ['app/world/main']
+                    }
+                    ],
+                }
+            },
+            shared: {
+                options: {
+                    'modules': [{
+                        'name': 'common',
+                        'include': ['jquery',
+                            'underscore',
+                            'backbone',
+                            'text',
+                        ],
+                    },
+                        {
+                            'name': 'app/hello/main',
+                            'exclude': ['common']
+                        },
+                        {
+                            'name': 'app/world/main',
+                            'exclude': ['common']
+                        }
+                    ],
+                }
+            },
+        },
 
 
         shell: {
