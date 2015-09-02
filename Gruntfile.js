@@ -547,16 +547,27 @@ module.exports = function (grunt) {
             grunt.task.run("copy:plugins");
         });
     });
-    grunt.registerTask("build", [
-        "clean:out",
-        "clean:temp",
-        "amdbuild:amdloader",
-        "uglify:my_target"
+
+    grunt.registerTask("buildCode", [
+        //Build/wcDocker.js
+        "requirejs:compileLibD",
+        //Build/wcDocker.min.js
+        "requirejs:compileLibR"
     ]);
 
     grunt.registerTask("buildThemes", [
+        //copy themes into Build/
         "copy:themes",
+        //copy Code/style.css into Build/
         "copy:style",
+        //minify all css from Themes/ into /Build
         "cssmin:themes"
     ]);
+
+    grunt.registerTask("build", [
+        "buildCode",
+        "buildThemes"
+    ]);
+
+
 };
