@@ -1,0 +1,12 @@
+{
+  "name": "dcl",
+  "version": "1.1.1",
+  "main": "dcl.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
