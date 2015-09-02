@@ -14,7 +14,8 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
-        // Config to allow to concatenate files to generate the layer.
+
+        //not needed anymore, Config to allow to concatenate files to generate the layer.
         concat: {
             options: {
                 banner: "<%= " + outprop + ".header%>",
@@ -25,6 +26,24 @@ module.exports = function (grunt) {
                 dest: outdir + "<%= " + outprop + ".layerPath %>"
             }
         },
+        //not needed anymore,
+        clean: {
+            out: [outdir],
+            temp: [tmpdir]
+        },
+        //not needed anymore, Config to allow to concatenate files to generate the layer.
+        uglify: {
+            options: {
+                mangle: false
+            },
+            my_target: {
+                files: {
+                    'build/bower_components/build.js': ['build/bower_components/app.js']
+                }
+            }
+        },
+
+
 
         copy: {
             plugins: {
@@ -52,22 +71,7 @@ module.exports = function (grunt) {
             }
 
         },
-
-        clean: {
-            out: [outdir],
-            temp: [tmpdir]
-        },
-
-        uglify: {
-            options: {
-                mangle: false
-            },
-            my_target: {
-                files: {
-                    'build/bower_components/build.js': ['build/bower_components/app.js']
-                }
-            }
-        },
+        //not needed anymore
         jshint: {
             src: [
                 "**/*.js",
@@ -79,6 +83,7 @@ module.exports = function (grunt) {
             }
         },
 
+        //not needed anymore
         // Task for compiling less files into CSS files
         less : {
             // Compile theme independent files
@@ -116,7 +121,7 @@ module.exports = function (grunt) {
                 ]
             }
         },
-
+        //not needed anymore
         // convert CSS files to JS files
         cssToJs : {
             // conversions removing the CSS files
@@ -148,7 +153,7 @@ module.exports = function (grunt) {
                 ]
             }
         },
-
+        //needed later
         intern: {
             local: {
                 options: {
@@ -194,32 +199,6 @@ module.exports = function (grunt) {
                         dest: "/tmp/doclets.json"
                     }
                 ]
-            }
-        },
-
-        // backup
-        _requirejs: {
-            compile: {
-
-                // !! You can drop your app.build.js config wholesale into 'options'
-                options: {
-                    /*appDir: "app",*/
-                    baseUrl: "./",
-                    dir:'build',
-                    _optimize: 'uglify2',
-                    optimize: 'none',
-                    mainConfigFile:'./main.js',
-                    optimizeCss:'none',
-                    modules:[
-                        {
-                            name:'buildMain'
-                        }
-                    ],
-                    logLevel: 0,
-                    findNestedDependencies: true,
-                    fileExclusionRegExp: /^\./,
-                    inlineText: true
-                }
             }
         },
         requirejs: {
@@ -301,7 +280,7 @@ module.exports = function (grunt) {
             }
         },
 
-
+        //not needed anymore
         shell: {
             subfolderLs: {
                 command: 'ls',
