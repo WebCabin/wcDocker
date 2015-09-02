@@ -40,6 +40,15 @@ module.exports = function (grunt) {
             style:{
                 src: "Code/style.css",
                 dest: "Build/wcDocker.css"
+            },
+            /**
+             * The build tasks requires almond.js in Compiler/libs.
+             * Since its installed by "bower install" in the root
+             * directory, it needs to be copied over
+             */
+            almond:{
+                src: "bower_components/almond/almond.js",
+                dest: "Compiler/libs/almond.js"
             }
 
         },
@@ -188,7 +197,7 @@ module.exports = function (grunt) {
             }
         },
 
-        // !! This is the name of the task ('requirejs')
+        // backup
         _requirejs: {
             compile: {
 
@@ -213,41 +222,22 @@ module.exports = function (grunt) {
                 }
             }
         },
-        __requirejsWorking: {
-            compile: {
-
-                // !! You can drop your app.build.js config wholesale into 'options'
-                options: {
-                    appDir: "./app",
-                    baseUrl: "./",
-                    dir:'build',
-                    optimize: 'uglify2',
-                    _optimize: 'none',
-                    mainConfigFile:'./main.js',
-                    optimizeCss:'none',
-                    logLevel: 0,
-                    include:[
-                        'bower_components/dcl'
-                    ],
-                    modules:[{
-                        name:'demo'
-                    }],
-                    /*findNestedDependencies: true,*/
-                    fileExclusionRegExp: /^\.|node_modules|Compiler|build/,
-                    inlineText: true
-                }
-            }
-        },
-
         requirejs: {
+            /**
+             * Not needed, but added for completeness:
+             * Grunt task to compile entire demo app. Its not
+             * using ./demo.js but the AMD version of it:
+             * Code/samples/demoAMD.js
+             */
             compileDemo: {
-                // !! You can drop your app.build.js config wholesale into 'options'
-                options: {
-                    baseUrl: 'apps',
 
-                    out: 'build/demo.js',
+                options: {
+                    baseUrl: 'Compiler',
+
+                    out: 'Build/demo.js',
                     optimize: 'none',
                     name: 'libs/almond',
+                    //require-js bootstrap
                     include: ['demo'],
                     exclude: [],
                     stubModules: [],
@@ -270,6 +260,7 @@ module.exports = function (grunt) {
                     out: 'Build/wcDocker.min.js',
                     optimize: 'uglify2',
                     name: 'libs/almond',
+                    //require-js bootstrap
                     include: [
                         'wcDockerLibrary'
                     ],
@@ -294,13 +285,13 @@ module.exports = function (grunt) {
                     out: 'Build/wcDocker.js',
                     optimize: 'none',
                     name: 'libs/almond',
+                    //require-js bootstrap
                     include: [
                         'wcDockerLibrary'
                     ],
                     exclude: [],
                     stubModules: [],
                     wrap: true,
-
                     paths: {
                         "wcDocker":"../Code/",
                         "dcl":"../bower_components/dcl"
@@ -308,120 +299,6 @@ module.exports = function (grunt) {
 
                 }
             }
-        },
-
-        __requirejsA: {
-            options: {
-                'appDir': 'app',
-                'dir': 'build',
-                'mainConfigFile': 'app/common.js',
-                'optimize': 'uglify2',
-                'normalizeDirDefines': 'skip',
-                'skipDirOptimize': true
-            },
-            centralized: {
-                options: {
-                    'modules': [{
-                        'name': 'common',
-                        'include': [
-                            'hello/main'
-                        ]
-                    }
-                    ]
-                }
-            },
-            centralizedAlmond: {
-                options: {
-                    almond: true,
-                    replaceRequireScript: [{
-                        files: ['build/hello.html'],
-                        module: 'common',
-                        modulePath: 'common'
-                    }, {
-                        files: ['build/world.html'],
-                        module: 'common',
-                        modulePath: 'common'
-                    }],
-                    'modules': [{
-                        'name': 'common',
-                        'include': ['jquery',
-                            'underscore',
-                            'backbone',
-                            'text',
-                            'app/hello/main',
-                            'app/world/main',
-                        ],
-                    },
-                    ],
-                }
-            },
-            independent: {
-                options: {
-                    replaceRequireScript: [{
-                        files: ['build/hello.html'],
-                        module: 'app/hello/main',
-                        modulePath: 'app/hello/main'
-                    }, {
-                        files: ['build/world.html'],
-                        module: 'app/world/main',
-                        modulePath: 'app/world/main'
-                    }],
-                    'modules': [{
-                        name: 'app/hello/main',
-                        include: ['backbone', 'common'],
-                    }, {
-                        name: 'app/world/main',
-                        include: ['backbone', 'common'],
-                    }
-                    ],
-                }
-            },
-            independentAlmond: {
-                options: {
-                    almond: true,
-                    wrap: true,
-                    replaceRequireScript: [{
-                        files: ['build/hello.html'],
-                        module: 'app/hello/main',
-                        modulePath: 'app/hello/main'
-                    }, {
-                        files: ['build/world.html'],
-                        module: 'app/world/main',
-                        modulePath: 'app/world/main'
-                    }],
-                    'modules': [{
-                        name: 'app/hello/main',
-                        include: ['backbone'],
-                        insertRequire: ['app/hello/main']
-                    }, {
-                        name: 'app/world/main',
-                        include: ['backbone'],
-                        insertRequire: ['app/world/main']
-                    }
-                    ],
-                }
-            },
-            shared: {
-                options: {
-                    'modules': [{
-                        'name': 'common',
-                        'include': ['jquery',
-                            'underscore',
-                            'backbone',
-                            'text',
-                        ],
-                    },
-                        {
-                            'name': 'app/hello/main',
-                            'exclude': ['common']
-                        },
-                        {
-                            'name': 'app/world/main',
-                            'exclude': ['common']
-                        }
-                    ],
-                }
-            },
         },
 
 
@@ -548,7 +425,12 @@ module.exports = function (grunt) {
         });
     });
 
+    grunt.registerTask("prepareBuild", [
+        "copy:almond"
+    ]);
+
     grunt.registerTask("buildCode", [
+        "prepareBuild",
         //Build/wcDocker.js
         "requirejs:compileLibD",
         //Build/wcDocker.min.js
