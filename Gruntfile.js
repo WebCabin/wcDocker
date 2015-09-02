@@ -65,6 +65,18 @@ module.exports = function (grunt) {
             out: [outdir],
             temp: [tmpdir]
         },
+
+        uglify: {
+            options: {
+                mangle: false
+            },
+            my_target: {
+                files: {
+                    'build/bower_components/build.js': ['build/bower_components/app.js']
+                }
+            }
+        },
+
         pkg: grunt.file.readJSON("package.json"),
         jshint: {
             src: [
@@ -194,6 +206,9 @@ module.exports = function (grunt) {
                 ]
             }
         },
+
+
+
         shell: {
             subfolderLs: {
                 command: 'ls',
@@ -257,12 +272,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+
     grunt.loadNpmTasks("grunt-amd-build");
 
     grunt.loadNpmTasks("jsdoc-amddcl");
 
     grunt.loadNpmTasks('intern-geezer');
     grunt.loadNpmTasks('grunt-shell');
+
 
     // Aliases
     //grunt.registerTask("css", ["less", "cssToJs"]);
@@ -286,6 +304,7 @@ module.exports = function (grunt) {
     grunt.registerTask("build", [
         "clean:out",
         "clean:temp",
-        "amdbuild:amdloader"
+        "amdbuild:amdloader",
+        "uglify:my_target"
     ]);
 };
