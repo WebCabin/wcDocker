@@ -283,6 +283,30 @@ module.exports = function (grunt) {
                     }
 
                 }
+            },
+            /**
+             * Grunt task to compile wcDocker as all-in-one and non-minified library
+             * into Build/wcDocker.js
+             */
+            compileLibD: {
+                options: {
+                    baseUrl: 'Compiler',
+                    out: 'Build/wcDocker.js',
+                    optimize: 'none',
+                    name: 'libs/almond',
+                    include: [
+                        'wcDockerLibrary'
+                    ],
+                    exclude: [],
+                    stubModules: [],
+                    wrap: true,
+
+                    paths: {
+                        "wcDocker":"../Code/",
+                        "dcl":"../bower_components/dcl"
+                    }
+
+                }
             }
         },
 
