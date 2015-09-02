@@ -207,6 +207,31 @@ module.exports = function (grunt) {
             }
         },
 
+        // !! This is the name of the task ('requirejs')
+        requirejs: {
+            compile: {
+
+                // !! You can drop your app.build.js config wholesale into 'options'
+                options: {
+                    appDir: ".",
+                    baseUrl: ".",
+                    dir:'build',
+                    optimize: 'uglify2',
+                    mainConfigFile:'./main.js',
+                    optimizeCss:'none',
+                    modules:[
+                        {
+                            name:'buildMain'
+                        }
+                    ],
+                    logLevel: 0,
+                    findNestedDependencies: true,
+                    fileExclusionRegExp: /^\./,
+                    inlineText: true
+                }
+            }
+        },
+
 
 
         shell: {
@@ -275,6 +300,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.loadNpmTasks("grunt-amd-build");
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
 
     grunt.loadNpmTasks("jsdoc-amddcl");
 
