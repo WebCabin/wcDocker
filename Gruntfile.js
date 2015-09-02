@@ -279,14 +279,19 @@ module.exports = function (grunt) {
 
                 }
             },
-            compileLib: {
-                // !! You can drop your app.build.js config wholesale into 'options'
+            /**
+             * Grunt task to compile wcDocker as all-in-one library
+             * into Build/wcDocker.min.js
+             */
+            compileLibR: {
                 options: {
-                    baseUrl: 'apps',
-                    out: 'build/lib.js',
+                    baseUrl: 'Compiler',
+                    out: 'Build/wcDocker.min.js',
                     optimize: 'uglify2',
                     name: 'libs/almond',
-                    include: ['wcDockerLibrary'],
+                    include: [
+                        'wcDockerLibrary'
+                    ],
                     exclude: [],
                     stubModules: [],
                     wrap: true,
