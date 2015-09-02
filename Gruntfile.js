@@ -13,33 +13,7 @@ module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        amdloader: {
-            baseUrl: "bower_components",
-            paths: {
-                'wcDocker':'../Code'
-            },
-
-            // Unfortunately this is needed for the jquery plugin.
-            // It's automatically handled by the plugin itself at runtime, but not during builds.
-            map: {
-
-            }
-        },
-        amdbuild: {
-            dir: tmpdir,
-
-            // List of layers to build.
-            layers: [
-                // Test build for jquery plugin.  Should contain main test js file and a few jquery modules.
-                {
-                    name: "app",
-                    include: [
-                        // Modules and layers listed here, and their dependencies, will be added to the layer.
-                        "../buildMain"
-                    ]
-                }
-            ]
-        },
+        pkg: grunt.file.readJSON("package.json"),
         // Config to allow to concatenate files to generate the layer.
         concat: {
             options: {
@@ -58,7 +32,16 @@ module.exports = function (grunt) {
                 cwd: tmpdir,
                 src: "<%= " + outprop + ".plugins.rel %>",
                 dest: outdir
+            },
+            themes:{
+                src: "Themes/*.*",
+                dest: "Build/"
+            },
+            style:{
+                src: "Code/style.css",
+                dest: "Build/wcDocker.css"
             }
+
         },
 
         clean: {
@@ -76,8 +59,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-
-        pkg: grunt.file.readJSON("package.json"),
         jshint: {
             src: [
                 "**/*.js",
@@ -470,6 +451,32 @@ module.exports = function (grunt) {
                     cwd:'Code/utils'
                 }
             }
+        },
+
+        cssmin: {
+
+            themes: {
+                options: {
+                    banner: '/* My minified css file */'
+                },
+                files: {
+                    'Build/Themes/default.min.css': [
+                        'Themes/default.css'
+                    ],
+                    'Build/Themes/bigRed.min.css': [
+                        'Themes/bigRed.css'
+                    ],
+                    'Build/Themes/shadow.min.css': [
+                        'Themes/shadow.css'
+                    ],
+                    'Build/Themes/ideDark.min.css': [
+                        'Themes/ideDark.css'
+                    ],
+                    'Build/wcDocker.min.css': [
+                        'Build/wcDocker.css'
+                    ]
+                }
+            }
         }
 
     });
@@ -485,7 +492,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.loadNpmTasks("grunt-amd-build");
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+
+
+
     grunt.loadNpmTasks('grunt-contrib-requirejs');
 
     grunt.loadNpmTasks("jsdoc-amddcl");
@@ -518,5 +528,11 @@ module.exports = function (grunt) {
         "clean:temp",
         "amdbuild:amdloader",
         "uglify:my_target"
+    ]);
+
+    grunt.registerTask("buildThemes", [
+        "copy:themes",
+        "copy:style",
+        "cssmin:themes"
     ]);
 };
