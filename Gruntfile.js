@@ -14,20 +14,15 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         amdloader: {
-            baseUrl: ".",
-
+            baseUrl: "bower_components",
             paths: {
-                jquery: "bower_components/jquery",
-                lie: "bower_components/lie",
-                "requirejs-dplugins": "../../.."
+                'wcDocker':'../Code'
             },
 
             // Unfortunately this is needed for the jquery plugin.
             // It's automatically handled by the plugin itself at runtime, but not during builds.
             map: {
-                "*": {
-                    "jquery/src/selector": "jquery/src/selector-native"
-                }
+
             }
         },
         amdbuild: {
@@ -40,7 +35,7 @@ module.exports = function (grunt) {
                     name: "app",
                     include: [
                         // Modules and layers listed here, and their dependencies, will be added to the layer.
-                        "src"
+                        "../buildMain"
                     ]
                 }
             ]
