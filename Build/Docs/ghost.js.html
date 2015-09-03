@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>wcDocker Source: ghost.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container-fluid">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div></a>
+	</div>
+	<div class="navbar-collapse">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-wcBase.html">wcBase</a></li><li><a href="module-wcCollapser.html">wcCollapser</a></li><li><a href="module-wcDocker.html">wcDocker</a></li><li><a href="module-wcDrawer.html">wcDrawer</a></li><li><a href="module-wcFrame.html">wcFrame</a></li><li><a href="module-wcGhost.html">wcGhost</a></li><li><a href="module-wcIFrame.html">wcIFrame</a></li><li><a href="module-wcLayoutSimple.html">wcLayoutSimple</a></li><li><a href="module-wcLayoutTable.html">wcLayoutTable</a></li><li><a href="module-wcPanel.html">wcPanel</a></li><li><a href="module-wcSplitter.html">wcSplitter</a></li><li><a href="module-wcTabFrame.html">wcTabFrame</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-wcDocker.html#~event:onEvent">wcDocker~event:onEvent</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+
+<div class="container-fluid">
+<div class="row">
+
+	
+	<div class="col-md-10 col-md-offset-1">
+	
+		<div id="main">
+    		
+
+		<h1 class="page-title">Source: ghost.js</h1>
+    
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">/** @module wcGhost **/
+define([
+    "dcl/dcl",
+    "./types"
+], function (dcl, wcDocker) {
+
+    /**
+     * @class module:wcGhost
+     * A ghost object that follows the mouse around during dock movement.
+     */
+    var Module = dcl(null, {
+        declaredClass:'wcGhost',
+        constructor: function (rect, mouse, docker) {
+            this.$ghost = null;
+            this._rect;
+            this._anchorMouse = false;
+            this._anchor = null;
+            this._docker = docker;
+
+            this._outer = docker.__findInner();
+            if (this._outer instanceof wcSplitter) {
+                this._inner = this._outer.right();
+            }
+
+            this.__init(rect, mouse);
+        },
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Public Functions
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // --------------------------------------------------------------------------------
+        // Updates the ghost based on the given screen position.
+        update: function (position) {
+            this.__move(position);
+
+            for (var i = 0; i &lt; this._docker._floatingList.length; ++i) {
+                var rect = this._docker._floatingList[i].__rect();
+                if (position.x > rect.x &amp;&amp; position.y > rect.y
+                    &amp;&amp; position.x &lt; rect.x + rect.w &amp;&amp; position.y &lt; rect.y + rect.h) {
+
+                    if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
+                        this.anchor(position, null);
+                    } else {
+                        this._anchor.panel = this._docker._floatingList[i].panel();
+                    }
+                    return;
+                }
+            }
+
+            for (var i = 0; i &lt; this._docker._frameList.length; ++i) {
+                var rect = this._docker._frameList[i].__rect();
+                if (position.x > rect.x &amp;&amp; position.y > rect.y
+                    &amp;&amp; position.x &lt; rect.x + rect.w &amp;&amp; position.y &lt; rect.y + rect.h) {
+
+                    if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
+                        this.anchor(position, null);
+                    } else {
+                        this._anchor.panel = this._docker._frameList[i].panel();
+                    }
+                    return;
+                }
+            }
+        },
+
+        // --------------------------------------------------------------------------------
+        // Get, or Sets the ghost's anchor.
+        // Params:
+        //    mouse     The current mouse position.
+        //    anchor    If supplied, assigns a new anchor.
+        anchor: function (mouse, anchor) {
+            if (typeof mouse === 'undefined') {
+                return this._anchor;
+            }
+
+            if (anchor &amp;&amp; this._anchor &amp;&amp; anchor.loc === this._anchor.loc &amp;&amp; anchor.item === this._anchor.item) {
+                return;
+            }
+
+            var rect = {
+                x: parseInt(this.$ghost.css('left')),
+                y: parseInt(this.$ghost.css('top')),
+                w: parseInt(this.$ghost.css('width')),
+                h: parseInt(this.$ghost.css('height'))
+            };
+
+            this._anchorMouse = {
+                x: rect.x - mouse.x,
+                y: rect.y - mouse.y
+            };
+
+            this._rect.x = -this._anchorMouse.x;
+            this._rect.y = -this._anchorMouse.y;
+
+            if (!anchor) {
+                if (!this._anchor) {
+                    return;
+                }
+
+                if (this._docker._draggingFrame &amp;&amp; this._docker._draggingFrame.$container) {
+                    var detachToWidth = this._docker._draggingFrame._panelList[0]._options.detachToWidth || this._docker._options.detachToWidth || this._rect.w;
+                    var detachToHeight = this._docker._draggingFrame._panelList[0]._options.detachToHeight || this._docker._options.detachToHeight || this._rect.h;
+                    this._rect.w = this._docker.__stringToPixel(detachToWidth, this._docker.$container.width());
+                    this._rect.h = this._docker.__stringToPixel(detachToHeight, this._docker.$container.height());
+                }
+
+                this._anchor = null;
+                this.$ghost.show();
+                this.$ghost.stop().animate({
+                    opacity: 0.3,
+                    'margin-left': this._rect.x - this._rect.w / 2 + 'px',
+                    'margin-top': this._rect.y - 10 + 'px',
+                    width: this._rect.w + 'px',
+                    height: this._rect.h + 'px'
+                }, 150);
+                return;
+            }
+
+            this._anchor = anchor;
+            var opacity = 0.8;
+            if (anchor.self &amp;&amp; anchor.loc === wcDocker.DOCK.STACKED) {
+                opacity = 0;
+                this.$ghost.hide();
+            } else {
+                this.$ghost.show();
+            }
+            this.$ghost.stop().animate({
+                opacity: opacity,
+                'margin-left': '2px',
+                'margin-top': '2px',
+                border: '0px',
+                left: anchor.x + 'px',
+                top: anchor.y + 'px',
+                width: anchor.w + 'px',
+                height: anchor.h + 'px'
+            }, 150);
+        },
+
+        // --------------------------------------------------------------------------------
+        rect: function () {
+            return {
+                x: this.$ghost.offset().left,
+                y: this.$ghost.offset().top,
+                w: parseInt(this.$ghost.css('width')),
+                h: parseInt(this.$ghost.css('height')),
+                tabOrientation: this._anchor &amp;&amp; this._anchor.tab
+            };
+        },
+
+        // --------------------------------------------------------------------------------
+        destroy: function () {
+            this.__destroy();
+        },
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // Initialize
+        __init: function (rect, mouse) {
+            this.$ghost = $('&lt;div class="wcGhost">')
+                .css('opacity', 0)
+                .css('top', rect.y + 'px')
+                .css('left', rect.x + 'px')
+                .css('width', rect.w + 'px')
+                .css('height', rect.h + 'px');
+
+            this._anchorMouse = {
+                x: rect.x - mouse.x,
+                y: rect.y - mouse.y
+            };
+
+            this._rect = {
+                x: -this._anchorMouse.x,
+                y: -this._anchorMouse.y,
+                w: rect.w,
+                h: rect.h
+            };
+
+            $('body').append(this.$ghost);
+
+            this.anchor(mouse, rect);
+        },
+
+        // Updates the size of the layout.
+        __move: function (mouse) {
+            if (this._anchor) {
+                return;
+            }
+
+            var x = parseInt(this.$ghost.css('left'));
+            var y = parseInt(this.$ghost.css('top'));
+
+            x = mouse.x + this._anchorMouse.x;
+            y = mouse.y + this._anchorMouse.y;
+
+            this.$ghost.css('left', x + 'px');
+            this.$ghost.css('top', y + 'px');
+        },
+
+        // Gets the original size of the moving widget.
+        __rect: function () {
+            return this._rect;
+        },
+
+        // Exorcise the ghost.
+        __destroy: function () {
+            this.$ghost.stop().animate({
+                opacity: 0.0
+            }, {
+                duration: 175,
+                complete: function () {
+                    $(this).remove();
+                }
+            });
+        }
+    });
+
+    window['wcGhost'] = Module;
+
+    return Module;
+
+});
+</pre>
+	</article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+
+<div class="row">
+	
+	<div class="col-md-10 col-md-offset-1">
+	
+		<footer>
+		
+		
+		<span class="jsdoc-message">
+			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
+			on 2015-09-03 using the <a
+			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
+		</span>
+		</footer>
+	</div>
+</div>
+<div style="height:1000px;"></div>
+
+<!--<script src="scripts/sunlight.js"></script>-->
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/bootstrap-dropdown.js"></script>
+<script src="scripts/toc.js"></script>
+
+<script>
+$( function () {
+	// $( "[id*='$']" ).each( function () {
+	// 	var $this = $( this );
+
+	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	// } );
+
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			// return $( heading ).attr( "id" ) || ( prefix + i );
+			return ( prefix + i );
+		},
+		selectors   : "h1,h2,h3,h4",
+		showAndHide : false,
+		scrollTo    : "100px"
+	} );
+
+	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+	// $( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			lang = "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$("a[name^='sunlight-1-line-']").each(function() {
+		$(this).wrap('<div id="' + this.name + '" style="padding-top:40px;margin-top:-40px;display:inline-block;" class="sunlight-line-container"></div>');
+		this.name = '';
+	});
+
+  $("h1,h2,h3,h4").each(function() {
+  	$(this).css('padding-top', 50).css('margin-top', -50);
+  });
+} );
+</script>
+
+
+
+
+
+
+<!-- Piwik Analytics -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  
+  
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.webcabin.org/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 6]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="https://analytics.webcabin.org/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+
+
+
+</body>
+</html>
