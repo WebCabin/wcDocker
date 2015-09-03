@@ -15,36 +15,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
 
-        //not needed anymore, Config to allow to concatenate files to generate the layer.
-        concat: {
-            options: {
-                banner: "<%= " + outprop + ".header%>",
-                sourceMap: true
-            },
-            dist: {
-                src: "<%= " + outprop + ".modules.abs %>",
-                dest: outdir + "<%= " + outprop + ".layerPath %>"
-            }
-        },
-        //not needed anymore,
-        clean: {
-            out: [outdir],
-            temp: [tmpdir]
-        },
-        //not needed anymore, Config to allow to concatenate files to generate the layer.
-        uglify: {
-            options: {
-                mangle: false
-            },
-            my_target: {
-                files: {
-                    'build/bower_components/build.js': ['build/bower_components/app.js']
-                }
-            }
-        },
-
-
-
         copy: {
             plugins: {
                 expand: true,
@@ -83,76 +53,6 @@ module.exports = function (grunt) {
             }
         },
 
-        //not needed anymore
-        // Task for compiling less files into CSS files
-        less : {
-            // Compile theme independent files
-            transitions: {
-                expand: true,
-                cwd: "themes/common/transitions",
-                src: ["*.less"],
-                dest: "themes/common/transitions",
-                ext: ".css"
-            },
-
-            // Infrastructure per-theme files
-            common : {
-                files: [
-                    {
-                        expand: true,
-                        src: ["themes/*/*.less", "!themes/common/*.less", "!**/variables.less", "!**/common.less"],
-                        ext: ".css"
-                    }
-                ]
-            },
-
-            // Compile less code for each widget
-            widgets : {
-                files: [
-                    {
-                        expand: true,
-                        src: [
-                            "*/themes/*/*.less",
-                            "samples/ExampleWidget/themes/*/*.less",
-                            "!{dijit,mobile}/themes/*/*.less"
-                        ],
-                        ext: ".css"
-                    }
-                ]
-            }
-        },
-        //not needed anymore
-        // convert CSS files to JS files
-        cssToJs : {
-            // conversions removing the CSS files
-            replace: {
-                src: [
-                    // infrastructure
-                    "themes/*/*.css",
-                    "!themes/common/*.css",
-                    "themes/common/transitions/*.css",
-
-                    // widgets
-                    "*/themes/*/*.css",
-                    "samples/ExampleWidget/themes/*/*.css",
-                    "!{dijit,mobile}/themes/*/*.css"
-                ],
-                options: {
-                    remove: true
-                }
-            },
-
-            // conversions keeping the CSS files
-            keep: {
-                src: [
-                    // some apps may want to load defaultapp.css as a JS file rather than a CSS file.
-                    "themes/defaultapp.css",
-
-                    // files originally authored as CSS
-                    "tests/unit/css/*.css"
-                ]
-            }
-        },
         //needed later
         intern: {
             local: {
@@ -169,38 +69,40 @@ module.exports = function (grunt) {
             }
         },
 
-        "jsdoc-amddcl": {
-            "plugins": [
-                "plugins/markdown"
-            ],
-            docs: {
-                files: [
-                    {
-                        src: [
-                            "./Code/*.js",
-                            "./README.md",
-                            "!./node_modules"
-                        ]
+        jsdoc : {
 
+            dist : {
+                src: ['Code/*.js', 'README.md'],
+                options: {
+                    destination: 'Build/Docs',
+                    template : "node_modules/ink-docstrap/template",
+                    configure : "Compiler/config_documents.json",
+                    "templates": {
+                        "cleverLinks": false,
+                        "monospaceLinks": false,
+                        "systemTitle": "wcDocker",
+                        "systemName": "<div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div>",
+                        "footer": "",
+                        "copyright": "",
+                        "navType": "vertical",
+                        "theme": "superhero",
+                        "linenums": true,
+                        "collapseSymbols": false,
+                        "inverseNav": true,
+                        "outputSourceFiles": true,
+                        "outputSourcePath": false,
+                        "dateFormat": "YYYY-MM-DD",
+                        "highlightTutorialCode": false,
+                        "syntaxTheme": "dark",
+                        "analytics": {
+                            "piwikSite": 6,
+                            "domain": "analytics.webcabin.org"
+                        }
                     }
-                ]
-            },
-            export: {
-                files: [
-                    {
-                        args: [
-                            "-X"
-                        ],
-                        src: [
-                            ".",
-                            "./README.md",
-                            "./package.json"
-                        ],
-                        dest: "/tmp/doclets.json"
-                    }
-                ]
+                }
             }
         },
+
         requirejs: {
             /**
              * Not needed, but added for completeness:
@@ -280,59 +182,6 @@ module.exports = function (grunt) {
             }
         },
 
-        //not needed anymore
-        shell: {
-            subfolderLs: {
-                command: 'ls',
-                options: {
-                    stderr: false,
-                    execOptions: {
-                        cwd: 'docs'
-                    }
-                }
-            },
-            themes: {
-                command: [
-                    'cd Code/client/src/light-blue-wrapbootstrap',
-                    'ls',
-                    'grunt --gruntfile GruntfileAcc.js --target=html-transparent-small dist-compass'
-                ].join('&&'),
-
-                options: {
-                    stderr: false
-
-                }
-            },
-            xide: {
-                command: [
-                    'cd Code/utils',
-                    //'forever -s stop nxappmain/xide.js',
-                    'forever start nxappmain/xide.js'
-                ].join('&&'),
-
-                options: {
-                    stderr: true,
-                    failOnError:false,
-                    cwd:'Code/utils'
-
-                }
-            },
-            deviceServer: {
-                command: [
-                    'cd Code/utils',
-                    'ls',
-                    //'forever -s stop nxappmain/server.js',
-                    'forever start nxappmain/server.js'
-                ].join('&&'),
-
-                options: {
-                    stderr: true,
-                    failOnError:false,
-                    cwd:'Code/utils'
-                }
-            }
-        },
-
         cssmin: {
 
             themes: {
@@ -378,31 +227,16 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-requirejs');
 
-    grunt.loadNpmTasks("jsdoc-amddcl");
+    grunt.loadNpmTasks('grunt-jsdoc');
+
 
     grunt.loadNpmTasks('intern-geezer');
     grunt.loadNpmTasks('grunt-shell');
 
 
     // Aliases
-    //grunt.registerTask("css", ["less", "cssToJs"]);
-    grunt.registerTask("jsdoc", "jsdoc-amddcl");
     grunt.registerTask('test', [ 'intern:local' ]);
-    grunt.registerTask('themes', ['shell:themes']);
-    grunt.registerTask('services', [
-        'shell:deviceServer',
-        'shell:xide'
-    ]);
 
-    grunt.registerTask("amdbuild", function (amdloader) {
-        var name = this.name, layers = grunt.config(name).layers;
-        layers.forEach(function (layer) {
-            grunt.task.run("amddepsscan:" + layer.name + ":" + name + ":" + amdloader);
-            grunt.task.run("amdserialize:" + layer.name + ":" + name + ":" + outprop);
-            grunt.task.run("concat");
-            grunt.task.run("copy:plugins");
-        });
-    });
 
     grunt.registerTask("prepareBuild", [
         "copy:almond"
@@ -427,7 +261,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask("build", [
         "buildCode",
-        "buildThemes"
+        "buildThemes",
+        "jsdoc"
     ]);
 
 
