@@ -41,7 +41,7 @@ define([
          * @version 3.0.0
          * @memberOf module:wcDocker
          * @enum {String} module:wcDocker.DOCK
-         * @todo for some reason, jsDoc wants it here. The actual enum is in ./types
+         * @todo for some reason, jsDoc wants it here but the actual enum is in ./types
          */
         DOCK : {
             /** A floating panel that blocks input until closed */

@@ -108,7 +108,7 @@ define([
          * @version 3.0.0
          * @memberOf module:wcDocker
          * @enum {String} module:wcDocker.DOCK
-         * @todo for some reason, jsDoc wants it here. The actual enum is in ./types
+         * @todo for some reason, jsDoc wants it here but the actual enum is in ./types
          */
         DOCK : {
             /** A floating panel that blocks input until closed */
@@ -125,6 +125,120 @@ define([
             BOTTOM: 'bottom',
             /** Docks as another tabbed item along with the target */
             STACKED: 'stacked'
+        },
+
+
+        /**
+         * Enumerated Internal events
+         * @memberOf module:wcDocker
+         * @version 3.0.0
+         * @enum {String}
+         * @todo for some reason, jsDoc wants it here but the actual enum is in ./types
+         */
+        EVENT : {
+            /** When the panel is initialized */
+            INIT: 'panelInit',
+            /** When all panels have finished loading */
+            LOADED: 'dockerLoaded',
+            /** When the panel is updated */
+            UPDATED: 'panelUpdated',
+            /**
+             * When the panel has changed its visibility&lt;br>
+             * This event is called with the current visibility state as the first parameter.
+             */
+            VISIBILITY_CHANGED: 'panelVisibilityChanged',
+            /** When the user begins moving any panel from its current docked position */
+            BEGIN_DOCK: 'panelBeginDock',
+            /** When the user finishes moving or docking a panel */
+            END_DOCK: 'panelEndDock',
+            /** When the user brings any panel within a tabbed frame into focus */
+            GAIN_FOCUS: 'panelGainFocus',
+            /** When the user leaves focus on any panel within a tabbed frame */
+            LOST_FOCUS: 'panelLostFocus',
+            /** When the panel is being closed */
+            CLOSED: 'panelClosed',
+            /** When a persistent panel is being hidden */
+            PERSISTENT_CLOSED: 'panelPersistentClosed',
+            /** When a persistent panel is being shown */
+            PERSISTENT_OPENED: 'panelPersistentOpened',
+            /** When a custom button is clicked, See [wcPanel.addButton]{@link wcPanel#addButton} */
+            BUTTON: 'panelButton',
+            /** When the panel has moved from floating to a docked position */
+            ATTACHED: 'panelAttached',
+            /** When the panel has moved from a docked position to floating */
+            DETACHED: 'panelDetached',
+            /**
+             * When the user has started moving the panel (top-left coordinates changed)&lt;br>
+             * This event is called with an object of the current {x, y} position as the first parameter.
+             */
+            MOVE_STARTED: 'panelMoveStarted',
+            /**
+             * When the user has finished moving the panel&lt;br>
+             * This event is called with an object of the current {x, y} position as the first parameter.
+             */
+            MOVE_ENDED: 'panelMoveEnded',
+            /**
+             * When the top-left coordinates of the panel has changed&lt;br>
+             * This event is called with an object of the current {x, y} position as the first parameter.
+             */
+            MOVED: 'panelMoved',
+            /**
+             * When the user has started resizing the panel (width or height changed)&lt;br>
+             * This event is called with an object of the current {width, height} size as the first parameter.
+             */
+            RESIZE_STARTED: 'panelResizeStarted',
+            /**
+             * When the user has finished resizing the panel&lt;br>
+             * This event is called with an object of the current {width, height} size as the first parameter.
+             */
+            RESIZE_ENDED: 'panelResizeEnded',
+            /**
+             * When the panels width or height has changed&lt;br>
+             * This event is called with an object of the current {width, height} size as the first parameter.
+             */
+            RESIZED: 'panelResized',
+            /** When the contents of the panel has been scrolled */
+            SCROLLED: 'panelScrolled',
+            /** When the layout is being saved, See [wcDocker.save]{@link wcDocker#save} */
+            SAVE_LAYOUT: 'layoutSave',
+            /** When the layout is being restored, See [wcDocker.restore]{@link wcDocker#restore} */
+            RESTORE_LAYOUT: 'layoutRestore',
+            /** When the current tab on a custom tab widget associated with this panel has changed, See {@link wcTabFrame} */
+            CUSTOM_TAB_CHANGED: 'customTabChanged',
+            /** When a tab has been closed on a custom tab widget associated with this panel, See {@link wcTabFrame} */
+            CUSTOM_TAB_CLOSED: 'customTabClosed'
+        },
+
+        /**
+         * Used for the splitter bar orientation.
+         * @version 3.0.0
+         * @enum {Boolean}  module:wcDocker.ORIENTATION
+         * @memberOf module:wcDocker
+         * @todo for some reason, jsDoc wants it here but the actual enum is in ./types
+         */
+        ORIENTATION : {
+            /** Top and Bottom panes */
+            VERTICAL: false,
+            /** Left and Right panes */
+            HORIZONTAL: true
+        },
+        /**
+         * Used to determine the position of tabbed widgets for stacked panels.&lt;br>
+         * &lt;b>Note:&lt;/b> Not supported on IE8 or below.
+         * @version 3.0.0
+         * @enum {String} module:wcDocker.TAB
+         * @memberOf module:wcDocker
+         * @todo for some reason, jsDoc wants it here but the actual enum is in ./types
+         */
+        TAB : {
+            /** The default, puts tabs at the top of the frame */
+            TOP: 'top',
+            /** Puts tabs on the left side of the frame */
+            LEFT: 'left',
+            /** Puts tabs on the right side of the frame */
+            RIGHT: 'right',
+            /** Puts tabs on the bottom of the frame */
+            BOTTOM: 'bottom'
         },
 
         /**

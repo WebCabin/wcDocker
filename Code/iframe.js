@@ -26,7 +26,7 @@ define([
         /**
          * @memberOf module:wcIFrame
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
-         * @param {wcPanel} parent - The iframes's parent panel.
+         * @param {module:wcPanel} parent - The iframes's parent panel.
          */
         constructor:function(container, panel) {
 
