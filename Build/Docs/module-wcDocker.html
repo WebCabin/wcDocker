@@ -558,1294 +558,6 @@ Must be used with docking positions LEFT, RIGHT, or BOTTOM only.</p>
         
             
 <hr>
-<dt class="name" id=".EVENT">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>EVENT</toc></b>
-    </h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p style="margin-left:20px;">Enumerated Internal events</p>
-    </div>
-    
-
-    
-        <h5>Type: 
-<span class="param-type">String</span>
-
-</h5>
-    
-
-    
-<dl class="details">
-	
-
-	<h5 class="subsection-title">Properties:</h5>
-
-	<dl>
-
-<div class="prop-container">
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>INIT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelInit
-                
-                </td>
-            
-
-            <td class="description last">When the panel is initialized</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>LOADED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    dockerLoaded
-                
-                </td>
-            
-
-            <td class="description last">When all panels have finished loading</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>UPDATED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelUpdated
-                
-                </td>
-            
-
-            <td class="description last">When the panel is updated</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>VISIBILITY_CHANGED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelVisibilityChanged
-                
-                </td>
-            
-
-            <td class="description last">When the panel has changed its visibility<br>
-This event is called with the current visibility state as the first parameter.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>BEGIN_DOCK</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelBeginDock
-                
-                </td>
-            
-
-            <td class="description last">When the user begins moving any panel from its current docked position</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>END_DOCK</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelEndDock
-                
-                </td>
-            
-
-            <td class="description last">When the user finishes moving or docking a panel</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>GAIN_FOCUS</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelGainFocus
-                
-                </td>
-            
-
-            <td class="description last">When the user brings any panel within a tabbed frame into focus</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>LOST_FOCUS</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelLostFocus
-                
-                </td>
-            
-
-            <td class="description last">When the user leaves focus on any panel within a tabbed frame</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>CLOSED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelClosed
-                
-                </td>
-            
-
-            <td class="description last">When the panel is being closed</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>PERSISTENT_CLOSED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelPersistentClosed
-                
-                </td>
-            
-
-            <td class="description last">When a persistent panel is being hidden</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>PERSISTENT_OPENED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelPersistentOpened
-                
-                </td>
-            
-
-            <td class="description last">When a persistent panel is being shown</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>BUTTON</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelButton
-                
-                </td>
-            
-
-            <td class="description last">When a custom button is clicked, See wcPanel.addButton</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>ATTACHED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelAttached
-                
-                </td>
-            
-
-            <td class="description last">When the panel has moved from floating to a docked position</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>DETACHED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelDetached
-                
-                </td>
-            
-
-            <td class="description last">When the panel has moved from a docked position to floating</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>MOVE_STARTED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelMoveStarted
-                
-                </td>
-            
-
-            <td class="description last">When the user has started moving the panel (top-left coordinates changed)<br>
-This event is called with an object of the current {x, y} position as the first parameter.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>MOVE_ENDED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelMoveEnded
-                
-                </td>
-            
-
-            <td class="description last">When the user has finished moving the panel<br>
-This event is called with an object of the current {x, y} position as the first parameter.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>MOVED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelMoved
-                
-                </td>
-            
-
-            <td class="description last">When the top-left coordinates of the panel has changed<br>
-This event is called with an object of the current {x, y} position as the first parameter.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>RESIZE_STARTED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelResizeStarted
-                
-                </td>
-            
-
-            <td class="description last">When the user has started resizing the panel (width or height changed)<br>
-This event is called with an object of the current {width, height} size as the first parameter.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>RESIZE_ENDED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelResizeEnded
-                
-                </td>
-            
-
-            <td class="description last">When the user has finished resizing the panel<br>
-This event is called with an object of the current {width, height} size as the first parameter.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>RESIZED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelResized
-                
-                </td>
-            
-
-            <td class="description last">When the panels width or height has changed<br>
-This event is called with an object of the current {width, height} size as the first parameter.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>SCROLLED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    panelScrolled
-                
-                </td>
-            
-
-            <td class="description last">When the contents of the panel has been scrolled</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>SAVE_LAYOUT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    layoutSave
-                
-                </td>
-            
-
-            <td class="description last">When the layout is being saved, See wcDocker.save</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>RESTORE_LAYOUT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    layoutRestore
-                
-                </td>
-            
-
-            <td class="description last">When the layout is being restored, See wcDocker.restore</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>CUSTOM_TAB_CHANGED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    customTabChanged
-                
-                </td>
-            
-
-            <td class="description last">When the current tab on a custom tab widget associated with this panel has changed, See wcTabFrame</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>CUSTOM_TAB_CLOSED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    customTabClosed
-                
-                </td>
-            
-
-            <td class="description last">When a tab has been closed on a custom tab widget associated with this panel, See wcTabFrame</td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</div></dl>
-
-	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
-		<ul class="dummy">
-			<li>3.0.0</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-71">line 71</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-71">line 71</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>for some reason, jsDoc wants it here but the actual enum is in ./types</li>
-			</ul>
-	</dd>
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id=".ORIENTATION">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>ORIENTATION</toc></b>
-    </h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p style="margin-left:20px;">Used for the splitter bar orientation.</p>
-    </div>
-    
-
-    
-        <h5>Type: 
-<span class="param-type">Boolean</span>
-
-</h5>
-    
-
-    
-<dl class="details">
-	
-
-	<h5 class="subsection-title">Properties:</h5>
-
-	<dl>
-
-<div class="prop-container">
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>VERTICAL</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">Top and Bottom panes</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>HORIZONTAL</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last">Left and Right panes</td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</div></dl>
-
-	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
-		<ul class="dummy">
-			<li>3.0.0</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-152">line 152</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-152">line 152</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>for some reason, jsDoc wants it here but the actual enum is in ./types</li>
-			</ul>
-	</dd>
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id=".TAB">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>TAB</toc></b>
-    </h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p style="margin-left:20px;">Used to determine the position of tabbed widgets for stacked panels.<br>
-<b>Note:</b> Not supported on IE8 or below.</p>
-    </div>
-    
-
-    
-        <h5>Type: 
-<span class="param-type">String</span>
-
-</h5>
-    
-
-    
-<dl class="details">
-	
-
-	<h5 class="subsection-title">Properties:</h5>
-
-	<dl>
-
-<div class="prop-container">
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>TOP</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    top
-                
-                </td>
-            
-
-            <td class="description last">The default, puts tabs at the top of the frame</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>LEFT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    left
-                
-                </td>
-            
-
-            <td class="description last">Puts tabs on the left side of the frame</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>RIGHT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    right
-                
-                </td>
-            
-
-            <td class="description last">Puts tabs on the right side of the frame</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>BOTTOM</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    bottom
-                
-                </td>
-            
-
-            <td class="description last">Puts tabs on the bottom of the frame</td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</div></dl>
-
-	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
-		<ul class="dummy">
-			<li>3.0.0</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-166">line 166</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-166">line 166</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>for some reason, jsDoc wants it here but the actual enum is in ./types</li>
-			</ul>
-	</dd>
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
 <dt class="name" id=".wcDocker.EVENT">
     <h4><toc class="small"><i>static</i></toc><toc> </toc>
         var
@@ -3541,13 +2253,13 @@ This event is called with an object of the current {width, height} size as the f
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-183">line 183</a>
+     <a href="docker.js.html#sunlight-1-line-69">line 69</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-183">line 183</a>
+				 <a href="docker.js.html#sunlight-1-line-69">line 69</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -3819,13 +2531,13 @@ This event is called with an object of the current {width, height} size as the f
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-393">line 393</a>
+     <a href="docker.js.html#sunlight-1-line-279">line 279</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-393">line 393</a>
+				 <a href="docker.js.html#sunlight-1-line-279">line 279</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4023,13 +2735,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-872">line 872</a>
+     <a href="docker.js.html#sunlight-1-line-758">line 758</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-872">line 872</a>
+				 <a href="docker.js.html#sunlight-1-line-758">line 758</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4118,13 +2830,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1218">line 1218</a>
+     <a href="docker.js.html#sunlight-1-line-1104">line 1104</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1218">line 1218</a>
+				 <a href="docker.js.html#sunlight-1-line-1104">line 1104</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4211,13 +2923,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1310">line 1310</a>
+     <a href="docker.js.html#sunlight-1-line-1196">line 1196</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1310">line 1310</a>
+				 <a href="docker.js.html#sunlight-1-line-1196">line 1196</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4384,13 +3096,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-719">line 719</a>
+     <a href="docker.js.html#sunlight-1-line-605">line 605</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-719">line 719</a>
+				 <a href="docker.js.html#sunlight-1-line-605">line 605</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4546,13 +3258,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-777">line 777</a>
+     <a href="docker.js.html#sunlight-1-line-663">line 663</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-777">line 777</a>
+				 <a href="docker.js.html#sunlight-1-line-663">line 663</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4665,13 +3377,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-309">line 309</a>
+     <a href="docker.js.html#sunlight-1-line-195">line 195</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-309">line 309</a>
+				 <a href="docker.js.html#sunlight-1-line-195">line 195</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4860,13 +3572,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-887">line 887</a>
+     <a href="docker.js.html#sunlight-1-line-773">line 773</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-887">line 887</a>
+				 <a href="docker.js.html#sunlight-1-line-773">line 773</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5137,13 +3849,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-567">line 567</a>
+     <a href="docker.js.html#sunlight-1-line-453">line 453</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-567">line 567</a>
+				 <a href="docker.js.html#sunlight-1-line-453">line 453</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5215,7 +3927,7 @@ If you wish to use a more complex context menu, you can use
             <td class="type">
             
                 
-<span class="param-type"><a href="module-wcDocker.html#.EVENT">module:wcDocker.EVENT</a></span>
+<span class="param-type">module:wcDocker.EVENT</span>
 
 
             
@@ -5322,13 +4034,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-820">line 820</a>
+     <a href="docker.js.html#sunlight-1-line-706">line 706</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-820">line 820</a>
+				 <a href="docker.js.html#sunlight-1-line-706">line 706</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5405,7 +4117,7 @@ If you wish to use a more complex context menu, you can use
             <td class="type">
             
                 
-<span class="param-type"><a href="module-wcDocker.html#.EVENT">module:wcDocker.EVENT</a></span>
+<span class="param-type">module:wcDocker.EVENT</span>
 
 
             
@@ -5506,13 +4218,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-798">line 798</a>
+     <a href="docker.js.html#sunlight-1-line-684">line 684</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-798">line 798</a>
+				 <a href="docker.js.html#sunlight-1-line-684">line 684</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5667,13 +4379,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-376">line 376</a>
+     <a href="docker.js.html#sunlight-1-line-262">line 262</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-376">line 376</a>
+				 <a href="docker.js.html#sunlight-1-line-262">line 262</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5828,13 +4540,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-361">line 361</a>
+     <a href="docker.js.html#sunlight-1-line-247">line 247</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-361">line 361</a>
+				 <a href="docker.js.html#sunlight-1-line-247">line 247</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -6070,13 +4782,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-321">line 321</a>
+     <a href="docker.js.html#sunlight-1-line-207">line 207</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-321">line 321</a>
+				 <a href="docker.js.html#sunlight-1-line-207">line 207</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -6254,13 +4966,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-445">line 445</a>
+     <a href="docker.js.html#sunlight-1-line-331">line 331</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-445">line 445</a>
+				 <a href="docker.js.html#sunlight-1-line-331">line 331</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -6396,13 +5108,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1273">line 1273</a>
+     <a href="docker.js.html#sunlight-1-line-1159">line 1159</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1273">line 1273</a>
+				 <a href="docker.js.html#sunlight-1-line-1159">line 1159</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -6509,13 +5221,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1243">line 1243</a>
+     <a href="docker.js.html#sunlight-1-line-1129">line 1129</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1243">line 1243</a>
+				 <a href="docker.js.html#sunlight-1-line-1129">line 1129</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -6747,13 +5459,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-740">line 740</a>
+     <a href="docker.js.html#sunlight-1-line-626">line 626</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-740">line 740</a>
+				 <a href="docker.js.html#sunlight-1-line-626">line 626</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -6908,13 +5620,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-278">line 278</a>
+     <a href="docker.js.html#sunlight-1-line-164">line 164</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-278">line 278</a>
+				 <a href="docker.js.html#sunlight-1-line-164">line 164</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -7070,13 +5782,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-266">line 266</a>
+     <a href="docker.js.html#sunlight-1-line-152">line 152</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-266">line 266</a>
+				 <a href="docker.js.html#sunlight-1-line-152">line 152</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -7148,7 +5860,7 @@ string that can be used later to restore it.</p>
             <td class="type">
             
                 
-<span class="param-type"><a href="module-wcDocker.html#.EVENT">module:wcDocker.EVENT</a></span>
+<span class="param-type">module:wcDocker.EVENT</span>
 
 
             
@@ -7260,13 +5972,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-845">line 845</a>
+     <a href="docker.js.html#sunlight-1-line-731">line 731</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-845">line 845</a>
+				 <a href="docker.js.html#sunlight-1-line-731">line 731</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -8572,7 +7284,7 @@ string that can be used later to restore it.</p>
             <td class="type">
             
                 
-<span class="param-type"><a href="module-wcDocker.html#.TAB">module:wcDocker.TAB</a></span>
+<span class="param-type">module:wcDocker.TAB</span>
 
 
             
