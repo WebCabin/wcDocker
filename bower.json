@@ -37,7 +37,7 @@
     "dcl": "1.1.2",
     "requirejs": "2.1.x",
     "requirejs-domready": "2.0.x",
-    "almost":"0.3.1"
+    "almond":"0.3.1"
   },
   "license": "MIT"
 }
