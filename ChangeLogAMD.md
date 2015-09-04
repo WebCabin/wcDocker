@@ -8,10 +8,6 @@
 
 #### Open issues:
 
-- Code/iframe::docker() not returning a docker instance
-
-to reproduce or fix it: grab a fresh copy and enable in indexDev.html "tutorials" = true
-
 
 - index.html: for some reason ./demo.js is evaluated before ./Build/wcDocker.js
 
@@ -87,7 +83,7 @@ Since we use now DCL for OOP, all classes have been wrapped
 into DCL classes. Furthermore, a base class ./Code/base has been
 added to all wcDocker classes
  
-Please follow for details [here](www.dcljs.org/docs/cheatsheet)
+Please follow for more details how to use dcl here[here](www.dcljs.org/docs/cheatsheet)
 
 
  
@@ -108,6 +104,23 @@ everything automatically what has been put into Compiler/wcDockerLibrary.js
 has been also developed by require.js
 
 
+### Low-Level Changes
+
+#### Constants & Enumerations: 
+
+Since AMD/require-js doesn't provide save cyclic dependencies:
+ 
+- constants and enumerations have been moved to Code/types.js
+- in some places, instanceOf have been replaced with Base::instanceOf
+
+Another issue was that jsDoc doesn't enumerate constants and enumerations
+listed in Code/types.js within the wcDocker class documentation. I duplicated
+them in wcDocker. This is will be solved.
+
+
+
+
+  
 
 
 
