@@ -27,8 +27,8 @@ define([
          *
          * @returns {wcDocker} - The top level docker object.
          */
-        docker: function () {
-            var parent = this._parent;
+        docker: function (startNode) {
+            var parent = startNode  || this._parent;
             while (parent && !(parent.instanceOf(null,'wcDocker'))) {
                 parent = parent._parent;
             }

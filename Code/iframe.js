@@ -202,9 +202,9 @@ define([
         },
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// Private Functions
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Private Functions
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         __init: function () {
             this.$frame = $('<div class="wcIFrame">');
@@ -286,7 +286,7 @@ define([
         },
 
         __onFocus: function () {
-            this.docker().__focus(this._panel._parent);
+            this.docker(this._panel).__focus(this._panel._parent);
         },
 
         __onVisibilityChanged: function () {
@@ -320,23 +320,10 @@ define([
                 this.__focusFix();
             }
         },
-        /**
-         * Retrieves the main [docker]{@link wcDocker} instance.
-         *
-         * @returns {wcDocker} - The top level docker object.
-         */
-        __docker: function () {
-            var parent = this._parent;
-            while (parent && !(parent.instanceOf('wcDocker'))) {
-
-                parent = parent._parent;
-            }
-            return parent;
-        },
         __onMoved: function () {
             if (this.$frame && this._panel) {
                 // Size, position, and show the frame once the move is finished.
-                var docker = this.docker();//in base
+                var docker = this.docker(this._panel);//in base
                 if(docker) {
                     var dockerPos = docker.$container.offset();
                     var pos = this.$container.offset();
