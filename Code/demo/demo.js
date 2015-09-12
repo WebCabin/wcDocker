@@ -7,11 +7,12 @@ $(document).ready(function() {
   // Create an instance of our docker window and assign it to the document.
   var myDocker = new wcDocker('.dockerContainer', {
     allowDrawers: true,
-    responseRate: 10
+    responseRate: 10,
+    themePath: 'Build/Themes'
   });
   if (myDocker) {
 
-    var _currentTheme = 'default';
+    var _currentTheme = 'default.min';
     var _showingInfo  = true;
     var _savedLayout  = null;
     var _chatterIndex = 1;
@@ -153,10 +154,10 @@ $(document).ready(function() {
         var $themeLabel       = $('<div style="width:100%;text-align:right;margin-top:20px;white-space:nowrap;">Select theme: </div>');
         var $themeSelector    = $('<select class="themeSelector" style="margin-top:20px;width:100%">');
         var $customOption     = $('<option class="custom" value="" style="display:none;">Custom</option>');
-        $themeSelector.append('<option value="default">Default</option>');
-        $themeSelector.append('<option value="bigRed">Big Red</option>');
-        $themeSelector.append('<option value="shadow">Shadow</option>');
-        $themeSelector.append('<option value="ideDark">ideDark</option>');
+        $themeSelector.append('<option value="default.min">Default</option>');
+        $themeSelector.append('<option value="bigRed.min">Big Red</option>');
+        $themeSelector.append('<option value="shadow.min">Shadow</option>');
+        $themeSelector.append('<option value="ideDark.min">ideDark</option>');
         $themeSelector.append($customOption);
         $themeSelector.val(_currentTheme);
 
