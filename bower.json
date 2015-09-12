@@ -33,7 +33,11 @@
     "jquery": "1.11.1",
     "jQuery-contextMenu": "1.6.6",
     "font-awesome": "4.4.0",
-    "FileSaver": "master"
+    "FileSaver": "master",
+    "dcl": "1.1.2",
+    "requirejs": "2.1.x",
+    "requirejs-domready": "2.0.x",
+    "almond":"0.3.1"
   },
   "license": "MIT"
 }

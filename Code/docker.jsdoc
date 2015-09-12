@@ -1,7 +1,7 @@
 /**
  * Options for a [docker]{@link wcDocker} instance.
  * 
- * @typedef {Object} wcDocker~Options
+ * @typedef {Object} module:wcDocker~Options
  * @property {String} [themePath='Themes'] - A folder path where all docker theme files can be found.
  * @property {String} [theme='default'] - The active docker theme.
  * @property {String} [loadingClass='fa fa-spinner fa-pulse'] - Any class name to use for the loading screen icon.
@@ -19,17 +19,18 @@
 /**
  * A rectangle structure.
  *
- * @typedef {Object} wcDocker~Rect
+ * @typedef {Object} module:wcDocker~Rect
  * @property {Number|String} [x] - X coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [y] - Y coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [w] - Width of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [h] - Height of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
  */
 
+
 /**
  * A bounding structure
  *
- * @typedef {Object} wcDocker~Bounds
+ * @typedef {Object} module:wcDocker~Bounds
  * @property {Number} top - The upper, or top bound (percentage value between 0 and 1).
  * @property {Number} bottom - The lower, or bottom bound (percentage value between 0 and 1).
  * @property {Number} left - The left bound (percentage value between 0 and 1).
@@ -39,7 +40,7 @@
 /**
  * A coordinate structure.
  *
- * @typedef {Object} wcDocker~Coordinate
+ * @typedef {Object} module:wcDocker~Coordinate
  * @property {Number} x - X coordinate.
  * @property {Number} y - Y coordinate.
  */
@@ -47,19 +48,19 @@
 /**
  * A 2D size structure.
  *
- * @typedef {Object} wcDocker~Size
+ * @typedef {Object} module:wcDocker~Size
  * @property {Number} x - Width.
  * @property {Number} y - Height.
  */
 
 /**
- * @typedef {Object} wcDocker~Scrollable
+ * @typedef {Object} module:wcDocker~Scrollable
  * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
  * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
  */
 
 /**
- * @typedef {Object} wcDocker~FitContents
+ * @typedef {Object} module:wcDocker~FitContents
  * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
  * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
  */
@@ -67,43 +68,43 @@
  /**
  * Options for adding a new panel.
  *
- * @typedef {Object} wcDocker~PanelOptions
+ * @typedef {Object} module:wcDocker~PanelOptions
  * @property {Number|String} [x] - X coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [y] - Y coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [w] - Desired width of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [h] - Desired height of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
- * @property {wcDocker.TAB} [tabOrientation] - Desired position of tab widgets when using [wcDocker.DOCK.STACKED]{@link wcDocker.DOCK}. <b>Not supported on IE8 or below.</b>
+ * @property {module:wcDocker.TAB} [tabOrientation] - Desired position of tab widgets when using [wcDocker.DOCK.STACKED]{@link wcDocker.DOCK}. <b>Not supported on IE8 or below.</b>
  */
 
 /**
  * Options object for registering new panel types.
  * 
- * @typedef wcDocker~registerOptions
- * @property {wcDocker~onCreatePanel} onCreate  - A function or an object constructor for the panel.
- * @property {wcDocker.LAYOUT} [layout=wcDocker.LAYOUT.TABLE] - If supplied, overrides the default layout used for this panel.
+ * @typedef module:wcDocker~registerOptions
+ * @property {module:wcDocker~onCreatePanel} onCreate  - A function or an object constructor for the panel.
+ * @property {module:wcDocker.LAYOUT} [layout=wcDocker.LAYOUT.TABLE] - If supplied, overrides the default layout used for this panel.
  * @property {String} [icon]                    - A CSS class name to draw an icon in the panels tab widget.
  * @property {String} [faicon]                  - An icon name using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library. You must download and link to the library first.
  * @property {String|Boolean} [title]           - Assign a custom name to the panels tab. A false value will hide the tab entirely.
  * @property {Boolean} [isPrivate]              - If true, the user will not be able to create this panel type.
  * @property {Boolean} [isPersistent]           - If true, when the user closes this panel, it will only be hidden instead of completely destroyed. When the user creates an instance of this panel, it will first attempt to un-hide an already existing panel before creating a new instance.
  * @property {Number} [limit]                   - Enforces a limited number of this panel type from being created by the user.
- * @property {wcPanel~options} [options]        - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
+ * @property {module:wcPanel~options} [options]        - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
  */
 
  /**
  * A function or an object constructor for the panel. This function is called using the 'new' operator.
  *
- * @callback wcDocker~onCreatePanel
- * @param {wcPanel} panel - The panel being constructed.
- * @param {wcPanel~options} [options] - An options object passed in from [wcDocker.registerPanelType]{@link wcDocker#registerPanelType}'s options.options parameter.
+ * @callback module:wcDocker~onCreatePanel
+ * @param {module:wcPanel} panel - The panel being constructed.
+ * @param {module:wcPanel~options} [options] - An options object passed in from [wcDocker.registerPanelType]{@link wcDocker#registerPanelType}'s options.options parameter.
  */
 
 /**
  * An event handler callback. Each is registered to a event type using the [wcDocker.on]{@link wcDocker~on} or [wcPanel.on]{@link wcPanel~on} functions.
  *
- * @event wcDocker~onEvent
+ * @event module:wcDocker~onEvent
  * @type {Function}
- * @param {wcPanel|NULL} panel - The panel invoking the event, or NULL if global.
+ * @param {module:wcPanel|NULL} panel - The panel invoking the event, or NULL if global.
  * @param {Object} [data] - A data object passed by the invoker.
  */
 

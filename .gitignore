@@ -1,3 +1,5 @@
+Compiler/libs
+out
 node_modules
 bower install.bat
 bower update.bat

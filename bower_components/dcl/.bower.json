@@ -1,0 +1,22 @@
+{
+  "name": "dcl",
+  "version": "1.1.2",
+  "main": "dcl.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "homepage": "https://github.com/uhop/dcl",
+  "_release": "1.1.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.1.2",
+    "commit": "64bfb2b736e787b1c2323ac31e1c7042bb7388c3"
+  },
+  "_source": "git://github.com/uhop/dcl.git",
+  "_target": "1.1.2",
+  "_originalSource": "dcl"
+}
