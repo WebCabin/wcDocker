@@ -8,7 +8,8 @@ $(document).ready(function() {
   var myDocker = new wcDocker('.dockerContainer', {
     allowDrawers: true,
     responseRate: 10,
-    themePath: 'Build/Themes'
+    themePath: 'Build/Themes',
+    theme: 'default.min'
   });
   if (myDocker) {
 
@@ -16,8 +17,6 @@ $(document).ready(function() {
     var _showingInfo  = true;
     var _savedLayout  = null;
     var _chatterIndex = 1;
-
-    myDocker.theme(_currentTheme);
 
     // A common function that uses the 'Info Panel' to show a given block of text.
     function showInfo(text) {
