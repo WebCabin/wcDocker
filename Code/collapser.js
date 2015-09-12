@@ -2,8 +2,10 @@
 define([
     "dcl/dcl",
     "./types",
+    "./splitter",
+    "./drawer",
     "./base"
-], function (dcl, wcDocker,base) {
+], function (dcl, wcDocker, wcSplitter, wcDrawer, base) {
 
     /**
      * A collapsable container for carrying panels.<br>
@@ -182,7 +184,7 @@ define([
         }
     });
 
-    window['wcCollapser'] = Module;
+    // window['wcCollapser'] = Module;
 
     return Module;
 

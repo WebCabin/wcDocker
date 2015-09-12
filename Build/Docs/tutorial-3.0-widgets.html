@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>wcDocker Externals</title>
+	<title>wcDocker tutorialWidgets</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,300 +65,55 @@
 	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
 	
 		<div id="main">
-    		
-
-	<h1 class="page-title">Externals</h1>
-<section>
+    		<section class="tutorial-section">
 
 <header>
     
-        <h2>
-        
-        </h2>
-        
-    
+
+    <h2>Widgets</h2>
 </header>
 
-
 <article>
-    <div class="container-overview">
-    
-        
+    <h3>Splitter Widget</h3><p>The <a href="wcSplitter.html">splitter</a> widget separates two elements by a moveable bar, either vertically or horizontally. It is the same one used by docker to organize the layout of all docked panels.</p>
+<p>To use it, you will need an element that will contain it. This element should be added to your layout and will mark the size and location of the splitter area.<br><strong>Note:</strong> Some limitations exist with iFrames. Even if the container element is partially hidden beyond the bounds of the panel layout, the iFrame itself will not be occluded.<br><strong>Troubleshooting:</strong> If the widget does not appear correctly, double check and make sure your container element has been positioned and sized properly according to your browser.</p>
+<pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;position:absolute;top:0px;left:0px;right:0px;bottom:0px;&quot;>&lt;/div>');
+myPanel.layout().addItem($container);
 
-        
-<dl class="details">
-	
+var splitter = new wcSplitter($container, myPanel, wcDocker.ORIENTATION.HORIZONTAL);
+splitter.initLayouts();</code></pre><p>Once you have created your splitter widget, you'll want to fill each side with content.</p>
+<pre class="prettyprint source"><code>// Horizontal splitters have a pane on the left and right.
+var leftLayout = splitter.left();
+var rightLayout = splitter.right();
 
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-wcBase.html">module:wcBase</a></dt>
-            <dd></dd>
-        
-            <dt><a href="module-wcCollapser.html">module:wcCollapser</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Events</h3>
-
-        <dl>
-            
+// Vertical splitters have a pane on the top and bottom.
+var topLayout = splitter.top();
+var rightLayout = splitter.bottom();</code></pre><p>Once you have the <a href="wcLayoutTable.html">layout</a> of the pane you want, you can add items to it like you would any panel.</p>
+<pre class="prettyprint source"><code>leftLayout.addItem(domNode);</code></pre><p>The orientation of a splitter can also be changed at any time by using the wcSplitter.orientation function.</p>
 <hr>
-<dt>
-    <h4 class="name" id="~event:onEvent"><toc class="small"><i>inner</i></toc><toc> </toc>function <toc><b>onEvent</b></toc>
-        
-    </h4>
+<h3>Tab Widget</h3><p>The tab frame widget allows you to separate multiple 'pages' of content into tabbed items, much like how panels become stacked.</p>
+<p>To use it, you will need an element that will contain it. This element should be added to your layout and will mark the size and location of the tabbed area.<br><strong>Troubleshooting:</strong> If the widget does not appear correctly, double check and make sure your container element has been positioned and sized properly according to your browser.</p>
+<pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;width:100%;height:100%;&quot;>&lt;/div>');
+myPanel.layout().addItem($container);
 
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p style="margin-left: 20px;">An event handler callback. Each is registered to a event type using the wcDocker.on or wcPanel.on functions.</p>
-    </div>
-    
+var tabFrame = new wcTabFrame($container, myPanel);</code></pre><p>Of course, you'll want to add tabs to your tabbed frame and fill them with content...</p>
+<pre class="prettyprint source"><code>var tabLayout = tabFrame.addTab('First Tab');
+tabLayout.addItem(domNode);</code></pre><hr>
+<h3>iFrame Widget</h3><p>The iFrame widget makes it easier to include an iFrame element into your panel.
+Because an iFrame's contents is cleared whenever it is moved in the DOM heirarchy
+(and changing a panels docking position causes DOM movement), special care must
+be taken when using them.</p>
+<p>To use it, you will need an element that will contain it. This element should be added to your layout and will mark the size and location of the iFrame area.<br><strong>Note:</strong> Some limitations exist with iFrames. Even if the container element is partially hidden beyond the bounds of the panel layout, the iFrame itself will not be occluded.<br><strong>Troubleshooting:</strong> If the widget does not appear correctly, double check and make sure your container element has been positioned and sized properly according to your browser.</p>
+<pre class="prettyprint source"><code>var $container = $('&lt;div style=&quot;position:absolute;top:0px;left:0px;right:0px;bottom:0px;&quot;>&lt;/div>');
+myPanel.layout().addItem($container);
 
-    
-
-    
-        <h5>Type: 
-<span class="param-type">function</span>
-
-</h5>
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>panel</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
-|
-
-<span class="param-type">NULL</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The panel invoking the event, or NULL if global.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">A data object passed by the invoker.</td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-102">line 102</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="docker.jsdoc.html">docker.jsdoc</a>,
-				 <a href="docker.jsdoc.html#sunlight-1-line-102">line 102</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-</dl>
-
-</dd>
-
-        </dl>
-    
+var iFrame = new wcIFrame($container, myPanel);</code></pre><p>And fill its contents...</p>
+<pre class="prettyprint source"><code>iFrame.openURL('http://www.example.com');
+// Or...
+iFrame.openHTML('&lt;span>Hello World!&lt;/span>');</code></pre><p>Or for some even more control, you can access the window object within the frame directly.</p>
+<pre class="prettyprint source"><code>var frameWindow = iFrame.window();</code></pre><p>Go back to the <a href="tutorial-2.0-tips-and-tricks.html">Tips and Tricks</a> tutorial.</p>
 </article>
 
 </section>
-
-
-
 
 		</div>
 	</div>

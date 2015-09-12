@@ -39,6 +39,13 @@
 			</li>
 			
 			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-tips-and-tricks.html">Tips and Tricks</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
 				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
 					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
@@ -72,7 +79,12 @@ define([
     "./layoutsimple",
     "./layouttable",
     "./base"
-], function (dcl, wcDocker,wcLayoutSimple,wcLayoutTable,base) {
+], function (dcl, wcDocker, wcLayoutSimple, wcLayoutTable, base) {
+
+    var layoutClasses = {
+      'wcLayoutSimple': wcLayoutSimple,
+      'wcLayoutTable': wcLayoutTable
+    };
 
     /**
      * @class module:wcPanel
@@ -80,7 +92,8 @@ define([
      * functions and layout that manages the contents of the panel.
      */
     var Module = dcl(base, {
-        declaredClass:'wcPanel',
+        declaredClass: 'wcPanel',
+
         /**
          * @memberOf module:wcPanel
          * @description
@@ -212,7 +225,7 @@ define([
                     this.$titleText.prepend(this.$icon);
                 }
 
-                if (this._parent instanceof wcFrame) {
+                if (this._parent.instanceOf('wcFrame')) {
                     this._parent.__updateTabs();
                 }
             }
@@ -284,7 +297,7 @@ define([
          * @returns {Boolean}
          */
         isFloating: function () {
-            if (this._parent instanceof wcFrame) {
+            if (this._parent.instanceOf('wcFrame')) {
                 return this._parent._isFloating;
             }
             return false;
@@ -296,7 +309,7 @@ define([
          */
         isInFocus: function () {
             var docker = this.docker();
-            if (docker &amp;&amp; this._parent instanceof wcFrame) {
+            if (docker &amp;&amp; this._parent.instanceOf('wcFrame')) {
                 return this._parent === docker._focusFrame;
             }
             return false;
@@ -322,7 +335,7 @@ define([
                 isToggled: false
             });
 
-            if (this._parent instanceof wcFrame) {
+            if (this._parent.instanceOf('wcFrame')) {
                 this._parent.__update();
             }
         },
@@ -336,11 +349,11 @@ define([
             for (var i = 0; i &lt; this._buttonList.length; ++i) {
                 if (this._buttonList[i].name === name) {
                     this._buttonList.splice(i, 1);
-                    if (this._parent instanceof wcFrame) {
+                    if (this._parent.instanceOf('wcFrame')) {
                         this._parent.__onTabChange();
                     }
 
-                    if (this._parent instanceof wcFrame) {
+                    if (this._parent.instanceOf('wcFrame')) {
                         this._parent.__update();
                     }
 
@@ -362,12 +375,12 @@ define([
                 if (this._buttonList[i].name === name) {
                     if (typeof toggleState !== 'undefined') {
                         this._buttonList[i].isToggled = toggleState;
-                        if (this._parent instanceof wcFrame) {
+                        if (this._parent.instanceOf('wcFrame')) {
                             this._parent.__onTabChange();
                         }
                     }
 
-                    if (this._parent instanceof wcFrame) {
+                    if (this._parent.instanceOf('wcFrame')) {
                         this._parent.__update();
                     }
 
@@ -517,7 +530,7 @@ define([
             this.$icon.removeClass();
             this.$icon.addClass('wcTabIcon ' + icon);
 
-            if (this._parent instanceof wcFrame) {
+            if (this._parent.instanceOf('wcFrame')) {
                 this._parent.__updateTabs();
             }
         },
@@ -535,7 +548,7 @@ define([
             this.$icon.removeClass();
             this.$icon.addClass('wcTabIcon fa fa-fw fa-' + icon);
 
-            if (this._parent instanceof wcFrame) {
+            if (this._parent &amp;&amp; this._parent.instanceOf('wcFrame')) {
                 this._parent.__updateTabs();
             }
         },
@@ -804,7 +817,7 @@ define([
         // Initialize
         __init: function () {
             var layoutClass = (this._options &amp;&amp; this._options.layout) || 'wcLayoutTable';
-            this._layout = new window[layoutClass](this.$container, this);
+            this._layout = new layoutClasses[layoutClass](this.$container, this);
             this.$title = $('&lt;div class="wcPanelTab">');
             this.$titleText = $('&lt;div>' + this._title + '&lt;/div>');
             this.$title.append(this.$titleText);
@@ -1023,7 +1036,7 @@ define([
         }
     });
 
-    window['wcPanel'] = Module;
+    // window['wcPanel'] = Module;
     return Module;
 });
 </pre>
@@ -1052,7 +1065,7 @@ define([
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2015-09-04 using the <a
+			on 2015-09-12 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

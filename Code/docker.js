@@ -23,10 +23,9 @@ define([
     './splitter',
     './frame',
     './collapser',
-    './drawer',
-    './iframe',
     './base'
-], function (dcl,wcDocker,wcPanel,wcGhost,wcSplitter,wcFrame,wcCollapser,wcDrawer,wcIFrame,base) {
+], function (dcl, wcDocker, wcPanel, wcGhost, wcSplitter, wcFrame, wcCollapser, base) {
+
     /**
      * @class
      *
@@ -34,31 +33,8 @@ define([
      * There should only be one instance of this, although it is not enforced.<br>
      * See {@tutorial getting-started}
      */
-    var Module = dcl(base,{
-
-        /**
-         * Enumerated Docking positions.
-         * @version 3.0.0
-         * @memberOf module:wcDocker
-         * @enum {String} module:wcDocker.DOCK
-         * @todo for some reason, jsDoc wants it here but the actual enum is in ./types
-         */
-        DOCK : {
-            /** A floating panel that blocks input until closed */
-            MODAL: 'modal',
-            /** A floating panel */
-            FLOAT: 'float',
-            /** Docks to the top of a target or window */
-            TOP: 'top',
-            /** Docks to the left of a target or window */
-            LEFT: 'left',
-            /** Docks to the right of a target or window */
-            RIGHT: 'right',
-            /** Docks to the bottom of a target or window */
-            BOTTOM: 'bottom',
-            /** Docks as another tabbed item along with the target */
-            STACKED: 'stacked'
-        },
+    var Module = dcl(base, {
+        declaredClass: 'wcDocker',
 
         /**
          *
@@ -68,7 +44,6 @@ define([
          */
         constructor: function (container, options) {
 
-            this.declaredClass = 'wcDocker';
             this.$outer = $(container);
             this.$container = $('<div class="wcDocker">');
             this.$transition = $('<div class="wcDockerTransition">');
@@ -337,7 +312,7 @@ define([
             var lastPanel = this.__isLastPanel(panel);
 
             var parentFrame = panel._parent;
-            if (parentFrame instanceof wcFrame) {
+            if (parentFrame.instanceOf('wcFrame')) {
                 if (dontDestroy) {
                     // Keep the panel in a hidden transition container so as to not
                     // destroy any event handlers that may be on it.
@@ -382,7 +357,7 @@ define([
                     }
 
                     var parentSplitter = parentFrame._parent;
-                    if (parentSplitter instanceof wcSplitter) {
+                    if (parentSplitter.instanceOf('wcSplitter')) {
                         parentSplitter.__removeChild(parentFrame);
 
                         var other;
@@ -408,7 +383,7 @@ define([
                         parentContainer = parentSplitter.__container();
                         parentSplitter.__destroy();
 
-                        if (parent instanceof wcSplitter) {
+                        if (parent.instanceOf('wcSplitter')) {
                             parent.__removeChild(parentSplitter);
                             if (!parent.pane(0)) {
                                 parent.pane(0, other);
@@ -454,7 +429,7 @@ define([
             var lastPanel = this.__isLastPanel(panel);
 
             var $elem = panel.$container;
-            if (panel._parent instanceof wcFrame) {
+            if (panel._parent.instanceOf('wcFrame')) {
                 $elem = panel._parent.$frame;
             }
             var offset = $elem.offset();
@@ -463,7 +438,7 @@ define([
 
             var parentFrame = panel._parent;
             var floating = false;
-            if (parentFrame instanceof wcFrame) {
+            if (parentFrame.instanceOf('wcFrame')) {
                 floating = parentFrame._isFloating;
                 // Remove the panel from the frame.
                 for (var i = 0; i < parentFrame._panelList.length; ++i) {
@@ -508,7 +483,7 @@ define([
                         }
 
                         var parentSplitter = parentFrame._parent;
-                        if (parentSplitter instanceof wcSplitter) {
+                        if (parentSplitter.instanceOf('wcSplitter')) {
                             parentSplitter.__removeChild(parentFrame);
 
                             var other;
@@ -538,7 +513,7 @@ define([
                             parentContainer = parentSplitter.__container();
                             parentSplitter.__destroy();
 
-                            if (parent instanceof wcSplitter) {
+                            if (parent.instanceOf('wcSplitter')) {
                                 parent.__removeChild(parentSplitter);
                                 if (!parent.pane(0)) {
                                     parent.pane(0, other);
@@ -575,7 +550,7 @@ define([
             }
 
             var frame = panel._parent;
-            if (frame instanceof wcFrame) {
+            if (frame.instanceOf('wcFrame')) {
                 if (frame._panelList.length === 1) {
                     frame.pos(offset.left + width / 2 + 20, offset.top + height / 2 + 20, true);
                 }
@@ -583,7 +558,7 @@ define([
 
             this.__update(true);
 
-            if (frame instanceof wcFrame) {
+            if (frame.instanceOf('wcFrame')) {
                 if (floating !== frame._isFloating) {
                     if (frame._isFloating) {
                         panel.__trigger(wcDocker.EVENT.DETACHED);
@@ -1352,7 +1327,7 @@ define([
                                 }
 
                                 var frame = panel._parent;
-                                if (frame instanceof wcFrame) {
+                                if (frame.instanceOf('wcFrame')) {
                                     frame.pos(mouse.x, mouse.y + self._ghost.__rect().h / 2 - 10, true);
 
                                     frame._size.x = self._ghost.__rect().w;
@@ -1411,13 +1386,13 @@ define([
                                     }
                                 } else {
                                     var frame = panel._parent;
-                                    if (frame instanceof wcFrame) {
+                                    if (frame.instanceOf('wcFrame')) {
                                         index = index + frame._panelList.length;
                                     }
                                 }
 
                                 var frame = panel._parent;
-                                if (frame instanceof wcFrame) {
+                                if (frame.instanceOf('wcFrame')) {
                                     frame.panel(index);
                                 }
                                 self.__focus(frame);
@@ -2098,12 +2073,12 @@ define([
          */
         __findInner: function () {
             function isPaneStatic(pane) {
-                return !!(pane && (pane instanceof wcFrame && pane.panel() && !pane.panel().moveable()) || (pane instanceof wcCollapser));
+                return !!(pane && (pane.instanceOf('wcFrame') && pane.panel() && !pane.panel().moveable()) || (pane.instanceOf('wcCollapser')));
             }
 
             var parent = this._root;
             while (parent) {
-                if (parent instanceof wcSplitter) {
+                if (parent.instanceOf('wcSplitter')) {
                     var pane0 = isPaneStatic(parent._pane[0]);
                     var pane1 = isPaneStatic(parent._pane[1]);
                     if (pane0 && !pane1) {
@@ -2352,11 +2327,11 @@ define([
         //                  new panel will split the center window.
         __addPanelGrouped: function (panel, targetPanel, options) {
             var frame = targetPanel;
-            if (targetPanel instanceof wcPanel) {
+            if (targetPanel.instanceOf('wcPanel')) {
                 frame = targetPanel._parent;
             }
 
-            if (frame instanceof wcFrame) {
+            if (frame.instanceOf('wcFrame')) {
                 if (options && options.tabOrientation) {
                     frame.tabOrientation(options.tabOrientation);
                 }
@@ -2465,13 +2440,12 @@ define([
 
                 var splitterChild = targetPanel;
 
-                //AMD-Port : parentSplitter instanceof wcDocker :
-                while (!(parentSplitter instanceof wcSplitter || parentSplitter.instanceOf(null,'wcDocker'))) {
+                while (!(parentSplitter.instanceOf('wcSplitter') || parentSplitter.instanceOf('wcDocker'))) {
                     splitterChild = parentSplitter;
                     parentSplitter = parentSplitter._parent;
                 }
 
-                if (parentSplitter instanceof wcSplitter) {
+                if (parentSplitter.instanceOf('wcSplitter')) {
                     var splitter;
                     var left = parentSplitter.pane(0);
                     var right = parentSplitter.pane(1);
@@ -2611,24 +2585,19 @@ define([
                 var splitterChild = parent;
                 var _d = dcl;
 
-
-                //parentSplitter.instanceOf(null,'wcDocker');
-
-                //AMD-PORT:
-                while (!(parentSplitter instanceof wcSplitter || parentSplitter.instanceOf(null,'wcDocker'))){
+                while (!(parentSplitter.instanceOf('wcSplitter') || parentSplitter.instanceOf('wcDocker'))){
                     splitterChild = parentSplitter;
                     parentSplitter = parentSplitter._parent;
                 }
 
                 var splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
 
-                //AMD-PORT: //if (parentSplitter instanceof wcDocker) { :
-                if (parentSplitter.instanceOf(null,'wcDocker')){
+                if (parentSplitter.instanceOf('wcDocker')){
                     this._root = splitter;
                     splitter.__container(this.$container);
                 }
 
-                if (parentSplitter instanceof wcSplitter) {
+                if (parentSplitter.instanceOf('wcSplitter')) {
                     var left = parentSplitter.left();
                     var right = parentSplitter.right();
                     var size = {
@@ -2731,7 +2700,7 @@ define([
     }
 
     //export to global
-    window['wcDocker'] = Module;
+    // window['wcDocker'] = Module;
 
     return Module;
 

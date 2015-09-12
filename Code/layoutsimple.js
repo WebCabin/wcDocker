@@ -10,8 +10,8 @@ define([
      * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
      */
     var Module = dcl(null, {
+        declaredClass: 'wcLayoutSimple',
 
-        declaredClass:'wcLayoutSimple',
         /**
          * @memberOf module:wcLayoutSimple
          * @description
@@ -277,7 +277,7 @@ define([
             }
 
             // Check for placeholder.
-            if (this._parent instanceof wcPanel && this._parent._isPlaceholder) {
+            if (this._parent.instanceOf('wcPanel') && this._parent._isPlaceholder) {
                 ghost.anchor(mouse, {
                     x: offset.left - 2,
                     y: offset.top - 2,
@@ -416,7 +416,7 @@ define([
         }
     });
 
-    window['wcLayoutSimple'] = Module;
+    // window['wcLayoutSimple'] = Module;
 
     return Module;
 });

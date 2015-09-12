@@ -4,7 +4,7 @@ define([
     "./types",
     "./frame",
     "./base"
-], function (dcl, wcDocker,wcFrame,base) {
+], function (dcl, wcDocker, wcFrame, base) {
     /**
      * A docker container for carrying its own arrangement of docked panels as a slide out drawer.
      * @class module:wcDrawer
@@ -14,8 +14,8 @@ define([
      * @description <b><i>PRIVATE<i> - Handled internally by [docker]{@link module:wcDocker} and <u>should never be constructed by the user.</u></b>
      */
     var Module = dcl(base,{
+        declaredClass: 'wcDrawer',
 
-        declaredClass:'wcCollapser',
         /**
          *
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
@@ -285,7 +285,7 @@ define([
         }
     });
 
-    window['wcDrawer'] = Module;
+    // window['wcDrawer'] = Module;
 
     return Module;
 });

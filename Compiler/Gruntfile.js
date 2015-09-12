@@ -8,8 +8,8 @@ module.exports = function (grunt) {
     }
 
     var outprop = "amdoutput";
-    var outdir = "./build/";
-    var tmpdir = "./tmp/";
+    var outdir = "../build/";
+    var tmpdir = "../tmp/";
 
     // Project configuration.
     grunt.initConfig({
@@ -23,12 +23,12 @@ module.exports = function (grunt) {
                 dest: outdir
             },
             themes:{
-                src: "Themes/*.*",
-                dest: "Build/"
+                src: "../Themes/*.*",
+                dest: "../Build/"
             },
             style:{
-                src: "Code/style.css",
-                dest: "Build/wcDocker.css"
+                src: "../Code/style.css",
+                dest: "../Build/wcDocker.css"
             },
             /**
              * The build tasks requires almond.js in Compiler/libs.
@@ -36,8 +36,8 @@ module.exports = function (grunt) {
              * directory, it needs to be copied over
              */
             almond:{
-                src: "bower_components/almond/almond.js",
-                dest: "Compiler/libs/almond.js"
+                src: "../bower_components/almond/almond.js",
+                dest: "libs/almond.js"
             }
 
         },
@@ -117,9 +117,9 @@ module.exports = function (grunt) {
             compileDemo: {
 
                 options: {
-                    baseUrl: 'Compiler',
+                    baseUrl: '.',
 
-                    out: 'Build/demo.js',
+                    out: '../Build/demo.js',
                     optimize: 'none',
                     name: 'libs/almond',
                     //require-js bootstrap
@@ -141,8 +141,8 @@ module.exports = function (grunt) {
              */
             compileLibR: {
                 options: {
-                    baseUrl: 'Compiler',
-                    out: 'Build/wcDocker.min.js',
+                    baseUrl: '.',
+                    out: '../Build/wcDocker.min.js',
                     optimize: 'uglify2',
                     name: 'libs/almond',
                     //require-js bootstrap
@@ -166,8 +166,8 @@ module.exports = function (grunt) {
              */
             compileLibD: {
                 options: {
-                    baseUrl: 'Compiler',
-                    out: 'Build/wcDocker.js',
+                    baseUrl: '.',
+                    out: '../Build/wcDocker.js',
                     optimize: 'none',
                     name: 'libs/almond',
                     //require-js bootstrap
@@ -193,20 +193,20 @@ module.exports = function (grunt) {
                     banner: '/* My minified css file */'
                 },
                 files: {
-                    'Build/Themes/default.min.css': [
-                        'Themes/default.css'
+                    '../Build/Themes/default.min.css': [
+                        '../Themes/default.css'
                     ],
-                    'Build/Themes/bigRed.min.css': [
-                        'Themes/bigRed.css'
+                    '../Build/Themes/bigRed.min.css': [
+                        '../Themes/bigRed.css'
                     ],
-                    'Build/Themes/shadow.min.css': [
-                        'Themes/shadow.css'
+                    '../Build/Themes/shadow.min.css': [
+                        '../Themes/shadow.css'
                     ],
-                    'Build/Themes/ideDark.min.css': [
-                        'Themes/ideDark.css'
+                    '../Build/Themes/ideDark.min.css': [
+                        '../Themes/ideDark.css'
                     ],
-                    'Build/wcDocker.min.css': [
-                        'Build/wcDocker.css'
+                    '../Build/wcDocker.min.css': [
+                        '../Build/wcDocker.css'
                     ]
                 }
             }

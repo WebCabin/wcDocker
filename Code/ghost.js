@@ -9,7 +9,8 @@ define([
      * A ghost object that follows the mouse around during dock movement.
      */
     var Module = dcl(null, {
-        declaredClass:'wcGhost',
+        declaredClass: 'wcGhost',
+        
         constructor: function (rect, mouse, docker) {
             this.$ghost = null;
             this._rect;
@@ -18,7 +19,7 @@ define([
             this._docker = docker;
 
             this._outer = docker.__findInner();
-            if (this._outer instanceof wcSplitter) {
+            if (this._outer.instanceOf('wcSplitter')) {
                 this._inner = this._outer.right();
             }
 
@@ -215,7 +216,7 @@ define([
         }
     });
 
-    window['wcGhost'] = Module;
+    // window['wcGhost'] = Module;
 
     return Module;
 

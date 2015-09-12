@@ -2,8 +2,15 @@
 define([
     "dcl/dcl",
     "./types",
+    "./layoutsimple",
+    "./layouttable",
     "./base"
-], function (dcl, wcDocker,base) {
+], function (dcl, wcDocker, wcLayoutSimple, wcLayoutTable, base) {
+
+    var layoutClasses = {
+      'wcLayoutSimple': wcLayoutSimple,
+      'wcLayoutTable': wcLayoutTable
+    };
 
     /**
      * @class module:wcSplitter
@@ -14,7 +21,8 @@ define([
      */
     var Module = dcl(base, {
 
-        declaredClass:'wcSplitter',
+        declaredClass: 'wcSplitter',
+
         /**
          * @memberOf module:wcSplitter
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this splitter.
@@ -59,10 +67,10 @@ define([
          */
         initLayouts: function (topLeftLayout, bottomRightLayout) {
             var layoutClass = topLeftLayout || 'wcLayoutTable';
-            var layout0 = new window[layoutClass](this.$pane[0], this);
+            var layout0 = new layoutClasses[layoutClass](this.$pane[0], this);
 
             layoutClass = bottomRightLayout || 'wcLayoutTable';
-            var layout1 = new window[layoutClass](this.$pane[1], this);
+            var layout1 = new layoutClasses[layoutClass](this.$pane[1], this);
 
             this.pane(0, layout0);
             this.pane(1, layout1);
@@ -96,7 +104,7 @@ define([
                 this.$bar.css('top', '').css('left', '').css('width', '').css('height', '');
                 this.__update();
 
-                if (this._parent instanceof wcPanel) {
+                if (this._parent.instanceOf('wcPanel')) {
                     this._parent.__trigger(wcDocker.EVENT.UPDATED);
                 }
             }
@@ -190,7 +198,7 @@ define([
                 this._pos = this._posTarget = value;
                 this.__update();
 
-                if (this._parent instanceof wcPanel) {
+                if (this._parent.instanceOf('wcPanel')) {
                     this._parent.__trigger(wcDocker.EVENT.UPDATED);
                 }
             }
@@ -382,7 +390,7 @@ define([
 
             this.__container(this.$container);
 
-            if (this._parent instanceof wcPanel) {
+            if (this._parent.instanceOf('wcPanel')) {
                 this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.__update.bind(this)});
                 this._boundEvents.push({event: wcDocker.EVENT.CLOSED, handler: this.destroy.bind(this)});
 
@@ -474,7 +482,7 @@ define([
 
                 var top = 0;
                 var bottom = 0;
-                if (this._parent instanceof wcCollapser) {
+                if (this._parent && this._parent.declaredClass === 'wcCollapser') {
                     var $outer = this.docker().$container;
                     var $inner = this._parent.$container;
 
@@ -517,7 +525,7 @@ define([
 
                 var left = 0;
                 var right = 0;
-                if (this._parent instanceof wcCollapser) {
+                if (this._parent && this._parent.declaredClass === 'wcCollapser') {
                     var $outer = this.docker().$container;
                     var $inner = this._parent.$container;
 
@@ -554,10 +562,10 @@ define([
         // object that can be used later to restore it.
         __save: function () {
             // If this is a collapser splitter, do not save it, skip to the children.
-            if (this._pane[0] && this._pane[0] instanceof wcCollapser) {
+            if (this._pane[0] && this._pane[0].declaredClass === 'wcCollapser') {
                 return this._pane[1].__save();
             }
-            if (this._pane[1] && this._pane[1] instanceof wcCollapser) {
+            if (this._pane[1] && this._pane[1].declaredClass === 'wcCollapser') {
                 return this._pane[0].__save();
             }
 
@@ -772,7 +780,7 @@ define([
         }
     });
 
-    window['wcSplitter'] = Module;
+    // window['wcSplitter'] = Module;
 
     return Module;
 });

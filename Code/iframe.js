@@ -3,7 +3,7 @@ define([
     "dcl/dcl",
     "./types",
     "./base"
-], function (dcl, wcDocker,base) {
+], function (dcl, wcDocker, base) {
 
     /**
      * @class module:wcIFrame
@@ -21,8 +21,8 @@ define([
      * {@tutorial 3.0-widgets}
      */
     var Module = dcl(base, {
+        declaredClass: 'wcIFrame',
 
-        declaredClass:'wcIFrame',
         /**
          * @memberOf module:wcIFrame
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
@@ -258,7 +258,7 @@ define([
                     this.$frame.removeClass('wcIFrameFloatingFocus');
                 }
                 this.$frame.toggleClass('wcIFramePanelHidden', !this._panel.isVisible());
-                if (this._panel._parent instanceof wcFrame) {
+                if (this._panel._parent.instanceOf('wcFrame')) {
                     this.$frame.toggleClass('wcDrawer', this._panel._parent.isCollapser());
                 }
             }
@@ -344,7 +344,7 @@ define([
         }
     });
 
-    window['wcIFrame'] = Module;
+    // window['wcIFrame'] = Module;
 
     return Module;
 

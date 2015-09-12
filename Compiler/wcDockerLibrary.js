@@ -19,13 +19,15 @@ require.config({
 //require docker
 require([
     "wcDocker/docker",
+    "wcDocker/splitter",
     "wcDocker/tabframe",
     "wcDocker/iframe"
-], function (docker,tabframe,iframe) {
+], function (wcDocker, wcSplitter, wcTabFrame, wcIFrame) {
 
     //export
-    window['wcDocker'] = docker;
-    window['wcTabFrame'] = tabframe;
-    window['wcIFrame'] = iframe;
+    window['wcDocker'] = wcDocker;
+    window['wcSplitter'] = wcSplitter;
+    window['wcTabFrame'] = wcTabFrame;
+    window['wcIFrame'] = wcIFrame;
     console.log('exported wcDocker');
-});
+}, undefined, true);    // Force synchronous loading so we don't have to wait.

@@ -2,24 +2,31 @@
 define([
     "dcl/dcl",
     "./types",
+    "./layoutsimple",
+    "./layouttable",
     "./base"
-], function (dcl, wcDocker,base) {
+], function (dcl, wcDocker, wcLayoutSimple, wcLayoutTable, base) {
+
+    var layoutClasses = {
+      'wcLayoutSimple': wcLayoutSimple,
+      'wcLayoutTable': wcLayoutTable
+    };
 
     /**
      * @class
      * A tab widget container, usable inside a panel to break up multiple elements into separate tabbed pages.
      */
     var Module = dcl(base, {
-
-        declaredClass:'wcTabFrame',
+        declaredClass: 'wcTabFrame',
 
         LEFT_TAB_BUFFER: 15,
+
         /**
          * @memberOf module:wcTabFrame
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
          * @param {module:wcPanel} parent - The parent panel object for this widget.
          */
-        constructor:function(container, parent) {
+        constructor: function(container, parent) {
             /**
              * The outer container element of the widget.
              *
@@ -109,7 +116,7 @@ define([
          */
         addTab: function (name, index, layout) {
             var layoutClass = layout || 'wcLayoutTable';
-            var newLayout = new window[layoutClass]('.wcDockerTransition', this._parent);
+            var newLayout = new layoutClasses[layoutClass]('.wcDockerTransition', this._parent);
             newLayout.name = name;
             newLayout._scrollable = {
                 x: true,
@@ -722,7 +729,7 @@ define([
         }
     });
 
-    window['wcTabFrame'] = Module;
+    // window['wcTabFrame'] = Module;
 
     return Module;
 });

@@ -10,7 +10,8 @@ define([
      * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
      */
     var Module = dcl(null, {
-        declaredClass:'wcLayoutTable',
+        declaredClass: 'wcLayoutTable',
+
         /**
          * @memberOf module:wcLayoutTable
          * @description
@@ -600,7 +601,7 @@ define([
             }
 
             // Check for placeholder.
-            if (this._parent instanceof wcPanel && this._parent._isPlaceholder) {
+            if (this._parent.instanceOf('wcPanel') && this._parent._isPlaceholder) {
                 ghost.anchor(mouse, {
                     x: offset.left - 2,
                     y: offset.top - 2,
@@ -739,7 +740,7 @@ define([
         }
     });
 
-    window['wcLayoutTable'] = Module;
+    // window['wcLayoutTable'] = Module;
 
     return Module;
 

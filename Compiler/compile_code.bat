@@ -1,2 +1,2 @@
-call node config_code.js
+call grunt build
 pause

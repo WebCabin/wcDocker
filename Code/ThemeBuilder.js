@@ -1,8 +1,9 @@
 define([
     "dcl/dcl",
     "wcDocker/types",
+    "wcDocker/tabframe",
     "wcDocker/base"
-], function (dcl, wcDocker, base) {
+], function (dcl, wcDocker, wcTabFrame, base) {
 
     var Module = dcl(base, {
 
@@ -4727,7 +4728,7 @@ define([
     });
 
     //export to global
-    window['wcThemeBuilder'] = Module;
+    // window['wcThemeBuilder'] = Module;
 
     return Module;
 

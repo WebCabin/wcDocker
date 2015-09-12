@@ -3,7 +3,7 @@ define([
     "dcl/dcl",
     "./types",
     "./base"
-], function (dcl, wcDocker,base) {
+], function (dcl, wcDocker, base) {
 
     /**
      * @class module:wcFrame
@@ -11,9 +11,10 @@ define([
      * Each panel appears as a tabbed item inside a frame.
      */
     var Module = dcl(base, {
+        declaredClass: 'wcFrame',
 
-        declaredClass:'wcFrame',
         LEFT_TAB_BUFFER: 15,
+
         /**
          * @memberOf module:wcFrame
          * @description
@@ -320,7 +321,7 @@ define([
          * @returns {Boolean} - Whether this frame is inside a collapser.
          */
         isCollapser: function () {
-            return (this._parent instanceof wcDrawer);
+            return (this._parent && this._parent.declaredClass === 'wcDrawer');
         },
 
         /**
@@ -1215,7 +1216,7 @@ define([
         }
     });
 
-    window['wcFrame'] = Module;
+    // window['wcFrame'] = Module;
 
     return Module;
 });

@@ -1,14 +1,11 @@
 define([
     "../docker",
+    "../splitter",
     "../tabframe",
     "../iframe",
     "wcDocker/ThemeBuilder",
     "module"
-], function (wcDocker, wcTabFrame, wcIFrame, wcThemeBuilder, module) {
-
-
-
-
+], function (wcDocker, wcSplitter, wcTabFrame, wcIFrame, wcThemeBuilder, module) {
 
     // --------------------------------------------------------------------------------
     // Create an instance of our docker window and assign it to the document.

@@ -49,11 +49,11 @@
     require.config({
       config: {
 
-        'wcDocker/samples/demoAMD':{
+        'wcDocker/demo/demoAMD':{
           //  enable/disable theme builder
           themeBuilder: true,
           //  enable/disable tutorials
-          tutorials:true
+          tutorials: true
         }
       }
     });
@@ -62,7 +62,7 @@
     try {
       //require demo
       require([
-        "wcDocker/samples/demoAMD"
+        "wcDocker/demo/demoAMD"
       ], function () {
 
       });

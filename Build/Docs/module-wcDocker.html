@@ -39,6 +39,13 @@
 			</li>
 			
 			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-tips-and-tricks.html">Tips and Tricks</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
 				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
 					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
@@ -157,8 +164,7 @@
 <dd>
     
     <div class="description">
-        <p style="margin-left:20px;">Used when adding or moving a panel to designate the target location as collapsed.<br>
-Must be used with docking positions LEFT, RIGHT, or BOTTOM only.</p>
+        <p style="margin-left:20px;">Used when adding or moving a panel to designate the target location as collapsed.<br>Must be used with docking positions LEFT, RIGHT, or BOTTOM only.</p>
     </div>
     
 
@@ -218,336 +224,6 @@ Must be used with docking positions LEFT, RIGHT, or BOTTOM only.</p>
 
 	
 
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id=".DOCK">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>DOCK</toc></b>
-    </h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p style="margin-left:20px;">Enumerated Docking positions.</p>
-    </div>
-    
-
-    
-        <h5>Type: 
-<span class="param-type">String</span>
-
-</h5>
-    
-
-    
-<dl class="details">
-	
-
-	<h5 class="subsection-title">Properties:</h5>
-
-	<dl>
-
-<div class="prop-container">
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>MODAL</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    modal
-                
-                </td>
-            
-
-            <td class="description last">A floating panel that blocks input until closed</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>FLOAT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    float
-                
-                </td>
-            
-
-            <td class="description last">A floating panel</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>TOP</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    top
-                
-                </td>
-            
-
-            <td class="description last">Docks to the top of a target or window</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>LEFT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    left
-                
-                </td>
-            
-
-            <td class="description last">Docks to the left of a target or window</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>RIGHT</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    right
-                
-                </td>
-            
-
-            <td class="description last">Docks to the right of a target or window</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>BOTTOM</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    bottom
-                
-                </td>
-            
-
-            <td class="description last">Docks to the bottom of a target or window</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>STACKED</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    stacked
-                
-                </td>
-            
-
-            <td class="description last">Docks as another tabbed item along with the target</td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</div></dl>
-
-	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
-		<ul class="dummy">
-			<li>3.0.0</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-46">line 46</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-46">line 46</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>for some reason, jsDoc wants it here but the actual enum is in ./types</li>
-			</ul>
-	</dd>
 	
 </dl>
 
@@ -722,8 +398,7 @@ Must be used with docking positions LEFT, RIGHT, or BOTTOM only.</p>
                 </td>
             
 
-            <td class="description last">When the panel has changed its visibility<br>
-This event is called with the current visibility state as the first parameter.</td>
+            <td class="description last">When the panel has changed its visibility<br>This event is called with the current visibility state as the first parameter.</td>
         </tr>
 
 	
@@ -1042,8 +717,7 @@ This event is called with the current visibility state as the first parameter.</
                 </td>
             
 
-            <td class="description last">When the user has started moving the panel (top-left coordinates changed)<br>
-This event is called with an object of the current {x, y} position as the first parameter.</td>
+            <td class="description last">When the user has started moving the panel (top-left coordinates changed)<br>This event is called with an object of the current {x, y} position as the first parameter.</td>
         </tr>
 
 	
@@ -1072,8 +746,7 @@ This event is called with an object of the current {x, y} position as the first 
                 </td>
             
 
-            <td class="description last">When the user has finished moving the panel<br>
-This event is called with an object of the current {x, y} position as the first parameter.</td>
+            <td class="description last">When the user has finished moving the panel<br>This event is called with an object of the current {x, y} position as the first parameter.</td>
         </tr>
 
 	
@@ -1102,8 +775,7 @@ This event is called with an object of the current {x, y} position as the first 
                 </td>
             
 
-            <td class="description last">When the top-left coordinates of the panel has changed<br>
-This event is called with an object of the current {x, y} position as the first parameter.</td>
+            <td class="description last">When the top-left coordinates of the panel has changed<br>This event is called with an object of the current {x, y} position as the first parameter.</td>
         </tr>
 
 	
@@ -1132,8 +804,7 @@ This event is called with an object of the current {x, y} position as the first 
                 </td>
             
 
-            <td class="description last">When the user has started resizing the panel (width or height changed)<br>
-This event is called with an object of the current {width, height} size as the first parameter.</td>
+            <td class="description last">When the user has started resizing the panel (width or height changed)<br>This event is called with an object of the current {width, height} size as the first parameter.</td>
         </tr>
 
 	
@@ -1162,8 +833,7 @@ This event is called with an object of the current {width, height} size as the f
                 </td>
             
 
-            <td class="description last">When the user has finished resizing the panel<br>
-This event is called with an object of the current {width, height} size as the first parameter.</td>
+            <td class="description last">When the user has finished resizing the panel<br>This event is called with an object of the current {width, height} size as the first parameter.</td>
         </tr>
 
 	
@@ -1192,8 +862,7 @@ This event is called with an object of the current {width, height} size as the f
                 </td>
             
 
-            <td class="description last">When the panels width or height has changed<br>
-This event is called with an object of the current {width, height} size as the first parameter.</td>
+            <td class="description last">When the panels width or height has changed<br>This event is called with an object of the current {width, height} size as the first parameter.</td>
         </tr>
 
 	
@@ -1858,8 +1527,7 @@ This event is called with an object of the current {width, height} size as the f
 <dd>
     
     <div class="description">
-        <p style="margin-left:20px;">Used to determine the position of tabbed widgets for stacked panels.<br>
-<b>Note:</b> Not supported on IE8 or below.</p>
+        <p style="margin-left:20px;">Used to determine the position of tabbed widgets for stacked panels.<br><b>Note:</b> Not supported on IE8 or below.</p>
     </div>
     
 
@@ -2253,13 +1921,13 @@ This event is called with an object of the current {width, height} size as the f
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-69">line 69</a>
+     <a href="docker.js.html#sunlight-1-line-45">line 45</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-69">line 69</a>
+				 <a href="docker.js.html#sunlight-1-line-45">line 45</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2298,8 +1966,7 @@ This event is called with an object of the current {width, height} size as the f
     
     
     <div class="description">
-        <p style="margin-left: 20px;">Add a new docked panel to the docker instance.<br>
-<b>Note:</b> It is best to use wcDocker.COLLAPSED after you have added your other docked panels, as it may ensure proper placement.</p>
+        <p style="margin-left: 20px;">Add a new docked panel to the docker instance.<br><b>Note:</b> It is best to use wcDocker.COLLAPSED after you have added your other docked panels, as it may ensure proper placement.</p>
     </div>
     
 
@@ -2373,7 +2040,7 @@ This event is called with an object of the current {width, height} size as the f
             <td class="type">
             
                 
-<span class="param-type"><a href="module-wcDocker.html#.DOCK">module:wcDocker.DOCK</a></span>
+<span class="param-type">module:wcDocker.DOCK</span>
 
 
             
@@ -2531,13 +2198,13 @@ This event is called with an object of the current {width, height} size as the f
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-279">line 279</a>
+     <a href="docker.js.html#sunlight-1-line-254">line 254</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-279">line 279</a>
+				 <a href="docker.js.html#sunlight-1-line-254">line 254</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2566,11 +2233,7 @@ This event is called with an object of the current {width, height} size as the f
     
     
     <div class="description">
-        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The context
-Menu is a simple list of options, no nesting or special options.<br><br>
-
-If you wish to use a more complex context menu, you can use
-<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
+        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
     </div>
     
 
@@ -2735,13 +2398,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-758">line 758</a>
+     <a href="docker.js.html#sunlight-1-line-733">line 733</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-758">line 758</a>
+				 <a href="docker.js.html#sunlight-1-line-733">line 733</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2770,9 +2433,7 @@ If you wish to use a more complex context menu, you can use
     
     
     <div class="description">
-        <p style="margin-left: 20px;">Bypasses the next context menu event.
-Use this during a mouse up event in which you do not want the
-context menu to appear when it normally would have.</p>
+        <p style="margin-left: 20px;">Bypasses the next context menu event.Use this during a mouse up event in which you do not want thecontext menu to appear when it normally would have.</p>
     </div>
     
 
@@ -2830,13 +2491,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1104">line 1104</a>
+     <a href="docker.js.html#sunlight-1-line-1079">line 1079</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1104">line 1104</a>
+				 <a href="docker.js.html#sunlight-1-line-1079">line 1079</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -2923,13 +2584,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1196">line 1196</a>
+     <a href="docker.js.html#sunlight-1-line-1171">line 1171</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1196">line 1196</a>
+				 <a href="docker.js.html#sunlight-1-line-1171">line 1171</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -3096,13 +2757,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-605">line 605</a>
+     <a href="docker.js.html#sunlight-1-line-580">line 580</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-605">line 605</a>
+				 <a href="docker.js.html#sunlight-1-line-580">line 580</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -3258,13 +2919,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-663">line 663</a>
+     <a href="docker.js.html#sunlight-1-line-638">line 638</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-663">line 663</a>
+				 <a href="docker.js.html#sunlight-1-line-638">line 638</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -3377,13 +3038,13 @@ context menu to appear when it normally would have.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-195">line 195</a>
+     <a href="docker.js.html#sunlight-1-line-170">line 170</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-195">line 195</a>
+				 <a href="docker.js.html#sunlight-1-line-170">line 170</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -3412,11 +3073,7 @@ context menu to appear when it normally would have.</p>
     
     
     <div class="description">
-        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The context
-Menu is a simple list of options, no nesting or special options.<br><br>
-
-If you wish to use a more complex context menu, you can use
-<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
+        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
     </div>
     
 
@@ -3572,13 +3229,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-773">line 773</a>
+     <a href="docker.js.html#sunlight-1-line-748">line 748</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-773">line 773</a>
+				 <a href="docker.js.html#sunlight-1-line-748">line 748</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -3691,7 +3348,7 @@ If you wish to use a more complex context menu, you can use
             <td class="type">
             
                 
-<span class="param-type"><a href="module-wcDocker.html#.DOCK">module:wcDocker.DOCK</a></span>
+<span class="param-type">module:wcDocker.DOCK</span>
 
 
             
@@ -3849,13 +3506,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-453">line 453</a>
+     <a href="docker.js.html#sunlight-1-line-428">line 428</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-453">line 453</a>
+				 <a href="docker.js.html#sunlight-1-line-428">line 428</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4034,13 +3691,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-706">line 706</a>
+     <a href="docker.js.html#sunlight-1-line-681">line 681</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-706">line 706</a>
+				 <a href="docker.js.html#sunlight-1-line-681">line 681</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4218,13 +3875,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-684">line 684</a>
+     <a href="docker.js.html#sunlight-1-line-659">line 659</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-684">line 684</a>
+				 <a href="docker.js.html#sunlight-1-line-659">line 659</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4379,13 +4036,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-262">line 262</a>
+     <a href="docker.js.html#sunlight-1-line-237">line 237</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-262">line 262</a>
+				 <a href="docker.js.html#sunlight-1-line-237">line 237</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4540,13 +4197,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-247">line 247</a>
+     <a href="docker.js.html#sunlight-1-line-222">line 222</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-247">line 247</a>
+				 <a href="docker.js.html#sunlight-1-line-222">line 222</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4782,13 +4439,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-207">line 207</a>
+     <a href="docker.js.html#sunlight-1-line-182">line 182</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-207">line 207</a>
+				 <a href="docker.js.html#sunlight-1-line-182">line 182</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -4966,13 +4623,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-331">line 331</a>
+     <a href="docker.js.html#sunlight-1-line-306">line 306</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-331">line 331</a>
+				 <a href="docker.js.html#sunlight-1-line-306">line 306</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5108,13 +4765,13 @@ If you wish to use a more complex context menu, you can use
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1159">line 1159</a>
+     <a href="docker.js.html#sunlight-1-line-1134">line 1134</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1159">line 1159</a>
+				 <a href="docker.js.html#sunlight-1-line-1134">line 1134</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5150,8 +4807,7 @@ If you wish to use a more complex context menu, you can use
     
     
     <div class="description">
-        <p style="margin-left: 20px;">Saves the current panel configuration into a serialized
-string that can be used later to restore it.</p>
+        <p style="margin-left: 20px;">Saves the current panel configuration into a serializedstring that can be used later to restore it.</p>
     </div>
     
 
@@ -5221,13 +4877,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1129">line 1129</a>
+     <a href="docker.js.html#sunlight-1-line-1104">line 1104</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-1129">line 1129</a>
+				 <a href="docker.js.html#sunlight-1-line-1104">line 1104</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5459,13 +5115,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-626">line 626</a>
+     <a href="docker.js.html#sunlight-1-line-601">line 601</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-626">line 626</a>
+				 <a href="docker.js.html#sunlight-1-line-601">line 601</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5620,13 +5276,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-164">line 164</a>
+     <a href="docker.js.html#sunlight-1-line-139">line 139</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-164">line 164</a>
+				 <a href="docker.js.html#sunlight-1-line-139">line 139</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5662,8 +5318,7 @@ string that can be used later to restore it.</p>
     
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the path where all theme files can be found.
-"Themes" is the default folder path.</p>
+        <p style="margin-left: 20px;">Gets, or Sets the path where all theme files can be found."Themes" is the default folder path.</p>
     </div>
     
 
@@ -5782,13 +5437,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-152">line 152</a>
+     <a href="docker.js.html#sunlight-1-line-127">line 127</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-152">line 152</a>
+				 <a href="docker.js.html#sunlight-1-line-127">line 127</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -5972,13 +5627,13 @@ string that can be used later to restore it.</p>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:
     <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-731">line 731</a>
+     <a href="docker.js.html#sunlight-1-line-706">line 706</a>
   </dt>
 <!-- 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-731">line 731</a>
+				 <a href="docker.js.html#sunlight-1-line-706">line 706</a>
 			</li>
 		</ul>
 	</dd> -->
@@ -8768,7 +8423,7 @@ string that can be used later to restore it.</p>
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2015-09-04 using the <a
+			on 2015-09-12 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>
