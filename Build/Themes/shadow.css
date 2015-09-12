@@ -1,0 +1,293 @@
+.wcDocker {
+  background-color: black;
+  color: #AAA;
+}
+
+.wcPanelBackground {
+  background-color: #444;
+}
+
+.wcPanelBackground .wcCenter {
+  background-color: #111;
+}
+
+.wcFrameFlasher {
+  background-color: #777;
+}
+
+.wcFrameShadower {
+  background-color: #555;
+}
+
+.wcFrameTitleBar {
+  height: 20px;
+  background-color: #222;
+  text-align: left;
+}
+
+.wcFrameTitle {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 3px;
+  background-color: #444;
+}
+
+.wcFrameCenter {
+  top: 20px;
+}
+
+.wcFrameButton {
+  width: 20px;
+  height: 20px;
+  border: 0px solid #111;
+  background-color: transparent;
+  color: #888;
+  font-size: 17px;
+}
+
+.wcFrameButton:hover, .wcFrameButtonHover {
+  border: 0px solid black;
+  background-color: black;
+  color: #CCC;
+}
+
+.wcFrameButton:active, .wcFrameButtonActive {
+  border: 0px solid black;
+  background-color: black;
+  color: #FFF;
+}
+
+.wcFrameButtonToggled, .wcFrameButtonToggled:hover {
+  border-style: inset;
+}
+
+.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
+  border: 1px solid #555;
+}
+
+.wcLayoutGridAlternate tr:nth-child(even), .wcLayoutGridAltColor {
+  background-color: rgba(100, 100, 100, 0.2) !important;
+}
+
+.wcFrameEdge {
+  position: absolute;
+  z-index: 2;
+  border: 2px solid black;
+  background-color: black;
+}
+
+.wcSplitterBar {
+  border: 1px solid black;
+  background-color: black;
+}
+
+.wcSplitterBarV.wcSplitterBarStatic {
+  width: 0px;
+}
+.wcSplitterBarH.wcSplitterBarStatic {
+  height: 0px;
+}
+
+.wcPanelTab {
+  font-family: sans-serif;
+  color: #999;
+  border-radius: 0px;
+  background-color: #111;
+  margin-right: 1px;
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.wcPanelTab:hover, .wcPanelTabHover {
+  background-color: #777;
+}
+
+.wcPanelTabActive {
+  font-family: sans-serif;
+  color: #DDD;
+  background-color: #444;
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 19px;
+  font-weight: normal;
+}
+
+.wcPanelTabActive:hover, .wcPanelTabActiveHover {
+  color: #DDD;
+  background-color: #444;
+}
+
+.wcGhost {
+  background-color: #000;
+  border-radius: 0px;
+}
+
+.wcScrollbar, ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  background-color: black;
+}
+
+.wcScrollbarCorner, ::-webkit-scrollbar-corner {
+  background-color: #111;
+}
+
+.wcScrollbarTrack, ::-webkit-scrollbar-track {
+  border-radius: 0px;
+  background-color: #111;
+}
+
+.wcScrollbarThumb, ::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: #666;
+}
+
+.wcMenuList, .context-menu-list {
+  border: 1px solid #111;
+}
+
+.wcMenuItem, .context-menu-item, .context-menu-list {
+  background-color: #444;
+}
+
+.wcMenuItemHover, .wcMenuItem:hover, .context-menu-item.hover {
+  background-color: #666;
+}
+
+.wcMenuItem.disabled, .context-menu-item.disabled {
+  color: #333;
+  background-color: #444;
+}
+
+.wcMenuSeparator, .context-menu-separator {
+  border: 2px solid #444;
+  background-color: #777;
+}
+
+.wcLoadingBackground {
+  background-color: rgba(55, 55, 55, 1);
+  opacity: 0.4;
+}
+
+.wcLoadingIcon {
+  color: #222;
+}
+
+.wcLoadingLabel {
+  color: #111;
+}
+
+
+/*
+  The following are not actually used in docker, they are provided as a convenience when
+  controls are used in your panels, if you want to match the active theme.
+*/
+
+.wcInput, input {
+  color: #CCC;
+  background-color: #555;
+  border: 1px solid black;
+}
+
+.wcSelect, select {
+  color: #CCC;
+  background-color: #555;
+  outline: 0px;
+}
+
+.wcButton, button {
+  color: #CCC;
+  border: 1px outset #555;
+  background-color: #555;
+}
+
+.wcButtonHover, .wcButton:hover, button:hover {
+  border: 1px outset #666;
+  background-color: #666;
+}
+
+.wcButtonActive, .wcButton:active, button:active {
+  border: 1px inset #777;
+  background-color: #777;
+}
+
+.wcButtonActive.wcButtonHover, .wcButton:hover.wcButtonActive, .wcButton:active.wcButtonHover, .wcButton:active:hover, button:active:hover {
+  border: 1px inset #888;
+  background-color: #888;
+}
+
+.wcButtonDisabled, .wcButton.disabled, button:disabled {
+  border: 1px outset #494949 !important;
+  background-color: #494949 !important;
+  color: #333 !important;
+}
+
+
+
+
+
+
+
+
+/*
+  Mobile style changes.
+*/
+
+.wcMobile .wcFrameTitleBar {
+  height: 29px;
+}
+
+.wcMobile .wcFrameTitle {
+  font-size: 20px;
+}
+
+.wcMobile .wcFrameButton, .wcMobile .wcFrameButton {
+  width: 25px;
+  height: 25px;
+  font-size: 22px;
+  border: 2px solid #111;
+}
+
+.wcMobile .wcFrameCenter {
+  top: 29px;
+}
+
+.wcMobile .wcPanelTab {
+  font-size: 14px;
+  height: 26px;
+}
+
+.wcMobile .wcPanelTabActive {
+  height: 30px;
+}
+
+.wcMobile .wcPanelTab > div {
+  margin-top: 4px;
+}
+
+.wcMobile .wcSplitterBarV.wcSplitterBar:not(.wcSplitterBarStatic) {
+  width: 12px;
+  border-width: 3px;
+  border-color: #000;
+  border-top: 0;
+  border-bottom: 0;
+  background-color: #111;
+}
+.wcMobile .wcSplitterBarH.wcSplitterBar:not(.wcSplitterBarStatic) {
+  height: 12px;
+  border-width: 3px;
+  border-color: #000;
+  border-left: 0;
+  border-right: 0;
+  background-color: #111;
+}
+
+.wcMobile .wcInput, .wcMobile input,
+.wcMobile .wcSelect, .wcMobile select,
+.wcMobile .wcButton, .wcMobile button {
+  font-size: 22px;
+}

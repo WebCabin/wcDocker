@@ -5980,7 +5980,6 @@ define('wcDocker/docker',[
                     $oldTheme.remove();
                     self.__update();
                 };
-                ;
 
                 $('head').append($link);
             }
@@ -9651,7 +9650,7 @@ require([
     window['wcTabFrame'] = wcTabFrame;
     window['wcIFrame'] = wcIFrame;
     console.log('exported wcDocker');
-}, undefined, true);
+}, undefined, true);    // Force synchronous loading so we don't have to wait.;
 define("wcDockerLibrary", function(){});
 
 }());

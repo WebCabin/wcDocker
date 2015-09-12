@@ -14,7 +14,6 @@
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
  */
-/*
 html, body {
   width: 100%;
   height: 100%;
@@ -22,28 +21,23 @@ html, body {
   position: relative;
   margin: 0
 }
-*/
-
-.wcTabIcon{
-    margin-right: 6px;
-}
 
 .wcDocker {
-  /*background-color: #515151;*/
-  /*color: #909090;*/
+  background-color: #515151;
+  color: #909090;
 }
 
 .wcModalBlocker {
-  /*background-color: black;*/
+  background-color: black;
   opacity: 0.8;
 }
 
 .wcPanelBackground {
-  /*background-color: #222;*/
+  background-color: #222;
 }
 
 .wcPanelBackground .wcCenter {
-  /*background-color: darkgray;*/
+  background-color: darkgray;
 }
 
 .wcFrameFlasher {
@@ -56,11 +50,11 @@ html, body {
 
 .wcFrameTitleBar {
   height: 30px;
-  /*background-color: #333;*/
+  background-color: #333;
 }
 
 .wcFrameTitle {
-  /*background-color: #333;*/
+  background-color: #333;
   border-bottom: 4px solid rgba(192, 88, 1, 1);
   color: rgba(192, 88, 1, 1);
   height: 30px;
@@ -75,19 +69,18 @@ html, body {
 }
 
 .wcFrameButton {
-  /*background-color: #333;*/
+  background-color: #333;
   border: none;
-  /*color: #aaa;*/
+  color: #aaa;
   font-size: 20px;
   height: 23px;
   width: 23px;
 }
 
-
-.wcFrameButton:hover {
-  /*background-color: #333;*/
+.wcFrameButton:hover, .wcFrameButtonHover {
+  background-color: #333;
   border: none;
-  /*color: #fff;*/
+  color: #fff;
 }
 
 .wcFrameCenter {
@@ -99,20 +92,12 @@ html, body {
 }
 
 .wcLayoutGridAlternate tr:nth-child(even), .wcLayoutGridAltColor {
-  /*background-color: rgba(200, 200, 200, 0.2) !important;*/
-}
-
-.wcPanelTab:before{
-    position: absolute;
-    display: block;
-    content: "";
-
+  background-color: rgba(200, 200, 200, 0.2) !important;
 }
 
 .wcPanelTab {
-  /*color: rgba(182, 182, 182, 1);*/
-  /*background-color: rgba(89, 89, 89, 1);*/
-    /*
+  color: rgba(182, 182, 182, 1);
+  background-color: rgba(89, 89, 89, 1);
   border: 1px solid rgba(165, 75, 0, 1);
   border-radius: 2px 2px 0px 0px;
   border-bottom: 0px;
@@ -124,55 +109,28 @@ html, body {
   padding-right: 2px;
   padding-top: 2.5px;
   padding-bottom: 0px;
-    */
-
-    margin-right: -1px;
-    padding: 4px 16px;
-    top: 4px;
-    vertical-align: bottom;
-    background: none repeat scroll 0 0 #fff;
-    border: 1px solid #d0d0d0;
-    position: relative;
-    text-align: center;
-    transition-duration: 0.2s;
-    transition-property: background, padding, margin;
-    transition-timing-function: ease;
-    cursor: pointer;
-    white-space: nowrap;
-    z-index: 3;
 }
 
-.wcPanelTab:hover {
+.wcPanelTab:hover, .wcPanelTabHover {
 
-}
-
-.wcPanelTabActive:before {
-    background: none repeat scroll 0 0 #007ac2;
-    height: 2px;
-    left: -1px;
-    right: -1px;
-    top: -1px;
 }
 
 .wcPanelTabActive {
-  /*color: #FFE4D0 !important;*/
-    /*
+  color: #FFE4D0 !important;
   background-color: rgba(192, 88, 1, 1) !important;
-  box-shadow: 0px 5px 20px #000;*/
-    /*
+  box-shadow: 0px 5px 20px #000;
   height: 30px;
   margin-top: 1px !important;
   padding-top: 2.5px;
-    */
 }
 
-.wcPanelTabActive:hover {
+.wcPanelTabActive:hover, .wcPanelTabActiveHover {
   padding-top: 2.5px;
 }
 
 .wcCollapserFrame .wcPanelTab {
-  /*background-color: #333;*/
-  /*color: rgba(107, 107, 107, 1);*/
+  background-color: #333;
+  color: rgba(107, 107, 107, 1);
   border: 1px solid #444;
   margin-left: 5px;
   margin-right: 10px;
@@ -185,9 +143,6 @@ html, body {
   color: #d2d2d2;
 }
 
-.wcFrame {
-    background-color: #ffffff;
-}
 .wcFrameEdge {
   position: absolute;
   z-index: 2;
@@ -196,37 +151,33 @@ html, body {
 }
 
 .wcSplitterBar {
-  /*background-color: #515151;*/
+  background-color: #515151;
 }
 
 .wcSplitterBarV {
   transition: opacity 200ms ease;
-    /*
   background: -webkit-gradient(linear, left top, left bottom, from(#505050), to(#383838));
   background: -webkit-linear-gradient(left, #505050, #383838);
   background: linear-gradient(to right, #505050, #383838);
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAhCAQAAABOpSL+AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAoSURBVCjPY7jPYVpxnwFBMtwXMv1/H4lkYkADowIjSuAHQwcDA4IEAIImE2aDUcP1AAAAAElFTkSuQmCC') #515151 center center no-repeat;*/
-  /*border: 1px solid black;*/
-  /*
-    border-left: 1px solid rgb(139, 139, 139);
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAhCAQAAABOpSL+AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAoSURBVCjPY7jPYVpxnwFBMtwXMv1/H4lkYkADowIjSuAHQwcDA4IEAIImE2aDUcP1AAAAAElFTkSuQmCC') #515151 center center no-repeat;
+  border: 1px solid black;
+  border-left: 1px solid rgb(139, 139, 139);
   border-right: 1px solid #515151;
-  outline: 1px outset rgb(40, 40, 40);*/
-  width: 7px
+  outline: 1px outset rgb(40, 40, 40);
+  width: 10px
 }
 
 .wcSplitterBarH {
   transition: opacity 200ms ease;
-    /*
   background: -webkit-gradient(linear, left top, left bottom, from(#505050), to(#383838));
   background: -webkit-linear-gradient(top, #505050, #383838);
   background: linear-gradient(to bottom, #505050, #383838);
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAICAQAAADdTl4aAAAAIUlEQVR4AWMwrTD9TxFsZ7jPcV+IIsjFcJ9iSFWPjHoEAEtWCqrThG9qAAAAAElFTkSuQmCC') #515151 center center no-repeat !important;*/
-  /*border: 1px solid black;*/
-    /*
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAICAQAAADdTl4aAAAAIUlEQVR4AWMwrTD9TxFsZ7jPcV+IIsjFcJ9iSFWPjHoEAEtWCqrThG9qAAAAAElFTkSuQmCC') #515151 center center no-repeat !important;
+  border: 1px solid black;
   border-right: 1px solid #515151;
   border-top: 1px outset rgb(139, 139, 139);
-  outline: 1px inset #515151;*/
-  height: 7px
+  outline: 1px inset #515151;
+  height: 10px
 }
 
 .wcSplitterBarStatic {
@@ -365,6 +316,6 @@ html, body {
   color: #555 !important;
 }
 
-.wcButton:focus, button:focus {
+.wcButtonFocus, .wcButton:focus, button:focus {
   outline: 0px;
 }

@@ -18,10 +18,9 @@ define([
 
 
         var config = module.config() || {
-                themeBuilder: false,
-                tutorials: false
-
-            };
+            themeBuilder: false,
+            tutorials: false
+        };
 
         var _currentTheme = 'default';
         var _showingInfo = true;

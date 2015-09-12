@@ -24,7 +24,7 @@ module.exports = function (grunt) {
             },
             themes:{
                 src: "../Themes/*.*",
-                dest: "../Build/"
+                dest: "../Build/Themes/"
             },
             style:{
                 src: "../Code/style.css",

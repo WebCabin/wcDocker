@@ -154,7 +154,6 @@ define([
                     $oldTheme.remove();
                     self.__update();
                 };
-                ;
 
                 $('head').append($link);
             }
