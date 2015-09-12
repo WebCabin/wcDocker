@@ -142,6 +142,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
     // Or you can restore it back to the default calculation
     myPanel.collapseDirection(false);
     ```
+- Source code now supports [DCL](http://www.dcljs.org/)!
 
 #### Version: 2.2.0 ####
 - Separated the default theme out of `wcDocker.css` (now use `wcDocker.css` with `Themes/default.css`).
