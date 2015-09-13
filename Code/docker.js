@@ -2311,7 +2311,7 @@ define([
         __create: function (data, parent, $container) {
             switch (data.type) {
                 case 'wcSplitter':
-                    var splitter = new wcSplitter($container, parent, data.horizontal);
+                    var splitter = new (this.option('wcSplitter'))($container, parent, data.horizontal);
                     splitter.scrollable(0, false, false);
                     splitter.scrollable(1, false, false);
                     return splitter;
@@ -2478,12 +2478,12 @@ define([
                         y: -1
                     };
                     if (left === splitterChild) {
-                        splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                        splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                         size.x = parentSplitter.$pane[0].width();
                         size.y = parentSplitter.$pane[0].height();
                         parentSplitter.pane(0, splitter);
                     } else {
-                        splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                        splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                         size.x = parentSplitter.$pane[1].width();
                         size.y = parentSplitter.$pane[1].height();
                         parentSplitter.pane(1, splitter);
@@ -2551,7 +2551,7 @@ define([
                 parent._root = frame;
                 frame.__container($container);
             } else {
-                var splitter = new wcSplitter($container, parent, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                var splitter = new (this.option('wcSplitter'))($container, parent, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                 if (splitter) {
                     frame._parent = splitter;
                     splitter.scrollable(0, false, false);
@@ -2614,7 +2614,7 @@ define([
                     parentSplitter = parentSplitter._parent;
                 }
 
-                var splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                var splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
 
                 if (parentSplitter.instanceOf('wcDocker')){
                     this._root = splitter;
@@ -2633,7 +2633,7 @@ define([
                         size.y = parentSplitter.$pane[0].height();
                         parentSplitter.pane(0, splitter);
                     } else {
-                        splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                        splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                         size.x = parentSplitter.$pane[1].width();
                         size.y = parentSplitter.$pane[1].height();
                         parentSplitter.pane(1, splitter);
