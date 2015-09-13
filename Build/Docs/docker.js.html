@@ -1996,7 +1996,7 @@ define([
                     var frame = self._frameList[i];
                     if (frame.$tabBar[0] === $(this).parents('.wcFrameTitleBar')[0]) {
                         var panel = frame._panelList[index];
-                        if (panel &amp;&amp; !panel.closeable()) {
+                        if (panel &amp;&amp; panel.closeable()) {
                             self._removingPanel = frame._panelList[index];
                         }
                         return true;
