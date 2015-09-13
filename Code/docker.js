@@ -34,14 +34,6 @@ define([
         'wcCollapser':wcCollapser
     };
 
-    var myPanelClass = dcl(wcPanel,{
-
-    });
-
-
-    defaultClasses.wcPanel = myPanelClass;
-
-
     /**
      * @class
      *
