@@ -189,7 +189,7 @@ define([
             this.$frame = $('<div class="wcCollapserFrame">');
             this.__container(this.$container);
 
-            this._frame = new wcFrame(this.$frame, this, false);
+            this._frame = new (this.option('wcFrame'))(this.$frame, this, false);
             this._frame.tabOrientation(this._position);
         },
 

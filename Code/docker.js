@@ -119,6 +119,8 @@ define([
                 detachToWidth: '50%',
                 detachToHeight: '50%'
             };
+
+            //replay default classes into default options
             for (var prop in defaultClasses) {
                 defaultOptions[prop] = defaultClasses[prop];
             }
@@ -127,6 +129,7 @@ define([
             for (var prop in defaultOptions) {
                 this._options[prop] = defaultOptions[prop];
             }
+
             for (var prop in options) {
                 this._options[prop] = options[prop];
             }
@@ -967,7 +970,7 @@ define([
 
                         if (myFrame && !myFrame._isFloating && myFrame.panel().moveable()) {
                             var rect = myFrame.__rect();
-                            self._ghost = new wcGhost(rect, mouse, self);
+                            self._ghost = new (this.option('wcGhost'))(rect, mouse, self);
                             myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false, false);
                             self._ghost.$ghost.hide();
                         }
@@ -2314,7 +2317,7 @@ define([
                     return splitter;
 
                 case 'wcFrame':
-                    var frame = new wcFrame($container, parent, data.floating);
+                    var frame = new (this.option('wcFrame'))($container, parent, data.floating);
                     this._frameList.push(frame);
                     if (data.floating) {
                         this._floatingList.push(frame);
@@ -2324,7 +2327,7 @@ define([
                 case 'wcPanel':
                     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
                         if (this._dockPanelTypeList[i].name === data.panelType) {
-                            var panel = new wcPanel(data.panelType, this._dockPanelTypeList[i].options);
+                            var panel = new (this.option('wcPanel'))(data.panelType, this._dockPanelTypeList[i].options);
                             panel._parent = parent;
                             panel.__container(this.$transition);
                             var options = (this._dockPanelTypeList[i].options && this._dockPanelTypeList[i].options.options) || {};
@@ -2420,7 +2423,7 @@ define([
 
             // Floating windows need no placement.
             if (location === wcDocker.DOCK.FLOAT || location === wcDocker.DOCK.MODAL) {
-                var frame = new wcFrame(this.$container, this, true);
+                var frame = new (this.option('wcFrame'))(this.$container, this, true);
                 if (options && options.tabOrientation) {
                     frame.tabOrientation(options.tabOrientation);
                 }
@@ -2523,7 +2526,7 @@ define([
                             splitter.pos(0.5);
                         }
 
-                        frame = new wcFrame(this.$transition, splitter, false);
+                        frame = new (this.option('wcFrame'))(this.$transition, splitter, false);
                         this._frameList.push(frame);
                         if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
                             splitter.pane(0, frame);
@@ -2541,7 +2544,7 @@ define([
 
             var parent = this;
             var $container = this.$container;
-            var frame = new wcFrame(this.$transition, parent, false);
+            var frame = new (this.option('wcFrame'))(this.$transition, parent, false);
             this._frameList.push(frame);
 
             if (!parent._root) {
@@ -2672,7 +2675,7 @@ define([
                 console.log('WARNING: wcDocker creating placeholder panel when one already exists');
             }
 
-            this._placeholderPanel = new wcPanel(wcDocker.PANEL_PLACEHOLDER, {});
+            this._placeholderPanel = new (this.option('wcPanel'))(wcDocker.PANEL_PLACEHOLDER, {});
             this._placeholderPanel._isPlaceholder = true;
             this._placeholderPanel._parent = this;
             this._placeholderPanel.__container(this.$transition);

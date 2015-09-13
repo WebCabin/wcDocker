@@ -8,20 +8,6 @@ define([
      */
     return dcl(null,{
         /**
-         * Creates new wcDocker class with options
-         * @param what
-         * @returns {module:wcDocker/base}
-         */
-        create:function(what){
-
-            what = this.option(what,what);
-            var args =Array.prototype.slice.call(arguments, 1);
-            var f = what.bind.apply(what, args);
-            return new f();
-            //return new (Function.prototype.bind.apply(what,args));
-
-        },
-        /**
          * Returns this or the docker's options
          * @TODO: better looking through the parents?
          * @returns {Object|null}
