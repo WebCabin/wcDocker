@@ -1921,7 +1921,10 @@ define([
                 for (var i = 0; i < self._frameList.length; ++i) {
                     var frame = self._frameList[i];
                     if (frame.$tabBar[0] === $(this).parents('.wcFrameTitleBar')[0]) {
-                        self._removingPanel = frame._panelList[index];
+                        var panel = frame._panelList[index];
+                        if (panel && !panel.closeable()) {
+                            self._removingPanel = frame._panelList[index];
+                        }
                         return true;
                     }
                 }
