@@ -26,6 +26,22 @@ define([
     './base'
 ], function (dcl, wcDocker, wcPanel, wcGhost, wcSplitter, wcFrame, wcCollapser, base) {
 
+    var defaultClasses = {
+        'wcPanel':wcPanel,
+        'wcGhost':wcGhost,
+        'wcSplitter':wcSplitter,
+        'wcFrame':wcFrame,
+        'wcCollapser':wcCollapser
+    };
+
+    var myPanelClass = dcl(wcPanel,{
+
+    });
+
+
+    defaultClasses.wcPanel = myPanelClass;
+
+
     /**
      * @class
      *
@@ -103,6 +119,9 @@ define([
                 detachToWidth: '50%',
                 detachToHeight: '50%'
             };
+            for (var prop in defaultClasses) {
+                defaultOptions[prop] = defaultClasses[prop];
+            }
 
             this._options = {};
             for (var prop in defaultOptions) {
@@ -283,7 +302,7 @@ define([
                 if (this._dockPanelTypeList[i].name === typeName) {
                     var panelType = this._dockPanelTypeList[i];
 
-                    var panel = new wcPanel(typeName, panelType.options);
+                    var panel = new (this.option('wcPanel'))(typeName, panelType.options);
                     panel._parent = this;
                     panel.__container(this.$transition);
                     var panelOptions = (panelType.options && panelType.options.options) || {};
