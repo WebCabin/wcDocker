@@ -9562,6 +9562,9 @@ define('wcDocker/iframe',[
 
         __onVisibilityChanged: function () {
             this.__updateFrame();
+            if (this._panel.isVisible()) {
+                this.__onMoved();
+            }
         },
 
         __onBeginDock: function () {
