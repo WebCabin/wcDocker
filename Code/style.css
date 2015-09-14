@@ -147,6 +147,10 @@ html, body {
   width: 100%;
 }
 
+.wcButton {
+  box-sizing: content-box;
+}
+
 .wcFrameCenter {
   overflow: hidden;
   position: absolute;
