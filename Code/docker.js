@@ -311,7 +311,7 @@ define([
             var lastPanel = this.__isLastPanel(panel);
 
             var parentFrame = panel._parent;
-            if (parentFrame.instanceOf('wcFrame')) {
+            if (parentFrame && parentFrame.instanceOf('wcFrame')) {
                 if (dontDestroy) {
                     // Keep the panel in a hidden transition container so as to not
                     // destroy any event handlers that may be on it.
@@ -356,7 +356,7 @@ define([
                     }
 
                     var parentSplitter = parentFrame._parent;
-                    if (parentSplitter.instanceOf('wcSplitter')) {
+                    if (parentSplitter && parentSplitter.instanceOf('wcSplitter')) {
                         parentSplitter.__removeChild(parentFrame);
 
                         var other;
@@ -382,7 +382,7 @@ define([
                         parentContainer = parentSplitter.__container();
                         parentSplitter.__destroy();
 
-                        if (parent.instanceOf('wcSplitter')) {
+                        if (parent && parent.instanceOf('wcSplitter')) {
                             parent.__removeChild(parentSplitter);
                             if (!parent.pane(0)) {
                                 parent.pane(0, other);
@@ -428,7 +428,7 @@ define([
             var lastPanel = this.__isLastPanel(panel);
 
             var $elem = panel.$container;
-            if (panel._parent.instanceOf('wcFrame')) {
+            if (panel._parent && panel._parent.instanceOf('wcFrame')) {
                 $elem = panel._parent.$frame;
             }
             var offset = $elem.offset();
@@ -437,7 +437,7 @@ define([
 
             var parentFrame = panel._parent;
             var floating = false;
-            if (parentFrame.instanceOf('wcFrame')) {
+            if (parentFrame && parentFrame.instanceOf('wcFrame')) {
                 floating = parentFrame._isFloating;
                 // Remove the panel from the frame.
                 for (var i = 0; i < parentFrame._panelList.length; ++i) {
@@ -482,7 +482,7 @@ define([
                         }
 
                         var parentSplitter = parentFrame._parent;
-                        if (parentSplitter.instanceOf('wcSplitter')) {
+                        if (parentSplitter && parentSplitter.instanceOf('wcSplitter')) {
                             parentSplitter.__removeChild(parentFrame);
 
                             var other;
@@ -512,7 +512,7 @@ define([
                             parentContainer = parentSplitter.__container();
                             parentSplitter.__destroy();
 
-                            if (parent.instanceOf('wcSplitter')) {
+                            if (parent && parent.instanceOf('wcSplitter')) {
                                 parent.__removeChild(parentSplitter);
                                 if (!parent.pane(0)) {
                                     parent.pane(0, other);
@@ -549,7 +549,7 @@ define([
             }
 
             var frame = panel._parent;
-            if (frame.instanceOf('wcFrame')) {
+            if (frame && frame.instanceOf('wcFrame')) {
                 if (frame._panelList.length === 1) {
                     frame.pos(offset.left + width / 2 + 20, offset.top + height / 2 + 20, true);
                 }
@@ -557,7 +557,7 @@ define([
 
             this.__update(true);
 
-            if (frame.instanceOf('wcFrame')) {
+            if (frame && frame.instanceOf('wcFrame')) {
                 if (floating !== frame._isFloating) {
                     if (frame._isFloating) {
                         panel.__trigger(wcDocker.EVENT.DETACHED);
@@ -1326,7 +1326,7 @@ define([
                                 }
 
                                 var frame = panel._parent;
-                                if (frame.instanceOf('wcFrame')) {
+                                if (frame && frame.instanceOf('wcFrame')) {
                                     frame.pos(mouse.x, mouse.y + self._ghost.__rect().h / 2 - 10, true);
 
                                     frame._size.x = self._ghost.__rect().w;
@@ -1385,13 +1385,13 @@ define([
                                     }
                                 } else {
                                     var frame = panel._parent;
-                                    if (frame.instanceOf('wcFrame')) {
+                                    if (frame && frame.instanceOf('wcFrame')) {
                                         index = index + frame._panelList.length;
                                     }
                                 }
 
                                 var frame = panel._parent;
-                                if (frame.instanceOf('wcFrame')) {
+                                if (frame && frame.instanceOf('wcFrame')) {
                                     frame.panel(index);
                                 }
                                 self.__focus(frame);
@@ -2319,11 +2319,11 @@ define([
         //                  new panel will split the center window.
         __addPanelGrouped: function (panel, targetPanel, options) {
             var frame = targetPanel;
-            if (targetPanel.instanceOf('wcPanel')) {
+            if (frame && frame.instanceOf('wcPanel')) {
                 frame = targetPanel._parent;
             }
 
-            if (frame.instanceOf('wcFrame')) {
+            if (frame && frame.instanceOf('wcFrame')) {
                 if (options && options.tabOrientation) {
                     frame.tabOrientation(options.tabOrientation);
                 }
@@ -2432,12 +2432,12 @@ define([
 
                 var splitterChild = targetPanel;
 
-                while (!(parentSplitter.instanceOf('wcSplitter') || parentSplitter.instanceOf('wcDocker'))) {
+                while (parentSplitter && !(parentSplitter.instanceOf('wcSplitter') || parentSplitter.instanceOf('wcDocker'))) {
                     splitterChild = parentSplitter;
                     parentSplitter = parentSplitter._parent;
                 }
 
-                if (parentSplitter.instanceOf('wcSplitter')) {
+                if (parentSplitter && parentSplitter.instanceOf('wcSplitter')) {
                     var splitter;
                     var left = parentSplitter.pane(0);
                     var right = parentSplitter.pane(1);
@@ -2577,19 +2577,19 @@ define([
                 var splitterChild = parent;
                 var _d = dcl;
 
-                while (!(parentSplitter.instanceOf('wcSplitter') || parentSplitter.instanceOf('wcDocker'))){
+                while (parentSplitter && !(parentSplitter.instanceOf('wcSplitter') || parentSplitter.instanceOf('wcDocker'))){
                     splitterChild = parentSplitter;
                     parentSplitter = parentSplitter._parent;
                 }
 
                 var splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
 
-                if (parentSplitter.instanceOf('wcDocker')){
+                if (parentSplitter && parentSplitter.instanceOf('wcDocker')){
                     this._root = splitter;
                     splitter.__container(this.$container);
                 }
 
-                if (parentSplitter.instanceOf('wcSplitter')) {
+                if (parentSplitter && parentSplitter.instanceOf('wcSplitter')) {
                     var left = parentSplitter.left();
                     var right = parentSplitter.right();
                     var size = {

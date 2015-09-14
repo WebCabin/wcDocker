@@ -258,7 +258,7 @@ define([
                     this.$frame.removeClass('wcIFrameFloatingFocus');
                 }
                 this.$frame.toggleClass('wcIFramePanelHidden', !this._panel.isVisible());
-                if (this._panel._parent.instanceOf('wcFrame')) {
+                if (this._panel && this._panel._parent && this._panel._parent.instanceOf('wcFrame')) {
                     this.$frame.toggleClass('wcDrawer', this._panel._parent.isCollapser());
                 }
             }

@@ -19,7 +19,7 @@ define([
             this._docker = docker;
 
             this._outer = docker.__findInner();
-            if (this._outer.instanceOf('wcSplitter')) {
+            if (this._outer && this._outer.instanceOf('wcSplitter')) {
                 this._inner = this._outer.right();
             }
 

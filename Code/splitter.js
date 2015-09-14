@@ -104,7 +104,7 @@ define([
                 this.$bar.css('top', '').css('left', '').css('width', '').css('height', '');
                 this.__update();
 
-                if (this._parent.instanceOf('wcPanel')) {
+                if (this._parent && this._parent.instanceOf('wcPanel')) {
                     this._parent.__trigger(wcDocker.EVENT.UPDATED);
                 }
             }
@@ -198,7 +198,7 @@ define([
                 this._pos = this._posTarget = value;
                 this.__update();
 
-                if (this._parent.instanceOf('wcPanel')) {
+                if (this._parent && this._parent.instanceOf('wcPanel')) {
                     this._parent.__trigger(wcDocker.EVENT.UPDATED);
                 }
             }
@@ -390,7 +390,7 @@ define([
 
             this.__container(this.$container);
 
-            if (this._parent.instanceOf('wcPanel')) {
+            if (this._parent && this._parent.instanceOf('wcPanel')) {
                 this._boundEvents.push({event: wcDocker.EVENT.UPDATED, handler: this.__update.bind(this)});
                 this._boundEvents.push({event: wcDocker.EVENT.CLOSED, handler: this.destroy.bind(this)});
 

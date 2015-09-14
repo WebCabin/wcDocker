@@ -277,7 +277,7 @@ define([
             }
 
             // Check for placeholder.
-            if (this._parent.instanceOf('wcPanel') && this._parent._isPlaceholder) {
+            if (this._parent && this._parent.instanceOf('wcPanel') && this._parent._isPlaceholder) {
                 ghost.anchor(mouse, {
                     x: offset.left - 2,
                     y: offset.top - 2,
