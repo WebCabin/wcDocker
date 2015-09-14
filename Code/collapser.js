@@ -93,7 +93,7 @@ define([
             this.__container(this.$container);
 
             var docker = this.docker();
-            this._splitter = new wcSplitter(docker.$container, this, this._orientation);
+            this._splitter = new (this.option('wcSplitter'))(docker.$container, this, this._orientation);
             this._drawer = new wcDrawer(docker.$transition, this._splitter, this._position);
             switch (this._position) {
                 case wcDocker.DOCK.LEFT:

@@ -26,6 +26,14 @@ define([
     './base'
 ], function (dcl, wcDocker, wcPanel, wcGhost, wcSplitter, wcFrame, wcCollapser, base) {
 
+    var defaultClasses = {
+        'wcPanel':wcPanel,
+        'wcGhost':wcGhost,
+        'wcSplitter':wcSplitter,
+        'wcFrame':wcFrame,
+        'wcCollapser':wcCollapser
+    };
+
     /**
      * @class
      *
@@ -104,10 +112,16 @@ define([
                 detachToHeight: '50%'
             };
 
+            //replay default classes into default options
+            for (var prop in defaultClasses) {
+                defaultOptions[prop] = defaultClasses[prop];
+            }
+
             this._options = {};
             for (var prop in defaultOptions) {
                 this._options[prop] = defaultOptions[prop];
             }
+
             for (var prop in options) {
                 this._options[prop] = options[prop];
             }
@@ -283,7 +297,7 @@ define([
                 if (this._dockPanelTypeList[i].name === typeName) {
                     var panelType = this._dockPanelTypeList[i];
 
-                    var panel = new wcPanel(typeName, panelType.options);
+                    var panel = new (this.option('wcPanel'))(typeName, panelType.options);
                     panel._parent = this;
                     panel.__container(this.$transition);
                     var panelOptions = (panelType.options && panelType.options.options) || {};
@@ -948,7 +962,7 @@ define([
 
                         if (myFrame && !myFrame._isFloating && myFrame.panel().moveable()) {
                             var rect = myFrame.__rect();
-                            self._ghost = new wcGhost(rect, mouse, self);
+                            self._ghost = new (this.option('wcGhost'))(rect, mouse, self);
                             myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false, false);
                             self._ghost.$ghost.hide();
                         }
@@ -2289,13 +2303,13 @@ define([
         __create: function (data, parent, $container) {
             switch (data.type) {
                 case 'wcSplitter':
-                    var splitter = new wcSplitter($container, parent, data.horizontal);
+                    var splitter = new (this.option('wcSplitter'))($container, parent, data.horizontal);
                     splitter.scrollable(0, false, false);
                     splitter.scrollable(1, false, false);
                     return splitter;
 
                 case 'wcFrame':
-                    var frame = new wcFrame($container, parent, data.floating);
+                    var frame = new (this.option('wcFrame'))($container, parent, data.floating);
                     this._frameList.push(frame);
                     if (data.floating) {
                         this._floatingList.push(frame);
@@ -2305,7 +2319,7 @@ define([
                 case 'wcPanel':
                     for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
                         if (this._dockPanelTypeList[i].name === data.panelType) {
-                            var panel = new wcPanel(data.panelType, this._dockPanelTypeList[i].options);
+                            var panel = new (this.option('wcPanel'))(data.panelType, this._dockPanelTypeList[i].options);
                             panel._parent = parent;
                             panel.__container(this.$transition);
                             var options = (this._dockPanelTypeList[i].options && this._dockPanelTypeList[i].options.options) || {};
@@ -2401,7 +2415,7 @@ define([
 
             // Floating windows need no placement.
             if (location === wcDocker.DOCK.FLOAT || location === wcDocker.DOCK.MODAL) {
-                var frame = new wcFrame(this.$container, this, true);
+                var frame = new (this.option('wcFrame'))(this.$container, this, true);
                 if (options && options.tabOrientation) {
                     frame.tabOrientation(options.tabOrientation);
                 }
@@ -2456,12 +2470,12 @@ define([
                         y: -1
                     };
                     if (left === splitterChild) {
-                        splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                        splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                         size.x = parentSplitter.$pane[0].width();
                         size.y = parentSplitter.$pane[0].height();
                         parentSplitter.pane(0, splitter);
                     } else {
-                        splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                        splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                         size.x = parentSplitter.$pane[1].width();
                         size.y = parentSplitter.$pane[1].height();
                         parentSplitter.pane(1, splitter);
@@ -2504,7 +2518,7 @@ define([
                             splitter.pos(0.5);
                         }
 
-                        frame = new wcFrame(this.$transition, splitter, false);
+                        frame = new (this.option('wcFrame'))(this.$transition, splitter, false);
                         this._frameList.push(frame);
                         if (location === wcDocker.DOCK.LEFT || location === wcDocker.DOCK.TOP) {
                             splitter.pane(0, frame);
@@ -2522,14 +2536,14 @@ define([
 
             var parent = this;
             var $container = this.$container;
-            var frame = new wcFrame(this.$transition, parent, false);
+            var frame = new (this.option('wcFrame'))(this.$transition, parent, false);
             this._frameList.push(frame);
 
             if (!parent._root) {
                 parent._root = frame;
                 frame.__container($container);
             } else {
-                var splitter = new wcSplitter($container, parent, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                var splitter = new (this.option('wcSplitter'))($container, parent, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                 if (splitter) {
                     frame._parent = splitter;
                     splitter.scrollable(0, false, false);
@@ -2592,7 +2606,7 @@ define([
                     parentSplitter = parentSplitter._parent;
                 }
 
-                var splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                var splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
 
                 if (parentSplitter.instanceOf('wcDocker')){
                     this._root = splitter;
@@ -2611,7 +2625,7 @@ define([
                         size.y = parentSplitter.$pane[0].height();
                         parentSplitter.pane(0, splitter);
                     } else {
-                        splitter = new wcSplitter(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
+                        splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
                         size.x = parentSplitter.$pane[1].width();
                         size.y = parentSplitter.$pane[1].height();
                         parentSplitter.pane(1, splitter);
@@ -2653,7 +2667,7 @@ define([
                 console.log('WARNING: wcDocker creating placeholder panel when one already exists');
             }
 
-            this._placeholderPanel = new wcPanel(wcDocker.PANEL_PLACEHOLDER, {});
+            this._placeholderPanel = new (this.option('wcPanel'))(wcDocker.PANEL_PLACEHOLDER, {});
             this._placeholderPanel._isPlaceholder = true;
             this._placeholderPanel._parent = this;
             this._placeholderPanel.__container(this.$transition);
