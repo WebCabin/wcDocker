@@ -603,8 +603,9 @@ define([
          * Forces the window to close.
          */
         close: function () {
-            if (this._parent) {
-                this._parent.$close.click();
+            var docker = this.docker();
+            if (docker) {
+                docker.__closePanel(this);
             }
         },
 

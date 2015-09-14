@@ -1609,17 +1609,7 @@ define([
                 for (var i = 0; i < self._frameList.length; ++i) {
                     var frame = self._frameList[i];
                     if (frame.$close[0] === this) {
-                        var panel = frame.panel();
-
-                        // If the panel is persistent, instead of destroying it, add it to a persistent list instead.
-                        var dontDestroy = false;
-                        var panelOptions = self.panelTypeInfo(panel._type);
-                        if (panelOptions && panelOptions.isPersistent) {
-                            dontDestroy = true;
-                            self._persistentList.push(panel);
-                        }
-                        self.removePanel(panel, dontDestroy);
-                        self.__update();
+                        self.__closePanel(frame.panel());
                         return;
                     }
                     if (frame.$collapse[0] === this) {
@@ -2668,6 +2658,18 @@ define([
                 this.__addPanelAlone(this._placeholderPanel, wcDocker.DOCK.TOP);
             }
 
+            this.__update();
+        },
+
+        __closePanel: function(panel) {
+            // If the panel is persistent, instead of destroying it, add it to a persistent list instead.
+            var dontDestroy = false;
+            var panelOptions = this.panelTypeInfo(panel._type);
+            if (panelOptions && panelOptions.isPersistent) {
+                dontDestroy = true;
+                this._persistentList.push(panel);
+            }
+            this.removePanel(panel, dontDestroy);
             this.__update();
         },
 
