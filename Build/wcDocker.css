@@ -140,6 +140,7 @@ html, body {
   text-align: center;
   overflow: hidden;
   z-index: 1;
+  box-sizing: content-box;
 }
 
 .wcFrameButton > div {
