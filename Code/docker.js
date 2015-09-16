@@ -1437,6 +1437,7 @@ define([
             var lastMouseMove = new Date().getTime();
             var lastMouseEvent = null;
             var moveTimeout = 0;
+            var lastLButtonDown = 0;
 
             function __onMouseMove(event) {
                 lastMouseEvent = event;
@@ -1457,11 +1458,7 @@ define([
                     }
                     return true;
                 }
-
                 lastMouseMove = new Date().getTime();
-
-                if (t - lastLButtonDown < self._options.moveStartDelay)
-                    return;
 
                 if (self._draggingSplitter) {
                     self._draggingSplitter.__moveBar(mouse);
@@ -1487,6 +1484,10 @@ define([
 
                         // Check anchoring with self.
                         if (!self._draggingFrame.__checkAnchorDrop(mouse, true, self._ghost, self._draggingFrame._panelList.length > 1 && self._draggingFrameTab, self._draggingFrameTopper, !self.__isLastFrame(self._draggingFrame))) {
+                            // Introduce a delay before a panel begins movement to a new docking position.
+                            if (new Date().getTime() - lastLButtonDown < self._options.moveStartDelay) {
+                                return;
+                            }
                             self._draggingFrame.__shadow(true);
                             self.__focus();
                             if (!forceFloat) {
@@ -1728,7 +1729,6 @@ define([
                 return true;
             }
 
-            var lastLButtonDown = 0;
             // on mousedown for .wcFrameTitleBar
             function __onMouseDownFrameTitle(event) {
                 var mouse = self.__mouse(event);
