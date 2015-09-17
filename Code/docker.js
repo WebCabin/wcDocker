@@ -2293,18 +2293,33 @@ define([
                     return frame;
 
                 case 'wcPanel':
-                    for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
-                        if (this._dockPanelTypeList[i].name === data.panelType) {
-                            var panel = new wcPanel(data.panelType, this._dockPanelTypeList[i].options);
-                            panel._parent = parent;
-                            panel.__container(this.$transition);
-                            var options = (this._dockPanelTypeList[i].options && this._dockPanelTypeList[i].options.options) || {};
-                            panel._panelObject = new this._dockPanelTypeList[i].options.onCreate(panel, options);
-                            panel.__container($container);
-                            break;
+                    if (data.panelType === wcDocker.PANEL_PLACEHOLDER) {
+                        if (!this._placeholderPanel) {
+                            this._placeholderPanel = new wcPanel(wcDocker.PANEL_PLACEHOLDER, {});
+                            this._placeholderPanel._isPlaceholder = true;
+                            this._placeholderPanel._parent = parent;
+                            this._placeholderPanel.__container(this.$transition);
+                            this._placeholderPanel._panelObject = new function (myPanel) {
+                                myPanel.title(false);
+                                myPanel.closeable(false);
+                            }(this._placeholderPanel);
+                            this._placeholderPanel.__container($container);
                         }
+                        return this._placeholderPanel;
+                    } else {
+                        for (var i = 0; i < this._dockPanelTypeList.length; ++i) {
+                            if (this._dockPanelTypeList[i].name === data.panelType) {
+                                var panel = new wcPanel(data.panelType, this._dockPanelTypeList[i].options);
+                                panel._parent = parent;
+                                panel.__container(this.$transition);
+                                var options = (this._dockPanelTypeList[i].options && this._dockPanelTypeList[i].options.options) || {};
+                                panel._panelObject = new this._dockPanelTypeList[i].options.onCreate(panel, options);
+                                panel.__container($container);
+                                break;
+                            }
+                        }
+                        return panel;
                     }
-                    return panel;
             }
 
             return null;
