@@ -151,7 +151,7 @@ define([
                     this.$titleText.prepend(this.$icon);
                 }
 
-                if (this._parent.instanceOf('wcFrame')) {
+                if (this._parent && this._parent.instanceOf('wcFrame')) {
                     this._parent.__updateTabs();
                 }
             }
@@ -223,7 +223,7 @@ define([
          * @returns {Boolean}
          */
         isFloating: function () {
-            if (this._parent.instanceOf('wcFrame')) {
+            if (this._parent && this._parent.instanceOf('wcFrame')) {
                 return this._parent._isFloating;
             }
             return false;
@@ -235,7 +235,7 @@ define([
          */
         isInFocus: function () {
             var docker = this.docker();
-            if (docker && this._parent.instanceOf('wcFrame')) {
+            if (docker && this._parent && this._parent.instanceOf('wcFrame')) {
                 return this._parent === docker._focusFrame;
             }
             return false;
@@ -261,7 +261,7 @@ define([
                 isToggled: false
             });
 
-            if (this._parent.instanceOf('wcFrame')) {
+            if (this._parent && this._parent.instanceOf('wcFrame')) {
                 this._parent.__update();
             }
         },
@@ -279,7 +279,7 @@ define([
                         this._parent.__onTabChange();
                     }
 
-                    if (this._parent.instanceOf('wcFrame')) {
+                    if (this._parent && this._parent.instanceOf('wcFrame')) {
                         this._parent.__update();
                     }
 
@@ -301,12 +301,12 @@ define([
                 if (this._buttonList[i].name === name) {
                     if (typeof toggleState !== 'undefined') {
                         this._buttonList[i].isToggled = toggleState;
-                        if (this._parent.instanceOf('wcFrame')) {
+                        if (this._parent && this._parent.instanceOf('wcFrame')) {
                             this._parent.__onTabChange();
                         }
                     }
 
-                    if (this._parent.instanceOf('wcFrame')) {
+                    if (this._parent && this._parent.instanceOf('wcFrame')) {
                         this._parent.__update();
                     }
 
@@ -456,7 +456,7 @@ define([
             this.$icon.removeClass();
             this.$icon.addClass('wcTabIcon ' + icon);
 
-            if (this._parent.instanceOf('wcFrame')) {
+            if (this._parent && this._parent.instanceOf('wcFrame')) {
                 this._parent.__updateTabs();
             }
         },
@@ -603,8 +603,9 @@ define([
          * Forces the window to close.
          */
         close: function () {
-            if (this._parent) {
-                this._parent.$close.click();
+            var docker = this.docker();
+            if (docker) {
+                docker.__closePanel(this);
             }
         },
 
