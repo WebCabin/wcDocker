@@ -1451,6 +1451,7 @@ define([
             var lastMouseMove = new Date().getTime();
             var lastMouseEvent = null;
             var moveTimeout = 0;
+            var lastLButtonDown = 0;
 
             function __onMouseMove(event) {
                 lastMouseEvent = event;
@@ -2608,12 +2609,12 @@ define([
 
                 var splitter = new (this.option('wcSplitter'))(this.$transition, parentSplitter, location !== wcDocker.DOCK.BOTTOM && location !== wcDocker.DOCK.TOP);
 
-                if (parentSplitter.instanceOf('wcDocker')){
+                if (parentSplitter && parentSplitter.instanceOf('wcDocker')){
                     this._root = splitter;
                     splitter.__container(this.$container);
                 }
 
-                if (parentSplitter.instanceOf('wcSplitter')) {
+                if (parentSplitter && parentSplitter.instanceOf('wcSplitter')) {
                     var left = parentSplitter.left();
                     var right = parentSplitter.right();
                     var size = {
