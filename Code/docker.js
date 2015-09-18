@@ -23,8 +23,26 @@ define([
     './splitter',
     './frame',
     './collapser',
+    './layoutsimple',
+    './layouttable',
+    './drawer',
     './base'
-], function (dcl, wcDocker, wcPanel, wcGhost, wcSplitter, wcFrame, wcCollapser, base) {
+], function (dcl, wcDocker, wcPanel, wcGhost, wcSplitter, wcFrame, wcCollapser, wcLayoutSimple,wcLayoutTable,wcDrawer,base) {
+
+    var defaultClasses = {
+        "classNames" : {
+            'wcPanel': wcPanel,
+            'wcGhost': wcGhost,
+            'wcSplitter': wcSplitter,
+            'wcFrame': wcFrame,
+            'wcCollapser': wcCollapser,
+            'wcLayoutSimple': wcLayoutSimple,
+            'wcLayoutTable': wcLayoutTable,
+            'wcDrawer': wcDrawer
+        }
+    };
+
+
 
     /**
      * @class
@@ -105,9 +123,16 @@ define([
             };
 
             this._options = {};
+
+            //replay default classes into default options
+            for (var prop in defaultClasses) {
+                defaultOptions[prop] = defaultClasses[prop];
+            }
+
             for (var prop in defaultOptions) {
                 this._options[prop] = defaultOptions[prop];
             }
+
             for (var prop in options) {
                 this._options[prop] = options[prop];
             }
@@ -283,7 +308,7 @@ define([
                 if (this._dockPanelTypeList[i].name === typeName) {
                     var panelType = this._dockPanelTypeList[i];
 
-                    var panel = new wcPanel(typeName, panelType.options);
+                    var panel = new (this._getClass('wcPanel'))(typeName, panelType.options);
                     panel._parent = this;
                     panel.__container(this.$transition);
                     var panelOptions = (panelType.options && panelType.options.options) || {};
