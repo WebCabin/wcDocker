@@ -51,7 +51,7 @@
 
         'wcDocker/demo/demoAMD':{
           //  enable/disable theme builder
-          themeBuilder: true,
+          themeBuilder: location.href.indexOf('noThemeBuilder') == -1,
           //  enable/disable tutorials
           tutorials: location.href.indexOf('noTutorials') == -1
         }
