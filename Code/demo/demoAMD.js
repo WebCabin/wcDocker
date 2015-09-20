@@ -1,11 +1,13 @@
 define([
+    "dcl/dcl",
     "../docker",
     "../splitter",
     "../tabframe",
     "../iframe",
+    "../panel",
     "wcDocker/ThemeBuilder",
     "module"
-], function (wcDocker, wcSplitter, wcTabFrame, wcIFrame, wcThemeBuilder, module) {
+], function (dcl,wcDocker, wcSplitter, wcTabFrame, wcIFrame,wcPanel,wcThemeBuilder, module) {
 
     // --------------------------------------------------------------------------------
     // Create an instance of our docker window and assign it to the document.
@@ -13,6 +15,7 @@ define([
         allowDrawers: true,
         responseRate: 10
     });
+
 
     if (myDocker) {
 
