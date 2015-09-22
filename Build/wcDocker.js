@@ -7055,7 +7055,7 @@ define('wcDocker/docker',[
             }, this._options.responseRate);
 
             $(window).resize(this.__resize.bind(this));
-            $('body').on('contextmenu', 'a, img', __onContextShowNormal);
+            // $('body').on('contextmenu', 'a, img', __onContextShowNormal);
             $('body').on('contextmenu', '.wcSplitterBar', __onContextDisable);
 
             // $('body').on('selectstart', '.wcFrameTitleBar, .wcPanelTab, .wcFrameButton', function(event) {
@@ -7349,14 +7349,14 @@ define('wcDocker/docker',[
 
             // on contextmenu for a, img
             function __onContextShowNormal() {
-                if (this._contextTimer) {
-                    clearTimeout(this._contextTimer);
+                if (self._contextTimer) {
+                    clearTimeout(self._contextTimer);
                 }
 
                 $(".wcFrame").contextMenu(false);
-                this._contextTimer = setTimeout(function () {
+                self._contextTimer = setTimeout(function () {
                     $(".wcFrame").contextMenu(true);
-                    this._contextTimer = null;
+                    self._contextTimer = null;
                 }, 100);
                 return true;
             }
