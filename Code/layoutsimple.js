@@ -52,8 +52,6 @@ define([
         },
     });
 
-    // window['wcLayoutSimple'] = Module;
-
     return Module;
 });
 

@@ -2,15 +2,8 @@
 define([
     "dcl/dcl",
     "./types",
-    "./layoutsimple",
-    "./layouttable",
     "./base"
-], function (dcl, wcDocker, wcLayoutSimple, wcLayoutTable, base) {
-
-    var layoutClasses = {
-      'wcLayoutSimple': wcLayoutSimple,
-      'wcLayoutTable': wcLayoutTable
-    };
+], function (dcl, wcDocker, base) {
 
     /**
      * @class
@@ -116,7 +109,7 @@ define([
          */
         addTab: function (name, index, layout) {
             var layoutClass = layout || 'wcLayoutTable';
-            var newLayout = new (this._getClass(layoutClass))('.wcDockerTransition', this._parent);
+            var newLayout = new (this.docker().__getClass(layoutClass))('.wcDockerTransition', this._parent);
             newLayout.name = name;
             newLayout._scrollable = {
                 x: true,

@@ -1,18 +1,18 @@
 /** @module wcBase */
 define([
     "dcl/dcl"
-], function (dcl) {
+], function(dcl) {
     /**
      * Base class for all docker classes
      * @class module:wcBase
      */
-    return dcl(null,{
+    return dcl(null, {
         /**
          * Returns this or the docker's options
          * @TODO: better looking through the parents?
          * @returns {Object|null}
          */
-        getOptions:function(){
+        getOptions: function() {
             return this._options || this.docker()._options || {};
         },
 
@@ -22,7 +22,7 @@ define([
          * @param _default {Object|null}
          * @returns {Object|null}
          */
-        option:function(name,_default){
+        option: function(name,_default) {
             return this.getOptions()[name] || _default;
         },
 
@@ -32,7 +32,7 @@ define([
          * @returns {object} the dcl module found in options
          * @private
          */
-        _getClass:function(name){
+        __getClass: function(name) {
             return this.getOptions()[name+'Class'];
         },
 
@@ -42,7 +42,7 @@ define([
          * @param {object} [who]
          * @returns {boolean}
          */
-        instanceOf: function(what, who){
+        instanceOf: function(what, who) {
             who = who || this;
             return !!(who && (who.declaredClass.indexOf(what)!=-1));
         },

@@ -2,15 +2,8 @@
 define([
     "dcl/dcl",
     "./types",
-    "./layoutsimple",
-    "./layouttable",
     "./base"
-], function (dcl, wcDocker, wcLayoutSimple, wcLayoutTable, base) {
-
-    var layoutClasses = {
-      'wcLayoutSimple': wcLayoutSimple,
-      'wcLayoutTable': wcLayoutTable
-    };
+], function (dcl, wcDocker, base) {
 
     /**
      * @class module:wcPanel
@@ -26,10 +19,11 @@ define([
          * <b><i>PRIVATE</i> - Use [wcDocker.addPanel]{@link module:wcDocker#addPanel}, [wcDocker.removePanel]{@link module:wcDocker#removePanel}, and
          * [wcDocker.movePanel]{@link module:wcDocker#movePanel} to manage panels, <u>this should never be constructed directly
          * by the user.</u></b>
+         * @param {module:base} parent - The parent.
          * @param {String} type - The name identifier for the panel.
          * @param {module:wcPanel~options} [options] - An options object passed from registration of the panel.
          */
-        constructor: function (type, options) {
+        constructor: function (parent, type, options) {
             /**
              * An options object for the [panel]{@link module:wcPanel} constructor.
              * @typedef module:wcPanel~options
@@ -45,7 +39,7 @@ define([
              * @member {external:jQuery~Object}
              */
             this.$container = null;
-            this._parent = null;
+            this._parent = parent;
             this.$icon = null;
             this.$title = null;
             this.$titleText = null;
@@ -744,7 +738,7 @@ define([
         // Initialize
         __init: function () {
             var layoutClass = (this._options && this._options.layout) || 'wcLayoutTable';
-            this._layout = new layoutClasses[layoutClass](this.$container, this);
+            this._layout = new (this.docker().__getClass(layoutClass))(this.$container, this);
             this.$title = $('<div class="wcPanelTab">');
             this.$titleText = $('<div>' + this._title + '</div>');
             this.$title.append(this.$titleText);

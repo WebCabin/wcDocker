@@ -93,8 +93,8 @@ define([
             this.__container(this.$container);
 
             var docker = this.docker();
-            this._splitter = new (this._getClass('wcSplitter'))(docker.$container, this, this._orientation);
-            this._drawer = new (this._getClass('wcDrawer'))(docker.$transition, this._splitter, this._position);
+            this._splitter = new (this.docker().__getClass('wcSplitter'))(docker.$container, this, this._orientation);
+            this._drawer = new (this.docker().__getClass('wcDrawer'))(docker.$transition, this._splitter, this._position);
             switch (this._position) {
                 case wcDocker.DOCK.LEFT:
                     this._splitter.pane(0, this._drawer);
