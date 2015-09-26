@@ -116,7 +116,7 @@ define([
          */
         addTab: function (name, index, layout) {
             var layoutClass = layout || 'wcLayoutTable';
-            var newLayout = new layoutClasses[layoutClass]('.wcDockerTransition', this._parent);
+            var newLayout = new (this._getClass(layoutClass))('.wcDockerTransition', this._parent);
             newLayout.name = name;
             newLayout._scrollable = {
                 x: true,

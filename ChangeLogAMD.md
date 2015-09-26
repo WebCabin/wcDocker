@@ -3,7 +3,6 @@
 #### Converting to AMD/DCL/Require-JS compatible classes/modules: done
 #### Converting comments jsDoc module tags: 99% done
 #### Creating grunt tasks to compile themes and library: done
-#### Creating grunt tasks to API docs: missing
 #### Creating grunt tasks for unit-testing (at least the base): missing
 
 #### Open issues:
@@ -118,10 +117,60 @@ listed in Code/types.js within the wcDocker class documentation. I duplicated
 them in wcDocker. This is will be solved.
 
 
+### Overriding wcDocker base classes
 
-
+wcDocker sub classes can be created as any other AMD module.
+ 
+- create a sub class of wcPanel, ie: as file myPanelClass.js
   
+          
+          define([
+              "dcl/dcl",
+              "wcDocker/panel"
+          ], function (dcl,wcPanel) {      
+              return dcl(wcPanel,{
+                  /**
+                   * Override wcPanel#__init
+                   */
+                  __init: dcl.superCall(function(sup){
+                      return function(){
+                          //call super
+                          return sup && sup.apply(this, arguments);
+                      };
+                  })
+              });
+          });
+ 
+ 
+- now pass the new version of wcPanel in the docker options: 
 
+    
+        define([
+            "dcl/dcl",
+            "wcDocker/docker",
+            "app/myPanelClass"
+        ], function (dcl,wcDocker,myPanelClass){
+            var myDocker = new wcDocker('.dockerContainer', {
+                    allowDrawers: true,
+                    responseRate: 10,
+                    wcPanelClass:myPanelClass
+            });
+        }
+ 
 
+- or create your panel sub class directly:
 
-
+        
+        define([
+            "dcl/dcl",
+            "wcDocker/docker",
+            "wcDocker/panel"
+        ], function (dcl,wcDocker,wcPanel){
+            var myDocker = new wcDocker('.dockerContainer', {
+                    allowDrawers: true,
+                    responseRate: 10,
+                    wcPanelClass:dcl(wcPanel,{
+                        //your overrides and implementation
+                    })
+            });
+        }
