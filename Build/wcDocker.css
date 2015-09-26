@@ -162,15 +162,12 @@ html, body {
 
 .wcFloating {
   position: fixed;
-  z-index: 10;
 }
 
 .wcFloatingFocus {
-  z-index: 20;
 }
 
 .wcModal {
-  z-index: 40;
 }
 
 .wcLayout, .wcLayout tr, .wcLayout td {
@@ -548,11 +545,11 @@ html, body {
 }
 
 .wcIFrameFloating {
-  z-index: 11;
+  /*z-index: 11;*/
 }
 
 .wcIFrameFloatingFocus {
-  z-index: 21;
+  /*z-index: 21;*/
 }
 
 .wcIFrameHidden, .wcIFramePanelHidden {

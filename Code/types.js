@@ -106,6 +106,8 @@ define([], function () {
          * This event is called with an object of the current {width, height} size as the first parameter.
          */
         RESIZED: 'panelResized',
+        /** This only happens with floating windows when the order of the windows have changed. */
+        ORDER_CHANGED: 'panelOrderChanged',
         /** When the contents of the panel has been scrolled */
         SCROLLED: 'panelScrolled',
         /** When the layout is being saved, See [wcDocker.save]{@link wcDocker#save} */

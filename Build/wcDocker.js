@@ -864,6 +864,8 @@ define('wcDocker/types',[], function () {
          * This event is called with an object of the current {width, height} size as the first parameter.
          */
         RESIZED: 'panelResized',
+        /** This only happens with floating windows when the order of the windows have changed. */
+        ORDER_CHANGED: 'panelOrderChanged',
         /** When the contents of the panel has been scrolled */
         SCROLLED: 'panelScrolled',
         /** When the layout is being saved, See [wcDocker.save]{@link wcDocker#save} */
@@ -2926,32 +2928,29 @@ define('wcDocker/panel',[
             var width = this.$container.width();
             var height = this.$container.height();
             if (this._actualSize.x !== width || this._actualSize.y !== height) {
-                this._actualSize.x = width;
-                this._actualSize.y = height;
-
                 this._resizeData.time = new Date();
                 if (!this._resizeData.timeout) {
                     this._resizeData.timeout = true;
                     setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
-                    this.__trigger(wcDocker.EVENT.RESIZE_STARTED, {
-                        width: this._actualSize.x,
-                        height: this._actualSize.y
-                    });
+                    this.__trigger(wcDocker.EVENT.RESIZE_STARTED, {width: this._actualSize.x, height: this._actualSize.y});
                 }
+
+                this._actualSize.x = width;
+                this._actualSize.y = height;
                 this.__trigger(wcDocker.EVENT.RESIZED, {width: this._actualSize.x, height: this._actualSize.y});
             }
 
             var offset = this.$container.offset();
             if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
-                this._actualPos.x = offset.left;
-                this._actualPos.y = offset.top;
-
                 this._moveData.time = new Date();
                 if (!this._moveData.timeout) {
                     this._moveData.timeout = true;
                     setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
                     this.__trigger(wcDocker.EVENT.MOVE_STARTED, {x: this._actualPos.x, y: this._actualPos.y});
                 }
+
+                this._actualPos.x = offset.left;
+                this._actualPos.y = offset.top;
                 this.__trigger(wcDocker.EVENT.MOVED, {x: this._actualPos.x, y: this._actualPos.y});
             }
         },
@@ -7791,17 +7790,20 @@ define('wcDocker/docker',[
             }
 
             // If we reach this point, all existing panels are initialized and loaded!
-            this.trigger(wcDocker.EVENT.LOADED);
+            var self = this;
+            setTimeout(function() {
+                self.trigger(wcDocker.EVENT.LOADED);
 
-            // Now unregister all loaded events so they do not fire again.
-            this.off(wcDocker.EVENT.LOADED);
-            for (var i = 0; i < this._frameList.length; ++i) {
-                var frame = this._frameList[i];
-                for (var a = 0; a < frame._panelList.length; ++a) {
-                    var panel = frame._panelList[a];
-                    panel.off(wcDocker.EVENT.LOADED);
+                // Now unregister all loaded events so they do not fire again.
+                self.off(wcDocker.EVENT.LOADED);
+                for (var i = 0; i < self._frameList.length; ++i) {
+                    var frame = self._frameList[i];
+                    for (var a = 0; a < frame._panelList.length; ++a) {
+                        var panel = frame._panelList[a];
+                        panel.off(wcDocker.EVENT.LOADED);
+                    }
                 }
-            }
+            }, 0);
         },
 
         // Test for browser compatability issues.
@@ -7961,6 +7963,32 @@ define('wcDocker/docker',[
             }
         },
 
+        __orderPanels: function () {
+            if (this._floatingList.length === 0) {
+                return;
+            }
+
+            var from = this._floatingList.indexOf(this._focusFrame);
+            var to = this._floatingList.length - 1;
+
+            this._floatingList.splice(to, 0, this._floatingList.splice(from, 1)[0]);
+
+            var length = this._floatingList.length;
+            var start = 10;
+            var step = 5;
+            var index = 0;
+            var panel;
+
+            for (var i = 0; i < this._floatingList.length; ++i) {
+                panel = this._floatingList[i];
+                if (panel) {
+                    var layer = start + (i * step);
+                    panel.$frame.css('z-index', layer);
+                    panel.__trigger(wcDocker.EVENT.ORDER_CHANGED, layer);
+                }
+            }
+        },
+
         // Retrieve mouse or touch position.
         __mouse: function (event) {
             if (event.originalEvent && (event.originalEvent.touches || event.originalEvent.changedTouches)) {
@@ -8035,6 +8063,8 @@ define('wcDocker/docker',[
 
                 this._focusFrame.__trigger(wcDocker.EVENT.GAIN_FOCUS);
             }
+
+            this.__orderPanels();
         },
 
         // Triggers an event exclusively on the docker and none of its panels.
@@ -8266,6 +8296,8 @@ define('wcDocker/docker',[
                         y: options.h
                     };
                 }
+
+                this.__orderPanels();
                 return;
             }
 
@@ -9501,10 +9533,7 @@ define('wcDocker/iframe',[
             this._panel.docker().$container.append(this.$frame);
             this.$frame.append(this.$focus);
 
-            this._boundEvents.push({
-                event: wcDocker.EVENT.VISIBILITY_CHANGED,
-                handler: this.__onVisibilityChanged.bind(this)
-            });
+            this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK, handler: this.__onBeginDock.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.END_DOCK, handler: this.__onEndDock.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.MOVE_STARTED, handler: this.__onMoveStarted.bind(this)});
@@ -9513,13 +9542,14 @@ define('wcDocker/iframe',[
             this._boundEvents.push({event: wcDocker.EVENT.RESIZE_ENDED, handler: this.__onMoveFinished.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.MOVED, handler: this.__onMoved.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.RESIZED, handler: this.__onMoved.bind(this)});
-            this._boundEvents.push({event: wcDocker.EVENT.ATTACHED, handler: this.__updateFrame.bind(this)});
+            this._boundEvents.push({event: wcDocker.EVENT.ATTACHED, handler: this.__onAttached.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.DETACHED, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_OPENED, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_CLOSED, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.CLOSED, handler: this.__onClosed.bind(this)});
+            this._boundEvents.push({event: wcDocker.EVENT.ORDER_CHANGED, handler: this.__onOrderChanged.bind(this)});
 
             for (var i = 0; i < this._boundEvents.length; ++i) {
                 this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
@@ -9600,6 +9630,11 @@ define('wcDocker/iframe',[
             }
         },
 
+        __onAttached: function() {
+            this.$frame.css('z-index', '');
+            this.__updateFrame();
+        },
+
         __onMoveStarted: function () {
             if (this.$frame && !this._isDocking) {
                 this.$frame.addClass('wcIFrameMoving');
@@ -9630,6 +9665,9 @@ define('wcDocker/iframe',[
                     console.error('have no docker');
                 }
             }
+        },
+        __onOrderChanged: function(layer) {
+            this.$frame.css('z-index', layer+1);
         },
         __onClosed: function () {
             this.destroy();

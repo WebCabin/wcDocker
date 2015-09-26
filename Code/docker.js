@@ -2137,6 +2137,32 @@ define([
             }
         },
 
+        __orderPanels: function () {
+            if (this._floatingList.length === 0) {
+                return;
+            }
+
+            var from = this._floatingList.indexOf(this._focusFrame);
+            var to = this._floatingList.length - 1;
+
+            this._floatingList.splice(to, 0, this._floatingList.splice(from, 1)[0]);
+
+            var length = this._floatingList.length;
+            var start = 10;
+            var step = 5;
+            var index = 0;
+            var panel;
+
+            for (var i = 0; i < this._floatingList.length; ++i) {
+                panel = this._floatingList[i];
+                if (panel) {
+                    var layer = start + (i * step);
+                    panel.$frame.css('z-index', layer);
+                    panel.__trigger(wcDocker.EVENT.ORDER_CHANGED, layer);
+                }
+            }
+        },
+
         // Retrieve mouse or touch position.
         __mouse: function (event) {
             if (event.originalEvent && (event.originalEvent.touches || event.originalEvent.changedTouches)) {
@@ -2211,6 +2237,8 @@ define([
 
                 this._focusFrame.__trigger(wcDocker.EVENT.GAIN_FOCUS);
             }
+
+            this.__orderPanels();
         },
 
         // Triggers an event exclusively on the docker and none of its panels.
@@ -2442,6 +2470,8 @@ define([
                         y: options.h
                     };
                 }
+
+                this.__orderPanels();
                 return;
             }
 

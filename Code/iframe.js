@@ -212,10 +212,7 @@ define([
             this._panel.docker().$container.append(this.$frame);
             this.$frame.append(this.$focus);
 
-            this._boundEvents.push({
-                event: wcDocker.EVENT.VISIBILITY_CHANGED,
-                handler: this.__onVisibilityChanged.bind(this)
-            });
+            this._boundEvents.push({event: wcDocker.EVENT.VISIBILITY_CHANGED, handler: this.__onVisibilityChanged.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.BEGIN_DOCK, handler: this.__onBeginDock.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.END_DOCK, handler: this.__onEndDock.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.MOVE_STARTED, handler: this.__onMoveStarted.bind(this)});
@@ -224,13 +221,14 @@ define([
             this._boundEvents.push({event: wcDocker.EVENT.RESIZE_ENDED, handler: this.__onMoveFinished.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.MOVED, handler: this.__onMoved.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.RESIZED, handler: this.__onMoved.bind(this)});
-            this._boundEvents.push({event: wcDocker.EVENT.ATTACHED, handler: this.__updateFrame.bind(this)});
+            this._boundEvents.push({event: wcDocker.EVENT.ATTACHED, handler: this.__onAttached.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.DETACHED, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.GAIN_FOCUS, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.LOST_FOCUS, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_OPENED, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.PERSISTENT_CLOSED, handler: this.__updateFrame.bind(this)});
             this._boundEvents.push({event: wcDocker.EVENT.CLOSED, handler: this.__onClosed.bind(this)});
+            this._boundEvents.push({event: wcDocker.EVENT.ORDER_CHANGED, handler: this.__onOrderChanged.bind(this)});
 
             for (var i = 0; i < this._boundEvents.length; ++i) {
                 this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
@@ -311,6 +309,11 @@ define([
             }
         },
 
+        __onAttached: function() {
+            this.$frame.css('z-index', '');
+            this.__updateFrame();
+        },
+
         __onMoveStarted: function () {
             if (this.$frame && !this._isDocking) {
                 this.$frame.addClass('wcIFrameMoving');
@@ -341,6 +344,9 @@ define([
                     console.error('have no docker');
                 }
             }
+        },
+        __onOrderChanged: function(layer) {
+            this.$frame.css('z-index', layer+1);
         },
         __onClosed: function () {
             this.destroy();
