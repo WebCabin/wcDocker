@@ -91,7 +91,7 @@ define([
 
             this._panel.layout().clear();
             this._panel.layout().startBatch();
-            this._panel.layout().$table.css('padding', '10px');
+            this._panel.layout().scene().css('padding', '10px');
 
             this._panel.layout()._childFrames = [];
 
@@ -185,7 +185,7 @@ define([
 
         addTab: function (frame, control, row, showMobile) {
             var layout = frame.addTab(control.name);
-            layout.$table.css('padding', '10px');
+            layout.scene().css('padding', '10px');
             layout.gridAlternate(true);
             layout.showGrid(true);
             layout._childFrames = [];
@@ -769,7 +769,7 @@ define([
             this._panel.on(wcDocker.EVENT.BUTTON, function (data) {
                 // Use the preivously defined common function to popup the Info Panel.
                 var infoPanel = self._panel.docker().addPanel('Info Panel', wcDocker.DOCK.MODAL, null);
-                infoPanel.layout().$table.find('span').text('The theme builder panel allows you to design your own custom wcDocker themes without having to mess with CSS code directly! Press "Pull" to gather all current theme settings from the window and assign them into the displayed attributes. Press "Apply" to override the current visible theme with your custom theme (and display any further changes live!). Press "Download" to download a copy of your new theme!');
+                infoPanel.layout().scene().find('span').text('The theme builder panel allows you to design your own custom wcDocker themes without having to mess with CSS code directly! Press "Pull" to gather all current theme settings from the window and assign them into the displayed attributes. Press "Apply" to override the current visible theme with your custom theme (and display any further changes live!). Press "Download" to download a copy of your new theme!');
             });
 
             this._panel.on(wcDocker.EVENT.CLOSED, function () {

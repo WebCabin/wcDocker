@@ -927,26 +927,26 @@ define('wcDocker/types',[], function () {
     return wcDocker;
 
 });
-/** @module wcLayoutSimple */
-define('wcDocker/layoutsimple',[
+/** @module wcLayout */
+define('wcDocker/layout',[
     "dcl/dcl",
     "./types"
 ], function (dcl, wcDocker) {
 
     /**
      * @class
-     * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
-     * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
+     * The base class for all panel layouts. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+     * and [tab widgets]{@link wcTabFrame} contain these to organize their contents.
      */
     var Module = dcl(null, {
-        declaredClass: 'wcLayoutSimple',
+        declaredClass: 'wcLayout',
 
         /**
-         * @memberOf module:wcLayoutSimple
+         * @memberOf module:wcLayout
          * @description
          * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
-         * @param {wcLayoutSimple|wcLayoutTable|wcSplitter|wcDocker} parent - The layout's parent object.
+         * @param {wcLayout|wcSplitter|wcDocker} parent - The layout's parent object.
          */
         constructor: function (container, parent) {
             /**
@@ -966,7 +966,8 @@ define('wcDocker/layoutsimple',[
 
             this.__init();
         },
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -976,7 +977,7 @@ define('wcDocker/layoutsimple',[
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
          */
         addItem: function (item) {
-            this.$elem.append(item);
+            // Should be implemented by a sub-class.
         },
 
         /**
@@ -984,9 +985,7 @@ define('wcDocker/layoutsimple',[
          * and columns from the grid.
          */
         clear: function () {
-            this.$elem.remove();
-            this.$elem = null;
-            this.__init();
+            // Should be implemented by a sub-class.
         },
 
         /**
@@ -1004,12 +1003,12 @@ define('wcDocker/layoutsimple',[
 
         // Initialize
         __init: function () {
-            this.$elem = $('<div class="wcLayout wcWide wcTall"></div>');
-            this.__container(this.$container);
+            // Should be implemented by a sub-class.
         },
 
         // Updates the size of the layout.
         __update: function () {
+            // Should be implemented by a sub-class.
         },
 
         // Checks if the mouse is in a valid anchor position for nesting another widget.
@@ -1345,6 +1344,64 @@ define('wcDocker/layoutsimple',[
         }
     });
 
+    return Module;
+});
+
+
+/** @module wcLayoutSimple */
+define('wcDocker/layoutsimple',[
+    "dcl/dcl",
+    "./types",
+    "./layout"
+], function (dcl, wcDocker, wcLayout) {
+
+    /**
+     * @class
+     * A simple layout for containing elements in a panel. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
+     * and [tab widgets]{@link wcTabFrame} can optionally contain these instead of the default {@link wcLayoutTable}.
+     */
+    var Module = dcl(wcLayout, {
+        declaredClass: 'wcLayoutSimple',
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * Adds an item into the layout, appending it to the main element.
+         *
+         * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
+         */
+        addItem: function (item) {
+            this.$elem.append(item);
+        },
+
+        /**
+         * Clears the contents of the layout and squashes all rows
+         * and columns from the grid.
+         */
+        clear: function () {
+            this.$elem.remove();
+            this.$elem = null;
+            this.__init();
+        },
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private Functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // Initialize
+        __init: function () {
+            this.$elem = $('<div class="wcLayout wcWide wcTall"></div>');
+            this.__container(this.$container);
+        },
+
+        // Updates the size of the layout.
+        __update: function () {
+        },
+    });
+
     // window['wcLayoutSimple'] = Module;
 
     return Module;
@@ -1354,45 +1411,18 @@ define('wcDocker/layoutsimple',[
 /** @module wcLayoutTable */
 define('wcDocker/layouttable',[
     "dcl/dcl",
-    "./types"
-], function (dcl, wcDocker) {
+    "./types",
+    "./layout"
+], function (dcl, wcDocker, wcLayout) {
 
     /**
      * @class module:wcLayoutTable
      * A gridded layout for arranging elements. [Panels]{@link wcPanel}, [splitter widgets]{@link wcSplitter}
      * and [tab widgets]{@link wcTabFrame} contain these by default to handle their contents.
      */
-    var Module = dcl(null, {
+    var Module = dcl(wcLayout, {
         declaredClass: 'wcLayoutTable',
 
-        /**
-         * @memberOf module:wcLayoutTable
-         * @description
-         * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
-         * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
-         * @param {wcLayoutSimple|wcLayoutTable|wcSplitter|wcDocker} parent   - The layout's parent object.
-         */
-        constructor: function (container, parent) {
-            /**
-             * The outer container element of the panel.
-             *
-             * @member {external:jQuery~Object}
-             */
-            this.$container = $(container);
-            this._parent = parent;
-
-            this._batchProcess = false;
-            this._grid = [];
-
-            /**
-             * The table DOM element for the layout.
-             *
-             * @member {external:jQuery~Object}
-             */
-            this.$table = null;
-
-            this.__init();
-        },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1567,7 +1597,7 @@ define('wcDocker/layouttable',[
             var spacing = this.gridSpacing();
             var alternate = this.gridAlternate();
 
-            this.$table.remove();
+            this.$elem.remove();
             this.__init();
 
             this.showGrid(showGrid);
@@ -1603,10 +1633,10 @@ define('wcDocker/layouttable',[
          */
         showGrid: function (enabled) {
             if (typeof enabled !== 'undefined') {
-                this.$table.toggleClass('wcLayoutGrid', enabled);
+                this.$elem.toggleClass('wcLayoutGrid', enabled);
             }
 
-            return this.$table.hasClass('wcLayoutGrid');
+            return this.$elem.hasClass('wcLayoutGrid');
         },
 
         /**
@@ -1618,10 +1648,10 @@ define('wcDocker/layouttable',[
          */
         gridSpacing: function (size) {
             if (typeof size !== 'undefined') {
-                this.$table.css('border-spacing', size + 'px');
+                this.$elem.css('border-spacing', size + 'px');
             }
 
-            return parseInt(this.$table.css('border-spacing'));
+            return parseInt(this.$elem.css('border-spacing'));
         },
 
         /**
@@ -1633,18 +1663,10 @@ define('wcDocker/layouttable',[
          */
         gridAlternate: function (enabled) {
             if (typeof enabled !== 'undefined') {
-                this.$table.toggleClass('wcLayoutGridAlternate', enabled);
+                this.$elem.toggleClass('wcLayoutGridAlternate', enabled);
             }
 
-            return this.$table.hasClass('wcLayoutGridAlternate');
-        },
-
-        /**
-         * Retrieves the main element.
-         * @returns {external:jQuery~Object} - The Table item that makes this layout scene.
-         */
-        scene: function () {
-            return this.$table;
+            return this.$elem.hasClass('wcLayoutGridAlternate');
         },
 
 
@@ -1654,8 +1676,9 @@ define('wcDocker/layouttable',[
 
         // Initialize
         __init: function () {
-            this.$table = $('<table class="wcLayout wcWide wcTall"></table>');
-            this.$table.append($('<tbody></tbody>'));
+            this.$elem = $('<table class="wcLayout wcWide wcTall"></table>');
+            this.$elem.append($('<tbody></tbody>'));
+            this._grid = [];
             this.__container(this.$container);
         },
 
@@ -1689,7 +1712,7 @@ define('wcDocker/layouttable',[
             }
 
             if (!this._batchProcess) {
-                var $oldBody = this.$table.find('tbody');
+                var $oldBody = this.$elem.find('tbody');
                 $('.wcDockerTransition').append($oldBody);
 
                 var $newBody = $('<tbody>');
@@ -1711,7 +1734,7 @@ define('wcDocker/layouttable',[
                     }
                 }
 
-                this.$table.append($newBody);
+                this.$elem.append($newBody);
                 $oldBody.remove();
             }
         },
@@ -1759,344 +1782,9 @@ define('wcDocker/layouttable',[
             }
             return true;
         },
-
-        // Checks if the mouse is in a valid anchor position for nesting another widget.
-        // Params:
-        //    mouse                 The current mouse position.
-        //    same                  Whether we are hovering over the same panel that is being moved.
-        //    ghost                 An instance to the ghost object.
-        //    canSplit              Whether the original panel can be split.
-        //    $elem                 The container element for the target panel.
-        //    title                 Whether the panel has a title bar visible.
-        //    isTopper              Whether the item being dragged is the top title bar, as apposed to dragging a side or bottom tab/bar.
-        //    forceTabOrientation   Force a specific tab orientation.
-        //    allowEdges            Whether to allow edge docking.
-        __checkAnchorDrop: function (mouse, same, ghost, canSplit, $elem, title, isTopper, forceTabOrientation, allowEdges) {
-            var docker = this._parent.docker();
-            var width = $elem.outerWidth();
-            var height = $elem.outerHeight();
-            var offset = $elem.offset();
-            var titleSize = $elem.find('.wcFrameTitleBar').height();
-            if (!title) {
-                titleSize = 0;
-            }
-
-            function __getAnchorSizes(value, w, h) {
-                if (typeof value === 'number' || (typeof value === 'string' && value.indexOf('px', value.length - 2) !== -1)) {
-                    // Pixel sizing.
-                    value = parseInt(value);
-                    return {
-                        x: value,
-                        y: value
-                    };
-                } else if (typeof value === 'string' && value.indexOf('%', value.length - 1) !== -1) {
-                    value = parseInt(value) / 100;
-                    // Percentage sizing.
-                    return {
-                        x: w * value,
-                        y: h * value
-                    };
-                } else {
-                    // Invalid value.
-                    return {x: 0, y: 0};
-                }
-            }
-
-            var edgeAnchor = __getAnchorSizes(docker._options.edgeAnchorSize, docker.$container.outerWidth(), docker.$container.outerHeight());
-            var panelAnchor = __getAnchorSizes(docker._options.panelAnchorSize, width, height);
-
-            // If the target panel has a title, hovering over it (on all sides) will cause stacking
-            // and also change the orientation of the tabs (if enabled).
-            if (title) {
-                // Top title bar
-                if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.TOP) &&
-                    mouse.y >= offset.top && mouse.y <= offset.top + titleSize &&
-                    mouse.x >= offset.left && mouse.x <= offset.left + width) {
-
-                    // Stacking with top orientation.
-                    ghost.anchor(mouse, {
-                        x: offset.left - 2,
-                        y: offset.top - 2,
-                        w: width,
-                        h: titleSize - 2,
-                        loc: wcDocker.DOCK.STACKED,
-                        tab: wcDocker.TAB.TOP,
-                        item: this,
-                        self: same === wcDocker.TAB.TOP || (isTopper && same)
-                    });
-                    return true;
-                }
-                // Any other tab orientation is only valid if tab orientation is enabled.
-                else if (docker._canOrientTabs) {
-                    // Bottom bar
-                    if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.BOTTOM) &&
-                        mouse.y >= offset.top + height - titleSize && mouse.y <= offset.top + height &&
-                        mouse.x >= offset.left && mouse.x <= offset.left + width) {
-
-                        // Stacking with bottom orientation.
-                        ghost.anchor(mouse, {
-                            x: offset.left - 2,
-                            y: offset.top + height - titleSize - 2,
-                            w: width,
-                            h: titleSize,
-                            loc: wcDocker.DOCK.STACKED,
-                            tab: wcDocker.TAB.BOTTOM,
-                            item: this,
-                            self: same === wcDocker.TAB.BOTTOM
-                        });
-                        return true;
-                    }
-                    // Left bar
-                    else if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.LEFT) &&
-                        mouse.y >= offset.top && mouse.y <= offset.top + height &&
-                        mouse.x >= offset.left && mouse.x <= offset.left + titleSize) {
-
-                        // Stacking with bottom orientation.
-                        ghost.anchor(mouse, {
-                            x: offset.left - 2,
-                            y: offset.top - 2,
-                            w: titleSize - 2,
-                            h: height,
-                            loc: wcDocker.DOCK.STACKED,
-                            tab: wcDocker.TAB.LEFT,
-                            item: this,
-                            self: same === wcDocker.TAB.LEFT
-                        });
-                        return true;
-                    }
-                    // Right bar
-                    else if ((!forceTabOrientation || forceTabOrientation === wcDocker.TAB.RIGHT) &&
-                        mouse.y >= offset.top && mouse.y <= offset.top + height &&
-                        mouse.x >= offset.left + width - titleSize && mouse.x <= offset.left + width) {
-
-                        // Stacking with bottom orientation.
-                        ghost.anchor(mouse, {
-                            x: offset.left + width - titleSize - 2,
-                            y: offset.top - 2,
-                            w: titleSize,
-                            h: height,
-                            loc: wcDocker.DOCK.STACKED,
-                            tab: wcDocker.TAB.RIGHT,
-                            item: this,
-                            self: same === wcDocker.TAB.RIGHT
-                        });
-                        return true;
-                    }
-                }
-            }
-
-            // Test for edge anchoring.
-            if (allowEdges && ghost._outer && ghost._inner) {
-                var outerWidth = ghost._outer.$container.outerWidth();
-                var outerHeight = ghost._outer.$container.outerHeight();
-                var outerOffset = ghost._outer.$container.offset();
-
-                // Left edge
-                if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
-                    mouse.x >= outerOffset.left + titleSize && mouse.x <= outerOffset.left + titleSize + edgeAnchor.x) {
-                    ghost.anchor(mouse, {
-                        x: outerOffset.left - 2,
-                        y: outerOffset.top - 2,
-                        w: outerWidth / 3,
-                        h: outerHeight,
-                        loc: wcDocker.DOCK.LEFT,
-                        item: ghost._inner,
-                        self: false
-                    });
-                    return true;
-                }
-                // Right edge
-                else if (mouse.y >= outerOffset.top && mouse.y <= outerOffset.top + outerHeight &&
-                    mouse.x >= outerOffset.left + outerWidth - edgeAnchor.x - titleSize && mouse.x <= outerOffset.left + outerWidth - titleSize) {
-                    ghost.anchor(mouse, {
-                        x: outerOffset.left + outerWidth - (outerWidth / 3) - 2,
-                        y: outerOffset.top - 2,
-                        w: outerWidth / 3,
-                        h: outerHeight,
-                        loc: wcDocker.DOCK.RIGHT,
-                        item: ghost._inner,
-                        self: false
-                    });
-                    return true;
-                }
-                // Top edge
-                else if (mouse.y >= outerOffset.top + titleSize && mouse.y <= outerOffset.top + titleSize + edgeAnchor.y &&
-                    mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
-                    ghost.anchor(mouse, {
-                        x: outerOffset.left - 2,
-                        y: outerOffset.top - 2,
-                        w: outerWidth,
-                        h: outerHeight / 3,
-                        loc: wcDocker.DOCK.TOP,
-                        item: ghost._inner,
-                        self: false
-                    });
-                    return true;
-                }
-                // Bottom edge
-                else if (mouse.y >= outerOffset.top + outerHeight - titleSize - edgeAnchor.y && mouse.y <= outerOffset.top + outerHeight - titleSize &&
-                    mouse.x >= outerOffset.left && mouse.x <= outerOffset.left + outerWidth) {
-                    ghost.anchor(mouse, {
-                        x: outerOffset.left - 2,
-                        y: outerOffset.top + outerHeight - (outerHeight / 3) - 2,
-                        w: outerWidth,
-                        h: outerHeight / 3,
-                        loc: wcDocker.DOCK.BOTTOM,
-                        item: ghost._inner,
-                        self: false
-                    });
-                    return true;
-                }
-            }
-
-            if (!canSplit) {
-                return false;
-            }
-
-            // Check for placeholder.
-            if (this._parent && this._parent.instanceOf('wcPanel') && this._parent._isPlaceholder) {
-                ghost.anchor(mouse, {
-                    x: offset.left - 2,
-                    y: offset.top - 2,
-                    w: width,
-                    h: height,
-                    loc: wcDocker.DOCK.TOP,
-                    item: this,
-                    self: false
-                });
-                return true;
-            }
-
-            if (width < height) {
-                // Top docking.
-                if (mouse.y >= offset.top && mouse.y <= offset.top + titleSize + panelAnchor.y &&
-                    mouse.x >= offset.left && mouse.x <= offset.left + width) {
-                    ghost.anchor(mouse, {
-                        x: offset.left - 2,
-                        y: offset.top - 2,
-                        w: width,
-                        h: height * 0.5,
-                        loc: wcDocker.DOCK.TOP,
-                        item: this,
-                        self: false
-                    });
-                    return true;
-                }
-
-                // Bottom side docking.
-                if (mouse.y >= offset.top + height - panelAnchor.y - titleSize && mouse.y <= offset.top + height &&
-                    mouse.x >= offset.left && mouse.x <= offset.left + width) {
-                    ghost.anchor(mouse, {
-                        x: offset.left - 2,
-                        y: offset.top + (height - height * 0.5) - 2,
-                        w: width,
-                        h: height * 0.5,
-                        loc: wcDocker.DOCK.BOTTOM,
-                        item: this,
-                        self: false
-                    });
-                    return true;
-                }
-            }
-
-            // Left side docking
-            if (mouse.y >= offset.top && mouse.y <= offset.top + height) {
-                if (mouse.x >= offset.left && mouse.x <= offset.left + panelAnchor.x + titleSize) {
-                    ghost.anchor(mouse, {
-                        x: offset.left - 2,
-                        y: offset.top - 2,
-                        w: width * 0.5,
-                        h: height,
-                        loc: wcDocker.DOCK.LEFT,
-                        item: this,
-                        self: false
-                    });
-                    return true;
-                }
-
-                // Right side docking
-                if (mouse.x >= offset.left + width - panelAnchor.x - titleSize && mouse.x <= offset.left + width) {
-                    ghost.anchor(mouse, {
-                        x: offset.left + width * 0.5 - 2,
-                        y: offset.top - 2,
-                        w: width * 0.5,
-                        h: height,
-                        loc: wcDocker.DOCK.RIGHT,
-                        item: this,
-                        self: false
-                    });
-                    return true;
-                }
-            }
-
-            if (width >= height) {
-                // Top docking.
-                if (mouse.y >= offset.top && mouse.y <= offset.top + panelAnchor.y + titleSize &&
-                    mouse.x >= offset.left && mouse.x <= offset.left + width) {
-                    ghost.anchor(mouse, {
-                        x: offset.left - 2,
-                        y: offset.top - 2,
-                        w: width,
-                        h: height * 0.5,
-                        loc: wcDocker.DOCK.TOP,
-                        item: this,
-                        self: false
-                    });
-                    return true;
-                }
-
-                // Bottom side docking.
-                if (mouse.y >= offset.top + height - panelAnchor.y - titleSize && mouse.y <= offset.top + height &&
-                    mouse.x >= offset.left && mouse.x <= offset.left + width) {
-                    ghost.anchor(mouse, {
-                        x: offset.left - 2,
-                        y: offset.top + (height - height * 0.5) - 2,
-                        w: width,
-                        h: height * 0.5,
-                        loc: wcDocker.DOCK.BOTTOM,
-                        item: this,
-                        self: false
-                    });
-                    return true;
-                }
-            }
-            return false;
-        },
-
-        // Gets, or Sets a new container for this layout.
-        // Params:
-        //    $container          If supplied, sets a new container for this layout.
-        // Returns:
-        //    JQuery collection   The current container.
-        __container: function ($container) {
-            if (typeof $container === 'undefined') {
-                return this.$container;
-            }
-
-            this.$container = $container;
-            if (this.$container) {
-                this.$container.append(this.$table);
-            } else {
-                this.$table.remove();
-            }
-            return this.$container;
-        },
-
-        // Destroys the layout.
-        __destroy: function () {
-            this.__container(null);
-            this._parent = null;
-            this.clear();
-
-            this.$table.remove();
-            this.$table = null;
-        }
     });
 
-    // window['wcLayoutTable'] = Module;
-
     return Module;
-
 });
 
 /** @module wcBase */
