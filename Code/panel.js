@@ -792,32 +792,29 @@ define([
             var width = this.$container.width();
             var height = this.$container.height();
             if (this._actualSize.x !== width || this._actualSize.y !== height) {
-                this._actualSize.x = width;
-                this._actualSize.y = height;
-
                 this._resizeData.time = new Date();
                 if (!this._resizeData.timeout) {
                     this._resizeData.timeout = true;
                     setTimeout(this.__resizeEnd.bind(this), this._resizeData.delta);
-                    this.__trigger(wcDocker.EVENT.RESIZE_STARTED, {
-                        width: this._actualSize.x,
-                        height: this._actualSize.y
-                    });
+                    this.__trigger(wcDocker.EVENT.RESIZE_STARTED, {width: this._actualSize.x, height: this._actualSize.y});
                 }
+
+                this._actualSize.x = width;
+                this._actualSize.y = height;
                 this.__trigger(wcDocker.EVENT.RESIZED, {width: this._actualSize.x, height: this._actualSize.y});
             }
 
             var offset = this.$container.offset();
             if (this._actualPos.x !== offset.left || this._actualPos.y !== offset.top) {
-                this._actualPos.x = offset.left;
-                this._actualPos.y = offset.top;
-
                 this._moveData.time = new Date();
                 if (!this._moveData.timeout) {
                     this._moveData.timeout = true;
                     setTimeout(this.__moveEnd.bind(this), this._moveData.delta);
                     this.__trigger(wcDocker.EVENT.MOVE_STARTED, {x: this._actualPos.x, y: this._actualPos.y});
                 }
+
+                this._actualPos.x = offset.left;
+                this._actualPos.y = offset.top;
                 this.__trigger(wcDocker.EVENT.MOVED, {x: this._actualPos.x, y: this._actualPos.y});
             }
         },

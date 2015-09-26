@@ -1964,17 +1964,20 @@ define([
             }
 
             // If we reach this point, all existing panels are initialized and loaded!
-            this.trigger(wcDocker.EVENT.LOADED);
+            var self = this;
+            setTimeout(function() {
+                self.trigger(wcDocker.EVENT.LOADED);
 
-            // Now unregister all loaded events so they do not fire again.
-            this.off(wcDocker.EVENT.LOADED);
-            for (var i = 0; i < this._frameList.length; ++i) {
-                var frame = this._frameList[i];
-                for (var a = 0; a < frame._panelList.length; ++a) {
-                    var panel = frame._panelList[a];
-                    panel.off(wcDocker.EVENT.LOADED);
+                // Now unregister all loaded events so they do not fire again.
+                self.off(wcDocker.EVENT.LOADED);
+                for (var i = 0; i < self._frameList.length; ++i) {
+                    var frame = self._frameList[i];
+                    for (var a = 0; a < frame._panelList.length; ++a) {
+                        var panel = frame._panelList[a];
+                        panel.off(wcDocker.EVENT.LOADED);
+                    }
                 }
-            }
+            }, 0);
         },
 
         // Test for browser compatability issues.
