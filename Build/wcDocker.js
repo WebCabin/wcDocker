@@ -7230,7 +7230,7 @@ define('wcDocker/docker',[
 
                         if (myFrame && !myFrame._isFloating && myFrame.panel().moveable()) {
                             var rect = myFrame.__rect();
-                            self._ghost = new (this.__getClass('wcGhost'))(rect, mouse, self);
+                            self._ghost = new (self.__getClass('wcGhost'))(rect, mouse, self);
                             myFrame.__checkAnchorDrop(mouse, false, self._ghost, true, false, false);
                             self._ghost.$ghost.hide();
                         }
@@ -8172,7 +8172,7 @@ define('wcDocker/docker',[
                         h: 500
                     };
                     $('body').addClass('wcDisableSelection');
-                    self._ghost = new (this.__getClass('wcGhost'))(rect, mouse, self);
+                    self._ghost = new (self.__getClass('wcGhost'))(rect, mouse, self);
                     self._ghost.update(mouse);
                     self._ghost.anchor(mouse, self._ghost.anchor());
                     self._creatingPanel = panelType;
@@ -8938,7 +8938,6 @@ define('wcDocker/docker',[
 
 
                 if (splitter) {
-
                     splitter.scrollable(0, false, false);
                     splitter.scrollable(1, false, false);
                     collapser = new (this.__getClass('wcCollapser'))(this.$transition, splitter, location);
