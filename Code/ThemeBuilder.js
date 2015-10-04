@@ -105,12 +105,49 @@ define([
             }
 
             var self = this;
+            var $upload = $('<input type="file" value="Upload" style="width:100%;" title="Upload your own custom css theme."/>');
+            this._panel.layout().addItem($('<label>Upload Theme:</label>'), 0, row);
+            this._panel.layout().addItem($upload, 1, row, 3).stretch('20%', '');
+            $upload.on('change', function(event) {
+                if (this.files.length) {
+                    var file = this.files[0];
+
+                    if (file.type !== 'text/css') {
+                        alert('Failed to upload file, must be a stylesheet!');
+                        return;
+                    }
+
+                    var reader = new FileReader();
+                    self._panel.startLoading();
+                    setTimeout(function() {
+                        reader.readAsText(file, "UTF-8");
+                        reader.onload = function(event) {
+                            self.apply(event.target.result);
+                            var isMobile = $('body').hasClass('wcMobile');
+                            self.pull(self._controls);
+                            self.buildControls(isMobile);
+                            self._panel.finishLoading(400);
+                        }
+                        reader.onerror = function(event) {
+                            console.log('Error reading theme file.');
+                            self._panel.finishLoading(400);
+                        }
+                    }, 100);
+                }
+            });
+
+            row += 1;
+
             var $pull = $('<button style="width:100%;" title="Pull attributes from the currently active theme.">Pull</button>');
             this._panel.layout().addItem($pull, 0, row).stretch('25%', '');
             $pull.click(function () {
-                var isMobile = $('body').hasClass('wcMobile');
-                self.pull(self._controls);
-                self.buildControls(isMobile);
+                self._panel.startLoading();
+                setTimeout(function() {
+                    var isMobile = $('body').hasClass('wcMobile');
+                    self.pull(self._controls);
+                    self.buildControls(isMobile);
+                    self._panel.finishLoading(400);
+                }, 100);
             });
 
             var $apply = $('<button class="wcCustomThemeApplied" style="width:100%;" title="Apply these attributes to the theme.">Apply</button>');
@@ -157,10 +194,10 @@ define([
             var $tabArea = null;
             if (control.stretch) {
                 $tabArea = $('<div class="wcFullSized"></div>');
-                layout.addItem($tabArea, 0, row, 4).stretch('', '100%').css('position', 'relative');
+                layout.addItem($tabArea, 0, row, 5).stretch('', '100%').css('position', 'relative');
             } else {
                 $tabArea = $('<div>');
-                layout.addItem($tabArea, 0, row, 4).css('height', 'auto');
+                layout.addItem($tabArea, 0, row, 5).css('height', 'auto');
             }
 
             var frame = new wcTabFrame($tabArea, this._panel);
@@ -207,7 +244,7 @@ define([
             }
 
             // Finish out this tab area.
-            layout.addItem('<div>', 0, row, 4).stretch('', '100%');
+            layout.addItem('<div>', 0, row, 5).stretch('', '100%');
             layout.finishBatch();
         },
 
@@ -2754,7 +2791,8 @@ define([
                         info: 'The background color of the context menu separator bar',
                         create: this.addColorControl,
                         attribute: 'background-color',
-                        value: ''
+                        value: '',
+                        important: true
                     }, {
                         // Menu Separator Border Style
                         selector: '.wcMenuSeparator, .context-menu-separator',
@@ -3124,6 +3162,18 @@ define([
                                 name: 'Thumb Normal State',
                                 create: this.addSpacer
                             }, {
+                                // Background color
+                                selector: '.wcScrollbarThumb, ::-webkit-scrollbar-thumb',
+                                elem: '<div class="wcScrollbarThumb"></div>',
+                                name: 'Color',
+                                info: 'The background color of the scrollbar thumb control',
+                                create: this.addColorControl,
+                                attribute: 'background-color',
+                                value: ''
+                            }, {
+                                name: '',
+                                create: this.addSpacer
+                            }, {
                                 // Border Style
                                 selector: '.wcScrollbarThumb, ::-webkit-scrollbar-thumb',
                                 elem: '<div class="wcScrollbarThumb"></div>',
@@ -3246,6 +3296,18 @@ define([
                                 name: 'Thumb Hover State',
                                 create: this.addSpacer
                             }, {
+                                // Background color
+                                selector: '.wcScrollbarThumb, ::-webkit-scrollbar-thumb',
+                                elem: '<div class="wcScrollbarThumb"></div>',
+                                name: 'Color',
+                                info: 'The background color of the scrollbar thumb control',
+                                create: this.addColorControl,
+                                attribute: 'background-color',
+                                value: ''
+                            }, {
+                                name: '',
+                                create: this.addSpacer
+                            }, {
                                 // Border Style
                                 selector: '.wcScrollbarThumbHover, .wcScrollBarThumb:hover, ::-webkit-scrollbar-thumb:hover',
                                 elem: '<div class="wcScrollbarThumb wcScrollbarThumbHover"></div>',
@@ -3366,6 +3428,18 @@ define([
                             create: this.addTab,
                             controls: [{
                                 name: 'Thumb Active State',
+                                create: this.addSpacer
+                            }, {
+                                // Background color
+                                selector: '.wcScrollbarThumb, ::-webkit-scrollbar-thumb',
+                                elem: '<div class="wcScrollbarThumb"></div>',
+                                name: 'Color',
+                                info: 'The background color of the scrollbar thumb control',
+                                create: this.addColorControl,
+                                attribute: 'background-color',
+                                value: ''
+                            }, {
+                                name: '',
                                 create: this.addSpacer
                             }, {
                                 // Border Style

@@ -143,7 +143,8 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
     myPanel.collapseDirection(false);
     ```
 - Source code now supports [DCL](http://www.dcljs.org/)!
-- Front page Theme Builder is now built into the libraries. To include it in your project, use the following:
+- Front page Theme Builder is now built into the libraries.
+  - To include it in your project, you will need to include [spectrum](https://bgrins.github.io/spectrum/) into your project as well as register a panel to be used for the theme builder:
     ```
     myDocker.registerPanelType('Theme Builder', {
       faicon: 'map',

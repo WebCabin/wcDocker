@@ -206,10 +206,13 @@ wcDocker.ORIENTATION.HORIZONTAL;
   // Or you can restore it back to the default calculation
   myPanel.collapseDirection(false);</code></pre></li>
 <li>Source code now supports <a href="http://www.dcljs.org/">DCL</a>!</li>
-<li>Front page Theme Builder is now built into the libraries. To include it in your project, use the following:<pre class="prettyprint source"><code>  myDocker.registerPanelType('Theme Builder', {
-    faicon: 'map',
-    onCreate: wcThemeBuilder
-  });</code></pre></li>
+<li>Front page Theme Builder is now built into the libraries.<ul>
+<li>To include it in your project, you will need to include <a href="https://bgrins.github.io/spectrum/">spectrum</a> into your project as well as register a panel to be used for the theme builder:<pre class="prettyprint source"><code>myDocker.registerPanelType('Theme Builder', {
+  faicon: 'map',
+  onCreate: wcThemeBuilder
+});</code></pre></li>
+</ul>
+</li>
 </ul>
 <h4>Version: 2.2.0</h4><ul>
 <li>Separated the default theme out of <code>wcDocker.css</code> (now use <code>wcDocker.css</code> with <code>Themes/default.css</code>).</li>
