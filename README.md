@@ -143,6 +143,13 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
     myPanel.collapseDirection(false);
     ```
 - Source code now supports [DCL](http://www.dcljs.org/)!
+- Front page Theme Builder is now built into the libraries. To include it in your project, use the following:
+    ```
+    myDocker.registerPanelType('Theme Builder', {
+      faicon: 'map',
+      onCreate: wcThemeBuilder
+    });
+    ```
 
 #### Version: 2.2.0 ####
 - Separated the default theme out of `wcDocker.css` (now use `wcDocker.css` with `Themes/default.css`).

@@ -622,3 +622,26 @@ html, body {
   -webkit-animation: fa-spin 1s infinite steps(8);
   animation: fa-spin 1s infinite steps(8);
 }
+
+.wcAttributeLabel {
+  white-space: nowrap;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.wcAttributeControl {
+  width: 100%;
+}
+
+.wcAttributeSpacer, .wcAttributeSpacerSolid {
+  width: 100%;
+  height: 22px;
+  text-align: center;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.wcAttributeSpacerSolid {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}

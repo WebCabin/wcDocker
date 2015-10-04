@@ -7,7 +7,7 @@ define([
     "../panel",
     "wcDocker/ThemeBuilder",
     "module"
-], function (dcl,wcDocker, wcSplitter, wcTabFrame, wcIFrame,wcPanel,wcThemeBuilder, module) {
+], function (dcl,wcDocker, wcSplitter, wcTabFrame, wcIFrame,wcPanel, wcThemeBuilder, module) {
 
     // --------------------------------------------------------------------------------
     // Create an instance of our docker window and assign it to the document.
@@ -508,9 +508,7 @@ define([
         if(config.themeBuilder) {
             myDocker.registerPanelType('Theme Builder', {
                 faicon: 'map',
-                onCreate: function (panel) {
-                    new wcThemeBuilder(panel);
-                }
+                onCreate: wcThemeBuilder
             });
         }
 
