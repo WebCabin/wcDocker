@@ -9509,8 +9509,8 @@ define('wcDocker/ThemeBuilder',[
                 self._panel.layout().addItem($('<label>Upload Theme:</label>'), 0, row);
                 self._panel.layout().addItem($upload, 1, row, 3).stretch('20%', '');
                 $upload.on('change', function(event) {
-                    if (self.files.length) {
-                        var file = self.files[0];
+                    if (this.files.length) {
+                        var file = this.files[0];
 
                         if (file.type !== 'text/css') {
                             alert('Failed to upload file, must be a stylesheet!');
