@@ -9472,6 +9472,7 @@ define('wcDocker/ThemeBuilder',[
 
             this.init();
         },
+
         clearControls: function () {
             this._frameIndex = [];
             for (var i = this._frames.length - 1; i >= 0; --i) {
@@ -9482,109 +9483,117 @@ define('wcDocker/ThemeBuilder',[
         },
 
         buildControls: function (showMobile) {
-            this.clearControls();
-
-            $('body').toggleClass('wcMobile', showMobile ? true : false).toggleClass('wcDesktop', showMobile ? false : true);
-
-            this._panel.layout().clear();
-            this._panel.layout().startBatch();
-            this._panel.layout().scene().css('padding', '10px');
-
-            this._panel.layout()._childFrames = [];
-
-            var row = 0;
-            for (var i = 0; i < this._controls.length; ++i) {
-                var control = this._controls[i];
-                if (control.create) {
-                    control.create.call(this, this._panel.layout(), control, row, showMobile);
-                    row += 1;
-                }
-            }
-
             var self = this;
-            var $upload = $('<input type="file" value="Upload" style="width:100%;" title="Upload your own custom css theme."/>');
-            this._panel.layout().addItem($('<label>Upload Theme:</label>'), 0, row);
-            this._panel.layout().addItem($upload, 1, row, 3).stretch('20%', '');
-            $upload.on('change', function(event) {
-                if (this.files.length) {
-                    var file = this.files[0];
+            this._panel.startLoading();
+            setTimeout(function() {
+                self.clearControls();
 
-                    if (file.type !== 'text/css') {
-                        alert('Failed to upload file, must be a stylesheet!');
-                        return;
+                $('body').toggleClass('wcMobile', showMobile ? true : false).toggleClass('wcDesktop', showMobile ? false : true);
+
+                self._panel.layout().clear();
+                self._panel.layout().startBatch();
+                self._panel.layout().scene().css('padding', '10px');
+
+                self._panel.layout()._childFrames = [];
+
+                var row = 0;
+                for (var i = 0; i < self._controls.length; ++i) {
+                    var control = self._controls[i];
+                    if (control.create) {
+                        control.create.call(self, self._panel.layout(), control, row, showMobile);
+                        row += 1;
                     }
+                }
 
-                    var reader = new FileReader();
+                var $upload = $('<input type="file" value="Upload" style="width:100%;" title="Upload your own custom css theme."/>');
+                self._panel.layout().addItem($('<label>Upload Theme:</label>'), 0, row);
+                self._panel.layout().addItem($upload, 1, row, 3).stretch('20%', '');
+                $upload.on('change', function(event) {
+                    if (self.files.length) {
+                        var file = self.files[0];
+
+                        if (file.type !== 'text/css') {
+                            alert('Failed to upload file, must be a stylesheet!');
+                            return;
+                        }
+
+                        var reader = new FileReader();
+                        self._panel.startLoading();
+                        setTimeout(function() {
+                            reader.readAsText(file, "UTF-8");
+                            reader.onload = function(event) {
+                                self.apply(event.target.result);
+                                var isMobile = $('body').hasClass('wcMobile');
+                                self.pull(self._controls);
+                                self.buildControls(isMobile);
+                                self._panel.finishLoading(400);
+                            }
+                            reader.onerror = function(event) {
+                                console.log('Error reading theme file.');
+                                self._panel.finishLoading(400);
+                            }
+                        }, 100);
+                    }
+                });
+
+                row += 1;
+
+                var $pull = $('<button style="width:100%;" title="Pull attributes from the currently active theme.">Pull</button>');
+                self._panel.layout().addItem($pull, 0, row).stretch('25%', '');
+                $pull.click(function () {
                     self._panel.startLoading();
                     setTimeout(function() {
-                        reader.readAsText(file, "UTF-8");
-                        reader.onload = function(event) {
-                            self.apply(event.target.result);
-                            var isMobile = $('body').hasClass('wcMobile');
-                            self.pull(self._controls);
-                            self.buildControls(isMobile);
-                            self._panel.finishLoading(400);
-                        }
-                        reader.onerror = function(event) {
-                            console.log('Error reading theme file.');
-                            self._panel.finishLoading(400);
-                        }
+                        var isMobile = $('body').hasClass('wcMobile');
+                        self.pull(self._controls);
+                        self.buildControls(isMobile);
+                        self._panel.finishLoading(400);
                     }, 100);
+                });
+
+                var $apply = $('<button class="wcCustomThemeApplied" style="width:100%;" title="Apply these attributes to the theme.">Apply</button>');
+                self._panel.layout().addItem($apply, 1, row).stretch('25%', '');
+                $apply.click(function () {
+                    var themeData = self.build();
+                    self.apply(themeData);
+                    $apply.addClass('wcButtonActive');
+                });
+
+                // If our current theme is active, toggle the button.
+                if (self.$activeTheme && self.$activeTheme.parent().length) {
+                    $apply.addClass('wcButtonActive');
                 }
-            });
 
-            row += 1;
+                var $mobile = $('<button style="width:100%;" title="Toggle mobile theme overrides.">Mobile</button>');
+                self._panel.layout().addItem($mobile, 2, row).stretch('25%', '');
+                $mobile.click(function () {
+                    self._panel.startLoading();
+                    setTimeout(function() {
+                        self.buildControls(!showMobile);
+                        self._panel.docker().__update();
+                        self._panel.finishLoading(400);
+                    }, 100);
+                });
 
-            var $pull = $('<button style="width:100%;" title="Pull attributes from the currently active theme.">Pull</button>');
-            this._panel.layout().addItem($pull, 0, row).stretch('25%', '');
-            $pull.click(function () {
-                self._panel.startLoading();
-                setTimeout(function() {
-                    var isMobile = $('body').hasClass('wcMobile');
-                    self.pull(self._controls);
-                    self.buildControls(isMobile);
-                    self._panel.finishLoading(400);
-                }, 100);
-            });
+                if (showMobile) {
+                    $mobile.addClass('wcButtonActive');
+                }
 
-            var $apply = $('<button class="wcCustomThemeApplied" style="width:100%;" title="Apply these attributes to the theme.">Apply</button>');
-            this._panel.layout().addItem($apply, 1, row).stretch('25%', '');
-            $apply.click(function () {
-                var themeData = self.build();
-                self.apply(themeData);
-                $apply.addClass('wcButtonActive');
-            });
+                var $download = $('<button style="width:100%;" title="Download your custom theme.">Download</button>');
+                self._panel.layout().addItem($download, 3, row).stretch('25%', '');
+                $download.click(function () {
+                    var themeData = self.build();
+                    var blob = new Blob([themeData], {type: "text/plain;charset=utf-8"});
+                    saveAs(blob, "myTheme.css");
+                });
 
-            // If our current theme is active, toggle the button.
-            if (this.$activeTheme && this.$activeTheme.parent().length) {
-                $apply.addClass('wcButtonActive');
-            }
+                self._panel.layout().finishBatch();
 
-            var $mobile = $('<button style="width:100%;" title="Toggle mobile theme overrides.">Mobile</button>');
-            this._panel.layout().addItem($mobile, 2, row).stretch('25%', '');
-            $mobile.click(function () {
-                self.buildControls(!showMobile);
-                self._panel.docker().__update();
-            });
-
-            if (showMobile) {
-                $mobile.addClass('wcButtonActive');
-            }
-
-            var $download = $('<button style="width:100%;" title="Download your custom theme.">Download</button>');
-            this._panel.layout().addItem($download, 3, row).stretch('25%', '');
-            $download.click(function () {
-                var themeData = self.build();
-                var blob = new Blob([themeData], {type: "text/plain;charset=utf-8"});
-                saveAs(blob, "myTheme.css");
-            });
-
-            this._panel.layout().finishBatch();
-
-            // Restore previous tab selections.
-            for (var i = 0; i < this._frameIndex.length; ++i) {
-                this._frames[i].tab(this._frameIndex[i]);
-            }
+                // Restore previous tab selections.
+                for (var i = 0; i < self._frameIndex.length; ++i) {
+                    self._frames[i].tab(self._frameIndex[i]);
+                }
+                self._panel.finishLoading(400);
+            }, 100);
         },
 
         addTabFrame: function (layout, control, row, showMobile) {
@@ -14198,11 +14207,7 @@ define('wcDocker/ThemeBuilder',[
         }
     });
 
-    //export to global
-    // window['wcThemeBuilder'] = Module;
-
     return Module;
-
 });
 require.config({
     baseUrl: "./bower_components",
