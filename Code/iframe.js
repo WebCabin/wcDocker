@@ -284,7 +284,9 @@ define([
         },
 
         __onFocus: function () {
-            this.docker(this._panel).__focus(this._panel._parent);
+            if (this._panel) {
+                this.docker(this._panel).__focus(this._panel._parent);
+            }
         },
 
         __onVisibilityChanged: function () {
