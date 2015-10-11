@@ -50,9 +50,11 @@ define([
             this._boundEvents = [];
 
             this._onLoadFuncs = [];
+            this._onClosedFuncs = [];
 
             this.__init();
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,8 +152,16 @@ define([
          * Registers an event handler when the contents of this iFrame has loaded.
          * @param {Function} onLoadedFunc - A function to call when the iFrame has loaded.
          */
-        onLoaded: function (onLoadedFunc) {
+        onLoaded: function(onLoadedFunc) {
             this._onLoadFuncs.push(onLoadedFunc);
+        },
+
+        /**
+         * Registers an event handler when the iFrame has been closed.
+         * @param {Function} onClosedFunc - A function to call when the iFrame has closed.
+         */
+        onClosed: function(onClosedFunc) {
+            this._onClosedFuncs.push(onClosedFunc);
         },
 
         /**
@@ -239,6 +249,11 @@ define([
 
         __clearFrame: function () {
             if (this.$iFrame) {
+                for (var i = 0; i < this._onClosedFuncs.length; ++i) {
+                    this._onClosedFuncs[i]();
+                }
+                this._onClosedFuncs = [];
+
                 this.$iFrame[0].srcdoc = '';
                 this.$iFrame.remove();
                 this.$iFrame = null;
