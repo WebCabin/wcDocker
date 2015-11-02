@@ -14,7 +14,6 @@ define([
 
         /**
          * @memberOf module:wcLayout
-         * @description
          * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
          * @param {wcLayout|wcSplitter|wcDocker} parent - The layout's parent object.
@@ -44,7 +43,7 @@ define([
 
         /**
          * Adds an item into the layout, appending it to the main element.
-         *
+         * @function module:wcLayout#addItem
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
          */
         addItem: function (item) {
@@ -52,8 +51,8 @@ define([
         },
 
         /**
-         * Clears the contents of the layout and squashes all rows
-         * and columns from the grid.
+         * Clears the contents of the layout and squashes all rows and columns from the grid.
+         * @function module:wcLayout#clear
          */
         clear: function () {
             // Should be implemented by a sub-class.
@@ -61,6 +60,7 @@ define([
 
         /**
          * Retrieves the main element.
+         * @function module:wcLayout#scene
          * @returns {external:jQuery~Object} - The div item that makes this layout scene.
          */
         scene: function () {

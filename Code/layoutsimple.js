@@ -19,7 +19,7 @@ define([
 
         /**
          * Adds an item into the layout, appending it to the main element.
-         *
+         * @function module:wcLayoutSimple#addItem
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
          */
         addItem: function (item) {
@@ -27,8 +27,8 @@ define([
         },
 
         /**
-         * Clears the contents of the layout and squashes all rows
-         * and columns from the grid.
+         * Clears the contents of the layout and squashes all rows and columns from the grid.
+         * @function module:wcLayoutSimple#clear
          */
         clear: function () {
             this.$elem.remove();

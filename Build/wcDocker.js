@@ -763,10 +763,9 @@ define('wcDocker/types',[], function () {
 
     /**
      * Enumerated Docking positions.
-     * @memberOf module:wcDocker
-     * @name module:wcDocker.DOCK
      * @version 3.0.0
-     * @enum {String}
+     * @memberOf module:wcDocker
+     * @enum {String} module:wcDocker.DOCK
      */
     wcDocker.DOCK = {
         /** A floating panel that blocks input until closed */
@@ -788,23 +787,21 @@ define('wcDocker/types',[], function () {
     /**
      * Enumerated Layout wcDocker.
      * @memberOf module:wcDocker
-     * @name module:wcDocker.LAYOUT
      * @version 3.0.0
-     * @enum {String}
+     * @enum {String} module:wcDocker.LAYOUT
      */
     wcDocker.LAYOUT = {
-        /** Contains a single div item without management using a {@link wcLayoutSimple}, it is up to you to populate it however you wish. */
+        /** Contains a single div item without management using a {@link module:wcLayoutSimple}, it is up to you to populate it however you wish. */
         SIMPLE: 'wcLayoutSimple',
-        /** Manages a table grid layout using {@link wcLayoutTable}, this is the default layout used if none is specified. **/
+        /** Manages a table grid layout using {@link module:wcLayoutTable}, this is the default layout used if none is specified. **/
         TABLE: 'wcLayoutTable'
     };
 
     /**
      * Enumerated Internal events
-     * @memberOf module:wcDocker
-     * @name module:wcDocker.EVENT
      * @version 3.0.0
-     * @enum {String}
+     * @memberOf module:wcDocker
+     * @enum {String} module:wcDocker.EVENT
      */
     wcDocker.EVENT = {
         /** When the panel is initialized */
@@ -832,7 +829,7 @@ define('wcDocker/types',[], function () {
         PERSISTENT_CLOSED: 'panelPersistentClosed',
         /** When a persistent panel is being shown */
         PERSISTENT_OPENED: 'panelPersistentOpened',
-        /** When a custom button is clicked, See [wcPanel.addButton]{@link wcPanel#addButton} */
+        /** When a custom button is clicked, See [wcPanel.addButton]{@link module:wcPanel~addButton} */
         BUTTON: 'panelButton',
         /** When the panel has moved from floating to a docked position */
         ATTACHED: 'panelAttached',
@@ -872,13 +869,13 @@ define('wcDocker/types',[], function () {
         ORDER_CHANGED: 'panelOrderChanged',
         /** When the contents of the panel has been scrolled */
         SCROLLED: 'panelScrolled',
-        /** When the layout is being saved, See [wcDocker.save]{@link wcDocker#save} */
+        /** When the layout is being saved, See [wcDocker.save]{@link module:wcDocker#save} */
         SAVE_LAYOUT: 'layoutSave',
-        /** When the layout is being restored, See [wcDocker.restore]{@link wcDocker#restore} */
+        /** When the layout is being restored, See [wcDocker.restore]{@link module:wcDocker#restore} */
         RESTORE_LAYOUT: 'layoutRestore',
-        /** When the current tab on a custom tab widget associated with this panel has changed, See {@link wcTabFrame} */
+        /** When the current tab on a custom tab widget associated with this panel has changed, See {@link module:wcTabFrame} */
         CUSTOM_TAB_CHANGED: 'customTabChanged',
-        /** When a tab has been closed on a custom tab widget associated with this panel, See {@link wcTabFrame} */
+        /** When a tab has been closed on a custom tab widget associated with this panel, See {@link module:wcTabFrame} */
         CUSTOM_TAB_CLOSED: 'customTabClosed'
     };
 
@@ -886,27 +883,23 @@ define('wcDocker/types',[], function () {
      * The name of the placeholder panel.
      * @private
      * @memberOf module:wcDocker
-     * @name module:wcDocker.PANEL_PLACEHOLDER
-     * @constant {String}
+     * @constant {String} module:wcDocker.PANEL_PLACEHOLDER
      */
     wcDocker.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
 
     /**
-     * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
-     * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
-     * @constant {String} module:wcDocker.COLLAPSED
+     * Used when [adding]{@link module:wcDocker#addPanel} or [moving]{@link module:wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
+     * Must be used with [docking]{@link module:wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
      * @memberOf module:wcDocker
-     * @name module:wcDocker.COLLAPSED
-     * @static
+     * @constant {String} module:wcDocker.COLLAPSED
      */
     wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
 
     /**
      * Used for the splitter bar orientation.
      * @version 3.0.0
-     * @enum {Boolean}  module:wcDocker.ORIENTATION
      * @memberOf module:wcDocker
-     * @name module:wcDocker.ORIENTATION
+     * @enum {Boolean} module:wcDocker.ORIENTATION
      */
     wcDocker.ORIENTATION = {
         /** Top and Bottom panes */
@@ -920,7 +913,6 @@ define('wcDocker/types',[], function () {
      * @version 3.0.0
      * @enum {String} module:wcDocker.TAB
      * @memberOf module:wcDocker
-     * @name module:wcDocker.TAB
      */
     wcDocker.TAB = {
         /** The default, puts tabs at the top of the frame */
@@ -948,6 +940,7 @@ define('wcDocker/base',[
         /**
          * Returns this or the docker's options
          * @TODO: better looking through the parents?
+         * @function module:wcBase#getOptions
          * @returns {Object|null}
          */
         getOptions: function() {
@@ -956,6 +949,7 @@ define('wcDocker/base',[
 
         /**
          * Return an option found in this or in the docker.
+         * @function module:wcBase#option
          * @param name
          * @param _default {Object|null}
          * @returns {Object|null}
@@ -965,17 +959,8 @@ define('wcDocker/base',[
         },
 
         /**
-         * Return a module (dcl) by class name.
-         * @param name {string} the class name, for instance "wcPanel", "wcSplitter" and so forth. Please see in wcDocker#defaultClasses for available class names.
-         * @returns {object} the dcl module found in options
-         * @private
-         */
-        __getClass: function(name) {
-            return this.getOptions()[name+'Class'];
-        },
-
-        /**
          * Class eq function
+         * @function module:wcBase#instanceOf
          * @param {string} what
          * @param {object} [who]
          * @returns {boolean}
@@ -987,7 +972,7 @@ define('wcDocker/base',[
 
         /**
          * Retrieves the main [docker]{@link module:wcDocker} instance.
-         *
+         * @function module:wcBase#docker
          * @returns {module:wcDocker} - The top level docker object.
          */
         docker: function(startNode) {
@@ -996,6 +981,17 @@ define('wcDocker/base',[
                 parent = parent._parent;
             }
             return parent;
+        },
+
+        /**
+         * Return a module (dcl) by class name.
+         * @function module:wcBase#__getClass
+         * @param name {string} the class name, for instance "wcPanel", "wcSplitter" and so forth. Please see in wcDocker#defaultClasses for available class names.
+         * @returns {object} the dcl module found in options
+         * @private
+         */
+        __getClass: function(name) {
+            return this.getOptions()[name+'Class'];
         }
     });
 });
@@ -1017,11 +1013,10 @@ define('wcDocker/panel',[
 
         /**
          * @memberOf module:wcPanel
-         * @description
          * <b><i>PRIVATE</i> - Use [wcDocker.addPanel]{@link module:wcDocker#addPanel}, [wcDocker.removePanel]{@link module:wcDocker#removePanel}, and
          * [wcDocker.movePanel]{@link module:wcDocker#movePanel} to manage panels, <u>this should never be constructed directly
          * by the user.</u></b>
-         * @param {module:base} parent - The parent.
+         * @param {module:wcBase} parent - The parent.
          * @param {String} type - The name identifier for the panel.
          * @param {module:wcPanel~options} [options] - An options object passed from registration of the panel.
          */
@@ -1124,12 +1119,15 @@ define('wcDocker/panel',[
 
             this.__init();
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Gets, or Sets the title for this panel.
          * Titles appear in the tab widget associated with the panel.
+         * @function module:wcPanel#title
          * @param {String|Boolean} title - If supplied, sets the new title (this can be html text). If false, the title bar will be removed.
          * @returns {String|Boolean} - The current title.
          */
@@ -1158,8 +1156,9 @@ define('wcDocker/panel',[
         /**
          * Retrieves the registration info of the panel as declared from
          * [wcDocker.registerPanelType]{@link module:wcDocker#registerPanelType};
-         * See [wcDocker.panelTypeInfo]{@link module:wcDocker#panelTypeInfo}.
+         * @function module:wcPanel#info
          * @returns {module:wcDocker~registerOptions} - Registered options of the panel type.
+         * @see [wcDocker.panelTypeInfo]{@link module:wcDocker#panelTypeInfo}.
          */
         info: function () {
             return this.docker().panelTypeInfo(this._type);
@@ -1167,6 +1166,7 @@ define('wcDocker/panel',[
 
         /**
          * Retrieves the layout instance.
+         * @function module:wcPanel#layout
          * @returns {module:wcLayoutSimple|wcLayoutTable} - The layout instance.
          */
         layout: function () {
@@ -1174,8 +1174,8 @@ define('wcDocker/panel',[
         },
 
         /**
-         * Brings this panel into focus. If it is floating, it will be moved to the front
-         * of all other panels.
+         * Brings this panel into focus. If it is floating, it will be moved to the front of all other panels.
+         * @function module:wcPanel#focus
          * @param {Boolean} [flash] - If true, in addition to bringing the panel into focus, it will also flash for the user.
          */
         focus: function (flash) {
@@ -1193,13 +1193,14 @@ define('wcDocker/panel',[
 
         /**
          * @callback wcPanel~CollapseDirection
-         * @see wcPanel#collapseDirection
+         * @see module:wcPanel#collapseDirection
          * @param {module:wcDocker~Bounds} bounds - The bounds of this panel relative to the wcDocker container.
          * @returns {module:wcDocker.DOCK} - A collapse direction to use, must only be LEFT, RIGHT, or BOTTOM
          */
 
         /**
          * Gets, or Sets the collapse direction for this panel.
+         * @function module:wcPanel#collapseDirection
          * @param {module:wcPanel~CollapseDirection|wcDocker.DOCK} direction - The collapse direction to use for this panel.<br>If this value is omitted, the default collapse direction will be used.
          */
         collapseDirection: function (direction) {
@@ -1208,6 +1209,7 @@ define('wcDocker/panel',[
 
         /**
          * Retrieves whether this panel can be seen by the user.
+         * @function module:wcPanel#isVisible
          * @returns {Boolean} - Visibility state.
          */
         isVisible: function () {
@@ -1216,6 +1218,7 @@ define('wcDocker/panel',[
 
         /**
          * Retrieves whether this panel is floating.
+         * @function module:wcPanel#isFloating
          * @returns {Boolean}
          */
         isFloating: function () {
@@ -1227,6 +1230,7 @@ define('wcDocker/panel',[
 
         /**
          * Retrieves whether this panel is in focus.
+         * @function module:wcPanel#isInFocus
          * @return {Boolean}
          */
         isInFocus: function () {
@@ -1239,6 +1243,7 @@ define('wcDocker/panel',[
 
         /**
          * Creates a new custom button that will appear in the title bar when the panel is active.
+         * @function module:wcPanel#addButton
          * @param {String} name               - The name of the button, to identify it later.
          * @param {String} className          - A CSS class name to apply to the button.
          * @param {String} text               - Text to apply to the button.
@@ -1264,6 +1269,7 @@ define('wcDocker/panel',[
 
         /**
          * Removes a custom button from the panel.
+         * @function module:wcPanel#removeButton
          * @param {String} name - The name identifier for the button to remove.
          * @returns {Boolean} - Success or failure.
          */
@@ -1288,7 +1294,8 @@ define('wcDocker/panel',[
         /**
          * Gets, or Sets the current toggle state of a custom button that was
          * added using [wcPanel.addButton]{@link module:wcPanel#addButton}.
-         * @param {String} name           - The name identifier of the button.
+         * @function module:wcPanel#buttonState
+         * @param {String} name - The name identifier of the button.
          * @param {Boolean} [toggleState] - If supplied, will assign a new toggle state to the button.
          * @returns {Boolean} - The current toggle state of the button.
          */
@@ -1314,6 +1321,7 @@ define('wcDocker/panel',[
 
         /**
          * Gets, or Sets the default position of the panel if it is floating. <b>Warning: after the panel has been initialized, this value no longer reflects the current position of the panel.</b>
+         * @function module:wcPanel#initPos
          * @param {Number|String} [x] - If supplied, sets the horizontal position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the vertical position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Coordinate} - The current default position of the panel.
@@ -1341,6 +1349,7 @@ define('wcDocker/panel',[
 
         /**
          * Gets, or Sets the desired size of the panel. <b>Warning: after the panel has been initialized, this value no longer reflects the current size of the panel.</b>
+         * @function module:wcPanel#initSize
          * @param {Number|String} [x] - If supplied, sets the desired initial horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired initial vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Size} - The current initial size of the panel.
@@ -1367,6 +1376,7 @@ define('wcDocker/panel',[
 
         /**
          * Gets, or Sets the minimum size constraint of the panel.
+         * @function module:wcPanel#minSize
          * @param {Number|String} [x] - If supplied, sets the desired minimum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired minimum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Size} - The current minimum size.
@@ -1393,6 +1403,7 @@ define('wcDocker/panel',[
 
         /**
          * Gets, or Sets the maximum size constraint of the panel.
+         * @function module:wcPanel#maxSize
          * @param {Number|String} [x] - If supplied, sets the desired maximum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired maximum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Size} - The current maximum size.
@@ -1419,6 +1430,7 @@ define('wcDocker/panel',[
 
         /**
          * Retrieves the width of the panel contents.
+         * @function module:wcPanel#width
          * @returns {Number} - Panel width.
          */
         width: function () {
@@ -1430,6 +1442,7 @@ define('wcDocker/panel',[
 
         /**
          * Retrieves the height of the panel contents.
+         * @function module:wcPanel#height
          * @returns {Number} - Panel height.
          */
         height: function () {
@@ -1440,8 +1453,9 @@ define('wcDocker/panel',[
         },
 
         /**
-         * Sets the icon for the panel, shown in the panels tab widget.
-         * Must be a css class name that contains the icon.
+         * Sets the icon for the panel, shown in the panels tab widget. Must be a css class name that contains the icon.
+         * @function module:wcPanel#icon
+         * @param {String} icon - The icon class name.
          */
         icon: function (icon) {
             if (!this.$icon) {
@@ -1460,6 +1474,8 @@ define('wcDocker/panel',[
         /**
          * Sets the icon for the panel, shown in the panels tab widget,
          * to an icon defined from the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
+         * @function module:wcPanel#faicon
+         * @param {String} icon - The font-awesome icon name.
          */
         faicon: function (icon) {
             if (!this.$icon) {
@@ -1477,6 +1493,7 @@ define('wcDocker/panel',[
 
         /**
          * Gets, or Sets whether the window is scrollable.
+         * @function module:wcPanel#scrollable
          * @param {Boolean} [x] - If supplied, assigns whether the window is scrollable in the horizontal direction.
          * @param {Boolean} [y] - If supplied, assigns whether the window is scrollable in the vertical direction.
          * @returns {module:wcDocker~Scrollable} - The current scrollable status.
@@ -1492,6 +1509,7 @@ define('wcDocker/panel',[
 
         /**
          * Gets, or Sets the scroll position of the panel's contents if it is scrollable; See [wcPanel.scrollable]{@link module:wcPanel#scrollable}).
+         * @function module:wcPanel#scroll
          * @param {Number} [x]        - If supplied, sets the scroll horizontal position of the panel.
          * @param {Number} [y]        - If supplied, sets the scroll vertical position of the panel.
          * @param {Number} [duration] - If supplied, will animate the scroll movement with the supplied duration (in milliseconds).
@@ -1523,6 +1541,7 @@ define('wcDocker/panel',[
         /**
          * Gets, or Sets whether this panel can be collapsed to the side or bottom.<br>
          * This only works if the collapse feature is enabled {@link module:wcDocker~Options}.
+         * @function module:wcPanel#collapsible
          * @param {Boolean} [enabled] - If supplied, assigns whether collapsing is enabled.
          * @returns {Boolean} - The current collapsible enabled state.
          */
@@ -1537,6 +1556,7 @@ define('wcDocker/panel',[
         /**
          * Gets, or Sets whether overflow on this panel is visible.
          * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
+         * @function module:wcPanel#overflowVisible
          * @param {Boolean} [visible] - If supplied, assigns whether overflow is visible.
          * @returns {Boolean} - The current overflow visibility.
          */
@@ -1551,6 +1571,7 @@ define('wcDocker/panel',[
         /**
          * Gets, or Sets whether the contents of the panel are visible on resize.
          * Use this if the panel has extremely expensive contents which take a long time to resize.
+         * @function module:wcPanel#resizeVisible
          * @param {Boolean} [visible] - If supplied, assigns whether panel contents are visible during resize.
          * @returns {Boolean} - The current resize visibility.
          */
@@ -1565,6 +1586,7 @@ define('wcDocker/panel',[
         /**
          * Sets, or Gets the moveable status of the window.
          * Note: Other panels can not dock beside a non-moving panel as doing so could cause it to move.
+         * @function module:wcPanel#moveable
          * @param {Boolean} [enabled] - If supplied, assigns whether this panel can be moved.
          * @returns {Boolean} - Whether the panel is moveable.
          */
@@ -1581,6 +1603,7 @@ define('wcDocker/panel',[
         /**
          * Gets, or Sets whether this dock window can be closed by the user.
          * Note: The panel can still be closed programmatically.
+         * @function module:wcPanel#closeable
          * @param {Boolean} [enabled] - If supplied, toggles whether it can be closed.
          * @returns {Boolean} the current closeable status.
          */
@@ -1597,6 +1620,7 @@ define('wcDocker/panel',[
 
         /**
          * Forces the window to close.
+         * @function module:wcPanel#close
          */
         close: function () {
             var docker = this.docker();
@@ -1607,6 +1631,7 @@ define('wcDocker/panel',[
 
         /**
          * Shows the loading screen.
+         * @function module:wcPanel#startLoading
          * @param {String} [label] - An optional label to display.
          * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
          * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
@@ -1652,6 +1677,7 @@ define('wcDocker/panel',[
 
         /**
          * Hides the loading screen.
+         * @function module:wcPanel#finishLoading
          * @param {Number} [fadeDuration=0] - If supplied, assigns a fade out duration for the loading screen.
          */
         finishLoading: function (fadeDuration) {
@@ -1674,8 +1700,9 @@ define('wcDocker/panel',[
 
         /**
          * Registers an [event]{@link module:wcDocker.EVENT} associated with this panel.
-         * @param {String} eventType          - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
-         * @param {module:wcDocker~onEvent} handler  - An event handler function to be called when the event is fired.
+         * @function module:wcPanel#on
+         * @param {String} eventType - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
+         * @param {module:wcDocker#onEvent} handler - An event handler function to be called when the event is fired.
          * @returns {Boolean} - Event registration success or failure.
          */
         on: function (eventType, handler) {
@@ -1697,8 +1724,9 @@ define('wcDocker/panel',[
 
         /**
          * Unregisters an [event]{@link module:wcDocker.EVENT} associated with this panel.
-         * @param {module:wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
-         * @param {module:wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
+         * @function module:wcPanel#off
+         * @param {module:wcDocker.EVENT} eventType - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
+         * @param {module:wcDocker~event:onEvent} [handler] - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
          */
         off: function (eventType, handler) {
             if (typeof eventType === 'undefined') {
@@ -1722,6 +1750,7 @@ define('wcDocker/panel',[
 
         /**
          * Triggers an [event]{@link module:wcDocker.EVENT} of a given type to all panels, including itself.
+         * @function module:wcPanel#trigger
          * @param {module:wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
          * @param {Object} [data]             - A custom data object to pass into all handlers.
          */
@@ -1973,6 +2002,12 @@ define('wcDocker/ghost',[
     var Module = dcl(null, {
         declaredClass: 'wcGhost',
         
+        /**
+         * @memberOf module:wcGhost
+         * @param {module:wcDocker~Rect} rect - A rectangle area to begin the ghost highlighting.
+         * @param {module:wcDocker~Coordinate} mouse - The mouse position.
+         * @param {module:wcDocker} docker - The docker object.
+         */
         constructor: function (rect, mouse, docker) {
             this.$ghost = null;
             this._rect;
@@ -1987,12 +2022,16 @@ define('wcDocker/ghost',[
 
             this.__init(rect, mouse);
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // --------------------------------------------------------------------------------
-        // Updates the ghost based on the given screen position.
+        /**
+         * Updates the ghost based on the given screen position.
+         * @function module:wcGhost#update
+         * @param {module:wcDocker~Coordinate} position - The mouse position.
+         */
         update: function (position) {
             this.__move(position);
 
@@ -2025,11 +2064,12 @@ define('wcDocker/ghost',[
             }
         },
 
-        // --------------------------------------------------------------------------------
-        // Get, or Sets the ghost's anchor.
-        // Params:
-        //    mouse     The current mouse position.
-        //    anchor    If supplied, assigns a new anchor.
+        /**
+         * Get, or Sets the ghost's anchor.
+         * @function module:wcGhost#anchor
+         * @param {module:wcDocker~Coordinate} [mouse] - If supplied with the anchor, .
+         * @param {module:wcDocker~Anchor} [anchor] - If supplied, assigns a new anchor.
+         */
         anchor: function (mouse, anchor) {
             if (typeof mouse === 'undefined') {
                 return this._anchor;
@@ -2098,7 +2138,11 @@ define('wcDocker/ghost',[
             }, 150);
         },
 
-        // --------------------------------------------------------------------------------
+        /**
+         * Retrieves the rectangle area of the ghost's anchor.
+         * @function module:wcGhost#rect
+         * @returns {module:wcDocker~AnchorRect} - The rectangle area of the anchor.
+         */
         rect: function () {
             return {
                 x: this.$ghost.offset().left,
@@ -2109,7 +2153,10 @@ define('wcDocker/ghost',[
             };
         },
 
-        // --------------------------------------------------------------------------------
+        /**
+         * Destroys the instance of the ghost.
+         * @function module:wcGhost#destroy
+         */
         destroy: function () {
             this.__destroy();
         },
@@ -2234,13 +2281,15 @@ define('wcDocker/splitter',[
 
             this.docker()._splitterList.push(this);
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Initializes the two [panes]{@link module:wcSplitter#$pane} of the splitter with its own layouts.<br>
          * This should be used to initialize the splitter when creating one for use inside your panel.
-         *
+         * @function module:wcSplitter#initLayouts
          * @param {module:wcDocker.LAYOUT} [topLeftLayout=wcDocker.LAYOUT.TABLE] - The type of layout to use for the top or left pane.
          * @param {module:wcDocker.LAYOUT} [bottomRightLayout=wcDocker.LAYOUT.TABLE] - The type of layout to use for the bottom or right pane.
          */
@@ -2257,7 +2306,7 @@ define('wcDocker/splitter',[
 
         /**
          * Gets, or Sets the orientation of the splitter.
-         *
+         * @function module:wcSplitter#orientation
          * @param {module:wcDocker.ORIENTATION} orientation - The new orientation of the splitter.
          */
         orientation: function (orientation) {
@@ -2291,7 +2340,7 @@ define('wcDocker/splitter',[
 
         /**
          * Gets the minimum size constraint of the outer splitter area.
-         *
+         * @function module:wcSplitter#minSize
          * @returns {module:wcDocker~Size} The minimum size.
          */
         minSize: function () {
@@ -2329,7 +2378,7 @@ define('wcDocker/splitter',[
 
         /**
          * Gets the maximum size constraint of the outer splitter area.
-         *
+         * @function module:wcSplitter#maxSize
          * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
@@ -2367,9 +2416,8 @@ define('wcDocker/splitter',[
 
         /**
          * Get, or Set the current splitter position.
-         *
+         * @function module:wcSplitter#pos
          * @param {Number} [value] - If supplied, assigns a new splitter position. Value must be a percentage value between 0 and 1.
-         *
          * @returns {Number} - The current position.
          */
         pos: function (value) {
@@ -2387,7 +2435,7 @@ define('wcDocker/splitter',[
 
         /**
          * Animates to a given splitter position.
-         *
+         * @function module:wcSplitter#animPos
          * @param {Number} value - Assigns the target splitter position. Value must be a percentage between 0 and 1.
          * @param {module:wcSplitter~onFinished} - A finished event handler.
          */
@@ -2427,11 +2475,10 @@ define('wcDocker/splitter',[
 
         /**
          * Gets, or Sets the element associated with a pane.
-         *
+         * @function module:wcSplitter#pane
          * @param {Number} index - The index of the pane, only 0 and 1 are valid.
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         pane: function (index, item) {
             if (index >= 0 && index < 2) {
@@ -2459,10 +2506,9 @@ define('wcDocker/splitter',[
 
         /**
          * Gets, or Sets the element associated with the left side pane (for horizontal layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#left
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         left: function (item) {
             return this.pane(0, item);
@@ -2470,10 +2516,9 @@ define('wcDocker/splitter',[
 
         /**
          * Gets, or Sets the element associated with the right side pane (for horizontal layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#right
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         right: function (item) {
             return this.pane(1, item);
@@ -2481,10 +2526,9 @@ define('wcDocker/splitter',[
 
         /**
          * Gets, or Sets the element associated with the top pane (for vertical layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#top
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         top: function (item) {
             return this.pane(0, item);
@@ -2492,10 +2536,9 @@ define('wcDocker/splitter',[
 
         /**
          * Gets, or Sets the element associated with the bottom pane (for vertical layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#bottom
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         bottom: function (item) {
             return this.pane(1, item);
@@ -2504,11 +2547,10 @@ define('wcDocker/splitter',[
         /**
          * Gets, or Sets whether a pane can be scrolled via scroll bars.
          * By default, scrolling is enabled in both directions.
-         *
+         * @function module:wcSplitter#scrollable
          * @param {Number} index - The index of the pane, only 0 and 1 are valid.
          * @param {Boolean} [x] - Whether to allow scrolling in the horizontal direction.
          * @param {Boolean} [y] - Whether to allow scrolling in the vertical direction.
-         *
          * @returns {module:wcDocker~Scrollable} - The current scroll state for each direction.
          */
         scrollable: function (index, x, y) {
@@ -2527,7 +2569,7 @@ define('wcDocker/splitter',[
 
         /**
          * Destroys the splitter.
-         *
+         * @function module:wcSplitter#destroy
          * @param {Boolean} [destroyPanes=true] - If true, both panes attached will be destroyed as well. Use false if you plan to continue using the objects assigned to each pane, or make sure to remove them first before destruction.
          */
         destroy: function (destroyPanes) {
@@ -2988,12 +3030,11 @@ define('wcDocker/frame',[
         LEFT_TAB_BUFFER: 15,
 
         /**
-         * @memberOf module:wcFrame
-         * @description
          * <b><i>PRIVATE<i> - Handled internally by [docker]{@link module:wcDocker} and <u>should never be constructed by the user.</u></b>
+         * @memberOf module:wcFrame
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this frame.
-         * @param {module:wcSplitter|wcDocker} parent  - The frames parent object.
-         * @param {Boolean} isFloating          - If true, the frame will be a floating window.
+         * @param {module:wcSplitter|wcDocker} parent - The frames parent object.
+         * @param {Boolean} isFloating - If true, the frame will be a floating window.
          */
         constructor: function (container, parent, isFloating) {
             /**
@@ -3074,11 +3115,10 @@ define('wcDocker/frame',[
 
         /**
          * Gets, or Sets the position of the frame.
-         *
+         * @function module:wcFrame#pos
          * @param {Number} [x]        - If supplied, assigns a new horizontal position.
          * @param {Number} [y]        - If supplied, assigns a new vertical position.
          * @param {Boolean} [pixels]  - If true, the coordinates passed in will be treated as a pixel position rather than a percentage.
-         *
          * @returns {module:wcDocker~Coordinate} - The current position of the frame. If the pixel parameter was true, the position will be in pixels.
          */
         pos: function (x, y, pixels) {
@@ -3104,7 +3144,7 @@ define('wcDocker/frame',[
 
         /**
          * Gets the initially desired size of the panel.
-         *
+         * @function module:wcFrame#initSize
          * @returns {module:wcDocker~Size} - The initially desired size.
          */
         initSize: function () {
@@ -3130,7 +3170,7 @@ define('wcDocker/frame',[
 
         /**
          * Gets the minimum size of the frame.
-         *
+         * @function module:wcFrame#minSize
          * @returns {module:wcDocker~Size} - The minimum size of the frame.
          */
         minSize: function () {
@@ -3148,7 +3188,7 @@ define('wcDocker/frame',[
 
         /**
          * Gets the maximum size of the frame.
-         *
+         * @function module:wcFrame#maxSize
          * @returns {module:wcDocker~Size} - The maximum size of the frame.
          */
         maxSize: function () {
@@ -3167,9 +3207,8 @@ define('wcDocker/frame',[
         /**
          * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the frame.
          * @version 3.0.0
-         *
+         * @function module:wcFrame#tabOrientation
          * @param {module:wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
-         *
          * @returns {module:wcDocker.TAB} - The current orientation.
          */
         tabOrientation: function (orientation) {
@@ -3187,7 +3226,7 @@ define('wcDocker/frame',[
 
         /**
          * Adds a given panel as a new tab item to the frame.
-         *
+         * @function module:wcFrame#addPanel
          * @param {module:wcPanel} panel         - The panel to add.
          * @param {Number} [index]        - Insert index.
          */
@@ -3215,9 +3254,8 @@ define('wcDocker/frame',[
 
         /**
          * Removes a given panel from the frame.
-         *
+         * @function module:wcFrame#removePanel
          * @param {module:wcPanel} panel - The panel to remove.
-         *
          * @returns {Boolean} - True if any panels still remain after the removal.
          */
         removePanel: function (panel) {
@@ -3253,6 +3291,7 @@ define('wcDocker/frame',[
 
         /**
          * Gets, or Sets the currently visible panel.
+         * @function module:wcFrame#panel
          * @param {Number} [tabIndex] - If supplied, sets the current panel index.
          * @param {Boolean} [autoFocus] - If true, this tab will be focused (brought to front).
          * @returns {module:wcPanel} - The currently visible panel.
@@ -3289,7 +3328,7 @@ define('wcDocker/frame',[
 
         /**
          * Gets whether this frame is inside a collapser.
-         *
+         * @function module:wcFrame#isCollapser
          * @returns {Boolean} - Whether this frame is inside a collapser.
          */
         isCollapser: function () {
@@ -3298,7 +3337,7 @@ define('wcDocker/frame',[
 
         /**
          * Collapses the frame, if it is a collapser.
-         *
+         * @function module:wcFrame#collapse
          * @param {Boolean} [instant] - If true, collapses without animating.
          */
         collapse: function (instant) {
@@ -3311,6 +3350,7 @@ define('wcDocker/frame',[
 
         /**
          * Expands the frame, if it is a collapser.
+         * @function module:wcFrame#expand
          */
         expand: function () {
             if (this.isCollapser()) {
@@ -3322,7 +3362,7 @@ define('wcDocker/frame',[
 
         /**
          * Gets whether the frame is expanded, if it is a collapser.
-         *
+         * @function module:wcFrame#isExpanded
          * @returns {Boolean|undefined} - The current expanded state, or undefined if it is not a collapser.
          */
         isExpanded: function () {
@@ -4213,10 +4253,10 @@ define('wcDocker/drawer',[
         declaredClass: 'wcDrawer',
 
         /**
-         *
+         * @memberOf module:wcDrawer
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
-         * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
-         * @param {module:wcDocker.DOCK} position      - A docking position to place this drawer.
+         * @param {wcSplitter|wcDocker} parent - The drawer's parent object.
+         * @param {module:wcDocker.DOCK} position - A docking position to place this drawer.
          */
         constructor:function (container, parent, position) {
             this.$container = $(container);
@@ -4232,11 +4272,14 @@ define('wcDocker/drawer',[
 
             this.__init();
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Collapses the drawer to its respective side wall.
+         * @function module:wcDrawer#collapse
          */
         collapse: function (instant) {
             if (this._expanded) {
@@ -4296,6 +4339,7 @@ define('wcDocker/drawer',[
 
         /**
          * Expands the drawer.
+         * @function module:wcDrawer#expand
          */
         expand: function () {
             if (!this._expanded) {
@@ -4330,7 +4374,7 @@ define('wcDocker/drawer',[
 
         /**
          * Gets whether the drawer is expanded.
-         *
+         * @function module:wcDrawer#isExpanded
          * @returns {Boolean} - The current expanded state.
          */
         isExpanded: function () {
@@ -4339,7 +4383,7 @@ define('wcDocker/drawer',[
 
         /**
          * The minimum size constraint for the drawer area.
-         *
+         * @function module:wcDrawer#minSize
          * @returns {module:wcDocker~Size} - The minimum size.
          */
         minSize: function () {
@@ -4356,7 +4400,7 @@ define('wcDocker/drawer',[
 
         /**
          * The maximum size constraint for the drawer area.
-         *
+         * @function module:wcDrawer#maxSize
          * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
@@ -4381,6 +4425,7 @@ define('wcDocker/drawer',[
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         __init: function () {
             this.$frame = $('<div class="wcCollapserFrame">');
             this.__container(this.$container);
@@ -4481,8 +4526,6 @@ define('wcDocker/drawer',[
         }
     });
 
-    // window['wcDrawer'] = Module;
-
     return Module;
 });
 /** @module wcCollapser */
@@ -4529,6 +4572,7 @@ define('wcDocker/collapser',[
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         /**
          * Collapses the drawer to its respective side wall.
+         * @function module:wcCollapser#collapse
          */
         collapse: function (instant) {
             this._drawer.collapse();
@@ -4536,6 +4580,7 @@ define('wcDocker/collapser',[
 
         /**
          * Expands the drawer.
+         * @function module:wcCollapser#expand
          */
         expand: function () {
             this._drawer.expand();
@@ -4543,7 +4588,7 @@ define('wcDocker/collapser',[
 
         /**
          * Gets whether the drawer is expanded.
-         *
+         * @function module:wcCollapser#isExpanded
          * @returns {Boolean} - The current expanded state.
          */
         isExpanded: function () {
@@ -4552,7 +4597,7 @@ define('wcDocker/collapser',[
 
         /**
          * The minimum size constraint for the side bar area.
-         *
+         * @function module:wcCollapser#minSize
          * @returns {module:wcDocker~Size} - The minimum size.
          */
         minSize: function () {
@@ -4561,7 +4606,7 @@ define('wcDocker/collapser',[
 
         /**
          * The maximum size constraint for the side bar area.
-         *
+         * @function module:wcCollapser#maxSize
          * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
@@ -4671,8 +4716,6 @@ define('wcDocker/collapser',[
         }
     });
 
-    // window['wcCollapser'] = Module;
-
     return Module;
 
 });
@@ -4693,7 +4736,6 @@ define('wcDocker/layout',[
 
         /**
          * @memberOf module:wcLayout
-         * @description
          * <b><i>PRIVATE</i> - <u>This should never be constructed directly by the user</u></b>
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this layout.
          * @param {wcLayout|wcSplitter|wcDocker} parent - The layout's parent object.
@@ -4723,7 +4765,7 @@ define('wcDocker/layout',[
 
         /**
          * Adds an item into the layout, appending it to the main element.
-         *
+         * @function module:wcLayout#addItem
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
          */
         addItem: function (item) {
@@ -4731,8 +4773,8 @@ define('wcDocker/layout',[
         },
 
         /**
-         * Clears the contents of the layout and squashes all rows
-         * and columns from the grid.
+         * Clears the contents of the layout and squashes all rows and columns from the grid.
+         * @function module:wcLayout#clear
          */
         clear: function () {
             // Should be implemented by a sub-class.
@@ -4740,6 +4782,7 @@ define('wcDocker/layout',[
 
         /**
          * Retrieves the main element.
+         * @function module:wcLayout#scene
          * @returns {external:jQuery~Object} - The div item that makes this layout scene.
          */
         scene: function () {
@@ -5119,7 +5162,7 @@ define('wcDocker/layoutsimple',[
 
         /**
          * Adds an item into the layout, appending it to the main element.
-         *
+         * @function module:wcLayoutSimple#addItem
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
          */
         addItem: function (item) {
@@ -5127,8 +5170,8 @@ define('wcDocker/layoutsimple',[
         },
 
         /**
-         * Clears the contents of the layout and squashes all rows
-         * and columns from the grid.
+         * Clears the contents of the layout and squashes all rows and columns from the grid.
+         * @function module:wcLayoutSimple#clear
          */
         clear: function () {
             this.$elem.remove();
@@ -5177,13 +5220,12 @@ define('wcDocker/layouttable',[
 
         /**
          * Adds an item into the layout, expanding the grid size if necessary.
-         *
+         * @function module:wcLayoutTable#addItem
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
          * @param {Number} [x=0] - The horizontal grid position to place the element.
          * @param {Number} [y=0] - The vertical grid position to place the element.
          * @param {Number} [w=1] - The number of horizontal cells this item will take within the grid.
          * @param {Number} [h=1] - The number of vertical cells this item will take within the grid.
-         *
          * @returns {module:wcLayoutTable~tableItem|Boolean} The table data element of the cell that contains the item, or false if there was a problem.
          */
         addItem: function (item, x, y, w, h) {
@@ -5215,10 +5257,9 @@ define('wcDocker/layouttable',[
          * Retrieves the table item at a given grid position, if it exists.
          * Note, if an item spans multiple cells, only the top-left most
          * cell will actually contain the table item.
-         *
+         * @function module:wcLayoutTable#item
          * @param {Number} x - The horizontal grid position.
          * @param {Number} y - The vertical grid position.
-         *
          * @returns {module:wcLayoutTable~tableItem|Boolean} - The table item, or false if none was found.
          */
         item: function (x, y) {
@@ -5244,10 +5285,8 @@ define('wcDocker/layouttable',[
              * convenient methods for cell alteration and supports chaining. Its purpose is
              * to remove the need to alter &lt;tr&gt; and &lt;td&gt; elements of the table directly.
              * @version 3.0.0
-             *
              * @example myPanel.addItem(domNode).css('text-align', 'right').css('border', '1px solid black').stretch('100%', '100%');
-             *
-             * @typedef module:wcLayoutTable~tableItem
+             * @typedef module:wcLayoutTable#tableItem
              * @property {jQuery~Object} $ - If you truely need the table cell [jQuery object]{@link jQuery~Object}, here it is.
              * @property {module:wcLayoutTable~tableItem_css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
              * @property {module:wcLayoutTable~tableItem_stretch} stretch - More reliable method for setting the table item width/height values.
@@ -5260,11 +5299,9 @@ define('wcDocker/layouttable',[
                  * A wrapper for [jQuery's css]{@link http://api.jquery.com/css/} function.
                  * <b>Note:</b> It is recommended that you use [stretch]{@link wcLayoutTable~stretch} if you intend to alter width or height styles.
                  * @version 3.0.0
-                 *
-                 * @function module:wcLayoutTable~tableItem_css
+                 * @function module:wcLayoutTable#tableItem_css
                  * @param {String} style - The style attribute to alter.
                  * @param {String} [value] - The value of the attribute. If omitted, the current value of the attribute is returned instead of the [tableItem]{@link module:wcLayoutTable~tableItem} instance.
-                 *
                  * @returns {module:wcLayoutTable~tableItem|String} - Self, for chaining, unless the value parameter was omitted.
                  */
                 css: function (style, value) {
@@ -5283,11 +5320,9 @@ define('wcDocker/layouttable',[
                  * Sets the stretch amount for the current table item. This is more reliable than
                  * assigning width and height style attributes directly on the table item.
                  * @version 3.0.0
-                 *
-                 * @function module:wcLayoutTable~tableItem_stretch
+                 * @function module:wcLayoutTable#tableItem_stretch
                  * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
                  * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
-                 *
                  * @returns {module:wcLayoutTable~tableItem} - Self, for chaining.
                  */
                 stretch: function (width, height) {
@@ -5302,12 +5337,11 @@ define('wcDocker/layouttable',[
          * Sets the stretch amount for a given table item. This is more reliable than
          * assigning width and height style attributes directly on the table item.
          * @version 3.0.0
-         *
+         * @function module:wcLayoutTable#itemStretch
          * @param {Number} x - The horizontal grid position.
          * @param {Number} y - The vertical grid position.
          * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
-         *
          * @returns {Boolean} - Success or failure. A failure generally means your grid position was a merged grid cell.
          */
         itemStretch: function (x, y, sx, sy) {
@@ -5337,8 +5371,8 @@ define('wcDocker/layouttable',[
         },
 
         /**
-         * Clears the contents of the layout and squashes all rows
-         * and columns from the grid.
+         * Clears the contents of the layout and squashes all rows and columns from the grid.
+         * @function module:wcLayoutTable#clear
          */
         clear: function () {
             var showGrid = this.showGrid();
@@ -5359,13 +5393,16 @@ define('wcDocker/layouttable',[
          * Begins a batch operation.  Basically it refrains from constructing
          * the layout grid, which causes a reflow, on each item added.  Instead,
          * The grid is only generated at the end once [wcLayoutTable.finishBatch]{@link wcLayoutTable#finishBatch} is called.
+         * @function module:wcLayoutTable#startBatch
          */
         startBatch: function () {
             this._batchProcess = true;
         },
 
         /**
-         * Ends a batch operation. See [wcLayoutTable.startBatch]{@link wcLayoutTable#startBatch} for more information.
+         * Ends a batch operation.
+         * @See module:wcLayoutTable#startBatch
+         * @function module:wcLayoutTable#finishBatch
          */
         finishBatch: function () {
             this._batchProcess = false;
@@ -5374,9 +5411,8 @@ define('wcDocker/layouttable',[
 
         /**
          * Gets, or Sets whether the layout grid cells should draw an outline.
-         *
+         * @function module:wcLayoutTable#showGrid
          * @param {Boolean} [enabled] - If supplied, will set the grid cell border visibility.
-         *
          * @returns {Boolean} - The current visibility state of the grid cells.
          */
         showGrid: function (enabled) {
@@ -5389,9 +5425,8 @@ define('wcDocker/layouttable',[
 
         /**
          * Gets, or Sets the spacing between cell borders.
-         *
+         * @function module:wcLayoutTable#gridSpacing
          * @param {Number} [size] - If supplied, sets the pixel size of the spacing between cells.
-         *
          * @returns {Number} - The current cell spacing in pixels.
          */
         gridSpacing: function (size) {
@@ -5404,9 +5439,8 @@ define('wcDocker/layouttable',[
 
         /**
          * Gets, or Sets whether the table rows alternate in color based on the theme.
-         *
+         * @function module:wcLayoutTable#gridAlternate
          * @params {Boolean} [enabled] - If supplied, will set whether the grid alternates in color.
-         *
          * @returns {Boolean} - Whether the grid alternates in color.
          */
         gridAlternate: function (enabled) {
@@ -5559,7 +5593,6 @@ define('wcDocker/tabframe',[
         constructor: function(container, parent) {
             /**
              * The outer container element of the widget.
-             *
              * @member {external:jQuery~Object}
              */
             this.$container = $(container);
@@ -5588,8 +5621,10 @@ define('wcDocker/tabframe',[
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Manually update the contents of this tab frame.
+         * @function module:wcTabFrame#update
          */
         update: function () {
             var scrollTop = this.$center.scrollTop();
@@ -5599,6 +5634,7 @@ define('wcDocker/tabframe',[
 
         /**
          * Destroys the widget.
+         * @function module:wcTabFrame#destroy
          */
         destroy: function () {
             this.__destroy();
@@ -5607,7 +5643,7 @@ define('wcDocker/tabframe',[
         /**
          * Gets the total number of tabs in this frame.
          * @version 3.0.0
-         *
+         * @function module:wcTabFrame#tabCount
          * @returns {Number}
          */
         tabCount: function () {
@@ -5617,9 +5653,8 @@ define('wcDocker/tabframe',[
         /**
          * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the tab frame.
          * @version 3.0.0
-         *
+         * @function module:wcTabFrame#tabOrientation
          * @param {module:wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
-         *
          * @returns {module:wcDocker.TAB} - The current orientation.
          */
         tabOrientation: function (orientation) {
@@ -5637,11 +5672,10 @@ define('wcDocker/tabframe',[
 
         /**
          * Adds a new tabbed page into the widget.
-         *
-         * @param {String} name    - The name of the new tab page.
+         * @function module:wcTabFrame#addTab
+         * @param {String} name - The name of the new tab page.
          * @param {Number} [index] - If supplied and above -1, will insert the new tab page at the given tab index, otherwise the new tab is appended to the end.
          * @param {module:wcDocker.LAYOUT} [layout] - If supplied, will set the type of layout to use for this tab.
-         *
          * @returns {module:wcLayoutSimple|wcLayoutTable} - The layout of the newly created tab page.
          */
         addTab: function (name, index, layout) {
@@ -5676,9 +5710,8 @@ define('wcDocker/tabframe',[
 
         /**
          * Removes a tab page from the widget.
-         *
+         * @function module:wcTabFrame#removeTab
          * @param {Number} index - The tab page index to remove.
-         *
          * @returns {Boolean} - Success or failure.
          */
         removeTab: function (index) {
@@ -5704,10 +5737,9 @@ define('wcDocker/tabframe',[
 
         /**
          * Gets, or Sets the currently visible tab page.
-         *
+         * @function module:wcTabFrame#tab
          * @param {Number} [index] - If supplied, sets the current tab page index.
          * @param {Boolean} [scrollTo] - If true, will auto scroll the tab bar until the selected tab is visible.
-         *
          * @returns {Number} - The index of the currently visible tab page.
          */
         tab: function (index, scrollTo) {
@@ -5730,9 +5762,8 @@ define('wcDocker/tabframe',[
 
         /**
          * Retrieves the layout for a given tab page.
-         *
+         * @function module:wcTabFrame#layout
          * @param {Number} index - The tab page index to retrieve.
-         *
          * @returns {module:wcLayoutSimple|wcLayoutTable|Boolean} - The layout of the found tab page, or false.
          */
         layout: function (index) {
@@ -5744,10 +5775,9 @@ define('wcDocker/tabframe',[
 
         /**
          * Moves a tab page from a given index to another index.
-         *
+         * @function module:wcTabFrame#moveTab
          * @param {Number} fromIndex - The current tab page index to move from.
-         * @param {Number} toIndex   - The new tab page index to move to.
-         *
+         * @param {Number} toIndex - The new tab page index to move to.
          * @returns {external:jQuery~Object} - The new element of the moved tab, or false if an error occurred.
          */
         moveTab: function (fromIndex, toIndex) {
@@ -5770,9 +5800,8 @@ define('wcDocker/tabframe',[
 
         /**
          * Gets, or Sets whether the tabs can be reordered by the user.
-         *
+         * @function module:wcTabFrame#moveable
          * @param {Boolean} [moveable] - If supplied, assigns whether tab pages can be reordered.
-         *
          * @returns {Boolean} - Whether tab pages are currently moveable.
          */
         moveable: function (moveable) {
@@ -5784,10 +5813,9 @@ define('wcDocker/tabframe',[
 
         /**
          * Gets, or Sets whether a tab can be closed (removed) by the user.
-         *
-         * @param {Number} index        - The index of the tab page.
+         * @function module:wcTabFrame#closeable
+         * @param {Number} index - The index of the tab page.
          * @param {Boolean} [closeable] - If supplied, assigns whether the tab page can be closed.
-         *
          * @returns {Boolean} - Whether the tab page can be closed.
          */
         closeable: function (index, closeable) {
@@ -5805,11 +5833,10 @@ define('wcDocker/tabframe',[
 
         /**
          * Gets, or Sets whether a tab page area is scrollable.
-         *
-         * @param {Number} index  - The index of the tab page.
-         * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
-         * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
-         *
+         * @function module:wcTabFrame#scrollable
+         * @param {Number} index - The index of the tab page.
+         * @param {Boolean} [x] - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+         * @param {Boolean} [y] - If supplied, assigns whether the tab page is scrollable in the vertical direction.
          * @returns {module:wcDocker~Scrollable} - The current scrollable status of the tab page.
          */
         scrollable: function (index, x, y) {
@@ -5841,10 +5868,9 @@ define('wcDocker/tabframe',[
         /**
          * Gets, or Sets whether overflow on a tab area is visible.<br>
          * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
-         *
-         * @param {Number} index        - The index of the tab page.
-         * @param {Boolean} [visible]   - If supplied, assigns whether overflow is visible.
-         *
+         * @function module:wcTabFrame#overflowVisible
+         * @param {Number} index - The index of the tab page.
+         * @param {Boolean} [visible] - If supplied, assigns whether overflow is visible.
          * @returns {Boolean} - The current overflow visiblity status of the tab page.
          */
         overflowVisible: function (index, visible) {
@@ -5863,11 +5889,10 @@ define('wcDocker/tabframe',[
         /**
          * Gets, or Sets whether the tab frame should fit to its contents.
          * @version 3.0.0
-         *
-         * @param {Number} index  - The index of the tab page.
-         * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
-         * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
-         *
+         * @function module:wcTabFrame#fitContents
+         * @param {Number} index - The index of the tab page.
+         * @param {Boolean} [x] - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+         * @param {Boolean} [y] - If supplied, assigns whether the tab page is scrollable in the vertical direction.
          * @returns {module:wcDocker~FitContents} - The current scrollable status of the tab page.
          */
         fitContents: function (index, x, y) {
@@ -5905,9 +5930,9 @@ define('wcDocker/tabframe',[
 
         /**
          * Sets the icon for a tab item.
-         *
-         * @param {Number} index  - The index of the tab item.
-         * @param {String} icon   - A CSS class name that represents the icon.
+         * @function module:wcTabFrame#icon
+         * @param {Number} index - The index of the tab item.
+         * @param {String} icon - A CSS class name that represents the icon.
          */
         icon: function (index, icon) {
             if (index > -1 && index < this._layoutList.length) {
@@ -5924,9 +5949,9 @@ define('wcDocker/tabframe',[
 
         /**
          * Sets the icon for a tab item using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
-         *
-         * @param {Number} index  - The index of the tab item.
-         * @param {String} icon   - A [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} icon name (without the 'fa fa-' prefix).
+         * @function module:wcTabFrame#faicon
+         * @param {Number} index - The index of the tab item.
+         * @param {String} icon - A [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} icon name (without the 'fa fa-' prefix).
          */
         faicon: function (index, icon) {
             if (index > -1 && index < this._layoutList.length) {
@@ -6406,6 +6431,7 @@ define('wcDocker/docker',[
 
             this.__init();
         },
+        
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6413,6 +6439,7 @@ define('wcDocker/docker',[
         /**
          * Gets, or Sets the path where all theme files can be found.
          * "Themes" is the default folder path.
+         * @function module:wcDocker#themePath
          * @param {String} path - If supplied, will set the path where all themes can be found.
          * @returns {String} - The currently assigned path.
          */
@@ -6425,6 +6452,7 @@ define('wcDocker/docker',[
 
         /**
          * Gets, or Sets the current theme used by docker.
+         * @function module:wcDocker#theme
          * @param {String} themeName - If supplied, will activate a theme with the given name.
          * @returns {String} - The currently active theme.
          */
@@ -6455,6 +6483,7 @@ define('wcDocker/docker',[
 
         /**
          * Retrieves whether panel collapsers are enabled.
+         * @function module:wcDocker#isCollapseEnabled
          * @version 3.0.0
          * @returns {Boolean} - Collapsers are enabled.
          */
@@ -6464,10 +6493,11 @@ define('wcDocker/docker',[
 
         /**
          * Registers a new docking panel type to be used later.
+         * @function module:wcDocker#registerPanelType
          * @version 3.0.0
-         * @param {String} name                       - The name identifier for the new panel type.
-         * @param {module:wcDocker~registerOptions} options  - An options object for describing the panel type.
-         * @param {Boolean} [isPrivate]               - <b>DEPRECATED:</b> Use [options.isPrivate]{@link wcDocker~registerOptions} instead.
+         * @param {String} name - The name identifier for the new panel type.
+         * @param {module:wcDocker~registerOptions} options  An options object for describing the panel type.
+         * @param {Boolean} [isPrivate] - <b>DEPRECATED:</b> Use [options.isPrivate]{@link wcDocker~registerOptions} instead.
          * @returns {Boolean} - Success or failure. Failure usually indicates the type name already exists.
          */
         registerPanelType: function (name, optionsOrCreateFunc, isPrivate) {
@@ -6507,6 +6537,7 @@ define('wcDocker/docker',[
 
         /**
          * Retrieves a list of all currently registered panel types.
+         * @function module:wcDocker#panelTypes
          * @param {Boolean} includePrivate - If true, panels registered as private will also be included with this list.
          * @returns {String[]} - A list of panel type names.
          */
@@ -6522,6 +6553,7 @@ define('wcDocker/docker',[
 
         /**
          * Retrieves the options data associated with a given panel type when it was registered.
+         * @function module:wcDocker#panelTypeInfo
          * @param {String} typeName - The name identifier of the panel.
          * @returns {module:wcDocker~registerOptions} - Registered options of the panel type, or false if the panel was not found.
          */
@@ -6533,13 +6565,15 @@ define('wcDocker/docker',[
             }
             return false;
         },
+
         /**
          * Add a new docked panel to the docker instance.<br>
          * <b>Note:</b> It is best to use {@link wcDocker.COLLAPSED} after you have added your other docked panels, as it may ensure proper placement.
-         * @param {String} typeName                           - The name identifier of the panel to create.
-         * @param {module:wcDocker.DOCK} location                    - The docking location to place this panel.
-         * @param {module:wcPanel|module:wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
-         * @param {module:wcDocker~PanelOptions} [options]           - Other options for panel placement.
+         * @function module:wcDocker#addPanel
+         * @param {String} typeName - The name identifier of the panel to create.
+         * @param {module:wcDocker.DOCK} location - The docking location to place this panel.
+         * @param {module:wcPanel|module:wcDocker.COLLAPSED} [targetPanel] - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
+         * @param {module:wcDocker~PanelOptions} [options] - Other options for panel placement.
          * @returns {module:wcPanel|Boolean} - The newly created panel object, or false if no panel was created.
          */
         addPanel: function (typeName, location, targetPanel, options) {
@@ -6589,6 +6623,7 @@ define('wcDocker/docker',[
 
         /**
          * Removes a docked panel from the window.
+         * @function module:wcDocker#removePanel
          * @param {module:wcPanel} panel - The panel to remove.
          * @param {Boolean} dontDestroy - If true, the panel itself will not be destroyed.
          * @returns {Boolean} - Success or failure.
@@ -6709,10 +6744,11 @@ define('wcDocker/docker',[
 
         /**
          * Moves a docking panel from its current location to another.
-         * @param {module:wcPanel} panel                             - The panel to move.
-         * @param {module:wcDocker.DOCK} location                    - The new docking location of the panel.
-         * @param {module:wcPanel|wcDocker.COLLAPSED} [targetPanel]  - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
-         * @param {module:wcDocker~PanelOptions} [options]           - Other options for panel placement.
+         * @function module:wcDocker#movePanel
+         * @param {module:wcPanel} panel - The panel to move.
+         * @param {module:wcDocker.DOCK} location - The new docking location of the panel.
+         * @param {module:wcPanel|wcDocker.COLLAPSED} [targetPanel] - A target panel to dock relative to, or use {@link wcDocker.COLLAPSED} to collapse it to the side or bottom.
+         * @param {module:wcDocker~PanelOptions} [options] - Other options for panel placement.
          * @returns {module:wcPanel|Boolean} - The panel that was created, or false on failure.
          */
         movePanel: function (panel, location, targetPanel, options) {
@@ -6864,6 +6900,7 @@ define('wcDocker/docker',[
 
         /**
          * Finds all instances of a given panel type.
+         * @function module:wcDocker#findPanels
          * @param {String} [typeName] - The name identifier for the panel. If not supplied, all panels are retrieved.
          * @returns {module:wcPanel[]} - A list of all panels found of the given type.
          */
@@ -6884,6 +6921,7 @@ define('wcDocker/docker',[
 
         /**
          * Shows the loading screen.
+         * @function module:wcDocker#startLoading
          * @param {String} [label] - An optional label to display.
          * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
          * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
@@ -6923,6 +6961,7 @@ define('wcDocker/docker',[
 
         /**
          * Hides the loading screen.
+         * @function module:wcDocker#finishLoading
          * @param {Number} [fadeDuration=0] - The fade out duration for the loading screen.
          */
         finishLoading: function (fadeDuration) {
@@ -6942,6 +6981,7 @@ define('wcDocker/docker',[
 
         /**
          * Registers a global [event]{@link wcDocker.EVENT}.
+         * @function module:wcDocker#on
          * @param {module:wcDocker.EVENT} eventType        - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
          * @param {module:wcDocker~event:onEvent} handler  - A handler function to be called for the event.
          * @returns {Boolean} Success or failure that the event has been registered.
@@ -6965,6 +7005,7 @@ define('wcDocker/docker',[
 
         /**
          * Unregisters a global [event]{@link wcDocker.EVENT}.
+         * @function module:wcDocker#off
          * @param {module:wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
          * @param {module:wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
          */
@@ -6989,6 +7030,7 @@ define('wcDocker/docker',[
 
         /**
          * Trigger an [event]{@link wcDocker.EVENT} on all panels.
+         * @function module:wcDocker#trigger
          * @fires wcDocker~event:onEvent
          * @param {module:wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
          * @param {Object} [data]             - A custom data object to be passed along with the event.
@@ -7015,6 +7057,7 @@ define('wcDocker/docker',[
          *
          * If you wish to use a more complex context menu, you can use
          * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
+         * @function module:wcDocker#basicMenu
          * @deprecated Renamed to [wcDocker.menu}{@link wcDocker#menu}.
          * @param {external:jQuery~selector} selector                               - A selector string that designates the elements who use this menu.
          * @param {external:jQuery#contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
@@ -7031,6 +7074,7 @@ define('wcDocker/docker',[
          *
          * If you wish to use a more complex context menu, you can use
          * [jQuery.contextMenu]{@link http://medialize.github.io/jQuery-contextMenu/docs.html} directly.
+         * @function module:wcDocker#menu
          * @param {external:jQuery~selector} selector                               - A selector string that designates the elements who use this menu.
          * @param {external:jQuery#contextMenu~item[]|Function} itemListOrBuildFunc - An array with each context menu item in it, or a function to call that returns one.
          * @param {Boolean} includeDefault                                          - If true, all default menu options will be included.
@@ -7365,6 +7409,7 @@ define('wcDocker/docker',[
          * Bypasses the next context menu event.
          * Use this during a mouse up event in which you do not want the
          * context menu to appear when it normally would have.
+         * @function module:wcDocker#bypassMenu
          */
         bypassMenu: function () {
             if (this._menuTimer) {
@@ -7389,6 +7434,7 @@ define('wcDocker/docker',[
         /**
          * Saves the current panel configuration into a serialized
          * string that can be used later to restore it.
+         * @function module:wcDocker#save
          * @returns {String} - A serialized string that describes the current panel configuration.
          */
         save: function () {
@@ -7419,6 +7465,7 @@ define('wcDocker/docker',[
 
         /**
          * Restores a previously saved configuration.
+         * @function module:wcDocker#restore
          * @param {String} dataString - A previously saved serialized string, See [wcDocker.save]{@link wcDocker#save}.
          */
         restore: function (dataString) {
@@ -7457,6 +7504,7 @@ define('wcDocker/docker',[
 
         /**
          * Clears all contents from the docker instance.
+         * @function module:wcDocker#clear
          */
         clear: function () {
             this._root = null;
@@ -9103,9 +9151,10 @@ define('wcDocker/iframe',[
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Opens a given URL address into the iFrame.
-         *
+         * @function module:wcIFrame#openURL
          * @param {String} url - The full, or relative, path to the page.
          */
         openURL: function (url) {
@@ -9133,7 +9182,7 @@ define('wcDocker/iframe',[
 
         /**
          * Populates the iFrame with the given HTML source code using the document to write data.
-         *
+         * @function module:wcIFrame#openHTML
          * @param {String} html - The HTML source code.
          */
         openHTML: function (html) {
@@ -9166,7 +9215,7 @@ define('wcDocker/iframe',[
         /**
          * Populates the iFrame with the given HTML source code using the srcdoc attribute.
          * @version 3.0.0
-         *
+         * @function module:wcIFrame#openSRC
          * @param {String} html - The HTML source code.
          */
         openSRC: function (html) {
@@ -9195,6 +9244,7 @@ define('wcDocker/iframe',[
 
         /**
          * Registers an event handler when the contents of this iFrame has loaded.
+         * @function module:wcIFrame#onLoaded
          * @param {Function} onLoadedFunc - A function to call when the iFrame has loaded.
          */
         onLoaded: function(onLoadedFunc) {
@@ -9203,6 +9253,7 @@ define('wcDocker/iframe',[
 
         /**
          * Registers an event handler when the iFrame has been closed.
+         * @function module:wcIFrame#onClosed
          * @param {Function} onClosedFunc - A function to call when the iFrame has closed.
          */
         onClosed: function(onClosedFunc) {
@@ -9211,6 +9262,7 @@ define('wcDocker/iframe',[
 
         /**
          * Allows the iFrame to be visible when the panel is visible.
+         * @function module:wcIFrame#show
          */
         show: function () {
             if (this.$frame) {
@@ -9220,6 +9272,7 @@ define('wcDocker/iframe',[
 
         /**
          * Forces the iFrame to be hidden, regardless of whether the panel is visible.
+         * @function module:wcIFrame#hide
          */
         hide: function () {
             if (this.$frame) {
@@ -9229,7 +9282,7 @@ define('wcDocker/iframe',[
 
         /**
          * Retrieves the window object from the iFrame element.
-         *
+         * @function module:wcIFrame#window
          * @returns {Object} - The window object.
          */
         window: function () {
@@ -9239,6 +9292,7 @@ define('wcDocker/iframe',[
         /**
          * Destroys the iFrame element and clears all references.<br>
          * <b>Note:</b> This is automatically called when the owner panel is destroyed.
+         * @function module:wcIFrame#destroy
          */
         destroy: function () {
             // Remove all registered events.
@@ -9255,7 +9309,6 @@ define('wcDocker/iframe',[
             this.$frame = null;
             this.$focus = null;
         },
-
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Private Functions

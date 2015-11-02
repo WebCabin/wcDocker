@@ -34,7 +34,7 @@
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-wcDocker.html#~event:onEvent">wcDocker~event:onEvent</a></li>
+					<li><a href="module-wcDocker.html#event:onEvent">wcDocker#event:onEvent</a></li>
 				</ul>
 			</li>
 			
@@ -73,7 +73,7 @@
 	<article>
 		<pre
 			class="sunlight-highlight-javascript linenums">/**
- * Options for a [docker]{@link wcDocker} instance.
+ * Options for a [docker]{@link module:wcDocker} instance.
  * 
  * @typedef {Object} module:wcDocker~Options
  * @property {String} [themePath='Themes'] - A folder path where all docker theme files can be found.
@@ -101,7 +101,6 @@
 
 /**
  * A rectangle structure.
- *
  * @typedef {Object} module:wcDocker~Rect
  * @property {Number|String} [x] - X coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [y] - Y coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
@@ -110,8 +109,17 @@
  */
 
 /**
+ * A rectangle structure.
+ * @typedef {Object} module:wcDocker~AnchorRect
+ * @property {Number|String} [x] - X coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [y] - Y coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [w] - Width of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {Number|String} [h] - Height of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.
+ * @property {module:wcDocker.TAB} [tabOrientation] - Desired orientation of tab widgets.
+ */
+
+/**
  * A bounding structure
- *
  * @typedef {Object} module:wcDocker~Bounds
  * @property {Number} top - The upper, or top bound (percentage value between 0 and 1).
  * @property {Number} bottom - The lower, or bottom bound (percentage value between 0 and 1).
@@ -121,7 +129,6 @@
 
 /**
  * A coordinate structure.
- *
  * @typedef {Object} module:wcDocker~Coordinate
  * @property {Number} x - X coordinate.
  * @property {Number} y - Y coordinate.
@@ -129,19 +136,20 @@
 
 /**
  * A 2D size structure.
- *
  * @typedef {Object} module:wcDocker~Size
  * @property {Number} x - Width.
  * @property {Number} y - Height.
  */
 
 /**
+ * Determines whether the container will allow scroll bars to appear on each axis.
  * @typedef {Object} module:wcDocker~Scrollable
  * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
  * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
  */
 
 /**
+ * Determines whether the container should fit the size of its contents instead of scroll for each axis.
  * @typedef {Object} module:wcDocker~FitContents
  * @property {Boolean} x - Whether scrolling is enabled in the horizontal direction.
  * @property {Boolean} y - Whether scrolling is enabled in the vertical direction.
@@ -149,18 +157,16 @@
 
  /**
  * Options for adding a new panel.
- *
  * @typedef {Object} module:wcDocker~PanelOptions
  * @property {Number|String} [x] - X coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [y] - Y coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [w] - Desired width of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
  * @property {Number|String} [h] - Desired height of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
- * @property {module:wcDocker.TAB} [tabOrientation] - Desired position of tab widgets when using [wcDocker.DOCK.STACKED]{@link wcDocker.DOCK}. &lt;b>Not supported on IE8 or below.&lt;/b>
+ * @property {module:wcDocker.TAB} [tabOrientation] - Desired position of tab widgets when using [wcDocker.DOCK.STACKED]{@link module:wcDocker.DOCK}. &lt;b>Not supported on IE8 or below.&lt;/b>
  */
 
 /**
  * Options object for registering new panel types.
- * 
  * @typedef module:wcDocker~registerOptions
  * @property {module:wcDocker~onCreatePanel} onCreate  - A function or an object constructor for the panel.
  * @property {module:wcDocker.LAYOUT} [layout=wcDocker.LAYOUT.TABLE] - If supplied, overrides the default layout used for this panel.
@@ -175,19 +181,31 @@
 
  /**
  * A function or an object constructor for the panel. This function is called using the 'new' operator.
- *
  * @callback module:wcDocker~onCreatePanel
  * @param {module:wcPanel} panel - The panel being constructed.
- * @param {module:wcPanel~options} [options] - An options object passed in from [wcDocker.registerPanelType]{@link wcDocker#registerPanelType}'s options.options parameter.
+ * @param {module:wcPanel~options} [options] - An options object passed in from [wcDocker.registerPanelType()]{@link module:wcDocker#registerPanelType}'s options.options parameter.
  */
 
 /**
- * An event handler callback. Each is registered to a event type using the [wcDocker.on]{@link wcDocker~on} or [wcPanel.on]{@link wcPanel~on} functions.
- *
- * @event module:wcDocker~onEvent
+ * An event handler callback. Each is registered to a event type using the [wcDocker.on()]{@link module:wcDocker#on} or [wcPanel.on()]{@link module:wcPanel~on} functions.
+ * @event module:wcDocker#onEvent
  * @type {Function}
  * @param {module:wcPanel|NULL} panel - The panel invoking the event, or NULL if global.
  * @param {Object} [data] - A data object passed by the invoker.
+ */
+
+/**
+ * Anchor data.
+ * @typedef {Object} module:wcDocker~Anchor
+ * @property {Boolean} self - Whether the anchor is hovering over the moving panel.
+ * @property {module:wcDocker.DOCK} loc - The location of the anchor on the panel.
+ * @property {module:wcLayout} item - The panel layout being hovered over.
+ * @property {module:wcDocker.TAB} tab - The tab location.
+ * @property {}
+ * @property {Number} [x] - X coordinate of the anchor.
+ * @property {Number} [y] - Y coordinate of the anchor.
+ * @property {Number} [w] - Width of the anchor.
+ * @property {Number} [h] - Height of the anchor.
  */
 
 </pre>
@@ -216,7 +234,7 @@
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2015-11-01 using the <a
+			on 2015-11-02 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

@@ -58,9 +58,10 @@ define([
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Opens a given URL address into the iFrame.
-         *
+         * @function module:wcIFrame#openURL
          * @param {String} url - The full, or relative, path to the page.
          */
         openURL: function (url) {
@@ -88,7 +89,7 @@ define([
 
         /**
          * Populates the iFrame with the given HTML source code using the document to write data.
-         *
+         * @function module:wcIFrame#openHTML
          * @param {String} html - The HTML source code.
          */
         openHTML: function (html) {
@@ -121,7 +122,7 @@ define([
         /**
          * Populates the iFrame with the given HTML source code using the srcdoc attribute.
          * @version 3.0.0
-         *
+         * @function module:wcIFrame#openSRC
          * @param {String} html - The HTML source code.
          */
         openSRC: function (html) {
@@ -150,6 +151,7 @@ define([
 
         /**
          * Registers an event handler when the contents of this iFrame has loaded.
+         * @function module:wcIFrame#onLoaded
          * @param {Function} onLoadedFunc - A function to call when the iFrame has loaded.
          */
         onLoaded: function(onLoadedFunc) {
@@ -158,6 +160,7 @@ define([
 
         /**
          * Registers an event handler when the iFrame has been closed.
+         * @function module:wcIFrame#onClosed
          * @param {Function} onClosedFunc - A function to call when the iFrame has closed.
          */
         onClosed: function(onClosedFunc) {
@@ -166,6 +169,7 @@ define([
 
         /**
          * Allows the iFrame to be visible when the panel is visible.
+         * @function module:wcIFrame#show
          */
         show: function () {
             if (this.$frame) {
@@ -175,6 +179,7 @@ define([
 
         /**
          * Forces the iFrame to be hidden, regardless of whether the panel is visible.
+         * @function module:wcIFrame#hide
          */
         hide: function () {
             if (this.$frame) {
@@ -184,7 +189,7 @@ define([
 
         /**
          * Retrieves the window object from the iFrame element.
-         *
+         * @function module:wcIFrame#window
          * @returns {Object} - The window object.
          */
         window: function () {
@@ -194,6 +199,7 @@ define([
         /**
          * Destroys the iFrame element and clears all references.<br>
          * <b>Note:</b> This is automatically called when the owner panel is destroyed.
+         * @function module:wcIFrame#destroy
          */
         destroy: function () {
             // Remove all registered events.
@@ -210,7 +216,6 @@ define([
             this.$frame = null;
             this.$focus = null;
         },
-
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Private Functions

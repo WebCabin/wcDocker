@@ -48,13 +48,15 @@ define([
 
             this.docker()._splitterList.push(this);
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Initializes the two [panes]{@link module:wcSplitter#$pane} of the splitter with its own layouts.<br>
          * This should be used to initialize the splitter when creating one for use inside your panel.
-         *
+         * @function module:wcSplitter#initLayouts
          * @param {module:wcDocker.LAYOUT} [topLeftLayout=wcDocker.LAYOUT.TABLE] - The type of layout to use for the top or left pane.
          * @param {module:wcDocker.LAYOUT} [bottomRightLayout=wcDocker.LAYOUT.TABLE] - The type of layout to use for the bottom or right pane.
          */
@@ -71,7 +73,7 @@ define([
 
         /**
          * Gets, or Sets the orientation of the splitter.
-         *
+         * @function module:wcSplitter#orientation
          * @param {module:wcDocker.ORIENTATION} orientation - The new orientation of the splitter.
          */
         orientation: function (orientation) {
@@ -105,7 +107,7 @@ define([
 
         /**
          * Gets the minimum size constraint of the outer splitter area.
-         *
+         * @function module:wcSplitter#minSize
          * @returns {module:wcDocker~Size} The minimum size.
          */
         minSize: function () {
@@ -143,7 +145,7 @@ define([
 
         /**
          * Gets the maximum size constraint of the outer splitter area.
-         *
+         * @function module:wcSplitter#maxSize
          * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
@@ -181,9 +183,8 @@ define([
 
         /**
          * Get, or Set the current splitter position.
-         *
+         * @function module:wcSplitter#pos
          * @param {Number} [value] - If supplied, assigns a new splitter position. Value must be a percentage value between 0 and 1.
-         *
          * @returns {Number} - The current position.
          */
         pos: function (value) {
@@ -201,7 +202,7 @@ define([
 
         /**
          * Animates to a given splitter position.
-         *
+         * @function module:wcSplitter#animPos
          * @param {Number} value - Assigns the target splitter position. Value must be a percentage between 0 and 1.
          * @param {module:wcSplitter~onFinished} - A finished event handler.
          */
@@ -241,11 +242,10 @@ define([
 
         /**
          * Gets, or Sets the element associated with a pane.
-         *
+         * @function module:wcSplitter#pane
          * @param {Number} index - The index of the pane, only 0 and 1 are valid.
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         pane: function (index, item) {
             if (index >= 0 && index < 2) {
@@ -273,10 +273,9 @@ define([
 
         /**
          * Gets, or Sets the element associated with the left side pane (for horizontal layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#left
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         left: function (item) {
             return this.pane(0, item);
@@ -284,10 +283,9 @@ define([
 
         /**
          * Gets, or Sets the element associated with the right side pane (for horizontal layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#right
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         right: function (item) {
             return this.pane(1, item);
@@ -295,10 +293,9 @@ define([
 
         /**
          * Gets, or Sets the element associated with the top pane (for vertical layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#top
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         top: function (item) {
             return this.pane(0, item);
@@ -306,10 +303,9 @@ define([
 
         /**
          * Gets, or Sets the element associated with the bottom pane (for vertical layouts).
-         *
-         * @param {module:wcLayout|wcPanel|wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
-         *
-         * @returns {module:wcLayout|wcPanel|wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
+         * @function module:wcSplitter#bottom
+         * @param {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter} [item] - If supplied, the pane will be replaced with this item.
+         * @returns {module:wcLayout|module:wcPanel|module:wcFrame|wcSplitter|Boolean} - The current object assigned to the pane, or false.
          */
         bottom: function (item) {
             return this.pane(1, item);
@@ -318,11 +314,10 @@ define([
         /**
          * Gets, or Sets whether a pane can be scrolled via scroll bars.
          * By default, scrolling is enabled in both directions.
-         *
+         * @function module:wcSplitter#scrollable
          * @param {Number} index - The index of the pane, only 0 and 1 are valid.
          * @param {Boolean} [x] - Whether to allow scrolling in the horizontal direction.
          * @param {Boolean} [y] - Whether to allow scrolling in the vertical direction.
-         *
          * @returns {module:wcDocker~Scrollable} - The current scroll state for each direction.
          */
         scrollable: function (index, x, y) {
@@ -341,7 +336,7 @@ define([
 
         /**
          * Destroys the splitter.
-         *
+         * @function module:wcSplitter#destroy
          * @param {Boolean} [destroyPanes=true] - If true, both panes attached will be destroyed as well. Use false if you plan to continue using the objects assigned to each pane, or make sure to remove them first before destruction.
          */
         destroy: function (destroyPanes) {

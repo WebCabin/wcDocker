@@ -17,10 +17,10 @@ define([
         declaredClass: 'wcDrawer',
 
         /**
-         *
+         * @memberOf module:wcDrawer
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} container - A container element for this drawer.
-         * @param {wcSplitter|wcDocker} parent  - The drawer's parent object.
-         * @param {module:wcDocker.DOCK} position      - A docking position to place this drawer.
+         * @param {wcSplitter|wcDocker} parent - The drawer's parent object.
+         * @param {module:wcDocker.DOCK} position - A docking position to place this drawer.
          */
         constructor:function (container, parent, position) {
             this.$container = $(container);
@@ -36,11 +36,14 @@ define([
 
             this.__init();
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Collapses the drawer to its respective side wall.
+         * @function module:wcDrawer#collapse
          */
         collapse: function (instant) {
             if (this._expanded) {
@@ -100,6 +103,7 @@ define([
 
         /**
          * Expands the drawer.
+         * @function module:wcDrawer#expand
          */
         expand: function () {
             if (!this._expanded) {
@@ -134,7 +138,7 @@ define([
 
         /**
          * Gets whether the drawer is expanded.
-         *
+         * @function module:wcDrawer#isExpanded
          * @returns {Boolean} - The current expanded state.
          */
         isExpanded: function () {
@@ -143,7 +147,7 @@ define([
 
         /**
          * The minimum size constraint for the drawer area.
-         *
+         * @function module:wcDrawer#minSize
          * @returns {module:wcDocker~Size} - The minimum size.
          */
         minSize: function () {
@@ -160,7 +164,7 @@ define([
 
         /**
          * The maximum size constraint for the drawer area.
-         *
+         * @function module:wcDrawer#maxSize
          * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
@@ -185,6 +189,7 @@ define([
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         __init: function () {
             this.$frame = $('<div class="wcCollapserFrame">');
             this.__container(this.$container);
@@ -284,8 +289,6 @@ define([
             this._parent = null;
         }
     });
-
-    // window['wcDrawer'] = Module;
 
     return Module;
 });

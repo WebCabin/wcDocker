@@ -5,8 +5,8 @@ define([], function () {
 
     /**
      * Enumerated Docking positions.
-     * @memberOf module:wcDocker
      * @version 3.0.0
+     * @memberOf module:wcDocker
      * @enum {String} module:wcDocker.DOCK
      */
     wcDocker.DOCK = {
@@ -33,16 +33,16 @@ define([], function () {
      * @enum {String} module:wcDocker.LAYOUT
      */
     wcDocker.LAYOUT = {
-        /** Contains a single div item without management using a {@link wcLayoutSimple}, it is up to you to populate it however you wish. */
+        /** Contains a single div item without management using a {@link module:wcLayoutSimple}, it is up to you to populate it however you wish. */
         SIMPLE: 'wcLayoutSimple',
-        /** Manages a table grid layout using {@link wcLayoutTable}, this is the default layout used if none is specified. **/
+        /** Manages a table grid layout using {@link module:wcLayoutTable}, this is the default layout used if none is specified. **/
         TABLE: 'wcLayoutTable'
     };
 
     /**
      * Enumerated Internal events
-     * @memberOf module:wcDocker
      * @version 3.0.0
+     * @memberOf module:wcDocker
      * @enum {String} module:wcDocker.EVENT
      */
     wcDocker.EVENT = {
@@ -71,7 +71,7 @@ define([], function () {
         PERSISTENT_CLOSED: 'panelPersistentClosed',
         /** When a persistent panel is being shown */
         PERSISTENT_OPENED: 'panelPersistentOpened',
-        /** When a custom button is clicked, See [wcPanel.addButton]{@link wcPanel#addButton} */
+        /** When a custom button is clicked, See [wcPanel.addButton]{@link module:wcPanel~addButton} */
         BUTTON: 'panelButton',
         /** When the panel has moved from floating to a docked position */
         ATTACHED: 'panelAttached',
@@ -111,13 +111,13 @@ define([], function () {
         ORDER_CHANGED: 'panelOrderChanged',
         /** When the contents of the panel has been scrolled */
         SCROLLED: 'panelScrolled',
-        /** When the layout is being saved, See [wcDocker.save]{@link wcDocker#save} */
+        /** When the layout is being saved, See [wcDocker.save]{@link module:wcDocker#save} */
         SAVE_LAYOUT: 'layoutSave',
-        /** When the layout is being restored, See [wcDocker.restore]{@link wcDocker#restore} */
+        /** When the layout is being restored, See [wcDocker.restore]{@link module:wcDocker#restore} */
         RESTORE_LAYOUT: 'layoutRestore',
-        /** When the current tab on a custom tab widget associated with this panel has changed, See {@link wcTabFrame} */
+        /** When the current tab on a custom tab widget associated with this panel has changed, See {@link module:wcTabFrame} */
         CUSTOM_TAB_CHANGED: 'customTabChanged',
-        /** When a tab has been closed on a custom tab widget associated with this panel, See {@link wcTabFrame} */
+        /** When a tab has been closed on a custom tab widget associated with this panel, See {@link module:wcTabFrame} */
         CUSTOM_TAB_CLOSED: 'customTabClosed'
     };
 
@@ -130,8 +130,8 @@ define([], function () {
     wcDocker.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
 
     /**
-     * Used when [adding]{@link wcDocker#addPanel} or [moving]{@link wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
-     * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
+     * Used when [adding]{@link module:wcDocker#addPanel} or [moving]{@link module:wcDocker#movePanel} a panel to designate the target location as collapsed.<br>
+     * Must be used with [docking]{@link module:wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
      * @memberOf module:wcDocker
      * @constant {String} module:wcDocker.COLLAPSED
      */

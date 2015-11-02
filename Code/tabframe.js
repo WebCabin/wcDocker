@@ -22,7 +22,6 @@ define([
         constructor: function(container, parent) {
             /**
              * The outer container element of the widget.
-             *
              * @member {external:jQuery~Object}
              */
             this.$container = $(container);
@@ -51,8 +50,10 @@ define([
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Manually update the contents of this tab frame.
+         * @function module:wcTabFrame#update
          */
         update: function () {
             var scrollTop = this.$center.scrollTop();
@@ -62,6 +63,7 @@ define([
 
         /**
          * Destroys the widget.
+         * @function module:wcTabFrame#destroy
          */
         destroy: function () {
             this.__destroy();
@@ -70,7 +72,7 @@ define([
         /**
          * Gets the total number of tabs in this frame.
          * @version 3.0.0
-         *
+         * @function module:wcTabFrame#tabCount
          * @returns {Number}
          */
         tabCount: function () {
@@ -80,9 +82,8 @@ define([
         /**
          * Gets, or Sets the tab orientation for the frame. This puts the tabbed widgets visually on any side of the tab frame.
          * @version 3.0.0
-         *
+         * @function module:wcTabFrame#tabOrientation
          * @param {module:wcDocker.TAB} [orientation] - Assigns the orientation of the tab items displayed.
-         *
          * @returns {module:wcDocker.TAB} - The current orientation.
          */
         tabOrientation: function (orientation) {
@@ -100,11 +101,10 @@ define([
 
         /**
          * Adds a new tabbed page into the widget.
-         *
-         * @param {String} name    - The name of the new tab page.
+         * @function module:wcTabFrame#addTab
+         * @param {String} name - The name of the new tab page.
          * @param {Number} [index] - If supplied and above -1, will insert the new tab page at the given tab index, otherwise the new tab is appended to the end.
          * @param {module:wcDocker.LAYOUT} [layout] - If supplied, will set the type of layout to use for this tab.
-         *
          * @returns {module:wcLayoutSimple|wcLayoutTable} - The layout of the newly created tab page.
          */
         addTab: function (name, index, layout) {
@@ -139,9 +139,8 @@ define([
 
         /**
          * Removes a tab page from the widget.
-         *
+         * @function module:wcTabFrame#removeTab
          * @param {Number} index - The tab page index to remove.
-         *
          * @returns {Boolean} - Success or failure.
          */
         removeTab: function (index) {
@@ -167,10 +166,9 @@ define([
 
         /**
          * Gets, or Sets the currently visible tab page.
-         *
+         * @function module:wcTabFrame#tab
          * @param {Number} [index] - If supplied, sets the current tab page index.
          * @param {Boolean} [scrollTo] - If true, will auto scroll the tab bar until the selected tab is visible.
-         *
          * @returns {Number} - The index of the currently visible tab page.
          */
         tab: function (index, scrollTo) {
@@ -193,9 +191,8 @@ define([
 
         /**
          * Retrieves the layout for a given tab page.
-         *
+         * @function module:wcTabFrame#layout
          * @param {Number} index - The tab page index to retrieve.
-         *
          * @returns {module:wcLayoutSimple|wcLayoutTable|Boolean} - The layout of the found tab page, or false.
          */
         layout: function (index) {
@@ -207,10 +204,9 @@ define([
 
         /**
          * Moves a tab page from a given index to another index.
-         *
+         * @function module:wcTabFrame#moveTab
          * @param {Number} fromIndex - The current tab page index to move from.
-         * @param {Number} toIndex   - The new tab page index to move to.
-         *
+         * @param {Number} toIndex - The new tab page index to move to.
          * @returns {external:jQuery~Object} - The new element of the moved tab, or false if an error occurred.
          */
         moveTab: function (fromIndex, toIndex) {
@@ -233,9 +229,8 @@ define([
 
         /**
          * Gets, or Sets whether the tabs can be reordered by the user.
-         *
+         * @function module:wcTabFrame#moveable
          * @param {Boolean} [moveable] - If supplied, assigns whether tab pages can be reordered.
-         *
          * @returns {Boolean} - Whether tab pages are currently moveable.
          */
         moveable: function (moveable) {
@@ -247,10 +242,9 @@ define([
 
         /**
          * Gets, or Sets whether a tab can be closed (removed) by the user.
-         *
-         * @param {Number} index        - The index of the tab page.
+         * @function module:wcTabFrame#closeable
+         * @param {Number} index - The index of the tab page.
          * @param {Boolean} [closeable] - If supplied, assigns whether the tab page can be closed.
-         *
          * @returns {Boolean} - Whether the tab page can be closed.
          */
         closeable: function (index, closeable) {
@@ -268,11 +262,10 @@ define([
 
         /**
          * Gets, or Sets whether a tab page area is scrollable.
-         *
-         * @param {Number} index  - The index of the tab page.
-         * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
-         * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
-         *
+         * @function module:wcTabFrame#scrollable
+         * @param {Number} index - The index of the tab page.
+         * @param {Boolean} [x] - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+         * @param {Boolean} [y] - If supplied, assigns whether the tab page is scrollable in the vertical direction.
          * @returns {module:wcDocker~Scrollable} - The current scrollable status of the tab page.
          */
         scrollable: function (index, x, y) {
@@ -304,10 +297,9 @@ define([
         /**
          * Gets, or Sets whether overflow on a tab area is visible.<br>
          * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
-         *
-         * @param {Number} index        - The index of the tab page.
-         * @param {Boolean} [visible]   - If supplied, assigns whether overflow is visible.
-         *
+         * @function module:wcTabFrame#overflowVisible
+         * @param {Number} index - The index of the tab page.
+         * @param {Boolean} [visible] - If supplied, assigns whether overflow is visible.
          * @returns {Boolean} - The current overflow visiblity status of the tab page.
          */
         overflowVisible: function (index, visible) {
@@ -326,11 +318,10 @@ define([
         /**
          * Gets, or Sets whether the tab frame should fit to its contents.
          * @version 3.0.0
-         *
-         * @param {Number} index  - The index of the tab page.
-         * @param {Boolean} [x]   - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
-         * @param {Boolean} [y]   - If supplied, assigns whether the tab page is scrollable in the vertical direction.
-         *
+         * @function module:wcTabFrame#fitContents
+         * @param {Number} index - The index of the tab page.
+         * @param {Boolean} [x] - If supplied, assigns whether the tab page is scrollable in the horizontal direction.
+         * @param {Boolean} [y] - If supplied, assigns whether the tab page is scrollable in the vertical direction.
          * @returns {module:wcDocker~FitContents} - The current scrollable status of the tab page.
          */
         fitContents: function (index, x, y) {
@@ -368,9 +359,9 @@ define([
 
         /**
          * Sets the icon for a tab item.
-         *
-         * @param {Number} index  - The index of the tab item.
-         * @param {String} icon   - A CSS class name that represents the icon.
+         * @function module:wcTabFrame#icon
+         * @param {Number} index - The index of the tab item.
+         * @param {String} icon - A CSS class name that represents the icon.
          */
         icon: function (index, icon) {
             if (index > -1 && index < this._layoutList.length) {
@@ -387,9 +378,9 @@ define([
 
         /**
          * Sets the icon for a tab item using the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
-         *
-         * @param {Number} index  - The index of the tab item.
-         * @param {String} icon   - A [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} icon name (without the 'fa fa-' prefix).
+         * @function module:wcTabFrame#faicon
+         * @param {Number} index - The index of the tab item.
+         * @param {String} icon - A [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} icon name (without the 'fa fa-' prefix).
          */
         faicon: function (index, icon) {
             if (index > -1 && index < this._layoutList.length) {

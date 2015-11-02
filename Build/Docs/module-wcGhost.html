@@ -34,7 +34,7 @@
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-wcDocker.html#~event:onEvent">wcDocker~event:onEvent</a></li>
+					<li><a href="module-wcDocker.html#event:onEvent">wcDocker#event:onEvent</a></li>
 				</ul>
 			</li>
 			
@@ -150,6 +150,728 @@
     
 
     
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".constructor"><toc class="small"><i>static</i></toc><toc> </toc>function <toc><b>constructor</b>(rect, mouse, docker)</toc>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>rect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcDocker.html#~Rect">module:wcDocker~Rect</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A rectangle area to begin the ghost highlighting.</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>mouse</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcDocker.html#~Coordinate">module:wcDocker~Coordinate</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The mouse position.</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>docker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcDocker.html">module:wcDocker</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The docker object.</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="ghost.js.html">ghost.js</a>,
+     <a href="ghost.js.html#sunlight-1-line-20">line 20</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ghost.js.html">ghost.js</a>,
+				 <a href="ghost.js.html#sunlight-1-line-20">line 20</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="anchor"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>anchor</b>(<span class="optional">mouse</span>, <span class="optional">anchor</span>)</toc>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Get, or Sets the ghost's anchor.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>mouse</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcDocker.html#~Coordinate">module:wcDocker~Coordinate</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If supplied with the anchor, .</td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>anchor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcDocker.html#~Anchor">module:wcDocker~Anchor</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If supplied, assigns a new anchor.</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="ghost.js.html">ghost.js</a>,
+     <a href="ghost.js.html#sunlight-1-line-76">line 76</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ghost.js.html">ghost.js</a>,
+				 <a href="ghost.js.html#sunlight-1-line-76">line 76</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="destroy"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>destroy</b>()</toc>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Destroys the instance of the ghost.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="ghost.js.html">ghost.js</a>,
+     <a href="ghost.js.html#sunlight-1-line-165">line 165</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ghost.js.html">ghost.js</a>,
+				 <a href="ghost.js.html#sunlight-1-line-165">line 165</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="rect"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>rect</b>()</toc>
+        
+        >
+        
+        <i><small>
+<span class="param-type"><a href="module-wcDocker.html#~AnchorRect">module:wcDocker~AnchorRect</a></span>
+
+</small></i>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Retrieves the rectangle area of the ghost's anchor.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+<h5>Returns: 
+<span class="param-type"><a href="module-wcDocker.html#~AnchorRect">module:wcDocker~AnchorRect</a></span>
+
+</h5>
+    
+            <p class="param-desc" style="margin-left: 20px;">
+    
+		 The rectangle area of the anchor.
+	</p>
+
+        
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="ghost.js.html">ghost.js</a>,
+     <a href="ghost.js.html#sunlight-1-line-150">line 150</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ghost.js.html">ghost.js</a>,
+				 <a href="ghost.js.html#sunlight-1-line-150">line 150</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="update"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>update</b>(position)</toc>
+        
+    </h4>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p style="margin-left: 20px;">Updates the ghost based on the given screen position.</p>
+    </div>
+    
+
+    
+
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcDocker.html#~Coordinate">module:wcDocker~Coordinate</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The mouse position.</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:
+    <a href="ghost.js.html">ghost.js</a>,
+     <a href="ghost.js.html#sunlight-1-line-39">line 39</a>
+  </dt>
+<!-- 	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ghost.js.html">ghost.js</a>,
+				 <a href="ghost.js.html#sunlight-1-line-39">line 39</a>
+			</li>
+		</ul>
+	</dd> -->
+	
+
+	
+
+	
+
+	
+</dl>
+
+</dd>
+
+        </dl>
+    
 
     
 
@@ -183,7 +905,7 @@
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2015-11-01 using the <a
+			on 2015-11-02 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>

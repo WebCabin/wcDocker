@@ -42,6 +42,7 @@ define([
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         /**
          * Collapses the drawer to its respective side wall.
+         * @function module:wcCollapser#collapse
          */
         collapse: function (instant) {
             this._drawer.collapse();
@@ -49,6 +50,7 @@ define([
 
         /**
          * Expands the drawer.
+         * @function module:wcCollapser#expand
          */
         expand: function () {
             this._drawer.expand();
@@ -56,7 +58,7 @@ define([
 
         /**
          * Gets whether the drawer is expanded.
-         *
+         * @function module:wcCollapser#isExpanded
          * @returns {Boolean} - The current expanded state.
          */
         isExpanded: function () {
@@ -65,7 +67,7 @@ define([
 
         /**
          * The minimum size constraint for the side bar area.
-         *
+         * @function module:wcCollapser#minSize
          * @returns {module:wcDocker~Size} - The minimum size.
          */
         minSize: function () {
@@ -74,7 +76,7 @@ define([
 
         /**
          * The maximum size constraint for the side bar area.
-         *
+         * @function module:wcCollapser#maxSize
          * @returns {module:wcDocker~Size} - The maximum size.
          */
         maxSize: function () {
@@ -183,8 +185,6 @@ define([
             this._parent = null;
         }
     });
-
-    // window['wcCollapser'] = Module;
 
     return Module;
 

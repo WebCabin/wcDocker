@@ -11,6 +11,12 @@ define([
     var Module = dcl(null, {
         declaredClass: 'wcGhost',
         
+        /**
+         * @memberOf module:wcGhost
+         * @param {module:wcDocker~Rect} rect - A rectangle area to begin the ghost highlighting.
+         * @param {module:wcDocker~Coordinate} mouse - The mouse position.
+         * @param {module:wcDocker} docker - The docker object.
+         */
         constructor: function (rect, mouse, docker) {
             this.$ghost = null;
             this._rect;
@@ -25,12 +31,16 @@ define([
 
             this.__init(rect, mouse);
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // --------------------------------------------------------------------------------
-        // Updates the ghost based on the given screen position.
+        /**
+         * Updates the ghost based on the given screen position.
+         * @function module:wcGhost#update
+         * @param {module:wcDocker~Coordinate} position - The mouse position.
+         */
         update: function (position) {
             this.__move(position);
 
@@ -63,11 +73,12 @@ define([
             }
         },
 
-        // --------------------------------------------------------------------------------
-        // Get, or Sets the ghost's anchor.
-        // Params:
-        //    mouse     The current mouse position.
-        //    anchor    If supplied, assigns a new anchor.
+        /**
+         * Get, or Sets the ghost's anchor.
+         * @function module:wcGhost#anchor
+         * @param {module:wcDocker~Coordinate} [mouse] - If supplied with the anchor, .
+         * @param {module:wcDocker~Anchor} [anchor] - If supplied, assigns a new anchor.
+         */
         anchor: function (mouse, anchor) {
             if (typeof mouse === 'undefined') {
                 return this._anchor;
@@ -136,7 +147,11 @@ define([
             }, 150);
         },
 
-        // --------------------------------------------------------------------------------
+        /**
+         * Retrieves the rectangle area of the ghost's anchor.
+         * @function module:wcGhost#rect
+         * @returns {module:wcDocker~AnchorRect} - The rectangle area of the anchor.
+         */
         rect: function () {
             return {
                 x: this.$ghost.offset().left,
@@ -147,7 +162,10 @@ define([
             };
         },
 
-        // --------------------------------------------------------------------------------
+        /**
+         * Destroys the instance of the ghost.
+         * @function module:wcGhost#destroy
+         */
         destroy: function () {
             this.__destroy();
         },

@@ -47,5 +47,5 @@
  * @callback external:jQuery#contextMenu~onSelect
  * @param {String} key              - The triggered menu key.
  * @param {Object} opts             - Menu event object.
- * @param {wcPanel|Boolean} panel   - The target panel, if one exists.
+ * @param {module:wcPanel|Boolean} panel   - The target panel, if one exists.
  */

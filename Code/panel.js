@@ -15,11 +15,10 @@ define([
 
         /**
          * @memberOf module:wcPanel
-         * @description
          * <b><i>PRIVATE</i> - Use [wcDocker.addPanel]{@link module:wcDocker#addPanel}, [wcDocker.removePanel]{@link module:wcDocker#removePanel}, and
          * [wcDocker.movePanel]{@link module:wcDocker#movePanel} to manage panels, <u>this should never be constructed directly
          * by the user.</u></b>
-         * @param {module:base} parent - The parent.
+         * @param {module:wcBase} parent - The parent.
          * @param {String} type - The name identifier for the panel.
          * @param {module:wcPanel~options} [options] - An options object passed from registration of the panel.
          */
@@ -122,12 +121,15 @@ define([
 
             this.__init();
         },
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Gets, or Sets the title for this panel.
          * Titles appear in the tab widget associated with the panel.
+         * @function module:wcPanel#title
          * @param {String|Boolean} title - If supplied, sets the new title (this can be html text). If false, the title bar will be removed.
          * @returns {String|Boolean} - The current title.
          */
@@ -156,8 +158,9 @@ define([
         /**
          * Retrieves the registration info of the panel as declared from
          * [wcDocker.registerPanelType]{@link module:wcDocker#registerPanelType};
-         * See [wcDocker.panelTypeInfo]{@link module:wcDocker#panelTypeInfo}.
+         * @function module:wcPanel#info
          * @returns {module:wcDocker~registerOptions} - Registered options of the panel type.
+         * @see [wcDocker.panelTypeInfo]{@link module:wcDocker#panelTypeInfo}.
          */
         info: function () {
             return this.docker().panelTypeInfo(this._type);
@@ -165,6 +168,7 @@ define([
 
         /**
          * Retrieves the layout instance.
+         * @function module:wcPanel#layout
          * @returns {module:wcLayoutSimple|wcLayoutTable} - The layout instance.
          */
         layout: function () {
@@ -172,8 +176,8 @@ define([
         },
 
         /**
-         * Brings this panel into focus. If it is floating, it will be moved to the front
-         * of all other panels.
+         * Brings this panel into focus. If it is floating, it will be moved to the front of all other panels.
+         * @function module:wcPanel#focus
          * @param {Boolean} [flash] - If true, in addition to bringing the panel into focus, it will also flash for the user.
          */
         focus: function (flash) {
@@ -191,13 +195,14 @@ define([
 
         /**
          * @callback wcPanel~CollapseDirection
-         * @see wcPanel#collapseDirection
+         * @see module:wcPanel#collapseDirection
          * @param {module:wcDocker~Bounds} bounds - The bounds of this panel relative to the wcDocker container.
          * @returns {module:wcDocker.DOCK} - A collapse direction to use, must only be LEFT, RIGHT, or BOTTOM
          */
 
         /**
          * Gets, or Sets the collapse direction for this panel.
+         * @function module:wcPanel#collapseDirection
          * @param {module:wcPanel~CollapseDirection|wcDocker.DOCK} direction - The collapse direction to use for this panel.<br>If this value is omitted, the default collapse direction will be used.
          */
         collapseDirection: function (direction) {
@@ -206,6 +211,7 @@ define([
 
         /**
          * Retrieves whether this panel can be seen by the user.
+         * @function module:wcPanel#isVisible
          * @returns {Boolean} - Visibility state.
          */
         isVisible: function () {
@@ -214,6 +220,7 @@ define([
 
         /**
          * Retrieves whether this panel is floating.
+         * @function module:wcPanel#isFloating
          * @returns {Boolean}
          */
         isFloating: function () {
@@ -225,6 +232,7 @@ define([
 
         /**
          * Retrieves whether this panel is in focus.
+         * @function module:wcPanel#isInFocus
          * @return {Boolean}
          */
         isInFocus: function () {
@@ -237,6 +245,7 @@ define([
 
         /**
          * Creates a new custom button that will appear in the title bar when the panel is active.
+         * @function module:wcPanel#addButton
          * @param {String} name               - The name of the button, to identify it later.
          * @param {String} className          - A CSS class name to apply to the button.
          * @param {String} text               - Text to apply to the button.
@@ -262,6 +271,7 @@ define([
 
         /**
          * Removes a custom button from the panel.
+         * @function module:wcPanel#removeButton
          * @param {String} name - The name identifier for the button to remove.
          * @returns {Boolean} - Success or failure.
          */
@@ -286,7 +296,8 @@ define([
         /**
          * Gets, or Sets the current toggle state of a custom button that was
          * added using [wcPanel.addButton]{@link module:wcPanel#addButton}.
-         * @param {String} name           - The name identifier of the button.
+         * @function module:wcPanel#buttonState
+         * @param {String} name - The name identifier of the button.
          * @param {Boolean} [toggleState] - If supplied, will assign a new toggle state to the button.
          * @returns {Boolean} - The current toggle state of the button.
          */
@@ -312,6 +323,7 @@ define([
 
         /**
          * Gets, or Sets the default position of the panel if it is floating. <b>Warning: after the panel has been initialized, this value no longer reflects the current position of the panel.</b>
+         * @function module:wcPanel#initPos
          * @param {Number|String} [x] - If supplied, sets the horizontal position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the vertical position of the floating panel. Can be a percentage position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Coordinate} - The current default position of the panel.
@@ -339,6 +351,7 @@ define([
 
         /**
          * Gets, or Sets the desired size of the panel. <b>Warning: after the panel has been initialized, this value no longer reflects the current size of the panel.</b>
+         * @function module:wcPanel#initSize
          * @param {Number|String} [x] - If supplied, sets the desired initial horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired initial vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Size} - The current initial size of the panel.
@@ -365,6 +378,7 @@ define([
 
         /**
          * Gets, or Sets the minimum size constraint of the panel.
+         * @function module:wcPanel#minSize
          * @param {Number|String} [x] - If supplied, sets the desired minimum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired minimum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Size} - The current minimum size.
@@ -391,6 +405,7 @@ define([
 
         /**
          * Gets, or Sets the maximum size constraint of the panel.
+         * @function module:wcPanel#maxSize
          * @param {Number|String} [x] - If supplied, sets the desired maximum horizontal size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [y] - If supplied, sets the desired maximum vertical size of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @returns {module:wcDocker~Size} - The current maximum size.
@@ -417,6 +432,7 @@ define([
 
         /**
          * Retrieves the width of the panel contents.
+         * @function module:wcPanel#width
          * @returns {Number} - Panel width.
          */
         width: function () {
@@ -428,6 +444,7 @@ define([
 
         /**
          * Retrieves the height of the panel contents.
+         * @function module:wcPanel#height
          * @returns {Number} - Panel height.
          */
         height: function () {
@@ -438,8 +455,9 @@ define([
         },
 
         /**
-         * Sets the icon for the panel, shown in the panels tab widget.
-         * Must be a css class name that contains the icon.
+         * Sets the icon for the panel, shown in the panels tab widget. Must be a css class name that contains the icon.
+         * @function module:wcPanel#icon
+         * @param {String} icon - The icon class name.
          */
         icon: function (icon) {
             if (!this.$icon) {
@@ -458,6 +476,8 @@ define([
         /**
          * Sets the icon for the panel, shown in the panels tab widget,
          * to an icon defined from the [Font-Awesome]{@link http://fortawesome.github.io/Font-Awesome/} library.
+         * @function module:wcPanel#faicon
+         * @param {String} icon - The font-awesome icon name.
          */
         faicon: function (icon) {
             if (!this.$icon) {
@@ -475,6 +495,7 @@ define([
 
         /**
          * Gets, or Sets whether the window is scrollable.
+         * @function module:wcPanel#scrollable
          * @param {Boolean} [x] - If supplied, assigns whether the window is scrollable in the horizontal direction.
          * @param {Boolean} [y] - If supplied, assigns whether the window is scrollable in the vertical direction.
          * @returns {module:wcDocker~Scrollable} - The current scrollable status.
@@ -490,6 +511,7 @@ define([
 
         /**
          * Gets, or Sets the scroll position of the panel's contents if it is scrollable; See [wcPanel.scrollable]{@link module:wcPanel#scrollable}).
+         * @function module:wcPanel#scroll
          * @param {Number} [x]        - If supplied, sets the scroll horizontal position of the panel.
          * @param {Number} [y]        - If supplied, sets the scroll vertical position of the panel.
          * @param {Number} [duration] - If supplied, will animate the scroll movement with the supplied duration (in milliseconds).
@@ -521,6 +543,7 @@ define([
         /**
          * Gets, or Sets whether this panel can be collapsed to the side or bottom.<br>
          * This only works if the collapse feature is enabled {@link module:wcDocker~Options}.
+         * @function module:wcPanel#collapsible
          * @param {Boolean} [enabled] - If supplied, assigns whether collapsing is enabled.
          * @returns {Boolean} - The current collapsible enabled state.
          */
@@ -535,6 +558,7 @@ define([
         /**
          * Gets, or Sets whether overflow on this panel is visible.
          * Use this if a child element within this panel is intended to 'popup' and be visible outside of its parent area.
+         * @function module:wcPanel#overflowVisible
          * @param {Boolean} [visible] - If supplied, assigns whether overflow is visible.
          * @returns {Boolean} - The current overflow visibility.
          */
@@ -549,6 +573,7 @@ define([
         /**
          * Gets, or Sets whether the contents of the panel are visible on resize.
          * Use this if the panel has extremely expensive contents which take a long time to resize.
+         * @function module:wcPanel#resizeVisible
          * @param {Boolean} [visible] - If supplied, assigns whether panel contents are visible during resize.
          * @returns {Boolean} - The current resize visibility.
          */
@@ -563,6 +588,7 @@ define([
         /**
          * Sets, or Gets the moveable status of the window.
          * Note: Other panels can not dock beside a non-moving panel as doing so could cause it to move.
+         * @function module:wcPanel#moveable
          * @param {Boolean} [enabled] - If supplied, assigns whether this panel can be moved.
          * @returns {Boolean} - Whether the panel is moveable.
          */
@@ -579,6 +605,7 @@ define([
         /**
          * Gets, or Sets whether this dock window can be closed by the user.
          * Note: The panel can still be closed programmatically.
+         * @function module:wcPanel#closeable
          * @param {Boolean} [enabled] - If supplied, toggles whether it can be closed.
          * @returns {Boolean} the current closeable status.
          */
@@ -595,6 +622,7 @@ define([
 
         /**
          * Forces the window to close.
+         * @function module:wcPanel#close
          */
         close: function () {
             var docker = this.docker();
@@ -605,6 +633,7 @@ define([
 
         /**
          * Shows the loading screen.
+         * @function module:wcPanel#startLoading
          * @param {String} [label] - An optional label to display.
          * @param {Number} [opacity=0.4] - If supplied, assigns a custom opacity value to the loading screen.
          * @param {Number} [textOpacity=1] - If supplied, assigns a custom opacity value to the loading icon and text displayed.
@@ -650,6 +679,7 @@ define([
 
         /**
          * Hides the loading screen.
+         * @function module:wcPanel#finishLoading
          * @param {Number} [fadeDuration=0] - If supplied, assigns a fade out duration for the loading screen.
          */
         finishLoading: function (fadeDuration) {
@@ -672,8 +702,9 @@ define([
 
         /**
          * Registers an [event]{@link module:wcDocker.EVENT} associated with this panel.
-         * @param {String} eventType          - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
-         * @param {module:wcDocker~onEvent} handler  - An event handler function to be called when the event is fired.
+         * @function module:wcPanel#on
+         * @param {String} eventType - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
+         * @param {module:wcDocker#onEvent} handler - An event handler function to be called when the event is fired.
          * @returns {Boolean} - Event registration success or failure.
          */
         on: function (eventType, handler) {
@@ -695,8 +726,9 @@ define([
 
         /**
          * Unregisters an [event]{@link module:wcDocker.EVENT} associated with this panel.
-         * @param {module:wcDocker.EVENT} eventType          - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
-         * @param {module:wcDocker~event:onEvent} [handler]  - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
+         * @function module:wcPanel#off
+         * @param {module:wcDocker.EVENT} eventType - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
+         * @param {module:wcDocker~event:onEvent} [handler] - The handler function registered with the event. If omitted, all events registered to the event type are unregistered.
          */
         off: function (eventType, handler) {
             if (typeof eventType === 'undefined') {
@@ -720,6 +752,7 @@ define([
 
         /**
          * Triggers an [event]{@link module:wcDocker.EVENT} of a given type to all panels, including itself.
+         * @function module:wcPanel#trigger
          * @param {module:wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
          * @param {Object} [data]             - A custom data object to pass into all handlers.
          */

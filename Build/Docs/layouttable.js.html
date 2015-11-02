@@ -34,7 +34,7 @@
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-wcDocker.html#~event:onEvent">wcDocker~event:onEvent</a></li>
+					<li><a href="module-wcDocker.html#event:onEvent">wcDocker#event:onEvent</a></li>
 				</ul>
 			</li>
 			
@@ -93,13 +93,12 @@ define([
 
         /**
          * Adds an item into the layout, expanding the grid size if necessary.
-         *
+         * @function module:wcLayoutTable#addItem
          * @param {external:jQuery~selector|external:jQuery~Object|external:domNode} item - A DOM element to add.
          * @param {Number} [x=0] - The horizontal grid position to place the element.
          * @param {Number} [y=0] - The vertical grid position to place the element.
          * @param {Number} [w=1] - The number of horizontal cells this item will take within the grid.
          * @param {Number} [h=1] - The number of vertical cells this item will take within the grid.
-         *
          * @returns {module:wcLayoutTable~tableItem|Boolean} The table data element of the cell that contains the item, or false if there was a problem.
          */
         addItem: function (item, x, y, w, h) {
@@ -131,10 +130,9 @@ define([
          * Retrieves the table item at a given grid position, if it exists.
          * Note, if an item spans multiple cells, only the top-left most
          * cell will actually contain the table item.
-         *
+         * @function module:wcLayoutTable#item
          * @param {Number} x - The horizontal grid position.
          * @param {Number} y - The vertical grid position.
-         *
          * @returns {module:wcLayoutTable~tableItem|Boolean} - The table item, or false if none was found.
          */
         item: function (x, y) {
@@ -160,10 +158,8 @@ define([
              * convenient methods for cell alteration and supports chaining. Its purpose is
              * to remove the need to alter &amp;lt;tr&amp;gt; and &amp;lt;td&amp;gt; elements of the table directly.
              * @version 3.0.0
-             *
              * @example myPanel.addItem(domNode).css('text-align', 'right').css('border', '1px solid black').stretch('100%', '100%');
-             *
-             * @typedef module:wcLayoutTable~tableItem
+             * @typedef module:wcLayoutTable#tableItem
              * @property {jQuery~Object} $ - If you truely need the table cell [jQuery object]{@link jQuery~Object}, here it is.
              * @property {module:wcLayoutTable~tableItem_css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
              * @property {module:wcLayoutTable~tableItem_stretch} stretch - More reliable method for setting the table item width/height values.
@@ -176,11 +172,9 @@ define([
                  * A wrapper for [jQuery's css]{@link http://api.jquery.com/css/} function.
                  * &lt;b>Note:&lt;/b> It is recommended that you use [stretch]{@link wcLayoutTable~stretch} if you intend to alter width or height styles.
                  * @version 3.0.0
-                 *
-                 * @function module:wcLayoutTable~tableItem_css
+                 * @function module:wcLayoutTable#tableItem_css
                  * @param {String} style - The style attribute to alter.
                  * @param {String} [value] - The value of the attribute. If omitted, the current value of the attribute is returned instead of the [tableItem]{@link module:wcLayoutTable~tableItem} instance.
-                 *
                  * @returns {module:wcLayoutTable~tableItem|String} - Self, for chaining, unless the value parameter was omitted.
                  */
                 css: function (style, value) {
@@ -199,11 +193,9 @@ define([
                  * Sets the stretch amount for the current table item. This is more reliable than
                  * assigning width and height style attributes directly on the table item.
                  * @version 3.0.0
-                 *
-                 * @function module:wcLayoutTable~tableItem_stretch
+                 * @function module:wcLayoutTable#tableItem_stretch
                  * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
                  * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
-                 *
                  * @returns {module:wcLayoutTable~tableItem} - Self, for chaining.
                  */
                 stretch: function (width, height) {
@@ -218,12 +210,11 @@ define([
          * Sets the stretch amount for a given table item. This is more reliable than
          * assigning width and height style attributes directly on the table item.
          * @version 3.0.0
-         *
+         * @function module:wcLayoutTable#itemStretch
          * @param {Number} x - The horizontal grid position.
          * @param {Number} y - The vertical grid position.
          * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
          * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
-         *
          * @returns {Boolean} - Success or failure. A failure generally means your grid position was a merged grid cell.
          */
         itemStretch: function (x, y, sx, sy) {
@@ -253,8 +244,8 @@ define([
         },
 
         /**
-         * Clears the contents of the layout and squashes all rows
-         * and columns from the grid.
+         * Clears the contents of the layout and squashes all rows and columns from the grid.
+         * @function module:wcLayoutTable#clear
          */
         clear: function () {
             var showGrid = this.showGrid();
@@ -275,13 +266,16 @@ define([
          * Begins a batch operation.  Basically it refrains from constructing
          * the layout grid, which causes a reflow, on each item added.  Instead,
          * The grid is only generated at the end once [wcLayoutTable.finishBatch]{@link wcLayoutTable#finishBatch} is called.
+         * @function module:wcLayoutTable#startBatch
          */
         startBatch: function () {
             this._batchProcess = true;
         },
 
         /**
-         * Ends a batch operation. See [wcLayoutTable.startBatch]{@link wcLayoutTable#startBatch} for more information.
+         * Ends a batch operation.
+         * @See module:wcLayoutTable#startBatch
+         * @function module:wcLayoutTable#finishBatch
          */
         finishBatch: function () {
             this._batchProcess = false;
@@ -290,9 +284,8 @@ define([
 
         /**
          * Gets, or Sets whether the layout grid cells should draw an outline.
-         *
+         * @function module:wcLayoutTable#showGrid
          * @param {Boolean} [enabled] - If supplied, will set the grid cell border visibility.
-         *
          * @returns {Boolean} - The current visibility state of the grid cells.
          */
         showGrid: function (enabled) {
@@ -305,9 +298,8 @@ define([
 
         /**
          * Gets, or Sets the spacing between cell borders.
-         *
+         * @function module:wcLayoutTable#gridSpacing
          * @param {Number} [size] - If supplied, sets the pixel size of the spacing between cells.
-         *
          * @returns {Number} - The current cell spacing in pixels.
          */
         gridSpacing: function (size) {
@@ -320,9 +312,8 @@ define([
 
         /**
          * Gets, or Sets whether the table rows alternate in color based on the theme.
-         *
+         * @function module:wcLayoutTable#gridAlternate
          * @params {Boolean} [enabled] - If supplied, will set whether the grid alternates in color.
-         *
          * @returns {Boolean} - Whether the grid alternates in color.
          */
         gridAlternate: function (enabled) {
@@ -476,7 +467,7 @@ define([
 		
 		<span class="jsdoc-message">
 			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2015-11-01 using the <a
+			on 2015-11-02 using the <a
 			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
 		</span>
 		</footer>
