@@ -763,6 +763,8 @@ define('wcDocker/types',[], function () {
 
     /**
      * Enumerated Docking positions.
+     * @memberOf module:wcDocker
+     * @name module:wcDocker.DOCK
      * @version 3.0.0
      * @enum {String}
      */
@@ -786,6 +788,7 @@ define('wcDocker/types',[], function () {
     /**
      * Enumerated Layout wcDocker.
      * @memberOf module:wcDocker
+     * @name module:wcDocker.LAYOUT
      * @version 3.0.0
      * @enum {String}
      */
@@ -799,6 +802,7 @@ define('wcDocker/types',[], function () {
     /**
      * Enumerated Internal events
      * @memberOf module:wcDocker
+     * @name module:wcDocker.EVENT
      * @version 3.0.0
      * @enum {String}
      */
@@ -880,7 +884,9 @@ define('wcDocker/types',[], function () {
 
     /**
      * The name of the placeholder panel.
+     * @private
      * @memberOf module:wcDocker
+     * @name module:wcDocker.PANEL_PLACEHOLDER
      * @constant {String}
      */
     wcDocker.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
@@ -890,6 +896,7 @@ define('wcDocker/types',[], function () {
      * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
      * @constant {String} module:wcDocker.COLLAPSED
      * @memberOf module:wcDocker
+     * @name module:wcDocker.COLLAPSED
      * @static
      */
     wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
@@ -899,6 +906,7 @@ define('wcDocker/types',[], function () {
      * @version 3.0.0
      * @enum {Boolean}  module:wcDocker.ORIENTATION
      * @memberOf module:wcDocker
+     * @name module:wcDocker.ORIENTATION
      */
     wcDocker.ORIENTATION = {
         /** Top and Bottom panes */
@@ -912,6 +920,7 @@ define('wcDocker/types',[], function () {
      * @version 3.0.0
      * @enum {String} module:wcDocker.TAB
      * @memberOf module:wcDocker
+     * @name module:wcDocker.TAB
      */
     wcDocker.TAB = {
         /** The default, puts tabs at the top of the frame */
@@ -5175,7 +5184,7 @@ define('wcDocker/layouttable',[
          * @param {Number} [w=1] - The number of horizontal cells this item will take within the grid.
          * @param {Number} [h=1] - The number of vertical cells this item will take within the grid.
          *
-         * @returns {wcLayoutTable~tableItem|Boolean} The table data element of the cell that contains the item, or false if there was a problem.
+         * @returns {module:wcLayoutTable~tableItem|Boolean} The table data element of the cell that contains the item, or false if there was a problem.
          */
         addItem: function (item, x, y, w, h) {
             if (typeof x === 'undefined' || x < 0) {
@@ -5210,7 +5219,7 @@ define('wcDocker/layouttable',[
          * @param {Number} x - The horizontal grid position.
          * @param {Number} y - The vertical grid position.
          *
-         * @returns {wcLayoutTable~tableItem|Boolean} - The table item, or false if none was found.
+         * @returns {module:wcLayoutTable~tableItem|Boolean} - The table item, or false if none was found.
          */
         item: function (x, y) {
             if (y >= this._grid.length) {
@@ -5238,25 +5247,25 @@ define('wcDocker/layouttable',[
              *
              * @example myPanel.addItem(domNode).css('text-align', 'right').css('border', '1px solid black').stretch('100%', '100%');
              *
-             * @typedef wcLayoutTable~tableItem
+             * @typedef module:wcLayoutTable~tableItem
              * @property {jQuery~Object} $ - If you truely need the table cell [jQuery object]{@link jQuery~Object}, here it is.
-             * @property {wcLayoutTable~css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
-             * @property {wcLayoutTable~stretch} stretch - More reliable method for setting the table item width/height values.
+             * @property {module:wcLayoutTable~tableItem_css} css - Wrapper to alter [jQuery's css]{@link http://api.jquery.com/css/} function.
+             * @property {module:wcLayoutTable~tableItem_stretch} stretch - More reliable method for setting the table item width/height values.
              */
             var myItem = {
                 $: self._grid[y][x].$el,
 
                 /**
-                 * <small><i>This function is found in {@link wcLayoutTable~tableItem}.</small></i><br>
+                 * <small><i>This function is found in {@link module:wcLayoutTable~tableItem}.</small></i><br>
                  * A wrapper for [jQuery's css]{@link http://api.jquery.com/css/} function.
                  * <b>Note:</b> It is recommended that you use [stretch]{@link wcLayoutTable~stretch} if you intend to alter width or height styles.
                  * @version 3.0.0
                  *
-                 * @function wcLayoutTable~css
+                 * @function module:wcLayoutTable~tableItem_css
                  * @param {String} style - The style attribute to alter.
-                 * @param {String} [value] - The value of the attribute. If omitted, the current value of the attribute is returned instead of the [tableItem]{@link wcLayoutTable~tableItem} instance.
+                 * @param {String} [value] - The value of the attribute. If omitted, the current value of the attribute is returned instead of the [tableItem]{@link module:wcLayoutTable~tableItem} instance.
                  *
-                 * @returns {wcLayoutTable~tableItem|String} - Self, for chaining, unless the value parameter was omitted.
+                 * @returns {module:wcLayoutTable~tableItem|String} - Self, for chaining, unless the value parameter was omitted.
                  */
                 css: function (style, value) {
                     if (self._grid[y][x].$el) {
@@ -5270,16 +5279,16 @@ define('wcDocker/layouttable',[
                 },
 
                 /**
-                 * <small><i>This function is found in {@link wcLayoutTable~tableItem}.</small></i><br>
+                 * <small><i>This function is found in {@link module:wcLayoutTable~tableItem}.</small></i><br>
                  * Sets the stretch amount for the current table item. This is more reliable than
                  * assigning width and height style attributes directly on the table item.
                  * @version 3.0.0
                  *
-                 * @function wcLayoutTable~stretch
+                 * @function module:wcLayoutTable~tableItem_stretch
                  * @param {Number|String} [sx] - The horizontal stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
                  * @param {Number|String} [sy] - The vertical stretch for this grid. Use empty string to clear current value. Can be a pixel position, or a string with a 'px' or '%' suffix.
                  *
-                 * @returns {wcLayoutTable~tableItem} - Self, for chaining.
+                 * @returns {module:wcLayoutTable~tableItem} - Self, for chaining.
                  */
                 stretch: function (width, height) {
                     self.itemStretch(x, y, width, height);

@@ -5,6 +5,8 @@ define([], function () {
 
     /**
      * Enumerated Docking positions.
+     * @memberOf module:wcDocker
+     * @name module:wcDocker.DOCK
      * @version 3.0.0
      * @enum {String}
      */
@@ -28,6 +30,7 @@ define([], function () {
     /**
      * Enumerated Layout wcDocker.
      * @memberOf module:wcDocker
+     * @name module:wcDocker.LAYOUT
      * @version 3.0.0
      * @enum {String}
      */
@@ -41,6 +44,7 @@ define([], function () {
     /**
      * Enumerated Internal events
      * @memberOf module:wcDocker
+     * @name module:wcDocker.EVENT
      * @version 3.0.0
      * @enum {String}
      */
@@ -122,7 +126,9 @@ define([], function () {
 
     /**
      * The name of the placeholder panel.
+     * @private
      * @memberOf module:wcDocker
+     * @name module:wcDocker.PANEL_PLACEHOLDER
      * @constant {String}
      */
     wcDocker.PANEL_PLACEHOLDER = '__wcDockerPlaceholderPanel';
@@ -132,6 +138,7 @@ define([], function () {
      * Must be used with [docking]{@link wcDocker.DOCK} positions LEFT, RIGHT, or BOTTOM only.
      * @constant {String} module:wcDocker.COLLAPSED
      * @memberOf module:wcDocker
+     * @name module:wcDocker.COLLAPSED
      * @static
      */
     wcDocker.COLLAPSED = '__wcDockerCollapsedPanel';
@@ -141,6 +148,7 @@ define([], function () {
      * @version 3.0.0
      * @enum {Boolean}  module:wcDocker.ORIENTATION
      * @memberOf module:wcDocker
+     * @name module:wcDocker.ORIENTATION
      */
     wcDocker.ORIENTATION = {
         /** Top and Bottom panes */
@@ -154,6 +162,7 @@ define([], function () {
      * @version 3.0.0
      * @enum {String} module:wcDocker.TAB
      * @memberOf module:wcDocker
+     * @name module:wcDocker.TAB
      */
     wcDocker.TAB = {
         /** The default, puts tabs at the top of the frame */

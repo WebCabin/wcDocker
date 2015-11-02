@@ -96,7 +96,7 @@
  * @property {Boolean} [isPrivate]              - If true, the user will not be able to create this panel type.
  * @property {Boolean} [isPersistent]           - If true, when the user closes this panel, it will only be hidden instead of completely destroyed. When the user creates an instance of this panel, it will first attempt to un-hide an already existing panel before creating a new instance.
  * @property {Number} [limit]                   - Enforces a limited number of this panel type from being created by the user.
- * @property {module:wcPanel~options} [options]        - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
+ * @property {Object} [options]                 - A custom options object to be passed into the new panel constructor or creation function as the second parameter.
  */
 
  /**
