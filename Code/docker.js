@@ -84,6 +84,7 @@ define([
             this._placeholderPanel = null;
             this._contextTimer = 0;
             this._dirty = false;
+            this._dirtyDontMove = false;
 
             this._splitterList = [];
             this._tabList = [];
@@ -1266,7 +1267,7 @@ define([
                 if (self._dirty) {
                     self._dirty = false;
                     if (self._root) {
-                        self._root.__update();
+                        self._root.__update(self._dirtyDontMove);
                     }
 
                     for (var i = 0; i < self._floatingList.length; ++i) {
@@ -2171,6 +2172,7 @@ define([
         // Updates the sizing of all panels inside this window.
         __update: function (opt_dontMove) {
             this._dirty = true;
+            this._dirtyDontMove = opt_dontMove;
         },
 
         // Forces an update, regardless of the response rate.
