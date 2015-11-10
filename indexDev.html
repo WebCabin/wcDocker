@@ -26,6 +26,12 @@
     //setup require-js
     require.config({
       baseUrl: "./bower_components",
+      shim: {
+        // Libraries
+        lodash: {
+          exports: '_'
+        }
+      },
       packages: [
         {
           name: 'dcl',
@@ -34,6 +40,10 @@
         {
           name: 'wcDocker',
           location: '../Code'
+        },
+        {
+          name: 'lodash',
+          location: './lodash-compat'   //points to bower_components/dcl
         }
       ]
     });

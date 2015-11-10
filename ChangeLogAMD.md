@@ -1,3 +1,21 @@
+### Change log
+
+**10.11.2015**
+
+#### indexDev.html
+- added lodash package in require config
+- added lodash shim in require config
+
+#### bower.json
+
+- added lodash - AMD - compat dependency
+
+#### package.json
+ 
+- updated intern-testing dependency to 3.0
+
+
+
 ###Status
 
 #### Converting to AMD/DCL/Require-JS compatible classes/modules: done
