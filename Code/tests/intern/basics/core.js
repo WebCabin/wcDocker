@@ -1,13 +1,16 @@
 define([
     'intern!tdd',
-    'intern/chai!assert'
+    'intern/chai!assert',
+
+
+    'wcDocker/docker'
+
 ], function (test, assert) {
 
     test.suite('Basics', function () {
 
         test.test('Core', function () {
-            //assert.equal(result, 2, 'publish not 2');
-            return false;
+            assert.equal(2, 2, 'result is not 2');
         });
     });
 });

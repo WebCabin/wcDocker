@@ -12,7 +12,7 @@ define({
 
 	// See https://www.browserstack.com/automate/capabilities for capabilities and environments
 	capabilities: {
-		name: 'xide'
+		name: 'wcDocker'
 	},
 
 	environments: [
@@ -35,7 +35,12 @@ define({
 		// Packages that should be registered with the loader in each testing environment
 		packages: [
 
-			{ name: 'wcDocker', location: '../Code' }
+			{ name: 'wcDocker', location: '../Code' },
+			{ name: 'dcl', location: 'dcl' },
+			{
+				name: 'lodash',
+				location: 'lodash-compat'   //points to bower_components/dcl
+			}
 		]
 	},
 

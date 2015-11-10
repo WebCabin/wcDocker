@@ -9,6 +9,8 @@
 #### bower.json
 
 - added lodash - AMD - compat dependency
+- added dojo dependency (required by test-units)
+
 
 #### package.json
  
@@ -18,6 +20,32 @@
 
 - added lodash to require-js build tasks (adds 40kb to the final build)
 
+
+#### Code/tests
+
+- added files and folders to run unit-tests with Sitepen's 'intern' unit-testing framework
+
+See Code/tests/intern/intern.js
+
+
+
+**NEW:** Testing
+
+
+wcDocker uses [intern](https://theintern.github.io/) for unit-testing.
+
+In order to run the unit-tests in your browser: open http://localhosts/wcDocker/Compiler/node_modules/intern/client.html?config=../Code/tests/intern/intern
+
+This will load some config from See Code/tests/intern/intern.js which will load unit-tests
+from See Code/tests/basics/*
+
+There is currently only a dummy unit. 
+ 
+Todos: 
+
+- add/update grunt tasks for server-side unit - tests via Source-Labs.
+
+- add/update grunt tasks for local command line unit - tests via Source-Labs-Local.
 
 
 
