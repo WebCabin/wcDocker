@@ -27,8 +27,9 @@ define([
     './layouttable',
     './tabframe',
     './drawer',
-    './base'
-], function (dcl, wcDocker, wcPanel, wcGhost, wcSplitter, wcFrame, wcCollapser, wcLayoutSimple, wcLayoutTable, wcTabFrame, wcDrawer, base) {
+    './base',
+    'lodash'
+], function (dcl, wcDocker, wcPanel, wcGhost, wcSplitter, wcFrame, wcCollapser, wcLayoutSimple, wcLayoutTable, wcTabFrame, wcDrawer, base,_) {
 
     /**
      * Default class name to module mapping, being used for default options

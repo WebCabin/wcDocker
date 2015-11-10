@@ -156,7 +156,13 @@ module.exports = function (grunt) {
                     paths: {
                         "wcDocker":"../Code/",
                         "dcl":"../bower_components/dcl"
-                    }
+                    },
+                    packages: [
+                        {
+                            name: 'lodash',
+                            location: '../bower_components/lodash-compat'   //points to bower_components/dcl
+                        }
+                    ]
 
                 }
             },
@@ -177,6 +183,12 @@ module.exports = function (grunt) {
                     exclude: [],
                     stubModules: [],
                     wrap: true,
+                    packages: [
+                        {
+                            name: 'lodash',
+                            location: '../bower_components/lodash-compat'   //points to bower_components/dcl
+                        }
+                    ],
                     paths: {
                         "wcDocker":"../Code/",
                         "dcl":"../bower_components/dcl"

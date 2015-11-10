@@ -1,5 +1,11 @@
 require.config({
     baseUrl: "./bower_components",
+    shim: {
+        // Libraries
+        lodash: {
+            exports: '_'
+        }
+    },
     packages: [
         {
             name: 'dcl',
@@ -8,6 +14,10 @@ require.config({
         {
             name: 'wcDocker',
             location: '../Code'
+        },
+        {
+            name: 'lodash',
+            location: './lodash-compat'   //points to bower_components/dcl
         }
     ]
 });

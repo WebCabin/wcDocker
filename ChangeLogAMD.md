@@ -14,6 +14,11 @@
  
 - updated intern-testing dependency to 3.0
 
+#### Compiler/GruntFile.js
+
+- added lodash to require-js build tasks (adds 40kb to the final build)
+
+
 
 
 ###Status
