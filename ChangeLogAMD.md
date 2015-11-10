@@ -2,6 +2,13 @@
 
 **10.11.2015**
 
+**Summary**:
+
+- indexDev.html, bower.json, package.json and Gruntfile.js updated for: 
+    - lodash dependency (is included in wcDocker.js and wcDocker.min.js)
+    - Code/tests added, only with a basic test
+
+
 #### indexDev.html
 - added lodash package in require config
 - added lodash shim in require config
@@ -34,9 +41,9 @@ See Code/tests/intern/intern.js
 
 wcDocker uses [intern](https://theintern.github.io/) for unit-testing.
 
-In order to run the unit-tests in your browser: open http://localhosts/wcDocker/Compiler/node_modules/intern/client.html?config=../Code/tests/intern/intern
+In order to run the unit-tests in your browser, open [this](http://localhosts/wcDocker/Compiler/node_modules/intern/client.html?config=../Code/tests/intern/intern) (adjust your url!)
 
-This will load some config from See Code/tests/intern/intern.js which will load unit-tests
+This will load a config from Code/tests/intern/intern.js which will load unit-tests
 from See Code/tests/basics/*
 
 There is currently only a dummy unit. 
