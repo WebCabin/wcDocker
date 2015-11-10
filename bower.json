@@ -38,7 +38,8 @@
     "requirejs": "2.1.x",
     "requirejs-domready": "2.0.x",
     "almond": "0.3.1",
-    "lodash-compat": "3.10.1-amd"
+    "lodash-compat": "3.10.1-amd",
+    "dojo": "1.9.1"
   },
   "license": "MIT"
 }

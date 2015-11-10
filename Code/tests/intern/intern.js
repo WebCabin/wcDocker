@@ -24,7 +24,7 @@ define({
 	// Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service
 	maxConcurrency: 2,
 
-	basePath: '..',
+	basePath: '../bower_components',
 
 	// Configuration options for the module loader;
 	// any AMD configuration options supported by the Dojo loader can be used here
@@ -34,16 +34,8 @@ define({
 	loaderOptions: {
 		// Packages that should be registered with the loader in each testing environment
 		packages: [
-			{ name: 'dojo', location: 'dojo' },
-			{ name: 'dijit', location: 'dijit' },
-			{ name: 'dgrid', location: 'dgrid' },
-			{ name: 'dstore', location: 'dstore' },
-			{ name: 'xide', location: 'xide' },
-			{ name: 'xfile', location: 'xfile' },
-			{ name: 'dojox', location: 'dojox' },
-			{ name: 'xdojo', location: 'xdojo' },
-			{ name: 'xgrid', location: 'xgrid' },
-			{ name: 'dcl', location: 'dcl' }
+
+			{ name: 'wcDocker', location: '../Code' }
 		]
 	},
 
@@ -51,8 +43,8 @@ define({
 	excludeInstrumentation: /^dojox?|^dijit|^dstore|\/node_modules\/|\/tests\/|\/nls\//,
 
 	// Non-functional test suite(s) to run in each browser
-	suites: [ 'xide/tests/intern/all' ],
+	suites: [ 'wcDocker/tests/intern/all' ],
 
 	// Functional test suite(s) to run in each browser once non-functional tests are completed
-	functionalSuites: [ 'xide/tests/intern/functional' ]
+	functionalSuites: [ 'wcDocker/tests/intern/functional' ]
 });
