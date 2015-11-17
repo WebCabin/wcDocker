@@ -6,3 +6,4 @@ bower update.bat
 project.sublime-project
 project.sublime-workspace
 runServer.bat
+bower_components/
