@@ -482,6 +482,34 @@ $(document).ready(function() {
           // Use the preivously defined common function to popup the Info Panel.
           showInfo("The tutorial panel shows the official API documentation page using a fully supported iFrame container widget.");
         });
+
+        var hasConfirmed = false;
+        myPanel.on(wcDocker.EVENT.CLOSING, function() {
+          // If we have not received confirmation to
+          // close this panel, ask for it now!
+          if (!hasConfirmed) {
+            // For testing purposes, I add a quick timeout to make
+            // it simulate an asynchronous action.
+            setTimeout(function() {
+              // Show the confirmation popup.
+              if (confirm('Are you sure you wish to close this panel?')) {
+                // If the user confirms, we first flag that the 
+                // user has made the confirmation, so when it
+                // returns to this event handler, it will actually
+                // allow the panel to close.
+                hasConfirmed = true;
+                myPanel.close();
+              }
+            }, 1);
+
+            // Return false immediately to cancel the close event.
+            return false;
+          }
+
+          // If we get here, the user has confirmed the event, we should
+          // allow the panel to close now.
+          return true;
+        });
       }
     });
 

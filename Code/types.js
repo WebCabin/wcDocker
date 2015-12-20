@@ -65,6 +65,8 @@ define([], function () {
         GAIN_FOCUS: 'panelGainFocus',
         /** When the user leaves focus on any panel within a tabbed frame */
         LOST_FOCUS: 'panelLostFocus',
+        /** When the panel is about to be closed, but before it closes. If any event handler returns a falsey value, the close action will be canceled. */
+        CLOSING: 'panelClosing',
         /** When the panel is being closed */
         CLOSED: 'panelClosed',
         /** When a persistent panel is being hidden */

@@ -931,12 +931,16 @@ define([
                 return false;
             }
 
+            var results = [];
+
             if (this._events[eventType]) {
                 var events = this._events[eventType].slice(0);
                 for (var i = 0; i < events.length; ++i) {
-                    events[i].call(this, data);
+                    results.push(events[i].call(this, data));
                 }
             }
+
+            return results;
         },
 
         // Retrieves the bounding rect for this widget.

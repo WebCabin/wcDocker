@@ -349,6 +349,14 @@ define([
 
             var parentFrame = panel._parent;
             if (parentFrame && parentFrame.instanceOf('wcFrame')) {
+                // Trigger the closing event, if any explicitely returned false, we cancel the close event.
+                var results = panel.__trigger(wcDocker.EVENT.CLOSING);
+                for (var i = 0; i < results.length; ++i) {
+                    if (!results[i]) {
+                        return false;
+                    }
+                }
+
                 if (dontDestroy) {
                     // Keep the panel in a hidden transition container so as to not
                     // destroy any event handlers that may be on it.
@@ -751,15 +759,17 @@ define([
                 return false;
             }
 
+            var results = [];
+
             for (var i = 0; i < this._frameList.length; ++i) {
                 var frame = this._frameList[i];
                 for (var a = 0; a < frame._panelList.length; ++a) {
                     var panel = frame._panelList[a];
-                    panel.__trigger(eventName, data);
+                    results = results.concat(panel.__trigger(eventName, data));
                 }
             }
 
-            this.__trigger(eventName, data);
+            return results.concat(this.__trigger(eventName, data));
         },
 
         /**
@@ -2301,12 +2311,16 @@ define([
                 return;
             }
 
+            var results = [];
+
             if (this._events[eventName]) {
                 var events = this._events[eventName].slice(0);
                 for (var i = 0; i < events.length; ++i) {
-                    events[i].call(this, data);
+                    results.push(events[i].call(this, data));
                 }
             }
+
+            return results;
         },
 
         // Checks a given panel to see if it is the final remaining
