@@ -751,8 +751,9 @@ define([
          * Trigger an [event]{@link wcDocker.EVENT} on all panels.
          * @function module:wcDocker#trigger
          * @fires wcDocker~event:onEvent
-         * @param {module:wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
-         * @param {Object} [data]             - A custom data object to be passed along with the event.
+         * @param {module:wcDocker.EVENT} eventType - The event type, can be a custom event string or a [predefined event]{@link wcDocker.EVENT}.
+         * @param {Object} [data] - A custom data object to be passed along with the event.
+         * @returns {Object[]} results - Returns an array with all results returned by event handlers.
          */
         trigger: function (eventName, data) {
             if (!eventName) {

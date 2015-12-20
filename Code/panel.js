@@ -753,14 +753,16 @@ define([
         /**
          * Triggers an [event]{@link module:wcDocker.EVENT} of a given type to all panels, including itself.
          * @function module:wcPanel#trigger
-         * @param {module:wcDocker.EVENT} eventType  - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
-         * @param {Object} [data]             - A custom data object to pass into all handlers.
+         * @param {module:wcDocker.EVENT} eventType - The event type, can be a custom event string or a [predefined event]{@link module:wcDocker.EVENT}.
+         * @param {Object} [data] - A custom data object to pass into all handlers.
+         * @returns {Object[]} results - Returns an array with all results returned by event handlers.
          */
         trigger: function (eventType, data) {
             var docker = this.docker();
             if (docker) {
-                docker.trigger(eventType, data);
+                return docker.trigger(eventType, data);
             }
+            return [];
         },
 
 
