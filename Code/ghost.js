@@ -40,8 +40,9 @@ define([
          * Updates the ghost based on the given screen position.
          * @function module:wcGhost#update
          * @param {module:wcDocker~Coordinate} position - The mouse position.
+         * @param {Boolean} [disableFloating] - If true, the ghost will not float.
          */
-        update: function (position) {
+        update: function (position, disableFloating) {
             this.__move(position);
 
             for (var i = 0; i < this._docker._floatingList.length; ++i) {
@@ -50,7 +51,9 @@ define([
                     && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
                     if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
-                        this.anchor(position, null);
+                        if (!disableFloating) {
+                            this.anchor(position, null);
+                        }
                     } else {
                         this._anchor.panel = this._docker._floatingList[i].panel();
                     }
@@ -64,7 +67,9 @@ define([
                     && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
                     if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
-                        this.anchor(position, null);
+                        if (!disableFloating) {
+                            this.anchor(position, null);
+                        }
                     } else {
                         this._anchor.panel = this._docker._frameList[i].panel();
                     }

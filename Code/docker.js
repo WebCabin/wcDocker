@@ -945,9 +945,9 @@ define([
                             }
                             if (!myFrame._isFloating) {
                                 items['Detach Panel'] = {
-                                    name: 'Float Panel',
+                                    name: 'Detach Panel',
                                     faicon: 'level-up',
-                                    disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder
+                                    disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                 };
                             }
 
@@ -985,9 +985,9 @@ define([
                                 }
                                 if (!myFrame._isFloating) {
                                     items['Detach Panel'] = {
-                                        name: 'Float Panel',
+                                        name: 'Detach Panel',
                                         faicon: 'level-up',
-                                        disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder
+                                        disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                     };
                                 }
 
@@ -1566,7 +1566,9 @@ define([
                                 }
                             }
 
-                            self._ghost.anchor(mouse, null);
+                            if (self._draggingFrame.panel().detachable()) {
+                                self._ghost.anchor(mouse, null);
+                            }
                         } else {
                             self._draggingFrame.__shadow(false);
                             var $target = $(document.elementFromPoint(mouse.x, mouse.y));
@@ -1576,7 +1578,7 @@ define([
                             }
                         }
                     } else if (self._creatingPanel) {
-                        self._ghost.update(mouse);
+                        self._ghost.update(mouse, !self._creatingPanelNoFloating);
                     }
                 } else if (self._draggingFrame && !self._draggingFrameTab) {
                     self._draggingFrame.__move(mouse);
@@ -1959,6 +1961,7 @@ define([
                     self._ghost.update(mouse);
                     self._ghost.anchor(mouse, self._ghost.anchor());
                     self._creatingPanel = panelType;
+                    self._creatingPanelNoFloating = !$(this).data('nofloating');
                     self.__focus();
                     self.trigger(wcDocker.EVENT.BEGIN_DOCK);
                 }

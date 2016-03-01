@@ -134,6 +134,7 @@ myPanel.layout().finishBatch();</code></pre><hr>
 <hr>
 <h3>Panel Creation Elements</h3><p>By default, <a href="module-wcDocker.html">wcDocker</a> provides a right-click context menu that allows users to create new panels into their view. However, you may want to implement panel creation a different way. <a href="module-wcDocker.html">wcDocker</a> provides an easy method for doing so, in the form of a CSS class. Simply create any HTML element, give it the CSS class <code>&quot;wcCreatePanel&quot;</code> and provide it with the panel type as the data attribute <code>&quot;panel&quot;</code>, and <a href="module-wcDocker.html">wcDocker</a> will instantly treat it as a panel creation element. The user can then drag-drop that element directly into their layout to add the new panel.</p>
 <pre class="prettyprint source"><code>{@lang xml}&lt;span class=&quot;wcCreatePanel&quot; data-panel=&quot;My Custom Panel Type&quot;>Create My Custom Panel Type&lt;/span></code></pre><p>This element can be styled to looked exactly the way you want, whether it be a simple text element, or a fancy looking button!</p>
+<p>Additionally, setting the data attribute <code>&quot;nofloating&quot;</code> to true will enforce that the user create this new panel docked within the layout rather than floating.</p>
 <p>Here is the example used in our <a href="http://docker.webcabin.org/">demo page</a> for the <code>Creation Panel</code>:</p>
 <pre class="prettyprint source"><code>myDocker.registerPanelType('Creation Panel', {
   faicon: 'plus-square',

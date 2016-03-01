@@ -187,6 +187,7 @@ define([
             this._collapsible = true;
             this._overflowVisible = false;
             this._moveable = true;
+            this._detachable = true;
             this._closeable = true;
             this._resizeVisible = true;
             this._isVisible = false;
@@ -674,6 +675,20 @@ define([
             }
 
             return this._moveable;
+        },
+
+        /**
+         * Sets, or Gets whether this panel can be detached into a floating panel.
+         * @function module:wcPanel#detachable
+         * @param {Boolean} [enabled] - If supplied, assigns whether this panel can be detached.
+         * @returns {Boolean} - Whether this panel can detach.
+         */
+        detachable: function(enabled) {
+            if (typeof enabled !== 'undefined') {
+                this._detachable = enabled ? true: false;
+            }
+
+            return this._detachable;
         },
 
         /**

@@ -1113,6 +1113,7 @@ define('wcDocker/panel',[
             this._collapsible = true;
             this._overflowVisible = false;
             this._moveable = true;
+            this._detachable = true;
             this._closeable = true;
             this._resizeVisible = true;
             this._isVisible = false;
@@ -1603,6 +1604,20 @@ define('wcDocker/panel',[
         },
 
         /**
+         * Sets, or Gets whether this panel can be detached into a floating panel.
+         * @function module:wcPanel#detachable
+         * @param {Boolean} [enabled] - If supplied, assigns whether this panel can be detached.
+         * @returns {Boolean} - Whether this panel can detach.
+         */
+        detachable: function(enabled) {
+            if (typeof enabled !== 'undefined') {
+                this._detachable = enabled ? true: false;
+            }
+
+            return this._detachable;
+        },
+
+        /**
          * Gets, or Sets whether this dock window can be closed by the user.
          * Note: The panel can still be closed programmatically.
          * @function module:wcPanel#closeable
@@ -2039,8 +2054,9 @@ define('wcDocker/ghost',[
          * Updates the ghost based on the given screen position.
          * @function module:wcGhost#update
          * @param {module:wcDocker~Coordinate} position - The mouse position.
+         * @param {Boolean} [disableFloating] - If true, the ghost will not float.
          */
-        update: function (position) {
+        update: function (position, disableFloating) {
             this.__move(position);
 
             for (var i = 0; i < this._docker._floatingList.length; ++i) {
@@ -2049,7 +2065,9 @@ define('wcDocker/ghost',[
                     && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
                     if (!this._docker._floatingList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
-                        this.anchor(position, null);
+                        if (!disableFloating) {
+                            this.anchor(position, null);
+                        }
                     } else {
                         this._anchor.panel = this._docker._floatingList[i].panel();
                     }
@@ -2063,7 +2081,9 @@ define('wcDocker/ghost',[
                     && position.x < rect.x + rect.w && position.y < rect.y + rect.h) {
 
                     if (!this._docker._frameList[i].__checkAnchorDrop(position, false, this, true, undefined, true)) {
-                        this.anchor(position, null);
+                        if (!disableFloating) {
+                            this.anchor(position, null);
+                        }
                     } else {
                         this._anchor.panel = this._docker._frameList[i].panel();
                     }
@@ -19780,9 +19800,9 @@ define('wcDocker/docker',[
                             }
                             if (!myFrame._isFloating) {
                                 items['Detach Panel'] = {
-                                    name: 'Float Panel',
+                                    name: 'Detach Panel',
                                     faicon: 'level-up',
-                                    disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder
+                                    disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                 };
                             }
 
@@ -19820,9 +19840,9 @@ define('wcDocker/docker',[
                                 }
                                 if (!myFrame._isFloating) {
                                     items['Detach Panel'] = {
-                                        name: 'Float Panel',
+                                        name: 'Detach Panel',
                                         faicon: 'level-up',
-                                        disabled: !myFrame.panel().moveable() || myFrame.panel()._isPlaceholder
+                                        disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                     };
                                 }
 
@@ -20401,7 +20421,9 @@ define('wcDocker/docker',[
                                 }
                             }
 
-                            self._ghost.anchor(mouse, null);
+                            if (self._draggingFrame.panel().detachable()) {
+                                self._ghost.anchor(mouse, null);
+                            }
                         } else {
                             self._draggingFrame.__shadow(false);
                             var $target = $(document.elementFromPoint(mouse.x, mouse.y));
@@ -20411,7 +20433,7 @@ define('wcDocker/docker',[
                             }
                         }
                     } else if (self._creatingPanel) {
-                        self._ghost.update(mouse);
+                        self._ghost.update(mouse, !self._creatingPanelNoFloating);
                     }
                 } else if (self._draggingFrame && !self._draggingFrameTab) {
                     self._draggingFrame.__move(mouse);
@@ -20794,6 +20816,7 @@ define('wcDocker/docker',[
                     self._ghost.update(mouse);
                     self._ghost.anchor(mouse, self._ghost.anchor());
                     self._creatingPanel = panelType;
+                    self._creatingPanelNoFloating = !$(this).data('nofloating');
                     self.__focus();
                     self.trigger(wcDocker.EVENT.BEGIN_DOCK);
                 }
