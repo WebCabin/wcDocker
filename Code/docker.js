@@ -1252,6 +1252,8 @@ define([
             while (this._frameList.length) this._frameList.pop();
             while (this._floatingList.length) this._floatingList.pop();
             while (this._splitterList.length) this._splitterList.pop();
+
+            this.off();
         },
 
 
