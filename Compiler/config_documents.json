@@ -3,8 +3,17 @@
         "allowUnknownTags": true
     },
     "source": {
+        "include": [
+            "README.md",
+            "Code"
+        ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "opts": {
+        "recurse": true,
+        "template": "Compiler/node_modules/ink-docstrap/template",
+        "tutorials": "Code/tutorials"
     },
     "plugins": [],
     "templates": {
@@ -13,12 +22,12 @@
         "systemTitle": "wcDocker",
         "systemName": "<div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div>",
         "footer": "",
-        "copyright": "",
-        "navType": "vertical",
-        "theme": "superhero",
+        "copyright": "2014-2016 Jeff Houde (<a href='mailto:lochemage@webcabin.org'>lochemage@webcabin.org</a>)",
+        "navType": "inline",
+        "theme": "slate",
         "linenums": true,
         "collapseSymbols": false,
-        "inverseNav": true,
+        "inverseNav": false,
         "outputSourceFiles": true,
         "outputSourcePath": false,
         "dateFormat": "YYYY-MM-DD",
@@ -26,7 +35,11 @@
         "syntaxTheme": "dark",
         "analytics": {
             "piwikSite": 6,
-            "domain": "analytics.webcabin.org"
+            "domain": "analytics.webcabin.org",
+            "myDomains": [
+                "*.docker.api.webcabin.org",
+                "*.docker.api.webcabin.org"
+            ]
         }
     }
 }

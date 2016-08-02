@@ -3,7 +3,7 @@ out
 node_modules
 bower install.bat
 bower update.bat
-project.sublime-project
-project.sublime-workspace
+*.sublime-project
+*.sublime-workspace
 runServer.bat
 bower_components/

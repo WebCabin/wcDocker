@@ -3,69 +3,86 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>wcDocker Module: wcCollapser</title>
+	<meta name="viewport" content="width=device-width">
+	<title><div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div> Module: wcCollapser</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
 
 </head>
 
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container-fluid">
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html"><div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div></a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
 	</div>
-	<div class="navbar-collapse">
+	<div class="navbar-collapse collapse" id="topNavigation">
 		<ul class="nav navbar-nav">
 			
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="module-wcBase.html">wcBase</a></li><li><a href="module-wcCollapser.html">wcCollapser</a></li><li><a href="module-wcDocker.html">wcDocker</a></li><li><a href="module-wcDrawer.html">wcDrawer</a></li><li><a href="module-wcFrame.html">wcFrame</a></li><li><a href="module-wcGhost.html">wcGhost</a></li><li><a href="module-wcIFrame.html">wcIFrame</a></li><li><a href="module-wcLayout.html">wcLayout</a></li><li><a href="module-wcLayoutSimple.html">wcLayoutSimple</a></li><li><a href="module-wcLayoutTable.html">wcLayoutTable</a></li><li><a href="module-wcPanel.html">wcPanel</a></li><li><a href="module-wcSplitter.html">wcSplitter</a></li><li><a href="module-wcTabFrame.html">wcTabFrame</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="module-wcDocker.html#event:onEvent">wcDocker#event:onEvent</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-tips-and-tricks.html">Tips and Tricks</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
 				</ul>
 			</li>
 			
 		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
 	</div>
+
 </div>
 </div>
 
 
-<div class="container-fluid">
+<div class="container" id="toc-content">
 <div class="row">
 
 	
-	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
+	<div class="col-md-8">
 	
 		<div id="main">
-    		
+			
 
 	<h1 class="page-title">Module: wcCollapser</h1>
 <section>
@@ -88,52 +105,38 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="module:wcCollapser"><toc class="small"><i></i></toc><toc> </toc><toc>new </toc><toc><b>(require("wcCollapser"))</b>()</toc>
+    <h4 class="name" id="module:wcCollapser"><toc class="attribs"><span class="type-signature"></span></toc>new <toc class="method"><b>(require("wcCollapser"))</b>()</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">A docker container for carrying its own arrangement of docked panels as a slide out drawer.<br/><b><i>PRIVATE<i> - Handled internally by <a href="module-wcDocker.html">docker</a> and <u>should never be constructed by the user.</u></b></p>
+        <p style="margin-left:20px;">A docker container for carrying its own arrangement of docked panels as a slide out drawer.<br/><b><i>PRIVATE<i> - Handled internally by <a href="module-wcDocker.html">docker</a> and <u>should never be constructed by the user.</u></b></p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
 
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -161,18 +164,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="collapser.js.html">collapser.js</a>,
-     <a href="collapser.js.html#sunlight-1-line-10">line 10</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="collapser.js.html">collapser.js</a>,
 				 <a href="collapser.js.html#sunlight-1-line-10">line 10</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -182,6 +182,20 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
@@ -207,20 +221,20 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".constructor"><toc class="small"><i>static</i></toc><toc> </toc>function <toc><b>constructor</b>(container, parent, position)</toc>
+    <h4 class="name" id=".constructor"><toc class="attribs"><span class="type-signature">&lt;static> </span></toc>function <toc class="method"><b>constructor</b>(container, parent, position)</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
-    
 
     
 
     
+
     
+
     
     
         <h5>Parameters:</h5>
@@ -228,23 +242,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -263,6 +277,7 @@
 <span class="param-type"><a href="external-domNode.html">external:domNode</a></span>
 
 
+
             
             </td>
 
@@ -273,7 +288,7 @@
             <td class="description last">A container element for this drawer.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -289,6 +304,7 @@
 <span class="param-type">wcDocker</span>
 
 
+
             
             </td>
 
@@ -299,7 +315,7 @@
             <td class="description last">The drawer's parent object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -309,7 +325,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.DOCK</span>
+<span class="param-type"><a href="module-wcDocker.html#.DOCK">module:wcDocker.DOCK</a></span>
+
 
 
             
@@ -322,29 +339,15 @@
             <td class="description last">A docking position to place this drawer.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -373,18 +376,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="collapser.js.html">collapser.js</a>,
-     <a href="collapser.js.html#sunlight-1-line-26">line 26</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="collapser.js.html">collapser.js</a>,
 				 <a href="collapser.js.html#sunlight-1-line-26">line 26</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -394,50 +394,50 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="collapse"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>collapse</b>()</toc>
+    <h4 class="name" id="collapse"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>collapse</b>()</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Collapses the drawer to its respective side wall.</p>
+        <p style="margin-left:20px;">Collapses the drawer to its respective side wall.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
 
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -466,18 +466,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="collapser.js.html">collapser.js</a>,
-     <a href="collapser.js.html#sunlight-1-line-43">line 43</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="collapser.js.html">collapser.js</a>,
 				 <a href="collapser.js.html#sunlight-1-line-43">line 43</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -487,50 +484,50 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="expand"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>expand</b>()</toc>
+    <h4 class="name" id="expand"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>expand</b>()</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Expands the drawer.</p>
+        <p style="margin-left:20px;">Expands the drawer.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
 
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -559,18 +556,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="collapser.js.html">collapser.js</a>,
-     <a href="collapser.js.html#sunlight-1-line-51">line 51</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="collapser.js.html">collapser.js</a>,
 				 <a href="collapser.js.html#sunlight-1-line-51">line 51</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -580,69 +574,58 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="isExpanded"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>isExpanded</b>()</toc>
+    <h4 class="name" id="isExpanded"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>isExpanded</b>()</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets whether the drawer is expanded.</p>
+        <p style="margin-left:20px;">Gets whether the drawer is expanded.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Boolean</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		The current expanded state.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -671,18 +654,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="collapser.js.html">collapser.js</a>,
-     <a href="collapser.js.html#sunlight-1-line-59">line 59</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="collapser.js.html">collapser.js</a>,
 				 <a href="collapser.js.html#sunlight-1-line-59">line 59</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -692,69 +672,82 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current expanded state.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="maxSize"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>maxSize</b>()</toc>
+    <h4 class="name" id="maxSize"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>maxSize</b>()</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">The maximum size constraint for the side bar area.</p>
+        <p style="margin-left:20px;">The maximum size constraint for the side bar area.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		The maximum size.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -783,18 +776,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="collapser.js.html">collapser.js</a>,
-     <a href="collapser.js.html#sunlight-1-line-77">line 77</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="collapser.js.html">collapser.js</a>,
 				 <a href="collapser.js.html#sunlight-1-line-77">line 77</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -804,69 +794,82 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The maximum size.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="minSize"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>minSize</b>()</toc>
+    <h4 class="name" id="minSize"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>minSize</b>()</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">The minimum size constraint for the side bar area.</p>
+        <p style="margin-left:20px;">The minimum size constraint for the side bar area.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		The minimum size.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -895,18 +898,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="collapser.js.html">collapser.js</a>,
-     <a href="collapser.js.html#sunlight-1-line-68">line 68</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="collapser.js.html">collapser.js</a>,
 				 <a href="collapser.js.html#sunlight-1-line-68">line 68</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -916,6 +916,44 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The minimum size.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         </dl>
@@ -938,56 +976,55 @@
 
 	
 		<div class="col-md-3">
-			<div id="toc" class="col-xs-3 col-sm-3 col-md-3 small"></div>
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
 		</div>
 	
 
 </div>
-
-<div class="row">
-	
-	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
-	
-		<footer>
-		
-		
-		<span class="jsdoc-message">
-			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2016-03-09 using the <a
-			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
-		</span>
-		</footer>
-	</div>
 </div>
-<div style="height:1000px;"></div>
 
-<!--<script src="scripts/sunlight.js"></script>-->
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	2014-2016 Jeff Houde (<a href='mailto:lochemage@webcabin.org'>lochemage@webcabin.org</a>)
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-08-02
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
 <script src="scripts/docstrap.lib.js"></script>
-<script src="scripts/bootstrap-dropdown.js"></script>
 <script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
 
 <script>
 $( function () {
-	// $( "[id*='$']" ).each( function () {
-	// 	var $this = $( this );
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
 
-	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
-	// } );
-
-	$( "#toc" ).toc( {
-		anchorName  : function ( i, heading, prefix ) {
-			// return $( heading ).attr( "id" ) || ( prefix + i );
-			return ( prefix + i );
-		},
-		selectors   : "h1,h2,h3,h4",
-		showAndHide : false,
-		scrollTo    : "100px"
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
-
-	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
-	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
-	$( '.dropdown-toggle' ).dropdown();
-	// $( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
 
 	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
 		var $this = $( this );
@@ -1000,7 +1037,8 @@ $( function () {
 			example.html( exampleText );
 			lang = lang[1];
 		} else {
-			lang = "javascript";
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
 		}
 
 		if ( lang ) {
@@ -1019,17 +1057,32 @@ $( function () {
 		enableDoclinks : true
 	} );
 
-	$("a[name^='sunlight-1-line-']").each(function() {
-		$(this).wrap('<div id="' + this.name + '" style="padding-top:40px;margin-top:-40px;display:inline-block;" class="sunlight-line-container"></div>');
-		this.name = '';
-	});
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
 
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 50).css('margin-top', -50);
-  });
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
 } );
 </script>
 
+
+
+<!--Navigation and Symbol Display-->
 
 
 
@@ -1040,20 +1093,34 @@ $( function () {
   var _paq = _paq || [];
   
   
+  
+  	_paq.push(["setDomains", [
+  		
+  		"*.docker.api.webcabin.org",
+  		
+  		"*.docker.api.webcabin.org"
+  		
+  	]]);
+  
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u="https://analytics.webcabin.org/";
+    var u="//analytics.webcabin.org/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', 6]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<noscript><p><img src="https://analytics.webcabin.org/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="//analytics.webcabin.org/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->
 
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
 
 </body>
 </html>

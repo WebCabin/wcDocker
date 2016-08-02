@@ -3,69 +3,86 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>wcDocker Module: wcSplitter</title>
+	<meta name="viewport" content="width=device-width">
+	<title><div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div> Module: wcSplitter</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
 
 </head>
 
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container-fluid">
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html"><div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div></a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
 	</div>
-	<div class="navbar-collapse">
+	<div class="navbar-collapse collapse" id="topNavigation">
 		<ul class="nav navbar-nav">
 			
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="module-wcBase.html">wcBase</a></li><li><a href="module-wcCollapser.html">wcCollapser</a></li><li><a href="module-wcDocker.html">wcDocker</a></li><li><a href="module-wcDrawer.html">wcDrawer</a></li><li><a href="module-wcFrame.html">wcFrame</a></li><li><a href="module-wcGhost.html">wcGhost</a></li><li><a href="module-wcIFrame.html">wcIFrame</a></li><li><a href="module-wcLayout.html">wcLayout</a></li><li><a href="module-wcLayoutSimple.html">wcLayoutSimple</a></li><li><a href="module-wcLayoutTable.html">wcLayoutTable</a></li><li><a href="module-wcPanel.html">wcPanel</a></li><li><a href="module-wcSplitter.html">wcSplitter</a></li><li><a href="module-wcTabFrame.html">wcTabFrame</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="module-wcDocker.html#event:onEvent">wcDocker#event:onEvent</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-tips-and-tricks.html">Tips and Tricks</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
 				</ul>
 			</li>
 			
 		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
 	</div>
+
 </div>
 </div>
 
 
-<div class="container-fluid">
+<div class="container" id="toc-content">
 <div class="row">
 
 	
-	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
+	<div class="col-md-8">
 	
 		<div id="main">
-    		
+			
 
 	<h1 class="page-title">Module: wcSplitter</h1>
 <section>
@@ -82,7 +99,7 @@
 
         
 <dl class="details">
-	
+    
 
 	
 
@@ -111,18 +128,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-1">line 1</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-1">line 1</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -154,30 +168,33 @@
             
 <hr>
 <dt class="name" id="$pane">
-    <h4><toc class="small"><i></i></toc><toc> </toc>
-        var
-        <b><toc>$pane</toc></b>
-    </h4>
+    <h4 id="$pane"><toc class="attribs"><span class="type-signature"></span></toc>var <toc class="member"><b>$pane</b></toc></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p style="margin-left:20px;">An array of two elements representing each side of the splitter.Index 0 is always either top or left depending on orientation.</p>
+        <p style="margin-left:20px;">An array of two elements representing each side of the splitter.Index 0 is always either top or left depending on <a href="module-wcDocker.html#.ORIENTATION">orientation</a>.</p>
     </div>
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;<a href="external-jQuery.html#~Object">external:jQuery~Object</a>></span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -206,18 +223,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-37">line 37</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-37">line 37</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -241,20 +255,20 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".constructor"><toc class="small"><i>static</i></toc><toc> </toc>function <toc><b>constructor</b>(container, parent, orientation)</toc>
+    <h4 class="name" id=".constructor"><toc class="attribs"><span class="type-signature">&lt;static> </span></toc>function <toc class="method"><b>constructor</b>(container, parent, orientation)</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
-    
 
     
 
     
+
     
+
     
     
         <h5>Parameters:</h5>
@@ -262,23 +276,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -297,6 +311,7 @@
 <span class="param-type"><a href="external-domNode.html">external:domNode</a></span>
 
 
+
             
             </td>
 
@@ -307,7 +322,7 @@
             <td class="description last">A container element for this splitter.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -326,6 +341,7 @@
 <span class="param-type">wcDocker</span>
 
 
+
             
             </td>
 
@@ -336,7 +352,7 @@
             <td class="description last">The splitter's parent object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -346,7 +362,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.ORIENTATION</span>
+<span class="param-type"><a href="module-wcDocker.html#.ORIENTATION">module:wcDocker.ORIENTATION</a></span>
+
 
 
             
@@ -359,29 +376,15 @@
             <td class="description last">The orientation of the splitter bar.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -410,18 +413,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-25">line 25</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-25">line 25</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -431,30 +431,44 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="animPos"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>animPos</b>(value)</toc>
+    <h4 class="name" id="animPos"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>animPos</b>(value)</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Animates to a given splitter position.</p>
+        <p style="margin-left:20px;">Animates to a given splitter position.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -462,23 +476,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -491,6 +505,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -501,7 +516,7 @@
             <td class="description last">Assigns the target splitter position. Value must be a percentage between 0 and 1.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -514,6 +529,7 @@
 <span class="param-type">module:wcSplitter~onFinished</span>
 
 
+
             
             </td>
 
@@ -524,29 +540,15 @@
             <td class="description last">A finished event handler.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -575,18 +577,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-203">line 203</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-203">line 203</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -596,15 +595,29 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="bottom"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>bottom</b>(<span class="optional">item</span>)</toc>
+    <h4 class="name" id="bottom"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>bottom</b>( [item])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
@@ -621,24 +634,25 @@
 
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the element associated with the bottom pane (for vertical layouts).</p>
+        <p style="margin-left:20px;">Gets, or Sets the element associated with the bottom pane (for vertical layouts).</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -646,25 +660,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -684,6 +698,7 @@
 |
 
 <span class="param-type"><a href="wcSplitter.html">wcSplitter</a></span>
+
 
 
             
@@ -706,15 +721,88 @@
             <td class="description last">If supplied, the pane will be replaced with this item.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
     
+
     
+<dl class="details">
     
+
+	
+
+	
+
+	
+
     
-<h5>Returns: 
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="splitter.js.html">splitter.js</a>,
+				 <a href="splitter.js.html#sunlight-1-line-304">line 304</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current object assigned to the pane, or false.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
 |
 
@@ -729,103 +817,39 @@
 
 <span class="param-type">Boolean</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The current object assigned to the pane, or false.
-	</p>
+
+
+    </dd>
+</dl>
+
 
         
 
     
-
-    
-
-    
-
-    
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-304">line 304</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="splitter.js.html">splitter.js</a>,
-				 <a href="splitter.js.html#sunlight-1-line-304">line 304</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-</dl>
-
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="destroy"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>destroy</b>(<span class="optional">destroyPanes</span>)</toc>
+    <h4 class="name" id="destroy"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>destroy</b>( [destroyPanes])</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Destroys the splitter.</p>
+        <p style="margin-left:20px;">Destroys the splitter.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -833,27 +857,27 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -864,6 +888,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -892,29 +917,15 @@
             <td class="description last">If true, both panes attached will be destroyed as well. Use false if you plan to continue using the objects assigned to each pane, or make sure to remove them first before destruction.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -943,18 +954,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-337">line 337</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-337">line 337</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -964,30 +972,44 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="initLayouts"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>initLayouts</b>(<span class="optional">topLeftLayout</span>, <span class="optional">bottomRightLayout</span>)</toc>
+    <h4 class="name" id="initLayouts"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>initLayouts</b>( [topLeftLayout] [, bottomRightLayout])</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Initializes the two <a href="module-wcSplitter.html#$pane">panes</a> of the splitter with its own layouts.<br>This should be used to initialize the splitter when creating one for use inside your panel.</p>
+        <p style="margin-left:20px;">Initializes the two <a href="module-wcSplitter.html#$pane">panes</a> of the splitter with its own layouts.<br>This should be used to initialize the splitter when creating one for use inside your panel.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -995,27 +1017,27 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -1025,7 +1047,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.LAYOUT</span>
+<span class="param-type"><a href="module-wcDocker.html#.LAYOUT">module:wcDocker.LAYOUT</a></span>
+
 
 
             
@@ -1054,7 +1077,7 @@
             <td class="description last">The type of layout to use for the top or left pane.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1064,7 +1087,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.LAYOUT</span>
+<span class="param-type"><a href="module-wcDocker.html#.LAYOUT">module:wcDocker.LAYOUT</a></span>
+
 
 
             
@@ -1093,29 +1117,15 @@
             <td class="description last">The type of layout to use for the bottom or right pane.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -1144,18 +1154,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-56">line 56</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-56">line 56</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1165,15 +1172,29 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="left"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>left</b>(<span class="optional">item</span>)</toc>
+    <h4 class="name" id="left"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>left</b>( [item])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
@@ -1190,24 +1211,25 @@
 
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the element associated with the left side pane (for horizontal layouts).</p>
+        <p style="margin-left:20px;">Gets, or Sets the element associated with the left side pane (for horizontal layouts).</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -1215,25 +1237,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -1253,6 +1275,7 @@
 |
 
 <span class="param-type"><a href="wcSplitter.html">wcSplitter</a></span>
+
 
 
             
@@ -1275,15 +1298,88 @@
             <td class="description last">If supplied, the pane will be replaced with this item.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
     
+
     
+<dl class="details">
     
+
+	
+
+	
+
+	
+
     
-<h5>Returns: 
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="splitter.js.html">splitter.js</a>,
+				 <a href="splitter.js.html#sunlight-1-line-274">line 274</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current object assigned to the pane, or false.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
 |
 
@@ -1298,142 +1394,53 @@
 
 <span class="param-type">Boolean</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The current object assigned to the pane, or false.
-	</p>
+
+
+    </dd>
+</dl>
+
 
         
 
     
-
-    
-
-    
-
-    
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-274">line 274</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="splitter.js.html">splitter.js</a>,
-				 <a href="splitter.js.html#sunlight-1-line-274">line 274</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-</dl>
-
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="maxSize"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>maxSize</b>()</toc>
+    <h4 class="name" id="maxSize"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>maxSize</b>()</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets the maximum size constraint of the outer splitter area.</p>
+        <p style="margin-left:20px;">Gets the maximum size constraint of the outer splitter area.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The maximum size.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -1462,18 +1469,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-146">line 146</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-146">line 146</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1483,69 +1487,82 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The maximum size.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="minSize"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>minSize</b>()</toc>
+    <h4 class="name" id="minSize"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>minSize</b>()</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets the minimum size constraint of the outer splitter area.</p>
+        <p style="margin-left:20px;">Gets the minimum size constraint of the outer splitter area.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		The minimum size.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -1574,18 +1591,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-108">line 108</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-108">line 108</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1595,30 +1609,68 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The minimum size.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcDocker.html#~Size">module:wcDocker~Size</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="orientation"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>orientation</b>(orientation)</toc>
+    <h4 class="name" id="orientation"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>orientation</b>(orientation)</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the orientation of the splitter.</p>
+        <p style="margin-left:20px;">Gets, or Sets the orientation of the splitter.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -1626,23 +1678,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -1652,7 +1704,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.ORIENTATION</span>
+<span class="param-type"><a href="module-wcDocker.html#.ORIENTATION">module:wcDocker.ORIENTATION</a></span>
+
 
 
             
@@ -1665,29 +1718,15 @@
             <td class="description last">The new orientation of the splitter.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -1716,18 +1755,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-74">line 74</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-74">line 74</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1737,15 +1773,29 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="pane"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>pane</b>(index, <span class="optional">item</span>)</toc>
+    <h4 class="name" id="pane"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>pane</b>(index [, item])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
@@ -1762,24 +1812,25 @@
 
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the element associated with a pane.</p>
+        <p style="margin-left:20px;">Gets, or Sets the element associated with a pane.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -1787,25 +1838,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -1816,6 +1867,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -1836,7 +1888,7 @@
             <td class="description last">The index of the pane, only 0 and 1 are valid.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1856,6 +1908,7 @@
 |
 
 <span class="param-type"><a href="wcSplitter.html">wcSplitter</a></span>
+
 
 
             
@@ -1878,15 +1931,88 @@
             <td class="description last">If supplied, the pane will be replaced with this item.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
     
+
     
+<dl class="details">
     
+
+	
+
+	
+
+	
+
     
-<h5>Returns: 
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="splitter.js.html">splitter.js</a>,
+				 <a href="splitter.js.html#sunlight-1-line-243">line 243</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current object assigned to the pane, or false.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
 |
 
@@ -1901,110 +2027,47 @@
 
 <span class="param-type">Boolean</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The current object assigned to the pane, or false.
-	</p>
+
+
+    </dd>
+</dl>
+
 
         
 
     
-
-    
-
-    
-
-    
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-243">line 243</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="splitter.js.html">splitter.js</a>,
-				 <a href="splitter.js.html#sunlight-1-line-243">line 243</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-</dl>
-
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="pos"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>pos</b>(<span class="optional">value</span>)</toc>
+    <h4 class="name" id="pos"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>pos</b>( [value])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Number</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Get, or Set the current splitter position.</p>
+        <p style="margin-left:20px;">Get, or Set the current splitter position.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -2012,25 +2075,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2041,6 +2104,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -2063,41 +2127,15 @@
             <td class="description last">If supplied, assigns a new splitter position. Value must be a percentage value between 0 and 1.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Number</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The current position.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -2126,18 +2164,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-184">line 184</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-184">line 184</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2147,15 +2182,53 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current position.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="right"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>right</b>(<span class="optional">item</span>)</toc>
+    <h4 class="name" id="right"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>right</b>( [item])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
@@ -2172,24 +2245,25 @@
 
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the element associated with the right side pane (for horizontal layouts).</p>
+        <p style="margin-left:20px;">Gets, or Sets the element associated with the right side pane (for horizontal layouts).</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -2197,25 +2271,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2235,6 +2309,7 @@
 |
 
 <span class="param-type"><a href="wcSplitter.html">wcSplitter</a></span>
+
 
 
             
@@ -2257,15 +2332,88 @@
             <td class="description last">If supplied, the pane will be replaced with this item.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
     
+
     
+<dl class="details">
     
+
+	
+
+	
+
+	
+
     
-<h5>Returns: 
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="splitter.js.html">splitter.js</a>,
+				 <a href="splitter.js.html#sunlight-1-line-284">line 284</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current object assigned to the pane, or false.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
 |
 
@@ -2280,110 +2428,47 @@
 
 <span class="param-type">Boolean</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The current object assigned to the pane, or false.
-	</p>
+
+
+    </dd>
+</dl>
+
 
         
 
     
-
-    
-
-    
-
-    
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-284">line 284</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="splitter.js.html">splitter.js</a>,
-				 <a href="splitter.js.html#sunlight-1-line-284">line 284</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-</dl>
-
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="scrollable"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>scrollable</b>(index, <span class="optional">x</span>, <span class="optional">y</span>)</toc>
+    <h4 class="name" id="scrollable"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>scrollable</b>(index [, x] [, y])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcDocker.html#~Scrollable">module:wcDocker~Scrollable</a></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets whether a pane can be scrolled via scroll bars.By default, scrolling is enabled in both directions.</p>
+        <p style="margin-left:20px;">Gets, or Sets whether a pane can be scrolled via scroll bars.By default, scrolling is enabled in both directions.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -2391,25 +2476,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2420,6 +2505,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -2440,7 +2526,7 @@
             <td class="description last">The index of the pane, only 0 and 1 are valid.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2451,6 +2537,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -2473,7 +2560,7 @@
             <td class="description last">Whether to allow scrolling in the horizontal direction.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2484,6 +2571,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -2506,41 +2594,15 @@
             <td class="description last">Whether to allow scrolling in the vertical direction.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcDocker.html#~Scrollable">module:wcDocker~Scrollable</a></span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The current scroll state for each direction.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -2569,18 +2631,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-314">line 314</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="splitter.js.html">splitter.js</a>,
 				 <a href="splitter.js.html#sunlight-1-line-314">line 314</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2590,15 +2649,53 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current scroll state for each direction.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcDocker.html#~Scrollable">module:wcDocker~Scrollable</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="top"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>top</b>(<span class="optional">item</span>)</toc>
+    <h4 class="name" id="top"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>top</b>( [item])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
@@ -2615,24 +2712,25 @@
 
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the element associated with the top pane (for vertical layouts).</p>
+        <p style="margin-left:20px;">Gets, or Sets the element associated with the top pane (for vertical layouts).</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -2640,25 +2738,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2678,6 +2776,7 @@
 |
 
 <span class="param-type"><a href="wcSplitter.html">wcSplitter</a></span>
+
 
 
             
@@ -2700,15 +2799,88 @@
             <td class="description last">If supplied, the pane will be replaced with this item.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
     
+
     
+<dl class="details">
     
+
+	
+
+	
+
+	
+
     
-<h5>Returns: 
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="splitter.js.html">splitter.js</a>,
+				 <a href="splitter.js.html#sunlight-1-line-294">line 294</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The current object assigned to the pane, or false.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
 |
 
@@ -2723,79 +2895,15 @@
 
 <span class="param-type">Boolean</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The current object assigned to the pane, or false.
-	</p>
+
+
+    </dd>
+</dl>
+
 
         
 
     
-
-    
-
-    
-
-    
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="splitter.js.html">splitter.js</a>,
-     <a href="splitter.js.html#sunlight-1-line-294">line 294</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="splitter.js.html">splitter.js</a>,
-				 <a href="splitter.js.html#sunlight-1-line-294">line 294</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-</dl>
-
 </dd>
 
         </dl>
@@ -2818,56 +2926,55 @@
 
 	
 		<div class="col-md-3">
-			<div id="toc" class="col-xs-3 col-sm-3 col-md-3 small"></div>
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
 		</div>
 	
 
 </div>
-
-<div class="row">
-	
-	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
-	
-		<footer>
-		
-		
-		<span class="jsdoc-message">
-			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2016-03-09 using the <a
-			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
-		</span>
-		</footer>
-	</div>
 </div>
-<div style="height:1000px;"></div>
 
-<!--<script src="scripts/sunlight.js"></script>-->
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	2014-2016 Jeff Houde (<a href='mailto:lochemage@webcabin.org'>lochemage@webcabin.org</a>)
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-08-02
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
 <script src="scripts/docstrap.lib.js"></script>
-<script src="scripts/bootstrap-dropdown.js"></script>
 <script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
 
 <script>
 $( function () {
-	// $( "[id*='$']" ).each( function () {
-	// 	var $this = $( this );
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
 
-	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
-	// } );
-
-	$( "#toc" ).toc( {
-		anchorName  : function ( i, heading, prefix ) {
-			// return $( heading ).attr( "id" ) || ( prefix + i );
-			return ( prefix + i );
-		},
-		selectors   : "h1,h2,h3,h4",
-		showAndHide : false,
-		scrollTo    : "100px"
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
-
-	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
-	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
-	$( '.dropdown-toggle' ).dropdown();
-	// $( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
 
 	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
 		var $this = $( this );
@@ -2880,7 +2987,8 @@ $( function () {
 			example.html( exampleText );
 			lang = lang[1];
 		} else {
-			lang = "javascript";
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
 		}
 
 		if ( lang ) {
@@ -2899,17 +3007,32 @@ $( function () {
 		enableDoclinks : true
 	} );
 
-	$("a[name^='sunlight-1-line-']").each(function() {
-		$(this).wrap('<div id="' + this.name + '" style="padding-top:40px;margin-top:-40px;display:inline-block;" class="sunlight-line-container"></div>');
-		this.name = '';
-	});
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
 
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 50).css('margin-top', -50);
-  });
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
 } );
 </script>
 
+
+
+<!--Navigation and Symbol Display-->
 
 
 
@@ -2920,20 +3043,34 @@ $( function () {
   var _paq = _paq || [];
   
   
+  
+  	_paq.push(["setDomains", [
+  		
+  		"*.docker.api.webcabin.org",
+  		
+  		"*.docker.api.webcabin.org"
+  		
+  	]]);
+  
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u="https://analytics.webcabin.org/";
+    var u="//analytics.webcabin.org/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', 6]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<noscript><p><img src="https://analytics.webcabin.org/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="//analytics.webcabin.org/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->
 
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
 
 </body>
 </html>

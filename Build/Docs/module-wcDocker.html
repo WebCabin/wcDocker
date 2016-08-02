@@ -3,69 +3,86 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>wcDocker Module: wcDocker</title>
+	<meta name="viewport" content="width=device-width">
+	<title><div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div> Module: wcDocker</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.superhero.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
 
 </head>
 
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-<div class="container-fluid">
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="index.html"><div style='font-size:15px;line-height:15px;margin-top:-5px;'>Web Cabin Docker<br>v3.0.0 (pre-release)</div></a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
 	</div>
-	<div class="navbar-collapse">
+	<div class="navbar-collapse collapse" id="topNavigation">
 		<ul class="nav navbar-nav">
 			
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="module-wcBase.html">wcBase</a></li><li><a href="module-wcCollapser.html">wcCollapser</a></li><li><a href="module-wcDocker.html">wcDocker</a></li><li><a href="module-wcDrawer.html">wcDrawer</a></li><li><a href="module-wcFrame.html">wcFrame</a></li><li><a href="module-wcGhost.html">wcGhost</a></li><li><a href="module-wcIFrame.html">wcIFrame</a></li><li><a href="module-wcLayout.html">wcLayout</a></li><li><a href="module-wcLayoutSimple.html">wcLayoutSimple</a></li><li><a href="module-wcLayoutTable.html">wcLayoutTable</a></li><li><a href="module-wcPanel.html">wcPanel</a></li><li><a href="module-wcSplitter.html">wcSplitter</a></li><li><a href="module-wcTabFrame.html">wcTabFrame</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="module-wcDocker.html#event:onEvent">wcDocker#event:onEvent</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="tutorial-1.0-getting-started.html">Getting Started</a></li><li><a href="tutorial-2.0-tips-and-tricks.html">Tips and Tricks</a></li><li><a href="tutorial-3.0-widgets.html">Widgets</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
+				<ul class="dropdown-menu inline">
 					<li><a href="external-domNode.html">domNode</a></li><li><a href="external-jQuery.html">jQuery</a></li>
 				</ul>
 			</li>
 			
 		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
 	</div>
+
 </div>
 </div>
 
 
-<div class="container-fluid">
+<div class="container" id="toc-content">
 <div class="row">
 
 	
-	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
+	<div class="col-md-8">
 	
 		<div id="main">
-    		
+			
 
 	<h1 class="page-title">Module: wcDocker</h1>
 <section>
@@ -82,7 +99,7 @@
 
         
 <dl class="details">
-	
+    
 
 	
 
@@ -111,18 +128,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-17">line 17</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-17">line 17</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -154,30 +168,33 @@
             
 <hr>
 <dt class="name" id=".COLLAPSED">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>COLLAPSED</toc></b>
-    </h4>
+    <h4 id=".COLLAPSED"><toc class="attribs"><span class="type-signature">&lt;static, constant> </span></toc>var <toc class="member"><b>COLLAPSED</b></toc></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p style="margin-left:20px;">Used when <a href="module-wcDocker.html#addPanel">adding</a> or <a href="module-wcDocker.html#movePanel">moving</a> a panel to designate the target location as collapsed.<br>Must be used with docking positions LEFT, RIGHT, or BOTTOM only.</p>
+        <p style="margin-left:20px;">Used when <a href="module-wcDocker.html#addPanel">adding</a> or <a href="module-wcDocker.html#movePanel">moving</a> a panel to designate the target location as collapsed.<br>Must be used with <a href="module-wcDocker.html#.DOCK">docking</a> positions LEFT, RIGHT, or BOTTOM only.</p>
     </div>
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">String</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -206,18 +223,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="types.js.html">types.js</a>,
-     <a href="types.js.html#sunlight-1-line-134">line 134</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="types.js.html">types.js</a>,
-				 <a href="types.js.html#sunlight-1-line-134">line 134</a>
+				 <a href="types.js.html#sunlight-1-line-113">line 113</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -234,11 +248,8 @@
         
             
 <hr>
-<dt class="name" id=".wcDocker.DOCK">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>wcDocker.DOCK</toc></b>
-    </h4>
+<dt class="name" id=".DOCK">
+    <h4 id=".DOCK"><toc class="attribs"><span class="type-signature">&lt;static, constant> </span></toc>var <toc class="member"><b>DOCK</b></toc></h4>
 
     
 </dt>
@@ -250,42 +261,36 @@
     
 
     
-        <h5>Type: 
-<span class="param-type">String</span>
-
-</h5>
-    
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -298,6 +303,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -306,7 +312,7 @@
             
                 <td class="default">
                 
-                    modal
+                    "modal"
                 
                 </td>
             
@@ -314,7 +320,7 @@
             <td class="description last">A floating panel that blocks input until closed</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -327,6 +333,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -335,7 +342,7 @@
             
                 <td class="default">
                 
-                    float
+                    "float"
                 
                 </td>
             
@@ -343,7 +350,7 @@
             <td class="description last">A floating panel</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -356,6 +363,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -364,7 +372,7 @@
             
                 <td class="default">
                 
-                    top
+                    "top"
                 
                 </td>
             
@@ -372,7 +380,7 @@
             <td class="description last">Docks to the top of a target or window</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -385,6 +393,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -393,7 +402,7 @@
             
                 <td class="default">
                 
-                    left
+                    "left"
                 
                 </td>
             
@@ -401,7 +410,7 @@
             <td class="description last">Docks to the left of a target or window</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -414,6 +423,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -422,7 +432,7 @@
             
                 <td class="default">
                 
-                    right
+                    "right"
                 
                 </td>
             
@@ -430,7 +440,7 @@
             <td class="description last">Docks to the right of a target or window</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -443,6 +453,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -451,7 +462,7 @@
             
                 <td class="default">
                 
-                    bottom
+                    "bottom"
                 
                 </td>
             
@@ -459,7 +470,7 @@
             <td class="description last">Docks to the bottom of a target or window</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -472,6 +483,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -480,7 +492,7 @@
             
                 <td class="default">
                 
-                    stacked
+                    "stacked"
                 
                 </td>
             
@@ -488,20 +500,20 @@
             <td class="description last">Docks as another tabbed item along with the target</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
+
+    
 
 	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -529,18 +541,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="types.js.html">types.js</a>,
-     <a href="types.js.html#sunlight-1-line-12">line 12</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="types.js.html">types.js</a>,
-				 <a href="types.js.html#sunlight-1-line-12">line 12</a>
+				 <a href="types.js.html#sunlight-1-line-6">line 6</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -557,11 +566,8 @@
         
             
 <hr>
-<dt class="name" id=".wcDocker.EVENT">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>wcDocker.EVENT</toc></b>
-    </h4>
+<dt class="name" id=".EVENT">
+    <h4 id=".EVENT"><toc class="attribs"><span class="type-signature">&lt;static, constant> </span></toc>var <toc class="member"><b>EVENT</b></toc></h4>
 
     
 </dt>
@@ -573,42 +579,36 @@
     
 
     
-        <h5>Type: 
-<span class="param-type">String</span>
-
-</h5>
-    
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -621,6 +621,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -629,7 +630,7 @@
             
                 <td class="default">
                 
-                    panelInit
+                    "panelInit"
                 
                 </td>
             
@@ -637,7 +638,7 @@
             <td class="description last">When the panel is initialized</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -650,6 +651,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -658,7 +660,7 @@
             
                 <td class="default">
                 
-                    dockerLoaded
+                    "dockerLoaded"
                 
                 </td>
             
@@ -666,7 +668,7 @@
             <td class="description last">When all panels have finished loading</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -679,6 +681,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -687,7 +690,7 @@
             
                 <td class="default">
                 
-                    panelUpdated
+                    "panelUpdated"
                 
                 </td>
             
@@ -695,7 +698,7 @@
             <td class="description last">When the panel is updated</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -708,6 +711,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -716,15 +720,15 @@
             
                 <td class="default">
                 
-                    panelVisibilityChanged
+                    "panelVisibilityChanged"
                 
                 </td>
             
 
-            <td class="description last">When the panel has changed its visibility<br>This event is called with the current visibility state as the first parameter.</td>
+            <td class="description last">When the panel has changed its visibility<br>This event is called with the current visibility state as the first parameter</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -737,6 +741,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -745,7 +750,7 @@
             
                 <td class="default">
                 
-                    panelBeginDock
+                    "panelBeginDock"
                 
                 </td>
             
@@ -753,7 +758,7 @@
             <td class="description last">When the user begins moving any panel from its current docked position</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -766,6 +771,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -774,7 +780,7 @@
             
                 <td class="default">
                 
-                    panelEndDock
+                    "panelEndDock"
                 
                 </td>
             
@@ -782,7 +788,7 @@
             <td class="description last">When the user finishes moving or docking a panel</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -795,6 +801,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -803,7 +810,7 @@
             
                 <td class="default">
                 
-                    panelGainFocus
+                    "panelGainFocus"
                 
                 </td>
             
@@ -811,7 +818,7 @@
             <td class="description last">When the user brings any panel within a tabbed frame into focus</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -824,6 +831,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -832,7 +840,7 @@
             
                 <td class="default">
                 
-                    panelLostFocus
+                    "panelLostFocus"
                 
                 </td>
             
@@ -840,7 +848,7 @@
             <td class="description last">When the user leaves focus on any panel within a tabbed frame</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -853,6 +861,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -861,7 +870,7 @@
             
                 <td class="default">
                 
-                    panelClosing
+                    "panelClosing"
                 
                 </td>
             
@@ -869,7 +878,7 @@
             <td class="description last">When the panel is about to be closed, but before it closes. If any event handler returns a falsey value, the close action will be canceled.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -882,6 +891,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -890,7 +900,7 @@
             
                 <td class="default">
                 
-                    panelClosed
+                    "panelClosed"
                 
                 </td>
             
@@ -898,7 +908,7 @@
             <td class="description last">When the panel is being closed</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -911,6 +921,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -919,7 +930,7 @@
             
                 <td class="default">
                 
-                    panelPersistentClosed
+                    "panelPersistentClosed"
                 
                 </td>
             
@@ -927,7 +938,7 @@
             <td class="description last">When a persistent panel is being hidden</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -940,6 +951,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -948,7 +960,7 @@
             
                 <td class="default">
                 
-                    panelPersistentOpened
+                    "panelPersistentOpened"
                 
                 </td>
             
@@ -956,7 +968,7 @@
             <td class="description last">When a persistent panel is being shown</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -969,6 +981,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -977,7 +990,7 @@
             
                 <td class="default">
                 
-                    panelButton
+                    "panelButton"
                 
                 </td>
             
@@ -985,7 +998,7 @@
             <td class="description last">When a custom button is clicked, See wcPanel.addButton</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -998,6 +1011,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1006,7 +1020,7 @@
             
                 <td class="default">
                 
-                    panelAttached
+                    "panelAttached"
                 
                 </td>
             
@@ -1014,7 +1028,7 @@
             <td class="description last">When the panel has moved from floating to a docked position</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1027,6 +1041,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1035,7 +1050,7 @@
             
                 <td class="default">
                 
-                    panelDetached
+                    "panelDetached"
                 
                 </td>
             
@@ -1043,7 +1058,7 @@
             <td class="description last">When the panel has moved from a docked position to floating</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1056,6 +1071,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1064,15 +1080,15 @@
             
                 <td class="default">
                 
-                    panelMoveStarted
+                    "panelMoveStarted"
                 
                 </td>
             
 
-            <td class="description last">When the user has started moving the panel (top-left coordinates changed)<br>This event is called with an object of the current {x, y} position as the first parameter.</td>
+            <td class="description last">When the user has started moving the panel (top-left coordinates changed)<br>This event is called with an object of the current {x, y} position as the first parameter</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1085,6 +1101,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1093,15 +1110,15 @@
             
                 <td class="default">
                 
-                    panelMoveEnded
+                    "panelMoveEnded"
                 
                 </td>
             
 
-            <td class="description last">When the user has finished moving the panel<br>This event is called with an object of the current {x, y} position as the first parameter.</td>
+            <td class="description last">When the user has finished moving the panel<br>This event is called with an object of the current {x, y} position as the first parameter</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1114,6 +1131,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1122,15 +1140,15 @@
             
                 <td class="default">
                 
-                    panelMoved
+                    "panelMoved"
                 
                 </td>
             
 
-            <td class="description last">When the top-left coordinates of the panel has changed<br>This event is called with an object of the current {x, y} position as the first parameter.</td>
+            <td class="description last">When the top-left coordinates of the panel has changed<br>This event is called with an object of the current {x, y} position as the first parameter</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1143,6 +1161,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1151,15 +1170,15 @@
             
                 <td class="default">
                 
-                    panelResizeStarted
+                    "panelResizeStarted"
                 
                 </td>
             
 
-            <td class="description last">When the user has started resizing the panel (width or height changed)<br>This event is called with an object of the current {width, height} size as the first parameter.</td>
+            <td class="description last">When the user has started resizing the panel (width or height changed)<br>This event is called with an object of the current {width, height} size as the first parameter</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1172,6 +1191,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1180,15 +1200,15 @@
             
                 <td class="default">
                 
-                    panelResizeEnded
+                    "panelResizeEnded"
                 
                 </td>
             
 
-            <td class="description last">When the user has finished resizing the panel<br>This event is called with an object of the current {width, height} size as the first parameter.</td>
+            <td class="description last">When the user has finished resizing the panel<br>This event is called with an object of the current {width, height} size as the first parameter</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1201,6 +1221,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1209,15 +1230,15 @@
             
                 <td class="default">
                 
-                    panelResized
+                    "panelResized"
                 
                 </td>
             
 
-            <td class="description last">When the panels width or height has changed<br>This event is called with an object of the current {width, height} size as the first parameter.</td>
+            <td class="description last">When the panels width or height has changed<br>This event is called with an object of the current {width, height} size as the first parameter</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1230,6 +1251,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1238,7 +1260,7 @@
             
                 <td class="default">
                 
-                    panelOrderChanged
+                    "panelOrderChanged"
                 
                 </td>
             
@@ -1246,7 +1268,7 @@
             <td class="description last">This only happens with floating windows when the order of the windows have changed.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1259,6 +1281,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1267,7 +1290,7 @@
             
                 <td class="default">
                 
-                    panelScrolled
+                    "panelScrolled"
                 
                 </td>
             
@@ -1275,7 +1298,7 @@
             <td class="description last">When the contents of the panel has been scrolled</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1288,6 +1311,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1296,7 +1320,7 @@
             
                 <td class="default">
                 
-                    layoutSave
+                    "layoutSave"
                 
                 </td>
             
@@ -1304,7 +1328,7 @@
             <td class="description last">When the layout is being saved, See <a href="module-wcDocker.html#save">wcDocker.save</a></td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1317,6 +1341,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1325,7 +1350,7 @@
             
                 <td class="default">
                 
-                    layoutRestore
+                    "layoutRestore"
                 
                 </td>
             
@@ -1333,7 +1358,7 @@
             <td class="description last">When the layout is being restored, See <a href="module-wcDocker.html#restore">wcDocker.restore</a></td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1346,6 +1371,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1354,7 +1380,7 @@
             
                 <td class="default">
                 
-                    customTabChanged
+                    "customTabChanged"
                 
                 </td>
             
@@ -1362,7 +1388,7 @@
             <td class="description last">When the current tab on a custom tab widget associated with this panel has changed, See <a href="module-wcTabFrame.html">module:wcTabFrame</a></td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1375,6 +1401,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1383,7 +1410,7 @@
             
                 <td class="default">
                 
-                    customTabClosed
+                    "customTabClosed"
                 
                 </td>
             
@@ -1391,20 +1418,20 @@
             <td class="description last">When a tab has been closed on a custom tab widget associated with this panel, See <a href="module-wcTabFrame.html">module:wcTabFrame</a></td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
+
+    
 
 	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1432,18 +1459,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="types.js.html">types.js</a>,
-     <a href="types.js.html#sunlight-1-line-48">line 48</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="types.js.html">types.js</a>,
-				 <a href="types.js.html#sunlight-1-line-48">line 48</a>
+				 <a href="types.js.html#sunlight-1-line-42">line 42</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1460,11 +1484,8 @@
         
             
 <hr>
-<dt class="name" id=".wcDocker.LAYOUT">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>wcDocker.LAYOUT</toc></b>
-    </h4>
+<dt class="name" id=".LAYOUT">
+    <h4 id=".LAYOUT"><toc class="attribs"><span class="type-signature">&lt;static, constant> </span></toc>var <toc class="member"><b>LAYOUT</b></toc></h4>
 
     
 </dt>
@@ -1476,42 +1497,36 @@
     
 
     
-        <h5>Type: 
-<span class="param-type">String</span>
-
-</h5>
-    
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -1524,6 +1539,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1532,7 +1548,7 @@
             
                 <td class="default">
                 
-                    wcLayoutSimple
+                    "wcLayoutSimple"
                 
                 </td>
             
@@ -1540,7 +1556,7 @@
             <td class="description last">Contains a single div item without management using a <a href="module-wcLayoutSimple.html">module:wcLayoutSimple</a>, it is up to you to populate it however you wish.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1553,6 +1569,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1561,7 +1578,7 @@
             
                 <td class="default">
                 
-                    wcLayoutTable
+                    "wcLayoutTable"
                 
                 </td>
             
@@ -1569,20 +1586,20 @@
             <td class="description last">Manages a table grid layout using <a href="module-wcLayoutTable.html">module:wcLayoutTable</a>, this is the default layout used if none is specified.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
+
+    
 
 	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1610,18 +1627,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="types.js.html">types.js</a>,
-     <a href="types.js.html#sunlight-1-line-35">line 35</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="types.js.html">types.js</a>,
-				 <a href="types.js.html#sunlight-1-line-35">line 35</a>
+				 <a href="types.js.html#sunlight-1-line-29">line 29</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1638,11 +1652,8 @@
         
             
 <hr>
-<dt class="name" id=".wcDocker.ORIENTATION">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>wcDocker.ORIENTATION</toc></b>
-    </h4>
+<dt class="name" id=".ORIENTATION">
+    <h4 id=".ORIENTATION"><toc class="attribs"><span class="type-signature">&lt;static, constant> </span></toc>var <toc class="member"><b>ORIENTATION</b></toc></h4>
 
     
 </dt>
@@ -1654,42 +1665,36 @@
     
 
     
-        <h5>Type: 
-<span class="param-type">Boolean</span>
-
-</h5>
-    
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -1700,6 +1705,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -1718,7 +1724,7 @@
             <td class="description last">Top and Bottom panes</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1729,6 +1735,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -1747,20 +1754,20 @@
             <td class="description last">Left and Right panes</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
+
+    
 
 	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1788,18 +1795,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="types.js.html">types.js</a>,
-     <a href="types.js.html#sunlight-1-line-148">line 148</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="types.js.html">types.js</a>,
-				 <a href="types.js.html#sunlight-1-line-148">line 148</a>
+				 <a href="types.js.html#sunlight-1-line-121">line 121</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -1816,11 +1820,8 @@
         
             
 <hr>
-<dt class="name" id=".wcDocker.TAB">
-    <h4><toc class="small"><i>static</i></toc><toc> </toc>
-        var
-        <b><toc>wcDocker.TAB</toc></b>
-    </h4>
+<dt class="name" id=".TAB">
+    <h4 id=".TAB"><toc class="attribs"><span class="type-signature">&lt;static, constant> </span></toc>var <toc class="member"><b>TAB</b></toc></h4>
 
     
 </dt>
@@ -1832,42 +1833,36 @@
     
 
     
-        <h5>Type: 
-<span class="param-type">String</span>
-
-</h5>
-    
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -1880,6 +1875,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1888,7 +1884,7 @@
             
                 <td class="default">
                 
-                    top
+                    "top"
                 
                 </td>
             
@@ -1896,7 +1892,7 @@
             <td class="description last">The default, puts tabs at the top of the frame</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1909,6 +1905,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1917,7 +1914,7 @@
             
                 <td class="default">
                 
-                    left
+                    "left"
                 
                 </td>
             
@@ -1925,7 +1922,7 @@
             <td class="description last">Puts tabs on the left side of the frame</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1938,6 +1935,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1946,7 +1944,7 @@
             
                 <td class="default">
                 
-                    right
+                    "right"
                 
                 </td>
             
@@ -1954,7 +1952,7 @@
             <td class="description last">Puts tabs on the right side of the frame</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -1967,6 +1965,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -1975,7 +1974,7 @@
             
                 <td class="default">
                 
-                    bottom
+                    "bottom"
                 
                 </td>
             
@@ -1983,20 +1982,20 @@
             <td class="description last">Puts tabs on the bottom of the frame</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
+
+    
 
 	
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2024,18 +2023,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="types.js.html">types.js</a>,
-     <a href="types.js.html#sunlight-1-line-161">line 161</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="types.js.html">types.js</a>,
-				 <a href="types.js.html#sunlight-1-line-161">line 161</a>
+				 <a href="types.js.html#sunlight-1-line-133">line 133</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2059,20 +2055,20 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".constructor"><toc class="small"><i>static</i></toc><toc> </toc>function <toc><b>constructor</b>(container, <span class="optional">options</span>)</toc>
+    <h4 class="name" id=".constructor"><toc class="attribs"><span class="type-signature">&lt;static> </span></toc>function <toc class="method"><b>constructor</b>(container [, options])</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
-    
 
     
 
     
+
     
+
     
     
         <h5>Parameters:</h5>
@@ -2080,25 +2076,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2115,6 +2111,7 @@
 |
 
 <span class="param-type"><a href="external-domNode.html">external:domNode</a></span>
+
 
 
             
@@ -2135,7 +2132,7 @@
             <td class="description last">A container element to store the contents of wcDocker.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2146,6 +2143,7 @@
             
                 
 <span class="param-type"><a href="module-wcDocker.html#~Options">module:wcDocker~Options</a></span>
+
 
 
             
@@ -2168,29 +2166,15 @@
             <td class="description last">Options for constructing the instance.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -2219,18 +2203,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-65">line 65</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-65">line 65</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2240,15 +2221,29 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="addPanel"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>addPanel</b>(typeName, location, <span class="optional">targetPanel</span>, <span class="optional">options</span>)</toc>
+    <h4 class="name" id="addPanel"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>addPanel</b>(typeName, location [, targetPanel] [, options])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
@@ -2256,24 +2251,25 @@
 
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Add a new docked panel to the docker instance.<br><b>Note:</b> It is best to use wcDocker.COLLAPSED after you have added your other docked panels, as it may ensure proper placement.</p>
+        <p style="margin-left:20px;">Add a new docked panel to the docker instance.<br><b>Note:</b> It is best to use wcDocker.COLLAPSED after you have added your other docked panels, as it may ensure proper placement.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -2281,25 +2277,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2310,6 +2306,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -2330,7 +2327,7 @@
             <td class="description last">The name identifier of the panel to create.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2340,7 +2337,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.DOCK</span>
+<span class="param-type"><a href="module-wcDocker.html#.DOCK">module:wcDocker.DOCK</a></span>
+
 
 
             
@@ -2361,7 +2359,7 @@
             <td class="description last">The docking location to place this panel.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2375,6 +2373,7 @@
 |
 
 <span class="param-type"><a href="module-wcDocker.html#.COLLAPSED">module:wcDocker.COLLAPSED</a></span>
+
 
 
             
@@ -2397,7 +2396,7 @@
             <td class="description last">A target panel to dock relative to, or use wcDocker.COLLAPSED to collapse it to the side or bottom.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2408,6 +2407,7 @@
             
                 
 <span class="param-type"><a href="module-wcDocker.html#~PanelOptions">module:wcDocker~PanelOptions</a></span>
+
 
 
             
@@ -2430,44 +2430,15 @@
             <td class="description last">Other options for panel placement.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
-|
-
-<span class="param-type">Boolean</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The newly created panel object, or false if no panel was created.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -2496,18 +2467,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-280">line 280</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-280">line 280</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2517,30 +2485,71 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The newly created panel object, or false if no panel was created.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
+|
+
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="basicMenu"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>basicMenu</b>(selector, itemListOrBuildFunc, includeDefault)</toc>
+    <h4 class="name" id="basicMenu"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>basicMenu</b>(selector, itemListOrBuildFunc, includeDefault)</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
+        <p style="margin-left:20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -2548,23 +2557,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2577,6 +2586,7 @@
 <span class="param-type"><a href="external-jQuery.html#~selector">external:jQuery~selector</a></span>
 
 
+
             
             </td>
 
@@ -2587,7 +2597,7 @@
             <td class="description last">A selector string that designates the elements who use this menu.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2603,6 +2613,7 @@
 <span class="param-type">function</span>
 
 
+
             
             </td>
 
@@ -2613,7 +2624,7 @@
             <td class="description last">An array with each context menu item in it, or a function to call that returns one.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -2626,6 +2637,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -2636,29 +2648,15 @@
             <td class="description last">If true, all default menu options will be included.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -2677,13 +2675,13 @@
 	
 	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
 	
-	<dd>
-		<ul class="dummy">
-			<li>Renamed to [wcDocker.menu}wcDocker#menu.</li>
-		</ul>
-	</dd>
-	
-	
+    <dd>
+        <ul class="dummy">
+            <li>Renamed to [wcDocker.menu}wcDocker#menu.</li>
+        </ul>
+    </dd>
+    
+    
 
 	
 
@@ -2696,18 +2694,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-776">line 776</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-776">line 776</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2717,50 +2712,50 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="bypassMenu"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>bypassMenu</b>()</toc>
+    <h4 class="name" id="bypassMenu"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>bypassMenu</b>()</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Bypasses the next context menu event.Use this during a mouse up event in which you do not want thecontext menu to appear when it normally would have.</p>
+        <p style="margin-left:20px;">Bypasses the next context menu event.Use this during a mouse up event in which you do not want thecontext menu to appear when it normally would have.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
 
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -2789,18 +2784,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1130">line 1130</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-1130">line 1130</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2810,50 +2802,50 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="clear"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>clear</b>()</toc>
+    <h4 class="name" id="clear"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>clear</b>()</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Clears all contents from the docker instance.</p>
+        <p style="margin-left:20px;">Clears all contents from the docker instance.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
 
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -2882,18 +2874,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1227">line 1227</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-1227">line 1227</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -2903,37 +2892,52 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="findPanels"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>findPanels</b>(<span class="optional">typeName</span>)</toc>
+    <h4 class="name" id="findPanels"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>findPanels</b>( [typeName])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Array.&lt;<a href="module-wcPanel.html">module:wcPanel</a>></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Finds all instances of a given panel type.</p>
+        <p style="margin-left:20px;">Finds all instances of a given panel type.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -2941,25 +2945,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -2970,6 +2974,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -2992,41 +2997,15 @@
             <td class="description last">The name identifier for the panel. If not supplied, all panels are retrieved.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Array.&lt;<a href="module-wcPanel.html">module:wcPanel</a>></span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 A list of all panels found of the given type.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -3055,18 +3034,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-620">line 620</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-620">line 620</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -3076,30 +3052,68 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - A list of all panels found of the given type.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;<a href="module-wcPanel.html">module:wcPanel</a>></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="finishLoading"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>finishLoading</b>(<span class="optional">fadeDuration</span>)</toc>
+    <h4 class="name" id="finishLoading"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>finishLoading</b>( [fadeDuration])</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Hides the loading screen.</p>
+        <p style="margin-left:20px;">Hides the loading screen.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -3107,27 +3121,27 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -3138,6 +3152,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -3166,29 +3181,15 @@
             <td class="description last">The fade out duration for the loading screen.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -3217,18 +3218,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-681">line 681</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-681">line 681</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -3238,77 +3236,66 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="isCollapseEnabled"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>isCollapseEnabled</b>()</toc>
+    <h4 class="name" id="isCollapseEnabled"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>isCollapseEnabled</b>()</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Retrieves whether panel collapsers are enabled.</p>
+        <p style="margin-left:20px;">Retrieves whether panel collapsers are enabled.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Boolean</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 Collapsers are enabled.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -3336,18 +3323,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-195">line 195</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-195">line 195</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -3357,30 +3341,68 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Collapsers are enabled.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="menu"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>menu</b>(selector, itemListOrBuildFunc, includeDefault)</toc>
+    <h4 class="name" id="menu"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>menu</b>(selector, itemListOrBuildFunc, includeDefault)</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
+        <p style="margin-left:20px;">Assigns a basic context menu to a selector element.  The contextMenu is a simple list of options, no nesting or special options.<br><br>If you wish to use a more complex context menu, you can use<a href="http://medialize.github.io/jQuery-contextMenu/docs.html">jQuery.contextMenu</a> directly.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -3388,23 +3410,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -3417,6 +3439,7 @@
 <span class="param-type"><a href="external-jQuery.html#~selector">external:jQuery~selector</a></span>
 
 
+
             
             </td>
 
@@ -3427,7 +3450,7 @@
             <td class="description last">A selector string that designates the elements who use this menu.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -3443,6 +3466,7 @@
 <span class="param-type">function</span>
 
 
+
             
             </td>
 
@@ -3453,7 +3477,7 @@
             <td class="description last">An array with each context menu item in it, or a function to call that returns one.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -3466,6 +3490,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -3476,29 +3501,15 @@
             <td class="description last">If true, all default menu options will be included.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -3527,18 +3538,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-793">line 793</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-793">line 793</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -3548,15 +3556,29 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="movePanel"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>movePanel</b>(panel, location, <span class="optional">targetPanel</span>, <span class="optional">options</span>)</toc>
+    <h4 class="name" id="movePanel"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>movePanel</b>(panel, location [, targetPanel] [, options])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
@@ -3564,24 +3586,25 @@
 
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Moves a docking panel from its current location to another.</p>
+        <p style="margin-left:20px;">Moves a docking panel from its current location to another.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -3589,25 +3612,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -3618,6 +3641,7 @@
             
                 
 <span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
+
 
 
             
@@ -3638,7 +3662,7 @@
             <td class="description last">The panel to move.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -3648,7 +3672,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.DOCK</span>
+<span class="param-type"><a href="module-wcDocker.html#.DOCK">module:wcDocker.DOCK</a></span>
+
 
 
             
@@ -3669,7 +3694,7 @@
             <td class="description last">The new docking location of the panel.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -3683,6 +3708,7 @@
 |
 
 <span class="param-type">wcDocker.COLLAPSED</span>
+
 
 
             
@@ -3705,7 +3731,7 @@
             <td class="description last">A target panel to dock relative to, or use wcDocker.COLLAPSED to collapse it to the side or bottom.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -3716,6 +3742,7 @@
             
                 
 <span class="param-type"><a href="module-wcDocker.html#~PanelOptions">module:wcDocker~PanelOptions</a></span>
+
 
 
             
@@ -3738,44 +3765,15 @@
             <td class="description last">Other options for panel placement.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
-|
-
-<span class="param-type">Boolean</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The panel that was created, or false on failure.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -3804,18 +3802,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-464">line 464</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-464">line 464</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -3825,30 +3820,71 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The panel that was created, or false on failure.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
+|
+
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="off"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>off</b>(eventType, <span class="optional">handler</span>)</toc>
+    <h4 class="name" id="off"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>off</b>(eventType [, handler])</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Unregisters a global event.</p>
+        <p style="margin-left:20px;">Unregisters a global event.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -3856,25 +3892,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -3884,7 +3920,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.EVENT</span>
+<span class="param-type"><a href="module-wcDocker.html#.EVENT">module:wcDocker.EVENT</a></span>
+
 
 
             
@@ -3905,7 +3942,7 @@
             <td class="description last">The event type, can be a custom event string or a predefined event.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -3916,6 +3953,7 @@
             
                 
 <span class="param-type">module:wcDocker~event:onEvent</span>
+
 
 
             
@@ -3938,29 +3976,15 @@
             <td class="description last">The handler function registered with the event. If omitted, all events registered to the event type are unregistered.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -3989,18 +4013,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-725">line 725</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-725">line 725</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -4010,37 +4031,52 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="on"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>on</b>(eventType, handler)</toc>
+    <h4 class="name" id="on"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>on</b>(eventType, handler)</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Registers a global event.</p>
+        <p style="margin-left:20px;">Registers a global event.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -4048,23 +4084,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -4074,7 +4110,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.EVENT</span>
+<span class="param-type"><a href="module-wcDocker.html#.EVENT">module:wcDocker.EVENT</a></span>
+
 
 
             
@@ -4087,7 +4124,7 @@
             <td class="description last">The event type, can be a custom event string or a predefined event.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -4100,6 +4137,7 @@
 <span class="param-type">module:wcDocker~event:onEvent</span>
 
 
+
             
             </td>
 
@@ -4110,41 +4148,15 @@
             <td class="description last">A handler function to be called for the event.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Boolean</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		Success or failure that the event has been registered.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -4173,18 +4185,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-701">line 701</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-701">line 701</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -4194,37 +4203,76 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Success or failure that the event has been registered.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="panelTypeInfo"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>panelTypeInfo</b>(typeName)</toc>
+    <h4 class="name" id="panelTypeInfo"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>panelTypeInfo</b>(typeName)</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type"><a href="module-wcDocker.html#~registerOptions">module:wcDocker~registerOptions</a></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Retrieves the options data associated with a given panel type when it was registered.</p>
+        <p style="margin-left:20px;">Retrieves the options data associated with a given panel type when it was registered.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -4232,23 +4280,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -4261,6 +4309,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -4271,41 +4320,15 @@
             <td class="description last">The name identifier of the panel.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="module-wcDocker.html#~registerOptions">module:wcDocker~registerOptions</a></span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 Registered options of the panel type, or false if the panel was not found.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -4334,18 +4357,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-265">line 265</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-265">line 265</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -4355,37 +4375,76 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Registered options of the panel type, or false if the panel was not found.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="module-wcDocker.html#~registerOptions">module:wcDocker~registerOptions</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="panelTypes"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>panelTypes</b>(includePrivate)</toc>
+    <h4 class="name" id="panelTypes"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>panelTypes</b>(includePrivate)</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Array.&lt;String></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Retrieves a list of all currently registered panel types.</p>
+        <p style="margin-left:20px;">Retrieves a list of all currently registered panel types.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -4393,23 +4452,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -4422,6 +4481,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -4432,41 +4492,15 @@
             <td class="description last">If true, panels registered as private will also be included with this list.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Array.&lt;String></span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 A list of panel type names.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -4495,18 +4529,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-249">line 249</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-249">line 249</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -4516,37 +4547,76 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - A list of panel type names.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;String></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="registerPanelType"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>registerPanelType</b>(name, options, <span class="optional">isPrivate</span>)</toc>
+    <h4 class="name" id="registerPanelType"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>registerPanelType</b>(name, options [, isPrivate])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Registers a new docking panel type to be used later.</p>
+        <p style="margin-left:20px;">Registers a new docking panel type to be used later.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -4554,25 +4624,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -4583,6 +4653,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -4603,7 +4674,7 @@
             <td class="description last">The name identifier for the new panel type.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -4614,6 +4685,7 @@
             
                 
 <span class="param-type"><a href="module-wcDocker.html#~registerOptions">module:wcDocker~registerOptions</a></span>
+
 
 
             
@@ -4634,7 +4706,7 @@
             <td class="description last">An options object for describing the panel type.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -4645,6 +4717,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -4667,49 +4740,23 @@
             <td class="description last"><b>DEPRECATED:</b> Use options.isPrivate instead.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Boolean</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 Success or failure. Failure usually indicates the type name already exists.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version: 3.0.0</dt>
-<!-- 	<dd class="tag-version">
+	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
+	<dd class="tag-version">
 		<ul class="dummy">
 			<li>3.0.0</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -4737,18 +4784,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-205">line 205</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-205">line 205</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -4758,37 +4802,76 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Success or failure. Failure usually indicates the type name already exists.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="removePanel"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>removePanel</b>(panel, dontDestroy)</toc>
+    <h4 class="name" id="removePanel"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>removePanel</b>(panel, dontDestroy)</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Boolean</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Removes a docked panel from the window.</p>
+        <p style="margin-left:20px;">Removes a docked panel from the window.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -4796,23 +4879,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -4825,6 +4908,7 @@
 <span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
 
 
+
             
             </td>
 
@@ -4835,7 +4919,7 @@
             <td class="description last">The panel to remove.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -4848,6 +4932,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -4858,41 +4943,15 @@
             <td class="description last">If true, the panel itself will not be destroyed.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Boolean</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 Success or failure.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -4921,18 +4980,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-335">line 335</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-335">line 335</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -4942,30 +4998,68 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Success or failure.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="restore"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>restore</b>(dataString)</toc>
+    <h4 class="name" id="restore"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>restore</b>(dataString)</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Restores a previously saved configuration.</p>
+        <p style="margin-left:20px;">Restores a previously saved configuration.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -4973,23 +5067,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -5002,6 +5096,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -5012,29 +5107,15 @@
             <td class="description last">A previously saved serialized string, See wcDocker.save.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -5063,18 +5144,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1188">line 1188</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-1188">line 1188</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -5084,69 +5162,58 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="save"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>save</b>()</toc>
+    <h4 class="name" id="save"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>save</b>()</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">String</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Saves the current panel configuration into a serializedstring that can be used later to restore it.</p>
+        <p style="margin-left:20px;">Saves the current panel configuration into a serializedstring that can be used later to restore it.</p>
     </div>
     
 
     
 
     
-    
-    
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">String</span>
 
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 A serialized string that describes the current panel configuration.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
     
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -5175,18 +5242,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-1156">line 1156</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-1156">line 1156</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -5196,30 +5260,68 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - A serialized string that describes the current panel configuration.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="startLoading"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>startLoading</b>(<span class="optional">label</span>, <span class="optional">opacity</span>, <span class="optional">textOpacity</span>)</toc>
+    <h4 class="name" id="startLoading"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>startLoading</b>( [label] [, opacity] [, textOpacity])</toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Shows the loading screen.</p>
+        <p style="margin-left:20px;">Shows the loading screen.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -5227,27 +5329,27 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -5258,6 +5360,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -5284,7 +5387,7 @@
             <td class="description last">An optional label to display.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -5295,6 +5398,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -5323,7 +5427,7 @@
             <td class="description last">If supplied, assigns a custom opacity value to the loading screen.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -5334,6 +5438,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -5362,29 +5467,15 @@
             <td class="description last">If supplied, assigns a custom opacity value to the loading icon and text displayed.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -5413,18 +5504,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-641">line 641</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-641">line 641</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -5434,37 +5522,52 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="theme"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>theme</b>(themeName)</toc>
+    <h4 class="name" id="theme"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>theme</b>(themeName)</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">String</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the current theme used by docker.</p>
+        <p style="margin-left:20px;">Gets, or Sets the current theme used by docker.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -5472,23 +5575,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -5501,6 +5604,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -5511,41 +5615,15 @@
             <td class="description last">If supplied, will activate a theme with the given name.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">String</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The currently active theme.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -5574,18 +5652,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-164">line 164</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-164">line 164</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -5595,37 +5670,76 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The currently active theme.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="themePath"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>themePath</b>(path)</toc>
+    <h4 class="name" id="themePath"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>themePath</b>(path)</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">String</span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Gets, or Sets the path where all theme files can be found."Themes" is the default folder path.</p>
+        <p style="margin-left:20px;">Gets, or Sets the path where all theme files can be found."Themes" is the default folder path.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -5633,23 +5747,23 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -5662,6 +5776,7 @@
 <span class="param-type">String</span>
 
 
+
             
             </td>
 
@@ -5672,41 +5787,15 @@
             <td class="description last">If supplied, will set the path where all themes can be found.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">String</span>
-
-</h5>
-    
-            <p class="param-desc" style="margin-left: 20px;">
-    
-		 The currently assigned path.
-	</p>
-
-        
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -5735,18 +5824,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-150">line 150</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.js.html">docker.js</a>,
 				 <a href="docker.js.html#sunlight-1-line-150">line 150</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -5756,37 +5842,76 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The currently assigned path.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="trigger"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>trigger</b>(eventType, <span class="optional">data</span>)</toc>
+    <h4 class="name" id="trigger"><toc class="attribs"><span class="type-signature"></span></toc>function <toc class="method"><b>trigger</b>(eventType [, data])</toc>
         
-        >
+        ->
         
         <i><small>
 <span class="param-type">Array.&lt;Object></span>
 
+
 </small></i>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">Trigger an event on all panels.</p>
+        <p style="margin-left:20px;">Trigger an event on all panels.</p>
     </div>
     
 
     
 
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -5794,25 +5919,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -5822,7 +5947,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.EVENT</span>
+<span class="param-type"><a href="module-wcDocker.html#.EVENT">module:wcDocker.EVENT</a></span>
+
 
 
             
@@ -5843,7 +5969,7 @@
             <td class="description last">The event type, can be a custom event string or a predefined event.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -5854,6 +5980,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -5876,25 +6003,61 @@
             <td class="description last">A custom data object to be passed along with the event.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
     
-    
-    
-    
-<h5>Returns: 
-<span class="param-type">Array.&lt;Object></span>
 
-</h5>
     
-            <p class="param-desc" style="margin-left: 20px;">
+<dl class="details">
     
-		results - Returns an array with all results returned by event handlers.
-	</p>
 
-        
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="docker.js.html">docker.js</a>,
+				 <a href="docker.js.html#sunlight-1-line-750">line 750</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
 
     
 
@@ -5908,63 +6071,36 @@
     
 
     
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
 
     
 
     
-
+    <h5>Returns:</h5>
     
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
+            
+<div class="param-desc">
+    results - Returns an array with all results returned by event handlers.
+</div>
 
 
 
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.js.html">docker.js</a>,
-     <a href="docker.js.html#sunlight-1-line-750">line 750</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="docker.js.html">docker.js</a>,
-				 <a href="docker.js.html#sunlight-1-line-750">line 750</a>
-			</li>
-		</ul>
-	</dd> -->
-	
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
 
-	
 
-	
 
-	
+    </dd>
 </dl>
 
+
+        
+
+    
 </dd>
 
         </dl>
@@ -5972,16 +6108,12 @@
 
     
         <h3 class="subsection-title">Type Definitions</h3>
+
         <dl>
-            <!-- List type definitions by members first, then methods -->
-            
                 
 <hr>
 <dt class="name" id="~Anchor">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>Anchor</toc></b>
-    </h4>
+    <h4 id="~Anchor"><toc class="attribs"></toc>typedef var <toc class="member"><b>Anchor</b></toc></h4>
 
     
 </dt>
@@ -5993,42 +6125,47 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -6039,6 +6176,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -6057,7 +6195,7 @@
             <td class="description last">Whether the anchor is hovering over the moving panel.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6067,7 +6205,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.DOCK</span>
+<span class="param-type"><a href="module-wcDocker.html#.DOCK">module:wcDocker.DOCK</a></span>
+
 
 
             
@@ -6086,7 +6225,7 @@
             <td class="description last">The location of the anchor on the panel.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6097,6 +6236,7 @@
             
                 
 <span class="param-type"><a href="module-wcLayout.html">module:wcLayout</a></span>
+
 
 
             
@@ -6115,7 +6255,7 @@
             <td class="description last">The panel layout being hovered over.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6125,7 +6265,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.TAB</span>
+<span class="param-type"><a href="module-wcDocker.html#.TAB">module:wcDocker.TAB</a></span>
+
 
 
             
@@ -6144,7 +6285,7 @@
             <td class="description last">The tab location.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6168,7 +6309,7 @@
             <td class="description last"></td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6179,6 +6320,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -6199,7 +6341,7 @@
             <td class="description last">X coordinate of the anchor.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6210,6 +6352,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -6230,7 +6373,7 @@
             <td class="description last">Y coordinate of the anchor.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6241,6 +6384,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -6261,7 +6405,7 @@
             <td class="description last">Width of the anchor.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6272,6 +6416,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -6292,12 +6437,12 @@
             <td class="description last">Height of the anchor.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -6326,18 +6471,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-123">line 123</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-123">line 123</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -6355,10 +6497,7 @@
                 
 <hr>
 <dt class="name" id="~AnchorRect">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>AnchorRect</toc></b>
-    </h4>
+    <h4 id="~AnchorRect"><toc class="attribs"></toc>typedef var <toc class="member"><b>AnchorRect</b></toc></h4>
 
     
 </dt>
@@ -6370,42 +6509,47 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -6419,6 +6563,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -6439,7 +6584,7 @@
             <td class="description last">X coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6453,6 +6598,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -6473,7 +6619,7 @@
             <td class="description last">Y coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6487,6 +6633,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -6507,7 +6654,7 @@
             <td class="description last">Width of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6521,6 +6668,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -6541,7 +6689,7 @@
             <td class="description last">Height of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6551,7 +6699,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.TAB</span>
+<span class="param-type"><a href="module-wcDocker.html#.TAB">module:wcDocker.TAB</a></span>
+
 
 
             
@@ -6572,12 +6721,12 @@
             <td class="description last">Desired orientation of tab widgets.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -6606,18 +6755,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-37">line 37</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-37">line 37</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -6635,10 +6781,7 @@
                 
 <hr>
 <dt class="name" id="~Bounds">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>Bounds</toc></b>
-    </h4>
+    <h4 id="~Bounds"><toc class="attribs"></toc>typedef var <toc class="member"><b>Bounds</b></toc></h4>
 
     
 </dt>
@@ -6650,40 +6793,45 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -6696,6 +6844,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -6706,7 +6855,7 @@
             <td class="description last">The upper, or top bound (percentage value between 0 and 1).</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6719,6 +6868,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -6729,7 +6879,7 @@
             <td class="description last">The lower, or bottom bound (percentage value between 0 and 1).</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6742,6 +6892,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -6752,7 +6903,7 @@
             <td class="description last">The left bound (percentage value between 0 and 1).</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6765,6 +6916,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -6775,12 +6927,12 @@
             <td class="description last">The right bound (percentage value between 0 and 1).</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -6809,18 +6961,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-47">line 47</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-47">line 47</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -6838,10 +6987,7 @@
                 
 <hr>
 <dt class="name" id="~Coordinate">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>Coordinate</toc></b>
-    </h4>
+    <h4 id="~Coordinate"><toc class="attribs"></toc>typedef var <toc class="member"><b>Coordinate</b></toc></h4>
 
     
 </dt>
@@ -6853,40 +6999,45 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -6899,6 +7050,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -6909,7 +7061,7 @@
             <td class="description last">X coordinate.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -6922,6 +7074,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -6932,12 +7085,12 @@
             <td class="description last">Y coordinate.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -6966,18 +7119,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-56">line 56</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-56">line 56</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -6995,10 +7145,7 @@
                 
 <hr>
 <dt class="name" id="~FitContents">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>FitContents</toc></b>
-    </h4>
+    <h4 id="~FitContents"><toc class="attribs"></toc>typedef var <toc class="member"><b>FitContents</b></toc></h4>
 
     
 </dt>
@@ -7010,40 +7157,45 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -7056,6 +7208,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -7066,7 +7219,7 @@
             <td class="description last">Whether scrolling is enabled in the horizontal direction.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7079,6 +7232,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -7089,12 +7243,12 @@
             <td class="description last">Whether scrolling is enabled in the vertical direction.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -7123,18 +7277,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-77">line 77</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-77">line 77</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -7151,11 +7302,192 @@
             
                 
 <hr>
-<dt class="name" id="~Options">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>Options</toc></b>
+<dt>
+    <h4 class="name" id="~onCreatePanel"><toc class="attribs"><span class="type-signature"></span></toc>typedef function <toc class="method"><b>onCreatePanel</b>(panel [, options])</toc>
+        
     </h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p style="margin-left:20px;">A function or an object constructor for the panel. This function is called using the 'new' operator.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>panel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The panel being constructed.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-wcPanel.html#~options">module:wcPanel~options</a></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An options object passed in from <a href="module-wcDocker.html#registerPanelType">wcDocker.registerPanelType()</a>'s options.options parameter.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="docker.jsdoc.html">docker.jsdoc</a>,
+				 <a href="docker.jsdoc.html#sunlight-1-line-108">line 108</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+            
+                
+<hr>
+<dt class="name" id="~Options">
+    <h4 id="~Options"><toc class="attribs"></toc>typedef var <toc class="member"><b>Options</b></toc></h4>
 
     
 </dt>
@@ -7167,44 +7499,49 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -7215,6 +7552,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -7241,7 +7579,7 @@
             <td class="description last">A folder path where all docker theme files can be found.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7252,6 +7590,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -7278,7 +7617,7 @@
             <td class="description last">The active docker theme.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7289,6 +7628,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -7315,7 +7655,7 @@
             <td class="description last">Any class name to use for the loading screen icon.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7326,6 +7666,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -7352,7 +7693,7 @@
             <td class="description last">Overrides the default right click menu with ones that interact with docker.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7363,6 +7704,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -7389,7 +7731,7 @@
             <td class="description last">If true, panels will hide their contents as they are being resized.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7400,6 +7742,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -7426,7 +7769,7 @@
             <td class="description last">Allows users to collapse panels to the sides of the docker view.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7437,6 +7780,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -7463,7 +7807,7 @@
             <td class="description last">This determines how often updates are performed (in milliseconds).</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7474,6 +7818,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -7500,7 +7845,7 @@
             <td class="description last">The time delay (in milliseconds) before a panel drag operation will start.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7514,6 +7859,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -7540,7 +7886,7 @@
             <td class="description last">Determines the size of the anchor points when docking a panel to the outer edge of the window. Can be a pixel value, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7554,6 +7900,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -7580,7 +7927,7 @@
             <td class="description last">Determines the size of the anchor points when docking a panel along the side of another panel. Can be a pixel value, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7594,6 +7941,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -7620,7 +7968,7 @@
             <td class="description last">Determines the new width when a panel is detached (0 = Don't change). Can be a pixel value, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7634,6 +7982,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -7660,7 +8009,7 @@
             <td class="description last">Determines the new height when a panel is detached (0 = Don't change).  Can be a pixel value, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7671,6 +8020,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7695,7 +8045,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcPanel object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7706,6 +8056,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7730,7 +8081,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcGhost object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7741,6 +8092,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7765,7 +8117,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcSplitter object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7776,6 +8128,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7800,7 +8153,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcFrame object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7811,6 +8164,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7835,7 +8189,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcCollapser object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7846,6 +8200,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7870,7 +8225,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcLayoutSimple object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7881,6 +8236,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7905,7 +8261,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcLayoutTable object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7916,6 +8272,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7940,7 +8297,7 @@
             <td class="description last">Defines a class object to use in replacement of the default wcDrawer object.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -7951,6 +8308,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -7975,12 +8333,12 @@
             <td class="description last">Defines a class object to use in replacement of the default wcTabFrame object.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -8009,18 +8367,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-1">line 1</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-1">line 1</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -8038,10 +8393,7 @@
                 
 <hr>
 <dt class="name" id="~PanelOptions">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>PanelOptions</toc></b>
-    </h4>
+    <h4 id="~PanelOptions"><toc class="attribs"></toc>typedef var <toc class="member"><b>PanelOptions</b></toc></h4>
 
     
 </dt>
@@ -8053,42 +8405,47 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -8102,6 +8459,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8122,7 +8480,7 @@
             <td class="description last">X coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8136,6 +8494,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8156,7 +8515,7 @@
             <td class="description last">Y coordinate of the panel center (if floating). Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8170,6 +8529,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8190,7 +8550,7 @@
             <td class="description last">Desired width of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8204,6 +8564,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8224,7 +8585,7 @@
             <td class="description last">Desired height of the panel. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8234,7 +8595,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.TAB</span>
+<span class="param-type"><a href="module-wcDocker.html#.TAB">module:wcDocker.TAB</a></span>
+
 
 
             
@@ -8252,15 +8614,15 @@
 
             
 
-            <td class="description last">Desired position of tab widgets when using wcDocker.DOCK.STACKED. <b>Not supported on IE8 or below.</b></td>
+            <td class="description last">Desired position of tab widgets when using <a href="module-wcDocker.html#.DOCK">wcDocker.DOCK.STACKED</a>. <b>Not supported on IE8 or below.</b></td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -8289,18 +8651,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-84">line 84</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-84">line 84</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -8318,10 +8677,7 @@
                 
 <hr>
 <dt class="name" id="~Rect">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>Rect</toc></b>
-    </h4>
+    <h4 id="~Rect"><toc class="attribs"></toc>typedef var <toc class="member"><b>Rect</b></toc></h4>
 
     
 </dt>
@@ -8333,42 +8689,47 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -8382,6 +8743,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8402,7 +8764,7 @@
             <td class="description last">X coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8416,6 +8778,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8436,7 +8799,7 @@
             <td class="description last">Y coordinate of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8450,6 +8813,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8470,7 +8834,7 @@
             <td class="description last">Width of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8484,6 +8848,7 @@
 |
 
 <span class="param-type">String</span>
+
 
 
             
@@ -8504,12 +8869,12 @@
             <td class="description last">Height of the rectangle. Can be a pixel position, or a string with a 'px' or '%' suffix.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -8538,18 +8903,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-28">line 28</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-28">line 28</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -8567,10 +8929,7 @@
                 
 <hr>
 <dt class="name" id="~registerOptions">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>registerOptions</toc></b>
-    </h4>
+    <h4 id="~registerOptions"><toc class="attribs"></toc>typedef var <toc class="member"><b>registerOptions</b></toc></h4>
 
     
 </dt>
@@ -8585,36 +8944,35 @@
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
-		<th>Default</th>
-		
+        
+        <th>Default</th>
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -8625,6 +8983,7 @@
             
                 
 <span class="param-type"><a href="module-wcDocker.html#~onCreatePanel">module:wcDocker~onCreatePanel</a></span>
+
 
 
             
@@ -8647,7 +9006,7 @@
             <td class="description last">A function or an object constructor for the panel.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8657,7 +9016,8 @@
             <td class="type">
             
                 
-<span class="param-type">module:wcDocker.LAYOUT</span>
+<span class="param-type"><a href="module-wcDocker.html#.LAYOUT">module:wcDocker.LAYOUT</a></span>
+
 
 
             
@@ -8684,7 +9044,7 @@
             <td class="description last">If supplied, overrides the default layout used for this panel.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8695,6 +9055,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -8719,7 +9080,7 @@
             <td class="description last">A CSS class name to draw an icon in the panels tab widget.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8730,6 +9091,7 @@
             
                 
 <span class="param-type">String</span>
+
 
 
             
@@ -8754,7 +9116,7 @@
             <td class="description last">An icon name using the <a href="http://fortawesome.github.io/Font-Awesome/">Font-Awesome</a> library. You must download and link to the library first.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8768,6 +9130,7 @@
 |
 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -8792,7 +9155,7 @@
             <td class="description last">Assign a custom name to the panels tab. A false value will hide the tab entirely.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8803,6 +9166,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -8827,7 +9191,7 @@
             <td class="description last">If true, the user will not be able to create this panel type.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8838,6 +9202,7 @@
             
                 
 <span class="param-type">Boolean</span>
+
 
 
             
@@ -8862,7 +9227,7 @@
             <td class="description last">If true, when the user closes this panel, it will only be hidden instead of completely destroyed. When the user creates an instance of this panel, it will first attempt to un-hide an already existing panel before creating a new instance.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8873,6 +9238,7 @@
             
                 
 <span class="param-type">Number</span>
+
 
 
             
@@ -8897,7 +9263,7 @@
             <td class="description last">Enforces a limited number of this panel type from being created by the user.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -8908,6 +9274,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -8932,12 +9299,12 @@
             <td class="description last">A custom options object to be passed into the new panel constructor or creation function as the second parameter.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -8966,18 +9333,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-94">line 94</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-94">line 94</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -8995,10 +9359,7 @@
                 
 <hr>
 <dt class="name" id="~Scrollable">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>Scrollable</toc></b>
-    </h4>
+    <h4 id="~Scrollable"><toc class="attribs"></toc>typedef var <toc class="member"><b>Scrollable</b></toc></h4>
 
     
 </dt>
@@ -9010,40 +9371,45 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -9056,6 +9422,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -9066,7 +9433,7 @@
             <td class="description last">Whether scrolling is enabled in the horizontal direction.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -9079,6 +9446,7 @@
 <span class="param-type">Boolean</span>
 
 
+
             
             </td>
 
@@ -9089,12 +9457,12 @@
             <td class="description last">Whether scrolling is enabled in the vertical direction.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -9123,18 +9491,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-70">line 70</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-70">line 70</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -9152,10 +9517,7 @@
                 
 <hr>
 <dt class="name" id="~Size">
-    <h4><toc class="small"><i>inner</i></toc><toc> </toc>
-        typedef var
-        <b><toc>Size</toc></b>
-    </h4>
+    <h4 id="~Size"><toc class="attribs"></toc>typedef var <toc class="member"><b>Size</b></toc></h4>
 
     
 </dt>
@@ -9167,40 +9529,45 @@
     
 
     
-        <h5>Type: 
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
-</h5>
+
+
+            </li>
+        </ul>
     
 
     
 <dl class="details">
-	
+    
 
-	<h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">Properties:</h5>
 
-	<dl>
+    <dl>
 
-<div class="prop-container">
 <table class="props table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -9213,6 +9580,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -9223,7 +9591,7 @@
             <td class="description last">Width.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -9236,6 +9604,7 @@
 <span class="param-type">Number</span>
 
 
+
             
             </td>
 
@@ -9246,12 +9615,12 @@
             <td class="description last">Height.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
-</div></dl>
+</dl>
 
-	
+    
 
 	
 
@@ -9280,18 +9649,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-63">line 63</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-63">line 63</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -9305,194 +9671,7 @@
     
 </dd>
 
-            
-            
-                
-<hr>
-<dt>
-    <h4 class="name" id="~onCreatePanel"><toc class="small"><i>inner</i></toc><toc> </toc>typedef function <toc><b>onCreatePanel</b>(panel, <span class="optional">options</span>)</toc>
-        
-    </h4>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p style="margin-left: 20px;">A function or an object constructor for the panel. This function is called using the 'new' operator.</p>
-    </div>
-    
-
-    
-
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>panel</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="module-wcPanel.html">module:wcPanel</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The panel being constructed.</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="module-wcPanel.html#~options">module:wcPanel~options</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">An options object passed in from <a href="module-wcDocker.html#registerPanelType">wcDocker.registerPanelType()</a>'s options.options parameter.</td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-108">line 108</a>
-  </dt>
-<!-- 	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="docker.jsdoc.html">docker.jsdoc</a>,
-				 <a href="docker.jsdoc.html#sunlight-1-line-108">line 108</a>
-			</li>
-		</ul>
-	</dd> -->
-	
-
-	
-
-	
-
-	
-</dl>
-
-</dd>
-
-            
-        </dl>
+            </dl>
     
 
     
@@ -9502,17 +9681,17 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="event:onEvent"><toc class="small"><i></i></toc><toc> </toc>function <toc><b>onEvent</b></toc>
+    <h4 class="name" id="event:onEvent"><toc class="attribs"></toc>function <toc class="method"><b>onEvent</b></toc>
         
     </h4>
-
+    
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
-        <p style="margin-left: 20px;">An event handler callback. Each is registered to a event type using the <a href="module-wcDocker.html#on">wcDocker.on()</a> or wcPanel.on() functions.</p>
+        <p style="margin-left:20px;">An event handler callback. Each is registered to a event type using the <a href="module-wcDocker.html#on">wcDocker.on()</a> or wcPanel.on() functions.</p>
     </div>
     
 
@@ -9522,9 +9701,10 @@
         <h5>Type: 
 <span class="param-type">function</span>
 
+
 </h5>
     
-    
+
     
     
         <h5>Parameters:</h5>
@@ -9532,25 +9712,25 @@
 
 <table class="params table table-striped">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
+    <tr>
+        
+        <th>Name</th>
+        
 
-		<th>Type</th>
+        <th>Type</th>
 
-		
-		<th>Argument</th>
-		
+        
+        <th>Argument</th>
+        
 
-		
+        
 
-		<th class="last">Description</th>
-	</tr>
-	</thead>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-	<tbody>
-	
+    <tbody>
+    
 
         <tr>
             
@@ -9564,6 +9744,7 @@
 |
 
 <span class="param-type">NULL</span>
+
 
 
             
@@ -9584,7 +9765,7 @@
             <td class="description last">The panel invoking the event, or NULL if global.</td>
         </tr>
 
-	
+    
 
         <tr>
             
@@ -9595,6 +9776,7 @@
             
                 
 <span class="param-type">Object</span>
+
 
 
             
@@ -9617,29 +9799,15 @@
             <td class="description last">A data object passed by the invoker.</td>
         </tr>
 
-	
-	</tbody>
+    
+    </tbody>
 </table>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
     
 
     
 <dl class="details">
-	
+    
 
 	
 
@@ -9668,18 +9836,15 @@
 
 
 	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:
-    <a href="docker.jsdoc.html">docker.jsdoc</a>,
-     <a href="docker.jsdoc.html#sunlight-1-line-115">line 115</a>
-  </dt>
-<!-- 	<dd class="tag-source">
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
 				<a href="docker.jsdoc.html">docker.jsdoc</a>,
 				 <a href="docker.jsdoc.html#sunlight-1-line-115">line 115</a>
 			</li>
 		</ul>
-	</dd> -->
+	</dd>
 	
 
 	
@@ -9689,6 +9854,20 @@
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dd>
 
         </dl>
@@ -9707,56 +9886,55 @@
 
 	
 		<div class="col-md-3">
-			<div id="toc" class="col-xs-3 col-sm-3 col-md-3 small"></div>
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
 		</div>
 	
 
 </div>
-
-<div class="row">
-	
-	<div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-1">
-	
-		<footer>
-		
-		
-		<span class="jsdoc-message">
-			Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a>
-			on 2016-03-09 using the <a
-			href="https://github.com/WebCabin/docstrap">Web Cabin DocStrap template</a>.
-		</span>
-		</footer>
-	</div>
 </div>
-<div style="height:1000px;"></div>
 
-<!--<script src="scripts/sunlight.js"></script>-->
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	2014-2016 Jeff Houde (<a href='mailto:lochemage@webcabin.org'>lochemage@webcabin.org</a>)
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-08-02
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
 <script src="scripts/docstrap.lib.js"></script>
-<script src="scripts/bootstrap-dropdown.js"></script>
 <script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
 
 <script>
 $( function () {
-	// $( "[id*='$']" ).each( function () {
-	// 	var $this = $( this );
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
 
-	// 	$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
-	// } );
-
-	$( "#toc" ).toc( {
-		anchorName  : function ( i, heading, prefix ) {
-			// return $( heading ).attr( "id" ) || ( prefix + i );
-			return ( prefix + i );
-		},
-		selectors   : "h1,h2,h3,h4",
-		showAndHide : false,
-		scrollTo    : "100px"
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
-
-	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
-	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
-	$( '.dropdown-toggle' ).dropdown();
-	// $( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
 
 	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
 		var $this = $( this );
@@ -9769,7 +9947,8 @@ $( function () {
 			example.html( exampleText );
 			lang = lang[1];
 		} else {
-			lang = "javascript";
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
 		}
 
 		if ( lang ) {
@@ -9788,17 +9967,32 @@ $( function () {
 		enableDoclinks : true
 	} );
 
-	$("a[name^='sunlight-1-line-']").each(function() {
-		$(this).wrap('<div id="' + this.name + '" style="padding-top:40px;margin-top:-40px;display:inline-block;" class="sunlight-line-container"></div>');
-		this.name = '';
-	});
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
 
-  $("h1,h2,h3,h4").each(function() {
-  	$(this).css('padding-top', 50).css('margin-top', -50);
-  });
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
 } );
 </script>
 
+
+
+<!--Navigation and Symbol Display-->
 
 
 
@@ -9809,20 +10003,34 @@ $( function () {
   var _paq = _paq || [];
   
   
+  
+  	_paq.push(["setDomains", [
+  		
+  		"*.docker.api.webcabin.org",
+  		
+  		"*.docker.api.webcabin.org"
+  		
+  	]]);
+  
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u="https://analytics.webcabin.org/";
+    var u="//analytics.webcabin.org/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', 6]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<noscript><p><img src="https://analytics.webcabin.org/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="//analytics.webcabin.org/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->
 
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
 
 </body>
 </html>

@@ -212,7 +212,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
-&copy; 2014-2014 Jeff Houde ([lochemage@webcabin.org](mailto:lochemage@webcabin.org))
+&copy; 2014-2016 Jeff Houde ([lochemage@webcabin.org](mailto:lochemage@webcabin.org))
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
