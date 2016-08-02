@@ -35,11 +35,7 @@
         "syntaxTheme": "dark",
         "analytics": {
             "piwikSite": 6,
-            "domain": "analytics.webcabin.org",
-            "myDomains": [
-                "*.docker.api.webcabin.org",
-                "*.docker.api.webcabin.org"
-            ]
+            "domain": "analytics.webcabin.org"
         }
     }
 }
