@@ -5,8 +5,8 @@
     "url": "http://docker.webcabin.org"
   },
   "version": "2.2.1",
-  "description": "A simple file menu and toolbar system.",
-  "main": "Build/wcMenu.min.js",
+  "description": "Dynamic docking panels for your app.",
+  "main": "Build/wcDocker.min.js",
   "dependencies": {
     "FileSaver": "0.10.0",
     "font-awesome": "4.6.3",
