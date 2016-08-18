@@ -484,7 +484,7 @@ define([
                 myPanel.layout().addItem($container);
 
                 var iFrame = new wcIFrame($container, myPanel);
-                iFrame.openURL('http://docker.api.webcabin.org/');
+                iFrame.openURL('http://docker.api.webcabin.org?t=' + new Date().getTime());
 
                 myPanel.startLoading('Loading...');
                 iFrame.onLoaded(function () {
