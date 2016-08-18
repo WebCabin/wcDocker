@@ -4,7 +4,7 @@
     "name": "WebCabin",
     "url": "http://docker.webcabin.org"
   },
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A simple file menu and toolbar system.",
   "main": "Build/wcMenu.min.js",
   "dependencies": {
