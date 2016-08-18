@@ -1,0 +1,24 @@
+{
+  "name": "webcabin-docker",
+  "author": {
+    "name": "WebCabin",
+    "url": "http://docker.webcabin.org"
+  },
+  "version": "2.2.0",
+  "description": "A simple file menu and toolbar system.",
+  "main": "Build/wcMenu.min.js",
+  "dependencies": {
+    "FileSaver": "0.10.0",
+    "font-awesome": "4.6.3",
+    "jquery": "1.11.1",
+    "jquery-contextmenu": "1.6.7"
+  },
+  "devDependencies": {
+    "almond": "0.3.2",
+    "dcl": "1.1.3",
+    "dojo": "1.11.2",
+    "lodash-amd": "4.15.0",
+    "requirejs": "2.2.0",
+    "requirejs-domready": "2.0.3"
+  }
+}

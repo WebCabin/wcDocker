@@ -1,9 +1,6 @@
-Compiler/libs
-out
-node_modules
-bower install.bat
-bower update.bat
+Compiler/libs/
+Compiler/node_modules/
+node_modules/
+bower_components/
 *.sublime-project
 *.sublime-workspace
-runServer.bat
-bower_components/

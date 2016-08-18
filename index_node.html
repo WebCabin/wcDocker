@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Web Cabin Docker Demo</title>
+    <meta name="description" content="wcDocker is a responsive IDE interface designed for the developer at heart!  Compartmentalize your environment into smaller components, put each of those parts into a docker panel, and organize your environment however you like, whenever you like!">
+
+    <!-- External modules -->
+    <link rel="stylesheet" type="text/css" href="node_modules/jQuery-contextMenu/src/jquery.contextMenu.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.css"/>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/jQuery-contextMenu/src/jquery.contextMenu.js"></script>
+    <script src="node_modules/jQuery-contextMenu/src/jquery.ui.position.js"></script>
+    <script src="node_modules/FileSaver/FileSaver.min.js"></script>
+
+    <!-- Core Modules -->
+    <link rel="stylesheet" type="text/css" href="Build/wcDocker.min.css"/>
+    <script src="Build/wcDocker.min.js"></script>
+
+    <!-- Demo specific files -->
+    <link rel='stylesheet' href='Code/ext/spectrum.css'/>
+    <script src='Code/ext/spectrum.js'></script>
+    <script src="Code/demo/demo.js"></script>
+
+  </head>
+  <body style="background-color:white;">
+    <div class="dockerContainer" style="position:absolute;left:0px;right:0px;top:0px;bottom:0px;border:3px solid black"></div>
+
+    <!-- Piwik Analytics -->
+    <script type="text/javascript">
+      var _paq = _paq || [];
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="https://analytics.webcabin.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 5]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <noscript><p><img src="https://analytics.webcabin.org/piwik.php?idsite=5" style="border:0;" alt="" /></p></noscript>
+    <!-- End Piwik Code -->
+  </body>
+</html>

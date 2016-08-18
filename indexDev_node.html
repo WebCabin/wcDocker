@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>wcDocker (Web Cabin)</title>
+  <meta name="description"
+        content="wcDocker is a responsive IDE interface designed for the developer at heart!  Compartmentalize your environment into smaller components, put each of those parts into a docker panel, and organize your environment however you like, whenever you like!">
+
+  <!-- External Modules -->
+  <link rel="stylesheet" type="text/css" href="node_modules/jquery-contextmenu/src/jquery.contextMenu.css"/>
+  <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.css"/>
+
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+  <script src="node_modules/jquery-contextmenu/src/jquery.contextMenu.js"></script>
+  <script src="node_modules/jquery-contextmenu/src/jquery.ui.position.js"></script>
+
+  <!--Moved before require-js, otherwise it crashes -->
+  <script src='Code/ext/spectrum.js'/>
+
+  <script src="node_modules/FileSaver/FileSaver.min.js"></script>
+  <script src="node_modules/requirejs/require.js"></script>
+
+  <script type="text/javascript">
+
+    //setup require-js
+    require.config({
+      baseUrl: "./node_modules",
+      shim: {
+        // Libraries
+        lodash: {
+          exports: '_'
+        }
+      },
+      packages: [
+        {
+          name: 'dcl',
+          location: './dcl'   //points to node_modules/dcl
+        },
+        {
+          name: 'wcDocker',
+          location: '../Code'
+        },
+        {
+          name: 'lodash',
+          location: './lodash-amd'   //points to node_modules/lodash-amd
+        }
+      ]
+    });
+
+
+  </script>
+
+  <script type="text/javascript">
+
+
+
+    //setup demo module
+    require.config({
+      config: {
+
+        'wcDocker/demo/demoAMD':{
+          //  enable/disable theme builder
+          themeBuilder: location.href.indexOf('noThemeBuilder') == -1,
+          //  enable/disable tutorials
+          tutorials: location.href.indexOf('noTutorials') == -1
+        }
+      }
+    });
+
+
+    try {
+      //require demo
+      require([
+        "wcDocker/demo/demoAMD"
+      ], function () {
+
+      });
+    }catch(e){
+      console.error('error loading demo ' + e , e);
+      console.dir(e.stack);
+    }
+  </script>
+
+
+  <link rel="stylesheet" type="text/css" href="Code/style.css"/>
+  <!-- Demo specific files -->
+  <link rel='stylesheet' href='Code/ext/spectrum.css'/>
+
+
+</head>
+<body style="background-color:white;">
+<div class="dockerContainer" style="position:absolute;left:0;right:0;top:0;bottom:0;border:3px solid black"></div>
+</body>
+</html>
