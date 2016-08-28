@@ -203,7 +203,7 @@ See the [Getting Started](http://docker.api.webcabin.org/tutorial-1.0-getting-st
 ### Dependencies ###
 
 * JQuery Library version 1.11.1 [http://jquery.com/](http://jquery.com/)
-* JQuery ContextMenu Library [https://github.com/medialize/jQuery-contextMenu](https://github.com/medialize/jQuery-contextMenu)
+* JQuery ContextMenu Library [https://github.com/swisnl/jQuery-contextMenu](https://github.com/swisnl/jQuery-contextMenu)
 * Font-Awesome [http://fortawesome.github.io/Font-Awesome/](http://fortawesome.github.io/Font-Awesome/)
 
 
