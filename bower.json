@@ -1,7 +1,7 @@
 {
   "name": "webcabin-docker",
   "description": "Dynamic docking panels for your app.",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "keywords": [
     "css",
     "js",
