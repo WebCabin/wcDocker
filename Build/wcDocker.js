@@ -20325,6 +20325,7 @@ define('wcDocker/docker',[
                     self._draggingSplitter.$pane[1].removeClass('wcResizing');
                 }
 
+                self._creatingPanel = false;
                 self._draggingSplitter = null;
                 self._draggingFrame = null;
                 self._draggingFrameSizer = null;
