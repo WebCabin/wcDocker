@@ -1056,7 +1056,7 @@ define([
                                         target = anchor.item._parent;
                                     }
                                     var newPanel = self.addPanel(key, anchor.loc, target, self._ghost.rect());
-                                    newPanel.focus();
+                                    newPanel.trigger('focus');
                                 }
                             }
                         },
@@ -1824,7 +1824,7 @@ define([
                             var index = parseInt($panelTab.attr('id'));
                             self._draggingFrame.panel(index, true);
                             self._draggingFrameTab = $panelTab[0];
-                            $(window).focus();
+                            $(window).trigger('focus');
                         }
 
                         // If the window is able to be docked, give it a dark shadow tint and begin the movement process
