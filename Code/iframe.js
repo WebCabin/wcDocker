@@ -75,7 +75,7 @@ define([
             this.__updateFrame();
             this._window.location.replace(url);
 
-            this.$iFrame[0].trigger('focus');
+            this.$iFrame.trigger('focus');
             this.$iFrame.on({
                 mouseenter:this.__onHoverEnter.bind(this),
                 mouseleave:this.__onHoverExit.bind(this)
@@ -110,7 +110,7 @@ define([
             this._window.document.write(html);
             this._window.document.close();
 
-            this.$iFrame[0].trigger('focus');
+            this.$iFrame.trigger('focus');
             this.$iFrame.on({
                 mouseenter:this.__onHoverEnter.bind(this),
                 mouseleave:this.__onHoverExit.bind(this)
@@ -143,7 +143,7 @@ define([
 
             // Write the frame source.
             this.$iFrame[0].srcdoc = html;
-            this.$iFrame[0].trigger('focus');
+            this.$iFrame.trigger('focus');
             this.$iFrame.on({
                 mouseenter:this.__onHoverEnter.bind(this),
                 mouseleave:this.__onHoverExit.bind(this)
