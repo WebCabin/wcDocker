@@ -75,11 +75,14 @@ define([
             this.__updateFrame();
             this._window.location.replace(url);
 
-            this.$iFrame[0].focus();
-            this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+            this.$iFrame[0].trigger('focus');
+            this.$iFrame.on({
+                mouseenter:this.__onHoverEnter.bind(this),
+                mouseleave:this.__onHoverExit.bind(this)
+            });
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load',function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -107,11 +110,14 @@ define([
             this._window.document.write(html);
             this._window.document.close();
 
-            this.$iFrame[0].focus();
-            this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+            this.$iFrame[0].trigger('focus');
+            this.$iFrame.on({
+                mouseenter:this.__onHoverEnter.bind(this),
+                mouseleave:this.__onHoverExit.bind(this)
+            });
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load',function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -137,11 +143,14 @@ define([
 
             // Write the frame source.
             this.$iFrame[0].srcdoc = html;
-            this.$iFrame[0].focus();
-            this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+            this.$iFrame[0].trigger('focus');
+            this.$iFrame.on({
+                mouseenter:this.__onHoverEnter.bind(this),
+                mouseleave:this.__onHoverExit.bind(this)
+            });
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load',function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -249,7 +258,7 @@ define([
                 this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
             }
 
-            $(window).blur(this.__onBlur.bind(this));
+            $(window).on('blur',this.__onBlur.bind(this));
         },
 
         __clearFrame: function () {

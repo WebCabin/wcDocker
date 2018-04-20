@@ -143,7 +143,7 @@ define([
 
                 var $pull = $('<button style="width:100%;" title="Pull attributes from the currently active theme.">Pull</button>');
                 self._panel.layout().addItem($pull, 0, row).stretch('25%', '');
-                $pull.click(function () {
+                $pull.on('click',function () {
                     self._panel.startLoading();
                     setTimeout(function() {
                         var isMobile = $('body').hasClass('wcMobile');
@@ -155,7 +155,7 @@ define([
 
                 var $apply = $('<button class="wcCustomThemeApplied" style="width:100%;" title="Apply these attributes to the theme.">Apply</button>');
                 self._panel.layout().addItem($apply, 1, row).stretch('25%', '');
-                $apply.click(function () {
+                $apply.on('click',function () {
                     var themeData = self.build();
                     self.apply(themeData);
                     $apply.addClass('wcButtonActive');
@@ -168,7 +168,7 @@ define([
 
                 var $mobile = $('<button style="width:100%;" title="Toggle mobile theme overrides.">Mobile</button>');
                 self._panel.layout().addItem($mobile, 2, row).stretch('25%', '');
-                $mobile.click(function () {
+                $mobile.on('click',function () {
                     self._panel.startLoading();
                     setTimeout(function() {
                         self.buildControls(!showMobile);
@@ -183,7 +183,7 @@ define([
 
                 var $download = $('<button style="width:100%;" title="Download your custom theme.">Download</button>');
                 self._panel.layout().addItem($download, 3, row).stretch('25%', '');
-                $download.click(function () {
+                $download.on('click',function () {
                     var themeData = self.build();
                     var blob = new Blob([themeData], {type: "text/plain;charset=utf-8"});
                     saveAs(blob, "myTheme.css");
@@ -332,7 +332,7 @@ define([
                 $activator = this._lastCheckbox;
             }
 
-            $activator.change(function () {
+            $activator.on('change',function () {
                 control[disabledProp] = !this.checked;
                 $control.spectrum(this.checked ? 'enable' : 'disable');
                 self.onChanged();
@@ -362,7 +362,7 @@ define([
             $control = $('<input class="wcAttributeControl" title="' + control.info + '" type="text"/>');
             layout.addItem($control, 2, row, 2).stretch('100%', '');
             $control.val(control[valueProp]);
-            $control.change(function () {
+            $control.on('change',function () {
                 control[valueProp] = $(this).val();
                 if (!showMobile && control.isMobileDisabled) {
                     control.mobileValue = control.value;
@@ -380,7 +380,7 @@ define([
                 $activator = this._lastCheckbox;
             }
 
-            $activator.change(function () {
+            $activator.on('change',function () {
                 control[disabledProp] = !this.checked;
                 $control.attr('disabled', !this.checked);
                 self.onChanged();
@@ -410,7 +410,7 @@ define([
             $control = $('<input class="wcAttributeControl" title="' + control.info + '" type="number" step="1"/>');
             layout.addItem($control, 2, row, 2).stretch('100%', '');
             $control.val(parseInt(control[valueProp]));
-            $control.change(function () {
+            $control.on('change',function () {
                 control[valueProp] = $(this).val() + 'px';
                 if (!showMobile && control.isMobileDisabled) {
                     control.mobileValue = control.value;
@@ -428,7 +428,7 @@ define([
                 $activator = this._lastCheckbox;
             }
 
-            $activator.change(function () {
+            $activator.on('change',function () {
                 control[disabledProp] = !this.checked;
                 $control.attr('disabled', !this.checked);
                 self.onChanged();
@@ -472,7 +472,7 @@ define([
                     $control.append($('<option value="' + value + '"' + (control[valueProp] === value ? ' selected' : '') + '>' + display + '</option>'));
                 }
 
-                $control.change(function () {
+                $control.on('change',function () {
                     control[valueProp] = $(this).val();
                     if (!showMobile && control.isMobileDisabled) {
                         control.mobileValue = control.value;
@@ -490,7 +490,7 @@ define([
                     $activator = this._lastCheckbox;
                 }
 
-                $activator.change(function () {
+                $activator.on('change',function () {
                     control[disabledProp] = !this.checked;
                     $control.attr('disabled', !this.checked);
                     self.onChanged();
@@ -822,7 +822,7 @@ define([
                 var $customTheme = $('#wcCustomTheme');
                 if ($customTheme.length) {
                     $('option.custom').hide();
-                    $('.themeSelector').val('default').change();
+                    $('.themeSelector').val('default').trigger('change');
                     $customTheme.remove();
                 }
             });

@@ -411,7 +411,7 @@ define([
                 this.$frame.addClass('wcFloating');
             }
 
-            this.$center.scroll(this.__scrolled.bind(this));
+            this.$center.on('scroll',this.__scrolled.bind(this));
         },
 
         // Updates the size of the frame.
