@@ -1,5 +1,4 @@
-(function () {
-/**
+(function () {/**
  * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/almond for details
@@ -3433,7 +3432,7 @@ define('wcDocker/frame',[
                 this.$frame.addClass('wcFloating');
             }
 
-            this.$center.scroll(this.__scrolled.bind(this));
+            this.$center.on('scroll',this.__scrolled.bind(this));
         },
 
         // Updates the size of the frame.
@@ -19891,7 +19890,7 @@ define('wcDocker/docker',[
                                         target = anchor.item._parent;
                                     }
                                     var newPanel = self.addPanel(key, anchor.loc, target, self._ghost.rect());
-                                    newPanel.focus();
+                                    newPanel.trigger('focus');
                                 }
                             }
                         },
@@ -20659,7 +20658,7 @@ define('wcDocker/docker',[
                             var index = parseInt($panelTab.attr('id'));
                             self._draggingFrame.panel(index, true);
                             self._draggingFrameTab = $panelTab[0];
-                            $(window).focus();
+                            $(window).trigger('focus');
                         }
 
                         // If the window is able to be docked, give it a dark shadow tint and begin the movement process
@@ -21739,11 +21738,14 @@ define('wcDocker/iframe',[
             this.__updateFrame();
             this._window.location.replace(url);
 
-            this.$iFrame[0].focus();
-            this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+            this.$iFrame.trigger('focus');
+            this.$iFrame.on({
+                mouseenter:this.__onHoverEnter.bind(this),
+                mouseleave:this.__onHoverExit.bind(this)
+            });
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load',function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -21771,11 +21773,14 @@ define('wcDocker/iframe',[
             this._window.document.write(html);
             this._window.document.close();
 
-            this.$iFrame[0].focus();
-            this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+            this.$iFrame.trigger('focus');
+            this.$iFrame.on({
+                mouseenter:this.__onHoverEnter.bind(this),
+                mouseleave:this.__onHoverExit.bind(this)
+            });
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load',function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -21801,11 +21806,14 @@ define('wcDocker/iframe',[
 
             // Write the frame source.
             this.$iFrame[0].srcdoc = html;
-            this.$iFrame[0].focus();
-            this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
+            this.$iFrame.trigger('focus');
+            this.$iFrame.on({
+                mouseenter:this.__onHoverEnter.bind(this),
+                mouseleave:this.__onHoverExit.bind(this)
+            });
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load',function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -21913,7 +21921,7 @@ define('wcDocker/iframe',[
                 this._panel.on(this._boundEvents[i].event, this._boundEvents[i].handler);
             }
 
-            $(window).blur(this.__onBlur.bind(this));
+            $(window).on('blur',this.__onBlur.bind(this));
         },
 
         __clearFrame: function () {
@@ -22190,7 +22198,7 @@ define('wcDocker/ThemeBuilder',[
 
                 var $pull = $('<button style="width:100%;" title="Pull attributes from the currently active theme.">Pull</button>');
                 self._panel.layout().addItem($pull, 0, row).stretch('25%', '');
-                $pull.click(function () {
+                $pull.on('click',function () {
                     self._panel.startLoading();
                     setTimeout(function() {
                         var isMobile = $('body').hasClass('wcMobile');
@@ -22202,7 +22210,7 @@ define('wcDocker/ThemeBuilder',[
 
                 var $apply = $('<button class="wcCustomThemeApplied" style="width:100%;" title="Apply these attributes to the theme.">Apply</button>');
                 self._panel.layout().addItem($apply, 1, row).stretch('25%', '');
-                $apply.click(function () {
+                $apply.on('click',function () {
                     var themeData = self.build();
                     self.apply(themeData);
                     $apply.addClass('wcButtonActive');
@@ -22215,7 +22223,7 @@ define('wcDocker/ThemeBuilder',[
 
                 var $mobile = $('<button style="width:100%;" title="Toggle mobile theme overrides.">Mobile</button>');
                 self._panel.layout().addItem($mobile, 2, row).stretch('25%', '');
-                $mobile.click(function () {
+                $mobile.on('click',function () {
                     self._panel.startLoading();
                     setTimeout(function() {
                         self.buildControls(!showMobile);
@@ -22230,7 +22238,7 @@ define('wcDocker/ThemeBuilder',[
 
                 var $download = $('<button style="width:100%;" title="Download your custom theme.">Download</button>');
                 self._panel.layout().addItem($download, 3, row).stretch('25%', '');
-                $download.click(function () {
+                $download.on('click',function () {
                     var themeData = self.build();
                     var blob = new Blob([themeData], {type: "text/plain;charset=utf-8"});
                     saveAs(blob, "myTheme.css");
@@ -22379,7 +22387,7 @@ define('wcDocker/ThemeBuilder',[
                 $activator = this._lastCheckbox;
             }
 
-            $activator.change(function () {
+            $activator.on('change',function () {
                 control[disabledProp] = !this.checked;
                 $control.spectrum(this.checked ? 'enable' : 'disable');
                 self.onChanged();
@@ -22409,7 +22417,7 @@ define('wcDocker/ThemeBuilder',[
             $control = $('<input class="wcAttributeControl" title="' + control.info + '" type="text"/>');
             layout.addItem($control, 2, row, 2).stretch('100%', '');
             $control.val(control[valueProp]);
-            $control.change(function () {
+            $control.on('change',function () {
                 control[valueProp] = $(this).val();
                 if (!showMobile && control.isMobileDisabled) {
                     control.mobileValue = control.value;
@@ -22427,7 +22435,7 @@ define('wcDocker/ThemeBuilder',[
                 $activator = this._lastCheckbox;
             }
 
-            $activator.change(function () {
+            $activator.on('change',function () {
                 control[disabledProp] = !this.checked;
                 $control.attr('disabled', !this.checked);
                 self.onChanged();
@@ -22457,7 +22465,7 @@ define('wcDocker/ThemeBuilder',[
             $control = $('<input class="wcAttributeControl" title="' + control.info + '" type="number" step="1"/>');
             layout.addItem($control, 2, row, 2).stretch('100%', '');
             $control.val(parseInt(control[valueProp]));
-            $control.change(function () {
+            $control.on('change',function () {
                 control[valueProp] = $(this).val() + 'px';
                 if (!showMobile && control.isMobileDisabled) {
                     control.mobileValue = control.value;
@@ -22475,7 +22483,7 @@ define('wcDocker/ThemeBuilder',[
                 $activator = this._lastCheckbox;
             }
 
-            $activator.change(function () {
+            $activator.on('change',function () {
                 control[disabledProp] = !this.checked;
                 $control.attr('disabled', !this.checked);
                 self.onChanged();
@@ -22519,7 +22527,7 @@ define('wcDocker/ThemeBuilder',[
                     $control.append($('<option value="' + value + '"' + (control[valueProp] === value ? ' selected' : '') + '>' + display + '</option>'));
                 }
 
-                $control.change(function () {
+                $control.on('change',function () {
                     control[valueProp] = $(this).val();
                     if (!showMobile && control.isMobileDisabled) {
                         control.mobileValue = control.value;
@@ -22537,7 +22545,7 @@ define('wcDocker/ThemeBuilder',[
                     $activator = this._lastCheckbox;
                 }
 
-                $activator.change(function () {
+                $activator.on('change',function () {
                     control[disabledProp] = !this.checked;
                     $control.attr('disabled', !this.checked);
                     self.onChanged();
@@ -22869,7 +22877,7 @@ define('wcDocker/ThemeBuilder',[
                 var $customTheme = $('#wcCustomTheme');
                 if ($customTheme.length) {
                     $('option.custom').hide();
-                    $('.themeSelector').val('default').change();
+                    $('.themeSelector').val('default').trigger('change');
                     $customTheme.remove();
                 }
             });

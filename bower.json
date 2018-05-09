@@ -29,9 +29,9 @@
     "package.json"
   ],
   "dependencies": {
-    "jquery": "1.11.1",
-    "jQuery-contextMenu": "1.6.6",
-    "font-awesome": "4.6.0"
+    "jquery": "3.3.1",
+    "jQuery-contextMenu": "2.6.4",
+    "font-awesome": "4.6.3"
   },
   "devDependencies": {
     "dcl": "1.1.2",
