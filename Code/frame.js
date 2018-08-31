@@ -900,6 +900,8 @@ define([
                         var $button = $('<div>');
                         var buttonClass = buttonData.className;
                         $button.addClass('wcFrameButton');
+                        if (buttonData.parentClass)
+                            $button.addClass(buttonData.parentClass);
                         if (buttonData.isTogglable) {
                             $button.addClass('wcFrameButtonToggler');
 

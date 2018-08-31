@@ -253,8 +253,9 @@ define([
          * @param {String} tip                - Tooltip text for the user.
          * @param {Boolean} [isTogglable]     - If true, will make the button toggle on and off per click.
          * @param {String} [toggleClassName]  - If this button is toggleable, you can designate an optional CSS class name that will replace the original class name.
+         * @param {String} [parentClass]      - A CSS class name to apply to the wcFrameButton
          */
-        addButton: function (name, className, text, tip, isTogglable, toggleClassName) {
+        addButton: function (name, className, text, tip, isTogglable, toggleClassName, parentClass) {
             this._buttonList.push({
                 name: name,
                 className: className,
@@ -262,7 +263,8 @@ define([
                 text: text,
                 tip: tip,
                 isTogglable: isTogglable,
-                isToggled: false
+                isToggled: false,
+                parentClass: parentClass,
             });
 
             if (this._parent && this._parent.instanceOf('wcFrame')) {
