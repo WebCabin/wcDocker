@@ -58,6 +58,11 @@
   color: #FFF;
 }
 
+.wcFrameButton.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .wcFrameButtonToggled, .wcFrameButtonToggled:hover {
   border-style: inset;
 }

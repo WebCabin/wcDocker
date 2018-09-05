@@ -902,6 +902,8 @@ define([
                         $button.addClass('wcFrameButton');
                         if (buttonData.parentClass)
                             $button.addClass(buttonData.parentClass);
+                        if (buttonData.enabled === false)
+                            $button.addClass('disabled');
                         if (buttonData.isTogglable) {
                             $button.addClass('wcFrameButtonToggler');
 

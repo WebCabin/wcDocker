@@ -67,6 +67,15 @@
   border: 2px inset #444;
 }
 
+.wcFrameButton.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {
+  border: 1px solid #555555;
+}
+
 .wcFrameCenter {
   top: 17px;
 }

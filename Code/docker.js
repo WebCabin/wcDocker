@@ -142,7 +142,7 @@ define([
 
             this.__init();
         },
-        
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1739,6 +1739,9 @@ define([
                                 name: $button.data('name'),
                                 isToggled: false
                             };
+
+                            if ($button.hasClass('disabled'))
+                                return;
 
                             if ($button.hasClass('wcFrameButtonToggler')) {
                                 $button.toggleClass('wcFrameButtonToggled');

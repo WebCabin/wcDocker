@@ -255,7 +255,7 @@ define([
          * @param {String} [toggleClassName]  - If this button is toggleable, you can designate an optional CSS class name that will replace the original class name.
          * @param {String} [parentClass]      - A CSS class name to apply to the wcFrameButton
          */
-        addButton: function (name, className, text, tip, isTogglable, toggleClassName, parentClass) {
+        addButton: function (name, className, text, tip, isTogglable, toggleClassName, parentClass, enabled) {
             this._buttonList.push({
                 name: name,
                 className: className,
@@ -265,6 +265,7 @@ define([
                 isTogglable: isTogglable,
                 isToggled: false,
                 parentClass: parentClass,
+                enabled: enabled,
             });
 
             if (this._parent && this._parent.instanceOf('wcFrame')) {
@@ -319,6 +320,26 @@ define([
                     }
 
                     return this._buttonList[i].isToggled;
+                }
+            }
+            return false;
+        },
+
+        buttonEnable: function(name, enableState) {
+            for (var i = 0; i < this._buttonList.length; ++i) {
+                if (this._buttonList[i].name === name) {
+                    if (typeof toggleState !== 'undefined') {
+                        this._buttonList[i].enabled = enableState;
+                        if (this._parent && this._parent.instanceOf('wcFrame')) {
+                            this._parent.__onTabChange();
+                        }
+                    }
+
+                    if (this._parent && this._parent.instanceOf('wcFrame')) {
+                        this._parent.__update();
+                    }
+
+                    return true;
                 }
             }
             return false;

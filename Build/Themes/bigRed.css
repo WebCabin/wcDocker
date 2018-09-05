@@ -54,8 +54,18 @@
   background-color: #822;
 }
 
+.wcFrameButton.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .wcFrameButtonToggled, .wcFrameButtonToggled:hover {
   border-style: inset;
+}
+
+.wcFrameButton.disabled {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .wcLayoutGrid, .wcLayoutGrid tr, .wcLayoutGrid td {

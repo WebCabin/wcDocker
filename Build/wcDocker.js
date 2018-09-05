@@ -1234,7 +1234,7 @@ define('wcDocker/panel',[
          * @param {String} [toggleClassName]  - If this button is toggleable, you can designate an optional CSS class name that will replace the original class name.
          * @param {String} [parentClass]      - A CSS class name to apply to the wcFrameButton
          */
-        addButton: function (name, className, text, tip, isTogglable, toggleClassName, parentClass) {
+        addButton: function (name, className, text, tip, isTogglable, toggleClassName, parentClass, enabled) {
             this._buttonList.push({
                 name: name,
                 className: className,
@@ -1244,6 +1244,7 @@ define('wcDocker/panel',[
                 isTogglable: isTogglable,
                 isToggled: false,
                 parentClass: parentClass,
+                enabled: enabled,
             });
 
             if (this._parent && this._parent.instanceOf('wcFrame')) {
@@ -1298,6 +1299,26 @@ define('wcDocker/panel',[
                     }
 
                     return this._buttonList[i].isToggled;
+                }
+            }
+            return false;
+        },
+
+        buttonEnable: function(name, enableState) {
+            for (var i = 0; i < this._buttonList.length; ++i) {
+                if (this._buttonList[i].name === name) {
+                    if (typeof toggleState !== 'undefined') {
+                        this._buttonList[i].enabled = enableState;
+                        if (this._parent && this._parent.instanceOf('wcFrame')) {
+                            this._parent.__onTabChange();
+                        }
+                    }
+
+                    if (this._parent && this._parent.instanceOf('wcFrame')) {
+                        this._parent.__update();
+                    }
+
+                    return true;
                 }
             }
             return false;
@@ -3925,6 +3946,8 @@ define('wcDocker/frame',[
                         $button.addClass('wcFrameButton');
                         if (buttonData.parentClass)
                             $button.addClass(buttonData.parentClass);
+                        if (buttonData.enabled === false)
+                            $button.addClass('disabled');
                         if (buttonData.isTogglable) {
                             $button.addClass('wcFrameButtonToggler');
 
@@ -18980,7 +19003,7 @@ define('wcDocker/docker',[
 
             this.__init();
         },
-        
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20578,6 +20601,9 @@ define('wcDocker/docker',[
                                 isToggled: false
                             };
 
+                            if ($button.hasClass('disabled'))
+                                return;
+
                             if ($button.hasClass('wcFrameButtonToggler')) {
                                 $button.toggleClass('wcFrameButtonToggled');
                                 if ($button.hasClass('wcFrameButtonToggled')) {
@@ -21665,6 +21691,7 @@ define('wcDocker/docker',[
 
     return Module;
 });
+
 /** @module wcIFrame */
 define('wcDocker/iframe',[
     "dcl/dcl",
