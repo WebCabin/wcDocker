@@ -328,7 +328,7 @@ define([
         buttonEnable: function(name, enableState) {
             for (var i = 0; i < this._buttonList.length; ++i) {
                 if (this._buttonList[i].name === name) {
-                    if (typeof toggleState !== 'undefined') {
+                    if (typeof enableState !== 'undefined') {
                         this._buttonList[i].enabled = enableState;
                         if (this._parent && this._parent.instanceOf('wcFrame')) {
                             this._parent.__onTabChange();
