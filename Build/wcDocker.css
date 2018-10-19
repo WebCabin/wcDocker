@@ -207,13 +207,13 @@ html, body {
   border-right: 0px;
 }
 
-.wcFrameCornerNW {
+.wcFrameCornerNW, .wcFrameCornerSE {
   height: 2px;
   width: 2px;
   cursor: nwse-resize;
 }
 
-.wcFrameCornerNE {
+.wcFrameCornerNE, .wcFrameCornerSW {
   height: 2px;
   width: 2px;
   cursor: nesw-resize;
