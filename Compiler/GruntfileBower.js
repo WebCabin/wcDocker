@@ -36,7 +36,7 @@ module.exports = function (grunt) {
              * directory, it needs to be copied over
              */
             almond:{
-                src: "../node_modules/almond/almond.js",
+                src: "../bower_components/almond/almond.js",
                 dest: "libs/almond.js"
             }
 
@@ -130,7 +130,7 @@ module.exports = function (grunt) {
 
                     paths: {
                         "wcDocker":"../Code/",
-                        "dcl":"../node_modules/dcl"
+                        "dcl":"../bower_components/dcl"
                     }
 
                 }
@@ -155,12 +155,12 @@ module.exports = function (grunt) {
 
                     paths: {
                         "wcDocker":"../Code/",
-                        "dcl":"../node_modules/dcl"
+                        "dcl":"../bower_components/dcl"
                     },
                     packages: [
                         {
                             name: 'lodash',
-                            location: '../node_modules/lodash-amd'   //points to node_modules/dcl
+                            location: '../bower_components/lodash-compat'   //points to bower_components/dcl
                         }
                     ]
 
@@ -186,12 +186,12 @@ module.exports = function (grunt) {
                     packages: [
                         {
                             name: 'lodash',
-                            location: '../node_modules/lodash-amd'   //points to node_modules/dcl
+                            location: '../bower_components/lodash-compat'   //points to bower_components/dcl
                         }
                     ],
                     paths: {
                         "wcDocker":"../Code/",
-                        "dcl":"../node_modules/dcl"
+                        "dcl":"../bower_components/dcl"
                     }
 
                 }
