@@ -1,42 +1,42 @@
 {
-  "name": "wcDocker",
-  "author": "Web Cabin",
-  "version": "3.0.0-pre",
-  "description": "Web Cabin Docker is a docking panel layout interface written in JavaScript under the MIT License.",
-  "main": "compiler.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node compiler.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/WebCabin/wcDocker.git"
-  },
-  "license": "MIT",
-  "engines": {
-    "node": "~0.10"
-  },
-  "dependencies": {
-    "uglify-js": "1.3.5",
-    "uglifycss": "0.0.9"
-  },
-  "devDependencies": {
-    "intern": "~3.0.3",
-    "intern-geezer": "latest",
-    "grunt": "~0.4.5",
-    "grunt-contrib-jshint": "~0.6.3",
-    "grunt-contrib-clean": "~0.6.0",
-    "grunt-contrib-less": "~0.8.3",
-    "grunt-contrib-uglify": "^0.4.0",
-    "grunt-amd-build": "0.8.x",
-    "grunt-contrib-concat": "0.5.x",
-    "grunt-contrib-copy": "0.5.x",
-    "grunt-contrib-requirejs": "latest",
-    "grunt-contrib-cssmin": "*",
-    "grunt-shell": "1.1.2",
-    "jsdoc-amddcl": "git://github.com/mc007/jsdoc-amddcl#master",
-    "jsdoc": "3.4.0",
-    "ink-docstrap": "git+https://github.com/Lochemage/docstrap.git#deploy",
-    "grunt-jsdoc": "~0.6.8"
-  }
+	"name": "wcDocker",
+	"author": "Web Cabin",
+	"version": "3.0.0-pre",
+	"description": "Web Cabin Docker is a docking panel layout interface written in JavaScript under the MIT License.",
+	"main": "compiler.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node compiler.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WebCabin/wcDocker.git"
+	},
+	"license": "MIT",
+	"engines": {
+		"node": "~0.10"
+	},
+	"dependencies": {
+		"uglify-js": "1.3.5",
+		"uglifycss": "0.0.9"
+	},
+	"devDependencies": {
+		"intern": "~3.0.3",
+		"intern-geezer": "latest",
+		"grunt": "~0.4.5",
+		"grunt-contrib-jshint": "~0.6.3",
+		"grunt-contrib-clean": "~0.6.0",
+		"grunt-contrib-less": "~0.8.3",
+		"grunt-contrib-uglify": "^0.4.0",
+		"grunt-amd-build": "0.8.x",
+		"grunt-contrib-concat": "0.5.x",
+		"grunt-contrib-copy": "0.5.x",
+		"grunt-contrib-requirejs": "latest",
+		"grunt-contrib-cssmin": "*",
+		"grunt-shell": "1.1.2",
+		"jsdoc-amddcl": "git://github.com/mc007/jsdoc-amddcl#master",
+		"jsdoc": "3.4.0",
+		"ink-docstrap": "git+https://github.com/Lochemage/docstrap.git#deploy",
+		"grunt-jsdoc": "~0.6.8"
+	}
 }
