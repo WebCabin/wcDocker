@@ -4,7 +4,7 @@
 		"name": "WebCabin",
 		"url": "http://docker.webcabin.org"
 	},
-	"version": "2.2.3",
+	"version": "2.2.4",
 	"description": "Dynamic docking panels for your app.",
 	"main": "Build/wcDocker.min.js",
 	"dependencies": {
