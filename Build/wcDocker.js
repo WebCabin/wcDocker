@@ -2629,6 +2629,7 @@ define('wcDocker/splitter',[
             this.$pane.push($('<div class="wcLayoutPane wcScrollableX wcScrollableY">'));
             this.$pane.push($('<div class="wcLayoutPane wcScrollableX wcScrollableY">'));
             this.$bar = $('<div class="wcSplitterBar">');
+            this.$barline = $('<div class="wcSplitterBarLine">').appendTo(this.$bar);
 
             if (this._orientation) {
                 // this.$pane[0].addClass('wcTall');
@@ -2717,14 +2718,15 @@ define('wcDocker/splitter',[
 
             if (this._orientation === wcDocker.ORIENTATION.HORIZONTAL) {
                 var barSize = this.$bar.outerWidth() / 2;
+                var barLineSize = this.$barline.outerWidth() / 2;
                 var barBorder = parseInt(this.$bar.css('border-top-width')) + parseInt(this.$bar.css('border-bottom-width'));
                 if (opt_dontMove) {
                     var offset = this._pixelPos - (this.$container.offset().left + parseInt(this.$container.css('border-left-width'))) - this.$bar.outerWidth() / 2;
-                    this._pos = offset / (width - this.$bar.outerWidth());
+                    this._pos = offset / (width - this.$barline.outerWidth());
                 }
 
                 this._pos = Math.min(Math.max(this._pos, 0), 1);
-                var size = (width - this.$bar.outerWidth()) * this._pos + barSize;
+                var size = (width - this.$barline.outerWidth()) * this._pos + barLineSize;
                 if (minSize) {
                     size = Math.max(minSize.x, size);
                 }
@@ -2746,28 +2748,29 @@ define('wcDocker/splitter',[
                 this.$bar.css('left', size - barSize);
                 this.$bar.css('top', top);
                 this.$bar.css('height', height - barBorder - bottom);
-                this.$pane[0].css('width', size - barSize);
+                this.$pane[0].css('width', size - barLineSize);
                 this.$pane[0].css('left', '0px');
                 this.$pane[0].css('right', '');
                 this.$pane[0].css('top', top);
                 this.$pane[0].css('bottom', bottom);
                 this.$pane[1].css('left', '');
                 this.$pane[1].css('right', '0px');
-                this.$pane[1].css('width', width - size - barSize - parseInt(this.$container.css('border-left-width')) * 2);
+                this.$pane[1].css('width', width - size - barLineSize - parseInt(this.$container.css('border-left-width')) * 2);
                 this.$pane[1].css('top', top);
                 this.$pane[1].css('bottom', bottom);
 
                 this._pixelPos = this.$bar.offset().left + barSize;
             } else {
                 var barSize = this.$bar.outerHeight() / 2;
+                var barLineSize = this.$barline.outerHeight() / 2;
                 var barBorder = parseInt(this.$bar.css('border-left-width')) + parseInt(this.$bar.css('border-right-width'));
                 if (opt_dontMove) {
                     var offset = this._pixelPos - (this.$container.offset().top + parseInt(this.$container.css('border-top-width'))) - this.$bar.outerHeight() / 2;
-                    this._pos = offset / (height - this.$bar.outerHeight());
+                    this._pos = offset / (height - this.$barline.outerHeight());
                 }
 
                 this._pos = Math.min(Math.max(this._pos, 0), 1);
-                var size = (height - this.$bar.outerHeight()) * this._pos + barSize;
+                var size = (height - this.$barline.outerHeight()) * this._pos + barSize;
                 if (minSize) {
                     size = Math.max(minSize.y, size);
                 }
@@ -2789,14 +2792,14 @@ define('wcDocker/splitter',[
                 this.$bar.css('top', size - barSize);
                 this.$bar.css('left', left);
                 this.$bar.css('width', width - barBorder - bottom);
-                this.$pane[0].css('height', size - barSize);
+                this.$pane[0].css('height', size - barLineSize);
                 this.$pane[0].css('top', '0px');
                 this.$pane[0].css('bottom', '');
                 this.$pane[0].css('left', left);
                 this.$pane[0].css('right', right);
                 this.$pane[1].css('top', '');
                 this.$pane[1].css('bottom', '0px');
-                this.$pane[1].css('height', height - size - barSize - parseInt(this.$container.css('border-top-width')) * 2);
+                this.$pane[1].css('height', height - size - barLineSize - parseInt(this.$container.css('border-top-width')) * 2);
                 this.$pane[1].css('left', left);
                 this.$pane[1].css('right', right);
 
@@ -27384,7 +27387,7 @@ define('wcDocker/ThemeBuilder',[
                                 // Splitter Bar Size
                                 selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic)',
                                 elem: '<div class="wcSplitterBar wcSplitterBarV"></div>',
-                                name: 'Size',
+                                name: 'Hover Area Size',
                                 info: 'The size of a splitter bar',
                                 create: this.addPixelControl,
                                 attribute: 'width',
@@ -27394,27 +27397,40 @@ define('wcDocker/ThemeBuilder',[
                                     attribute: 'height'
                                 }]
                             }, {
-                                // Splitter Bar Color
-                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic), .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic)',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV"></div>',
+                                // Splitter Bar Line Size
+                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic) .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
+                                name: 'Size',
+                                info: 'The size of a splitter bar',
+                                create: this.addPixelControl,
+                                attribute: 'width',
+                                value: '',
+                                also: [{
+                                    selector: '.wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic) .wcSplitterBarLine',
+                                    attribute: 'height'
+                                }]
+                            }, {
+                                // Splitter Bar Line Color
+                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic) .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic) .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Color',
                                 info: 'The color of a splitter bar',
                                 create: this.addColorControl,
                                 attribute: 'background-color',
                                 value: ''
                             }, {
-                                // Splitter Bar Border Style
-                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic), .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic)',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV"></div>',
+                                // Splitter Bar Line Border Style
+                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic) .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic) .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Border Style',
                                 info: 'The border style of a splitter bar',
                                 create: this.addListControl(this._borderStyles),
                                 attribute: 'border-style',
                                 value: ''
                             }, {
-                                // Splitter Bar Border Size
-                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic), .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic)',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV"></div>',
+                                // Splitter Bar Line Border Size
+                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic) .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic) .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Border Size',
                                 info: 'The border size of a splitter bar',
                                 create: this.addPixelControl,
@@ -27422,9 +27438,9 @@ define('wcDocker/ThemeBuilder',[
                                 value: '0px',
                                 mobileValue: '0px'
                             }, {
-                                // Splitter Bar Border Color
-                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic), .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic)',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV"></div>',
+                                // Splitter Bar Line Border Color
+                                selector: '.wcSplitterBar.wcSplitterBarV:not(.wcSplitterBarStatic) .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH:not(.wcSplitterBarStatic) .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarStatic"></div>',
                                 name: 'Border Color',
                                 info: 'The border color of a splitter bar',
                                 create: this.addColorControl,
@@ -27439,21 +27455,21 @@ define('wcDocker/ThemeBuilder',[
                                 create: this.addSpacer
                             }, {
                                 // Static Splitter Bar Size
-                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV wcSplitterBarStatic"></div>',
+                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Size',
                                 info: 'The size of a static splitter bar',
                                 create: this.addPixelControl,
                                 attribute: 'width',
                                 value: '',
                                 also: [{
-                                    selector: '.wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic',
+                                    selector: '.wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic .wcSplitterBarLine',
                                     attribute: 'height'
                                 }]
-                            }, {
+                            },{
                                 // Static Splitter Bar Color
-                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV wcSplitterBarStatic"></div>',
+                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Color',
                                 info: 'The color of a static splitter bar',
                                 create: this.addColorControl,
@@ -27461,8 +27477,8 @@ define('wcDocker/ThemeBuilder',[
                                 value: ''
                             }, {
                                 // Splitter Bar Border Style
-                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV wcSplitterBarStatic"></div>',
+                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Border Style',
                                 info: 'The border style of a static splitter bar',
                                 create: this.addListControl(this._borderStyles),
@@ -27470,8 +27486,8 @@ define('wcDocker/ThemeBuilder',[
                                 value: ''
                             }, {
                                 // Splitter Bar Border Size
-                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV wcSplitterBarStatic"></div>',
+                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Border Size',
                                 info: 'The border size of a static splitter bar',
                                 create: this.addPixelControl,
@@ -27480,8 +27496,8 @@ define('wcDocker/ThemeBuilder',[
                                 mobileValue: '0px'
                             }, {
                                 // Splitter Bar Border Color
-                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic',
-                                elem: '<div class="wcSplitterBar wcSplitterBarV wcSplitterBarStatic"></div>',
+                                selector: '.wcSplitterBar.wcSplitterBarV.wcSplitterBarStatic .wcSplitterBarLine, .wcSplitterBar.wcSplitterBarH.wcSplitterBarStatic .wcSplitterBarLine',
+                                elem: '<div class="wcSplitterBarLine"></div>',
                                 name: 'Border Color',
                                 info: 'The border color of a static splitter bar',
                                 create: this.addColorControl,
