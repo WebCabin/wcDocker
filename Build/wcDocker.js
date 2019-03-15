@@ -2726,7 +2726,7 @@ define('wcDocker/splitter',[
                 }
 
                 this._pos = Math.min(Math.max(this._pos, 0), 1);
-                var size = (width - this.$barline.outerWidth()) * this._pos + barLineSize;
+                var size = (width - this.$barline.outerWidth()) * this._pos + barSize;
                 if (minSize) {
                     size = Math.max(minSize.x, size);
                 }
