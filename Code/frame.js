@@ -516,8 +516,16 @@ define([
             this._curTab = data.tab;
             for (var i = 0; i < data.panels.length; ++i) {
                 var panel = docker.__create(data.panels[i], this, this.$center);
-                panel.__restore(data.panels[i], docker);
-                this._panelList.push(panel);
+                /* If unable to re-create panel, don't error out */
+                if(panel) {
+                    panel.__restore(data.panels[i], docker);
+                    this._panelList.push(panel);
+                } else if(i == this._curTab){
+                    /* If the restore failed panel was the current tab
+                     * then set the current tab to last available panel tab
+                     */
+                    this._curTab = this._panelList.length - 1;
+                }
             }
 
             this.__update();

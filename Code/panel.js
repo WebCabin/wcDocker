@@ -980,6 +980,10 @@ define([
                 }
             }
 
+            if(this.docker() && this._options.layoutChangeTrigger) {
+                this.docker().__layoutChanged(eventType);
+            }
+
             return results;
         },
 

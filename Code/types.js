@@ -50,6 +50,7 @@ define([], function () {
      * @property {String} END_DOCK="panelEndDock" - When the user finishes moving or docking a panel
      * @property {String} GAIN_FOCUS="panelGainFocus" - When the user brings any panel within a tabbed frame into focus
      * @property {String} LOST_FOCUS="panelLostFocus" - When the user leaves focus on any panel within a tabbed frame
+     * @property {String} OPENED="panelOpened" - When the panel is opened
      * @property {String} CLOSING="panelClosing" - When the panel is about to be closed, but before it closes. If any event handler returns a falsey value, the close action will be canceled.
      * @property {String} CLOSED="panelClosed" - When the panel is being closed
      * @property {String} PERSISTENT_CLOSED="panelPersistentClosed" - When a persistent panel is being hidden
@@ -69,6 +70,7 @@ define([], function () {
      * @property {String} RESTORE_LAYOUT="layoutRestore" - When the layout is being restored, See [wcDocker.restore]{@link module:wcDocker#restore}
      * @property {String} CUSTOM_TAB_CHANGED="customTabChanged" - When the current tab on a custom tab widget associated with this panel has changed, See {@link module:wcTabFrame}
      * @property {String} CUSTOM_TAB_CLOSED="customTabClosed" - When a tab has been closed on a custom tab widget associated with this panel, See {@link module:wcTabFrame}
+     * @property {String} LAYOUT_CHANGED="layoutCanged" - When layout of a panel is resized, moved or any structural changes.
      * @version 3.0.0
      * @const
      */
@@ -81,6 +83,7 @@ define([], function () {
         END_DOCK: 'panelEndDock',
         GAIN_FOCUS: 'panelGainFocus',
         LOST_FOCUS: 'panelLostFocus',
+        OPENED: 'panelOpened',
         CLOSING: 'panelClosing',
         CLOSED: 'panelClosed',
         PERSISTENT_CLOSED: 'panelPersistentClosed',
@@ -99,8 +102,30 @@ define([], function () {
         SAVE_LAYOUT: 'layoutSave',
         RESTORE_LAYOUT: 'layoutRestore',
         CUSTOM_TAB_CHANGED: 'customTabChanged',
-        CUSTOM_TAB_CLOSED: 'customTabClosed'
+        CUSTOM_TAB_CLOSED: 'customTabClosed',
+        LAYOUT_CHANGED: 'layoutCanged'
     };
+
+    /**
+     * The events which says layout has changed
+     * @private
+     * @memberOf module:wcDocker
+     * @constant {Array} module:wcDocker.LAYOUT_CHANGE_EVENTS
+     */
+
+    wcDocker.LAYOUT_CHANGE_EVENTS = [
+        wcDocker.EVENT.VISIBILITY_CHANGED,
+        wcDocker.EVENT.END_DOCK,
+        wcDocker.EVENT.OPENED,
+        wcDocker.EVENT.CLOSED,
+        wcDocker.EVENT.PERSISTENT_OPENED,
+        wcDocker.EVENT.PERSISTENT_CLOSED,
+        wcDocker.EVENT.ATTACHED,
+        wcDocker.EVENT.DETACHED,
+        wcDocker.EVENT.MOVE_ENDED,
+        wcDocker.EVENT.RESIZE_ENDED,
+        wcDocker.ORDER_CHANGED
+    ];
 
     /**
      * The name of the placeholder panel.
