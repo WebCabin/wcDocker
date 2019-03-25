@@ -1208,7 +1208,9 @@ define([
 
             for (var i = 0; i < data.floating.length; ++i) {
                 var panel = this.__create(data.floating[i], this, this.$container);
-                panel.__restore(data.floating[i], this);
+                if(panel) {
+                    panel.__restore(data.floating[i], this);
+                }
             }
 
             this.__forceUpdate(false);

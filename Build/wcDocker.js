@@ -1122,6 +1122,12 @@ define('wcDocker/panel',[
             this._closeable = true;
             this._resizeVisible = true;
             this._isVisible = false;
+            this._isLayoutMember = true;
+
+            if(typeof this._options.isLayoutMember != 'undefined' ||
+                this._options.isLayoutMember != null) {
+                this._isLayoutMember = this._options.isLayoutMember;
+            }
 
             this._events = {};
 
@@ -1921,6 +1927,11 @@ define('wcDocker/panel',[
         // object that can be used later to restore it.
         __save: function () {
             var data = {};
+
+            if(!this._isLayoutMember) {
+                return {};
+            }
+
             data.type = 'wcPanel';
             data.panelType = this._type;
             // data.title = this._title;
@@ -1985,7 +1996,7 @@ define('wcDocker/panel',[
                 }
             }
 
-            if(this.docker() && this._options.layoutChangeTrigger) {
+            if(this.docker() && this._isLayoutMember) {
                 this.docker().__layoutChanged(eventType);
             }
 
@@ -3577,7 +3588,11 @@ define('wcDocker/frame',[
             data.tab = this._curTab;
             data.panels = [];
             for (var i = 0; i < this._panelList.length; ++i) {
-                data.panels.push(this._panelList[i].__save());
+                if(!this._panelList[i]._isLayoutMember) {
+                    return {};
+                } else {
+                    data.panels.push(this._panelList[i].__save());
+                }
             }
             return data;
         },
@@ -24296,7 +24311,9 @@ define('wcDocker/docker',[
 
             for (var i = 0; i < data.floating.length; ++i) {
                 var panel = this.__create(data.floating[i], this, this.$container);
-                panel.__restore(data.floating[i], this);
+                if(panel) {
+                    panel.__restore(data.floating[i], this);
+                }
             }
 
             this.__forceUpdate(false);

@@ -500,7 +500,11 @@ define([
             data.tab = this._curTab;
             data.panels = [];
             for (var i = 0; i < this._panelList.length; ++i) {
-                data.panels.push(this._panelList[i].__save());
+                if(!this._panelList[i]._isLayoutMember) {
+                    return {};
+                } else {
+                    data.panels.push(this._panelList[i].__save());
+                }
             }
             return data;
         },
