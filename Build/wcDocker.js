@@ -809,6 +809,7 @@ define('wcDocker/types',[], function () {
      * @property {String} END_DOCK="panelEndDock" - When the user finishes moving or docking a panel
      * @property {String} GAIN_FOCUS="panelGainFocus" - When the user brings any panel within a tabbed frame into focus
      * @property {String} LOST_FOCUS="panelLostFocus" - When the user leaves focus on any panel within a tabbed frame
+     * @property {String} OPENED="panelOpened" - When the panel is opened
      * @property {String} CLOSING="panelClosing" - When the panel is about to be closed, but before it closes. If any event handler returns a falsey value, the close action will be canceled.
      * @property {String} CLOSED="panelClosed" - When the panel is being closed
      * @property {String} PERSISTENT_CLOSED="panelPersistentClosed" - When a persistent panel is being hidden
@@ -828,6 +829,7 @@ define('wcDocker/types',[], function () {
      * @property {String} RESTORE_LAYOUT="layoutRestore" - When the layout is being restored, See [wcDocker.restore]{@link module:wcDocker#restore}
      * @property {String} CUSTOM_TAB_CHANGED="customTabChanged" - When the current tab on a custom tab widget associated with this panel has changed, See {@link module:wcTabFrame}
      * @property {String} CUSTOM_TAB_CLOSED="customTabClosed" - When a tab has been closed on a custom tab widget associated with this panel, See {@link module:wcTabFrame}
+     * @property {String} LAYOUT_CHANGED="layoutCanged" - When layout of a panel is resized, moved or any structural changes.
      * @version 3.0.0
      * @const
      */
@@ -840,6 +842,7 @@ define('wcDocker/types',[], function () {
         END_DOCK: 'panelEndDock',
         GAIN_FOCUS: 'panelGainFocus',
         LOST_FOCUS: 'panelLostFocus',
+        OPENED: 'panelOpened',
         CLOSING: 'panelClosing',
         CLOSED: 'panelClosed',
         PERSISTENT_CLOSED: 'panelPersistentClosed',
@@ -858,8 +861,30 @@ define('wcDocker/types',[], function () {
         SAVE_LAYOUT: 'layoutSave',
         RESTORE_LAYOUT: 'layoutRestore',
         CUSTOM_TAB_CHANGED: 'customTabChanged',
-        CUSTOM_TAB_CLOSED: 'customTabClosed'
+        CUSTOM_TAB_CLOSED: 'customTabClosed',
+        LAYOUT_CHANGED: 'layoutCanged'
     };
+
+    /**
+     * The events which says layout has changed
+     * @private
+     * @memberOf module:wcDocker
+     * @constant {Array} module:wcDocker.LAYOUT_CHANGE_EVENTS
+     */
+
+    wcDocker.LAYOUT_CHANGE_EVENTS = [
+        wcDocker.EVENT.VISIBILITY_CHANGED,
+        wcDocker.EVENT.END_DOCK,
+        wcDocker.EVENT.OPENED,
+        wcDocker.EVENT.CLOSED,
+        wcDocker.EVENT.PERSISTENT_OPENED,
+        wcDocker.EVENT.PERSISTENT_CLOSED,
+        wcDocker.EVENT.ATTACHED,
+        wcDocker.EVENT.DETACHED,
+        wcDocker.EVENT.MOVE_ENDED,
+        wcDocker.EVENT.RESIZE_ENDED,
+        wcDocker.ORDER_CHANGED
+    ];
 
     /**
      * The name of the placeholder panel.
@@ -1097,6 +1122,12 @@ define('wcDocker/panel',[
             this._closeable = true;
             this._resizeVisible = true;
             this._isVisible = false;
+            this._isLayoutMember = true;
+
+            if(typeof this._options.isLayoutMember != 'undefined' ||
+                this._options.isLayoutMember != null) {
+                this._isLayoutMember = this._options.isLayoutMember;
+            }
 
             this._events = {};
 
@@ -1896,6 +1927,11 @@ define('wcDocker/panel',[
         // object that can be used later to restore it.
         __save: function () {
             var data = {};
+
+            if(!this._isLayoutMember) {
+                return {};
+            }
+
             data.type = 'wcPanel';
             data.panelType = this._type;
             // data.title = this._title;
@@ -1958,6 +1994,10 @@ define('wcDocker/panel',[
                 for (var i = 0; i < events.length; ++i) {
                     results.push(events[i].call(this, data));
                 }
+            }
+
+            if(this.docker() && this._isLayoutMember) {
+                this.docker().__layoutChanged(eventType);
             }
 
             return results;
@@ -3548,7 +3588,11 @@ define('wcDocker/frame',[
             data.tab = this._curTab;
             data.panels = [];
             for (var i = 0; i < this._panelList.length; ++i) {
-                data.panels.push(this._panelList[i].__save());
+                if(!this._panelList[i]._isLayoutMember) {
+                    return {};
+                } else {
+                    data.panels.push(this._panelList[i].__save());
+                }
             }
             return data;
         },
@@ -3564,8 +3608,16 @@ define('wcDocker/frame',[
             this._curTab = data.tab;
             for (var i = 0; i < data.panels.length; ++i) {
                 var panel = docker.__create(data.panels[i], this, this.$center);
-                panel.__restore(data.panels[i], docker);
-                this._panelList.push(panel);
+                /* If unable to re-create panel, don't error out */
+                if(panel) {
+                    panel.__restore(data.panels[i], docker);
+                    this._panelList.push(panel);
+                } else if(i == this._curTab){
+                    /* If the restore failed panel was the current tab
+                     * then set the current tab to last available panel tab
+                     */
+                    this._curTab = this._panelList.length - 1;
+                }
             }
 
             this.__update();
@@ -23161,6 +23213,8 @@ define('wcDocker/docker',[
                 delta: 150
             };
 
+            this._layoutChangeEvActive = false;
+
             var defaultOptions = {
                 themePath: 'Themes',
                 theme: 'default',
@@ -23377,6 +23431,7 @@ define('wcDocker/docker',[
                     panel._panelObject = new panelType.options.onCreate(panel, panelOptions);
 
                     __addPanel.call(this, panel);
+                    panel.__trigger(wcDocker.EVENT.OPENED);
                     return panel;
                 }
             }
@@ -24256,7 +24311,9 @@ define('wcDocker/docker',[
 
             for (var i = 0; i < data.floating.length; ++i) {
                 var panel = this.__create(data.floating[i], this, this.$container);
-                panel.__restore(data.floating[i], this);
+                if(panel) {
+                    panel.__restore(data.floating[i], this);
+                }
             }
 
             this.__forceUpdate(false);
@@ -25844,6 +25901,22 @@ define('wcDocker/docker',[
             }
             this.removePanel(panel, dontDestroy);
             this.__update();
+        },
+
+        // Triggers a LAYOUT_CHANGED event on the docker
+        // Called by panels on update, resize or any other change
+        __layoutChanged: function (eventType) {
+            // Eat up simultaneous layout change to trigger one
+            if(wcDocker.LAYOUT_CHANGE_EVENTS.indexOf(eventType) < 0
+                || this._layoutChangeEvActive) {
+                return;
+            }
+
+            this._layoutChangeEvActive = true;
+            setTimeout(function() {
+                this.__trigger(wcDocker.EVENT.LAYOUT_CHANGED);
+                this._layoutChangeEvActive = false;
+            }.bind(this), 250);
         },
 
         // Converts a potential string value to a percentage.

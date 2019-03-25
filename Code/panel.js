@@ -117,6 +117,12 @@ define([
             this._closeable = true;
             this._resizeVisible = true;
             this._isVisible = false;
+            this._isLayoutMember = true;
+
+            if(typeof this._options.isLayoutMember != 'undefined' ||
+                this._options.isLayoutMember != null) {
+                this._isLayoutMember = this._options.isLayoutMember;
+            }
 
             this._events = {};
 
@@ -916,6 +922,11 @@ define([
         // object that can be used later to restore it.
         __save: function () {
             var data = {};
+
+            if(!this._isLayoutMember) {
+                return {};
+            }
+
             data.type = 'wcPanel';
             data.panelType = this._type;
             // data.title = this._title;
@@ -978,6 +989,10 @@ define([
                 for (var i = 0; i < events.length; ++i) {
                     results.push(events[i].call(this, data));
                 }
+            }
+
+            if(this.docker() && this._isLayoutMember) {
+                this.docker().__layoutChanged(eventType);
             }
 
             return results;

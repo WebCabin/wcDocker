@@ -110,6 +110,8 @@ define([
                 delta: 150
             };
 
+            this._layoutChangeEvActive = false;
+
             var defaultOptions = {
                 themePath: 'Themes',
                 theme: 'default',
@@ -326,6 +328,7 @@ define([
                     panel._panelObject = new panelType.options.onCreate(panel, panelOptions);
 
                     __addPanel.call(this, panel);
+                    panel.__trigger(wcDocker.EVENT.OPENED);
                     return panel;
                 }
             }
@@ -1205,7 +1208,9 @@ define([
 
             for (var i = 0; i < data.floating.length; ++i) {
                 var panel = this.__create(data.floating[i], this, this.$container);
-                panel.__restore(data.floating[i], this);
+                if(panel) {
+                    panel.__restore(data.floating[i], this);
+                }
             }
 
             this.__forceUpdate(false);
@@ -2793,6 +2798,22 @@ define([
             }
             this.removePanel(panel, dontDestroy);
             this.__update();
+        },
+
+        // Triggers a LAYOUT_CHANGED event on the docker
+        // Called by panels on update, resize or any other change
+        __layoutChanged: function (eventType) {
+            // Eat up simultaneous layout change to trigger one
+            if(wcDocker.LAYOUT_CHANGE_EVENTS.indexOf(eventType) < 0
+                || this._layoutChangeEvActive) {
+                return;
+            }
+
+            this._layoutChangeEvActive = true;
+            setTimeout(function() {
+                this.__trigger(wcDocker.EVENT.LAYOUT_CHANGED);
+                this._layoutChangeEvActive = false;
+            }.bind(this), 250);
         },
 
         // Converts a potential string value to a percentage.
