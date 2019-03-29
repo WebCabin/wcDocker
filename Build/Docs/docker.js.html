@@ -201,6 +201,9 @@ define([
                 delta: 150
             };
 
+            this._layoutChangeEvActive = false;
+            this._lockLayoutLevel = wcDocker.LOCK_LAYOUT_LEVEL.NONE;
+
             var defaultOptions = {
                 themePath: 'Themes',
                 theme: 'default',
@@ -233,7 +236,7 @@ define([
 
             this.__init();
         },
-        
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Public Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -417,6 +420,7 @@ define([
                     panel._panelObject = new panelType.options.onCreate(panel, panelOptions);
 
                     __addPanel.call(this, panel);
+                    panel.__trigger(wcDocker.EVENT.OPENED);
                     return panel;
                 }
             }
@@ -1147,7 +1151,7 @@ define([
                                         target = anchor.item._parent;
                                     }
                                     var newPanel = self.addPanel(key, anchor.loc, target, self._ghost.rect());
-                                    newPanel.focus();
+                                    newPanel.trigger('focus');
                                 }
                             }
                         },
@@ -1296,7 +1300,9 @@ define([
 
             for (var i = 0; i &lt; data.floating.length; ++i) {
                 var panel = this.__create(data.floating[i], this, this.$container);
-                panel.__restore(data.floating[i], this);
+                if(panel) {
+                    panel.__restore(data.floating[i], this);
+                }
             }
 
             this.__forceUpdate(false);
@@ -1347,6 +1353,17 @@ define([
             this.off();
         },
 
+        /**
+         * Sets the lock level of the docker layout.
+         * @function module:wcDocker#lockLayout
+         * @param {module:wcDocker.LOCK_LAYOUT_LEVEL} lockLevel  The level at which docker layout be locked at.
+         */
+        lockLayout: function (lockLevel) {
+            if(lockLevel >= wcDocker.LOCK_LAYOUT_LEVEL.NONE  &amp;&amp;
+                lockLevel &lt;= wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
+                this._lockLayoutLevel = lockLevel;
+            }
+        },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
@@ -1619,8 +1636,14 @@ define([
                 lastMouseMove = new Date().getTime();
 
                 if (self._draggingSplitter) {
+                    if(self._lockLayoutLevel == wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
+                        return true;
+                    }
                     self._draggingSplitter.__moveBar(mouse);
                 } else if (self._draggingFrameSizer) {
+                    if(self._lockLayoutLevel == wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
+                        return true;
+                    }
                     var offset = self.$container.offset();
                     mouse.x += offset.left;
                     mouse.y += offset.top;
@@ -1635,6 +1658,9 @@ define([
                         }
                     }
                 } else if (self._ghost) {
+                    if(self._lockLayoutLevel >= wcDocker.LOCK_LAYOUT_LEVEL.PREVENT_DOCKING) {
+                        return true;
+                    }
                     if (self._draggingFrame) {
                         self._ghost.__move(mouse);
                         var forceFloat = !(self._draggingFrame._isFloating || mouse.which === 1);
@@ -1831,6 +1857,9 @@ define([
                                 isToggled: false
                             };
 
+                            if ($button.hasClass('disabled'))
+                                return;
+
                             if ($button.hasClass('wcFrameButtonToggler')) {
                                 $button.toggleClass('wcFrameButtonToggled');
                                 if ($button.hasClass('wcFrameButtonToggled')) {
@@ -1915,7 +1944,7 @@ define([
                             var index = parseInt($panelTab.attr('id'));
                             self._draggingFrame.panel(index, true);
                             self._draggingFrameTab = $panelTab[0];
-                            $(window).focus();
+                            $(window).trigger('focus');
                         }
 
                         // If the window is able to be docked, give it a dark shadow tint and begin the movement process
@@ -2883,6 +2912,22 @@ define([
             this.__update();
         },
 
+        // Triggers a LAYOUT_CHANGED event on the docker
+        // Called by panels on update, resize or any other change
+        __layoutChanged: function (eventType) {
+            // Eat up simultaneous layout change to trigger one
+            if(wcDocker.LAYOUT_CHANGE_EVENTS.indexOf(eventType) &lt; 0
+                || this._layoutChangeEvActive) {
+                return;
+            }
+
+            this._layoutChangeEvActive = true;
+            setTimeout(function() {
+                this.__trigger(wcDocker.EVENT.LAYOUT_CHANGED);
+                this._layoutChangeEvActive = false;
+            }.bind(this), 250);
+        },
+
         // Converts a potential string value to a percentage.
         __stringToPercent: function (value, size) {
             if (typeof value === 'string') {
@@ -2917,7 +2962,8 @@ define([
     Module.defaultClasses = defaultClasses;
 
     return Module;
-});</pre>
+});
+</pre>
     </article>
 </section>
 
@@ -2958,9 +3004,9 @@ define([
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2016-08-28
+		on 2019-03-29
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

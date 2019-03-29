@@ -1,5 +1,4 @@
-(function () {
-/**
+(function () {/**
  * @license almond 0.3.2 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
@@ -885,6 +884,22 @@ define('wcDocker/types',[], function () {
         wcDocker.EVENT.RESIZE_ENDED,
         wcDocker.ORDER_CHANGED
     ];
+
+    /**
+     * The levels of locking the layout. Based on these levels the docking, undocking and resizing of panels will be allowed or prevented. Note that, moving a floating panel will never be locked
+     * @member module:wcDocker.LOCK_LAYOUT_LEVEL
+     * @property {String} NONE=0 - No locking, allow all events
+     * @property {String} PREVENT_DOCKING=1 - Prevent docking/undocking of panels. Resizing on panels will work.
+     * @property {String} FULL=2 - Full lock, prevents docking, undocking and resizing of panels.
+     * @version 3.0.0
+     * @const
+     */
+
+    wcDocker.LOCK_LAYOUT_LEVEL = {
+        NONE: 0,
+        PREVENT_DOCKING: 1,
+        FULL: 2
+    };
 
     /**
      * The name of the placeholder panel.
@@ -23214,6 +23229,7 @@ define('wcDocker/docker',[
             };
 
             this._layoutChangeEvActive = false;
+            this._lockLayoutLevel = wcDocker.LOCK_LAYOUT_LEVEL.NONE;
 
             var defaultOptions = {
                 themePath: 'Themes',
@@ -24364,6 +24380,17 @@ define('wcDocker/docker',[
             this.off();
         },
 
+        /**
+         * Sets the lock level of the docker layout.
+         * @function module:wcDocker#lockLayout
+         * @param {module:wcDocker.LOCK_LAYOUT_LEVEL} lockLevel  The level at which docker layout be locked at.
+         */
+        lockLayout: function (lockLevel) {
+            if(lockLevel >= wcDocker.LOCK_LAYOUT_LEVEL.NONE  &&
+                lockLevel <= wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
+                this._lockLayoutLevel = lockLevel;
+            }
+        },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Private Functions
@@ -24636,8 +24663,14 @@ define('wcDocker/docker',[
                 lastMouseMove = new Date().getTime();
 
                 if (self._draggingSplitter) {
+                    if(self._lockLayoutLevel == wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
+                        return true;
+                    }
                     self._draggingSplitter.__moveBar(mouse);
                 } else if (self._draggingFrameSizer) {
+                    if(self._lockLayoutLevel == wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
+                        return true;
+                    }
                     var offset = self.$container.offset();
                     mouse.x += offset.left;
                     mouse.y += offset.top;
@@ -24652,6 +24685,9 @@ define('wcDocker/docker',[
                         }
                     }
                 } else if (self._ghost) {
+                    if(self._lockLayoutLevel >= wcDocker.LOCK_LAYOUT_LEVEL.PREVENT_DOCKING) {
+                        return true;
+                    }
                     if (self._draggingFrame) {
                         self._ghost.__move(mouse);
                         var forceFloat = !(self._draggingFrame._isFloating || mouse.which === 1);

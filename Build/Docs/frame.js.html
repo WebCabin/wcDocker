@@ -183,6 +183,8 @@ define([
                 y: 0
             };
 
+            this._borderWidth = '1px';
+
             this.__init();
         },
 
@@ -461,9 +463,9 @@ define([
             this.$tabBar = $('&lt;div class="wcFrameTitleBar">');
             this.$tabScroll = $('&lt;div class="wcTabScroller">');
             this.$center = $('&lt;div class="wcFrameCenter wcPanelBackground">');
-            this.$tabLeft = $('&lt;div class="wcFrameButton" title="Scroll tabs to the left.">&lt;span class="fa fa-arrow-left">&lt;/span>&amp;lt;&lt;/div>');
-            this.$tabRight = $('&lt;div class="wcFrameButton" title="Scroll tabs to the right.">&lt;span class="fa fa-arrow-right">&lt;/span>&amp;gt;&lt;/div>');
-            this.$close = $('&lt;div class="wcFrameButton" title="Close the currently active panel tab">&lt;div class="fa fa-close">&lt;/div>X&lt;/div>');
+            this.$tabLeft = $('&lt;div class="wcFrameButton" title="Scroll tabs to the left.">&lt;span class="fa fa-arrow-left">&lt;/span>&lt;/div>');
+            this.$tabRight = $('&lt;div class="wcFrameButton" title="Scroll tabs to the right.">&lt;span class="fa fa-arrow-right">&lt;/span>&lt;/div>');
+            this.$close = $('&lt;div class="wcFrameButton" title="Close the currently active panel tab">&lt;div class="fa fa-close">&lt;/div>&lt;/div>');
 
             this.$collapse = $('&lt;div class="wcFrameButton" title="Collapse the active panel">&lt;div class="fa fa-download">&lt;/div>C&lt;/div>');
             this.$buttonBar = $('&lt;div class="wcFrameButtonBar">');
@@ -477,14 +479,14 @@ define([
             this.$frame.append(this.$center);
 
             if (this._isFloating) {
-                this.$top = $('&lt;div class="wcFrameEdgeH wcFrameEdge">&lt;/div>').css('top', '-6px').css('left', '0px').css('right', '0px');
-                this.$bottom = $('&lt;div class="wcFrameEdgeH wcFrameEdge">&lt;/div>').css('bottom', '-6px').css('left', '0px').css('right', '0px');
-                this.$left = $('&lt;div class="wcFrameEdgeV wcFrameEdge">&lt;/div>').css('left', '-6px').css('top', '0px').css('bottom', '0px');
-                this.$right = $('&lt;div class="wcFrameEdgeV wcFrameEdge">&lt;/div>').css('right', '-6px').css('top', '0px').css('bottom', '0px');
-                this.$corner1 = $('&lt;div class="wcFrameCornerNW wcFrameEdge">&lt;/div>').css('top', '-6px').css('left', '-6px');
-                this.$corner2 = $('&lt;div class="wcFrameCornerNE wcFrameEdge">&lt;/div>').css('top', '-6px').css('right', '-6px');
-                this.$corner3 = $('&lt;div class="wcFrameCornerNW wcFrameEdge">&lt;/div>').css('bottom', '-6px').css('right', '-6px');
-                this.$corner4 = $('&lt;div class="wcFrameCornerNE wcFrameEdge">&lt;/div>').css('bottom', '-6px').css('left', '-6px');
+                this.$top = $('&lt;div class="wcFrameEdgeN wcFrameEdge">&lt;/div>').css('top', '-'+this._borderWidth).css('left', '0px').css('right', '0px');
+                this.$bottom = $('&lt;div class="wcFrameEdgeS wcFrameEdge">&lt;/div>').css('bottom', '-'+this._borderWidth).css('left', '0px').css('right', '0px');
+                this.$left = $('&lt;div class="wcFrameEdgeW wcFrameEdge">&lt;/div>').css('left', '-'+this._borderWidth).css('top', '0px').css('bottom', '0px');
+                this.$right = $('&lt;div class="wcFrameEdgeE wcFrameEdge">&lt;/div>').css('right', '-'+this._borderWidth).css('top', '0px').css('bottom', '0px');
+                this.$corner1 = $('&lt;div class="wcFrameCornerNW wcFrameEdge">&lt;/div>').css('top', '-'+this._borderWidth).css('left', '-'+this._borderWidth);
+                this.$corner2 = $('&lt;div class="wcFrameCornerNE wcFrameEdge">&lt;/div>').css('top', '-'+this._borderWidth).css('right', '-'+this._borderWidth);
+                this.$corner3 = $('&lt;div class="wcFrameCornerSE wcFrameEdge">&lt;/div>').css('bottom', '-'+this._borderWidth).css('right', '-'+this._borderWidth);
+                this.$corner4 = $('&lt;div class="wcFrameCornerSW wcFrameEdge">&lt;/div>').css('bottom', '-'+this._borderWidth).css('left', '-'+this._borderWidth);
 
                 this.$frame.append(this.$top);
                 this.$frame.append(this.$bottom);
@@ -502,7 +504,7 @@ define([
                 this.$frame.addClass('wcFloating');
             }
 
-            this.$center.scroll(this.__scrolled.bind(this));
+            this.$center.on('scroll',this.__scrolled.bind(this));
         },
 
         // Updates the size of the frame.
@@ -589,7 +591,11 @@ define([
             data.tab = this._curTab;
             data.panels = [];
             for (var i = 0; i &lt; this._panelList.length; ++i) {
-                data.panels.push(this._panelList[i].__save());
+                if(!this._panelList[i]._isLayoutMember) {
+                    return {};
+                } else {
+                    data.panels.push(this._panelList[i].__save());
+                }
             }
             return data;
         },
@@ -605,8 +611,16 @@ define([
             this._curTab = data.tab;
             for (var i = 0; i &lt; data.panels.length; ++i) {
                 var panel = docker.__create(data.panels[i], this, this.$center);
-                panel.__restore(data.panels[i], docker);
-                this._panelList.push(panel);
+                /* If unable to re-create panel, don't error out */
+                if(panel) {
+                    panel.__restore(data.panels[i], docker);
+                    this._panelList.push(panel);
+                } else if(i == this._curTab){
+                    /* If the restore failed panel was the current tab
+                     * then set the current tab to last available panel tab
+                     */
+                    this._curTab = this._panelList.length - 1;
+                }
             }
 
             this.__update();
@@ -991,6 +1005,10 @@ define([
                         var $button = $('&lt;div>');
                         var buttonClass = buttonData.className;
                         $button.addClass('wcFrameButton');
+                        if (buttonData.parentClass)
+                            $button.addClass(buttonData.parentClass);
+                        if (buttonData.enabled === false)
+                            $button.addClass('disabled');
                         if (buttonData.isTogglable) {
                             $button.addClass('wcFrameButtonToggler');
 
@@ -1351,9 +1369,9 @@ define([
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2016-08-28
+		on 2019-03-29
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

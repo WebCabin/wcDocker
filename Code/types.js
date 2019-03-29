@@ -128,6 +128,22 @@ define([], function () {
     ];
 
     /**
+     * The levels of locking the layout. Based on these levels the docking, undocking and resizing of panels will be allowed or prevented. Note that, moving a floating panel will never be locked
+     * @member module:wcDocker.LOCK_LAYOUT_LEVEL
+     * @property {String} NONE=0 - No locking, allow all events
+     * @property {String} PREVENT_DOCKING=1 - Prevent docking/undocking of panels. Resizing on panels will work.
+     * @property {String} FULL=2 - Full lock, prevents docking, undocking and resizing of panels.
+     * @version 3.0.0
+     * @const
+     */
+
+    wcDocker.LOCK_LAYOUT_LEVEL = {
+        NONE: 0,
+        PREVENT_DOCKING: 1,
+        FULL: 2
+    };
+
+    /**
      * The name of the placeholder panel.
      * @private
      * @memberOf module:wcDocker
