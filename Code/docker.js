@@ -1268,9 +1268,13 @@ define([
          * @param {module:wcDocker.LOCK_LAYOUT_LEVEL} lockLevel  The level at which docker layout be locked at.
          */
         lockLayout: function (lockLevel) {
-            if(lockLevel >= wcDocker.LOCK_LAYOUT_LEVEL.NONE  &&
-                lockLevel <= wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
+            if(Object.values(wcDocker.LOCK_LAYOUT_LEVEL).indexOf(lockLevel) > -1) {
+                var prefix = 'wcLock';
+                this.$container.removeClass(prefix + this._lockLayoutLevel);
                 this._lockLayoutLevel = lockLevel;
+                if(lockLevel != wcDocker.LOCK_LAYOUT_LEVEL.NONE) {
+                    this.$container.addClass(prefix + lockLevel);
+                }
             }
         },
 
@@ -1567,7 +1571,8 @@ define([
                         }
                     }
                 } else if (self._ghost) {
-                    if(self._lockLayoutLevel >= wcDocker.LOCK_LAYOUT_LEVEL.PREVENT_DOCKING) {
+                    if(self._lockLayoutLevel == wcDocker.LOCK_LAYOUT_LEVEL.PREVENT_DOCKING ||
+                        self._lockLayoutLevel == wcDocker.LOCK_LAYOUT_LEVEL.FULL) {
                         return true;
                     }
                     if (self._draggingFrame) {

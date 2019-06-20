@@ -93,48 +93,65 @@
 <article>
     <p><strong>wcDocker (Web Cabin Docker) is a page layout framework that allows users to organize an array-able list of panel types in almost any configuration. Panels can be docked beside other panels, floating on their own, resized, moved, duplicated, and removed at will by the user. It is a powerful library for use as an IDE or a visual data management interface.</strong></p>
 <ul>
-<li>wcDocker is developed and maintained by <strong>Jeff Houde</strong> (<a href="mailto:lochemage@webcabin.org">lochemage@webcabin.org</a>).  </li>
+<li>wcDocker is developed and maintained by <strong>Jeff Houde</strong> (<a href="mailto:lochemage@webcabin.org">lochemage@webcabin.org</a>).</li>
 </ul>
 <hr>
-<h3>Dependencies</h3><p>Begin by including the necessary dependencies.  </p>
+<h3>Dependencies</h3>
+<p>Begin by including the necessary dependencies.</p>
 <ul>
 <li>JQuery Library version 1.11.1 <a href="http://jquery.com/">http://jquery.com/</a></li>
 <li>JQuery ContextMenu Library <a href="https://github.com/swisnl/jQuery-contextMenu">https://github.com/swisnl/jQuery-contextMenu</a></li>
 <li>Font-Awesome <a href="http://fortawesome.github.io/Font-Awesome/">http://fortawesome.github.io/Font-Awesome/</a></li>
 </ul>
 <hr>
-<h3>Installation</h3><p>You can use <a href="http://bower.io/">bower</a> for easy installation using the <a href="https://%3Ca">Node Package Manager</a>">www.npmjs.com/}</a></p>
+<h3>Installation</h3>
+<p>You can use <a href="http://bower.io/">bower</a> for easy installation using the <a href="https://www.npmjs.com/">Node Package Manager</a></p>
 <pre class="prettyprint source"><code>{@lang bash}npm install -g bower
-bower install wcDocker</code></pre><p>Once installed, all of the source files will now be located in the <code>bower_components</code> folder and ready to link into your project.  </p>
+bower install wcDocker
+</code></pre>
+<p>Once installed, all of the source files will now be located in the <code>bower_components</code> folder and ready to link into your project.</p>
 <p>You can also download the <a href="https://github.com/WebCabin/wcDocker">source</a> and link them directly.</p>
 <hr>
-<h3>Basic Implementation</h3><pre class="prettyprint source"><code>{@lang xml}&lt;link rel='stylesheet' type='text/css' href='bower_components/jQuery-contextMenu/src/jquery.contextMenu.css'/>
+<h3>Basic Implementation</h3>
+<pre class="prettyprint source"><code>{@lang xml}&lt;link rel='stylesheet' type='text/css' href='bower_components/jQuery-contextMenu/src/jquery.contextMenu.css'/>
 &lt;link rel='stylesheet' type='text/css' href='bower_components/font-awesome/css/font-awesome.css'/>
 
 &lt;script src='bower_components/jquery/dist/jquery.min.js'>&lt;/script>
 &lt;script src='bower_components/jQuery-contextMenu/src/jquery.contextMenu.js'>&lt;/script>
-&lt;script src='bower_components/jQuery-contextMenu/src/jquery.ui.position.js'>&lt;/script></code></pre><p>Also include the wcDocker library files as well...</p>
+&lt;script src='bower_components/jQuery-contextMenu/src/jquery.ui.position.js'>&lt;/script>
+</code></pre>
+<p>Also include the wcDocker library files as well...</p>
 <pre class="prettyprint source"><code>{@lang xml}&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;bower_components/wcDocker/Build/wcDocker.min.css&quot;/>
 
-&lt;script src=&quot;bower_components/wcDocker/Build/wcDocker.min.js&quot;>&lt;/script></code></pre><p><br></p>
+&lt;script src=&quot;bower_components/wcDocker/Build/wcDocker.min.js&quot;>&lt;/script>
+</code></pre>
+<br>
 <p>Once the dependencies have been included, start by creating an instance of the main <a href="module-wcDocker.html">docker</a> and assign it a <a href="external-domNode.html">DOM container</a> (this should be done after the document has finished loading). Typically this would be the document body element, but there is no restriction if you want to use a smaller area instead. Multiple <a href="module-wcDocker.html">dockers</a> can be used, however, that feature is not currently supported and may not work properly.</p>
 <pre class="prettyprint source"><code>$(document).ready(function() {
   var myDocker = new wcDocker(document.body, {
     themePath: 'My/themes/folder'
   });
-});</code></pre><p><br></p>
+});
+</code></pre>
+<br>
 <p>Notice the themePath, if your theme CSS files are not in the default <code>'Themes'</code> folder, you will need to tell docker about the new path or it will not be able to initialize the default theme.</p>
 <p>Once the docker instance is made, you will need to <a href="module-wcDocker.html#registerPanelType">register</a> the panel types that will become the contents of your layout.  A <a href="module-wcPanel.html">panel</a> is an individual dockable window, generally designed to serve a single purpose.</p>
 <pre class="prettyprint source"><code>myDocker.registerPanelType('Some type name', {
   onCreate: function(myPanel, options) {...},
   options: {'some optional object': 'that will be passed to the create function above'}
-});</code></pre><p><br></p>
+});
+</code></pre>
+<br>
 <p>Once a panel is registered, any time an instance of it is created, the <a href="module-wcDocker.html#~onCreatePanel">onCreate</a> handler will be invoked allowing you to initialize the contents of your panel.</p>
 <p>To do this, you will need to use the <a href="module-wcLayout.html">layout</a> object found inside the panel.</p>
-<pre class="prettyprint source"><code>myPanel.layout().addItem(domNode, x, y, width, height);</code></pre><p><br></p>
+<pre class="prettyprint source"><code>myPanel.layout().addItem(domNode, x, y, width, height);
+</code></pre>
+<br>
 <p>Additionally, you can assign various starting properties of the panel here, such as the desired size, or size constraints...</p>
 <pre class="prettyprint source"><code>myPanel.initSize(200, 200);
-myPanel.minSize(100, 100);</code></pre><p><br></p>
+myPanel.minSize(100, 100);
+</code></pre>
+<br>
 <p>Once you have registered the panels that you want, if they are not private, the user will be able to create them whenever they wish. However, it is recommended that you initialize docker with a default arrangement of panels, to make it easier for the users to get started.</p>
 <pre class="prettyprint source"><code>// Put Panel1 into the docking layout, since it is the first panel,
 // it will always fill the entire area regardless of what docking
@@ -146,7 +163,9 @@ myDocker.addPanel('Panel2', wcDocker.DOCK.BOTTOM, panel1);
 
 // The panel itself may have an initial size, but you may want more
 // control over that.
-myDocker.addPanel('Panel3', wcDocker.DOCK.RIGHT, null, {w:200, h:200});</code></pre><p><br></p>
+myDocker.addPanel('Panel3', wcDocker.DOCK.RIGHT, null, {w:200, h:200});
+</code></pre>
+<br>
 <p>See <a href="http://docker.api.webcabin.org/module-wcDocker.html#toc3">wcDocker.DOCK</a> for a list of all available docking positions.</p>
 <p>Continue to the <a href="tutorial-2.0-tips-and-tricks.html">Tips and Tricks</a> tutorial.</p>
 </article>
@@ -186,9 +205,9 @@ myDocker.addPanel('Panel3', wcDocker.DOCK.RIGHT, null, {w:200, h:200});</code></
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.2</a>
 	
-		on 2019-03-29
+		on 2019-06-12
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
