@@ -1270,10 +1270,10 @@ define([
         lockLayout: function (lockLevel) {
             if(Object.values(wcDocker.LOCK_LAYOUT_LEVEL).indexOf(lockLevel) > -1) {
                 var prefix = 'wcLock';
-                this.$container.removeClass(prefix + this._lockLayoutLevel);
+                $('body').removeClass(prefix + this._lockLayoutLevel);
                 this._lockLayoutLevel = lockLevel;
                 if(lockLevel != wcDocker.LOCK_LAYOUT_LEVEL.NONE) {
-                    this.$container.addClass(prefix + lockLevel);
+                    $('body').addClass(prefix + lockLevel);
                 }
             }
         },

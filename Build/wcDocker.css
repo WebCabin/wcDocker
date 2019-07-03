@@ -104,8 +104,8 @@ html, body {
   bottom: 0px;
 }
 
-.wcLockPreventDocking .wcFrameTitleBar,
-.wcLockFull .wcFrameTitleBar,
+.wcLockPreventDocking *:not(.wcFloating) .wcFrameTitleBar,
+.wcLockFull *:not(.wcFloating) .wcFrameTitleBar,
 .wcFrameTitleBar.wcNotMoveable {
   cursor: default;
 }
@@ -193,6 +193,10 @@ html, body {
   z-index: 2;
   border: 2px outset #444;
   background-color: #222;
+}
+
+.wcLockFull .wcFrameEdge {
+  cursor: default !important;
 }
 
 .wcFrameEdgeE, .wcFrameEdgeW {
@@ -288,6 +292,7 @@ html, body {
 .wcLockFull .wcPanelTab,
 .wcPanelTab.wcNotMoveable {
   cursor: default;
+  background-color: unset !important;
 }
 
 .wcTabLeft {
