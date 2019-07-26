@@ -522,8 +522,10 @@ define([
                 var panel = docker.__create(data.panels[i], this, this.$center);
                 /* If unable to re-create panel, don't error out */
                 if(panel) {
-                    panel.__restore(data.panels[i], docker);
-                    this._panelList.push(panel);
+                    if(panel._isLayoutMember) {
+                        panel.__restore(data.panels[i], docker);
+                        this._panelList.push(panel);
+                    }
                 } else if(i == this._curTab){
                     /* If the restore failed panel was the current tab
                      * then set the current tab to last available panel tab
