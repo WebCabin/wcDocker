@@ -1292,7 +1292,7 @@ define([
 
             // Setup our context menus.
             if (this._options.allowContextMenu) {
-                this.menu('.wcFrame', [], true);
+                this.menu('.wcFrameTitleBar', [], true);
             }
 
             this.theme(this._options.theme);

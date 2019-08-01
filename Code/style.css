@@ -149,6 +149,11 @@ html, body {
   width: 100%;
 }
 
+.wcFrameButton > .fa {
+  width: 100%;
+  align-self: center;
+}
+
 .wcButton {
   box-sizing: content-box;
 }

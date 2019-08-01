@@ -372,8 +372,8 @@ define([
             this.$tabBar = $('<div class="wcFrameTitleBar">');
             this.$tabScroll = $('<div class="wcTabScroller">');
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
-            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-arrow-left"></span></div>');
-            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-arrow-right"></span></div>');
+            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-chevron-left"></span></div>');
+            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-chevron-right"></span></div>');
             this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div></div>');
 
             this.$collapse = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
