@@ -1281,8 +1281,9 @@ define('wcDocker/panel',[
          * @param {Boolean} [isTogglable]     - If true, will make the button toggle on and off per click.
          * @param {String} [toggleClassName]  - If this button is toggleable, you can designate an optional CSS class name that will replace the original class name.
          * @param {String} [parentClass]      - A CSS class name to apply to the wcFrameButton
+         * @param {String} [ariaLabel]        - A aria-label to apply to the wcFrameButton
          */
-        addButton: function (name, className, text, tip, isTogglable, toggleClassName, parentClass, enabled) {
+        addButton: function (name, className, text, tip, isTogglable, toggleClassName, parentClass, enabled, ariaLabel) {
             this._buttonList.push({
                 name: name,
                 className: className,
@@ -1293,6 +1294,7 @@ define('wcDocker/panel',[
                 isToggled: false,
                 parentClass: parentClass,
                 enabled: enabled,
+                ariaLabel: ariaLabel,
             });
 
             if (this._parent && this._parent.instanceOf('wcFrame')) {
@@ -3476,9 +3478,9 @@ define('wcDocker/frame',[
             this.$tabBar = $('<div class="wcFrameTitleBar">');
             this.$tabScroll = $('<div class="wcTabScroller">');
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
-            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-chevron-left"></span></div>');
-            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab"><div class="fa fa-close"></div></div>');
+            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left"><span class="fa fa-chevron-left"></span></div>');
+            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right"><span class="fa fa-chevron-right"></span></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel"><div class="fa fa-close"></div></div>');
 
             this.$collapse = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -4035,6 +4037,9 @@ define('wcDocker/frame',[
                         $button.attr('title', buttonData.tip);
                         $button.data('name', buttonData.name);
                         $button.text(buttonData.text);
+                        if(buttonData.ariaLabel) {
+                            $button.attr('aria-label', buttonData.ariaLabel);
+                        }
                         if (buttonClass) {
                             $button.prepend($('<div class="' + buttonClass + '">'));
                         }
@@ -6087,9 +6092,9 @@ define('wcDocker/tabframe',[
             this.$tabBar = $('<div class="wcFrameTitleBar wcCustomTabTitle wcWide">');
             this.$tabScroll = $('<div class="wcTabScroller">');
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
-            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left."><span class="fa fa-chevron-left"></span></div>');
-            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right."><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-close"></span></div>');
+            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left"><span class="fa fa-chevron-left"></span></div>');
+            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right"><span class="fa fa-chevron-right"></span></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel"><span class="fa fa-close"></span></div>');
 
             //this.$maximize = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-expand"></span>X</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
