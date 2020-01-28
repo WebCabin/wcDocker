@@ -3478,9 +3478,9 @@ define('wcDocker/frame',[
             this.$tabBar = $('<div class="wcFrameTitleBar">');
             this.$tabScroll = $('<div class="wcTabScroller">');
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
-            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left"><span class="fa fa-chevron-left"></span></div>');
-            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right"><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel"><div class="fa fa-close"></div></div>');
+            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left" tabindex="0"><span class="fa fa-chevron-left"></span></div>');
+            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right" tabindex="0"><span class="fa fa-chevron-right"></span></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><div class="fa fa-close"></div></div>');
 
             this.$collapse = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -3863,8 +3863,8 @@ define('wcDocker/frame',[
                 if (totalWidth > tabWidth - buttonSize) {
                     this._canScrollTabs = this._titleVisible;
                     if (this._canScrollTabs) {
-                        this.$tabButtonBar.append(this.$tabRight);
                         this.$tabButtonBar.append(this.$tabLeft);
+                        this.$tabButtonBar.append(this.$tabRight);
                         buttonSize += this.$tabRight.outerWidth();
                         buttonSize += this.$tabLeft.outerWidth();
                     }
@@ -4051,8 +4051,8 @@ define('wcDocker/frame',[
                 }
 
                 if (this._canScrollTabs) {
-                    this.$tabButtonBar.append(this.$tabRight);
                     this.$tabButtonBar.append(this.$tabLeft);
+                    this.$tabButtonBar.append(this.$tabRight);
 
                     tabButtonSize += this.$tabRight.outerWidth() + this.$tabLeft.outerWidth();
                 }
@@ -6092,9 +6092,9 @@ define('wcDocker/tabframe',[
             this.$tabBar = $('<div class="wcFrameTitleBar wcCustomTabTitle wcWide">');
             this.$tabScroll = $('<div class="wcTabScroller">');
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
-            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left"><span class="fa fa-chevron-left"></span></div>');
-            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right"><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel"><span class="fa fa-close"></span></div>');
+            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left" tabindex="0"><span class="fa fa-chevron-left"></span></div>');
+            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right" tabindex="0"><span class="fa fa-chevron-right"></span></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><span class="fa fa-close"></span></div>');
 
             //this.$maximize = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-expand"></span>X</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -6248,8 +6248,8 @@ define('wcDocker/tabframe',[
             this._canScrollTabs = false;
             if (totalWidth > tabWidth - buttonSize) {
                 this._canScrollTabs = true;
-                this.$buttonBar.append(this.$tabRight);
                 this.$buttonBar.append(this.$tabLeft);
+                this.$buttonBar.append(this.$tabRight);
                 buttonSize += this.$tabRight.outerWidth();
                 buttonSize += this.$tabLeft.outerWidth();
 
@@ -6298,8 +6298,8 @@ define('wcDocker/tabframe',[
                 }
 
                 if (this._canScrollTabs) {
-                    this.$tabBar.append(this.$tabRight);
                     this.$tabBar.append(this.$tabLeft);
+                    this.$tabBar.append(this.$tabRight);
 
                     buttonSize += this.$tabRight.outerWidth() + this.$tabLeft.outerWidth();
                 }
@@ -24493,6 +24493,9 @@ define('wcDocker/docker',[
             // Clicking on a panel frame button.
             $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', __onClickPanelButton);
 
+            // Space/Enter keyup on a panel frame button.
+            $('body').on('keyup', '.wcFrameButtonBar > .wcFrameButton', __onKeyUpPanelButton)
+
             // Escape key to cancel drag operations.
             $('body').on('keyup', __onKeyup);
 
@@ -24826,6 +24829,55 @@ define('wcDocker/docker',[
                         customTab.__updateTabs();
                         event.stopPropagation();
                         return;
+                    }
+                }
+            }
+
+            // on keyup for .wcFrameButtonBar > .wcFrameButton
+            function __onKeyUpPanelButton(e) {
+                if(e.which === 13 || e.which === 32) {
+                    // Class wcDisableSelection will disable text selection, remove it before performing respective action
+                    $('body').removeClass('wcDisableSelection');
+                    // Get frame instance on which event is triggered and perform respective action
+                    for (var i = 0; i < self._frameList.length; ++i) {
+                        var frame = self._frameList[i];
+                        // Check if event target is in frame container
+                        if(frame.$frame.find(e.target).length > 0) {
+                            if(frame.$close[0] == e.target) {
+                                self.__closePanel(frame.panel());
+                                e.stopPropagation();
+                                return;
+                            } else if(frame.$tabLeft[0] == e.target) {
+                                frame._tabScrollPos -= frame.$tabBar.width() / 2;
+                                if (frame._tabScrollPos < 0) {
+                                    frame._tabScrollPos = 0;
+                                }
+                                // Storing e.target in a variable to make sure focus is triggered on correct button
+                                var target = e.target;
+                                // Perform tab scroll in async mode and set focus back to scroll left button
+                                setTimeout(function() {
+                                    frame.__updateTabs();
+                                    if($(target).length > 0) {
+                                        target.focus();
+                                    }
+                                }, 10);
+                                e.stopPropagation();
+                                return;
+                            } else if(frame.$tabRight[0] == e.target) {
+                                frame._tabScrollPos += frame.$tabBar.width() / 2;
+                                // Storing e.target in a variable to make sure focus is triggered on correct button
+                                var target = e.target;
+                                // Perform tab scroll in async mode and set focus back to scroll right button
+                                setTimeout(function() {
+                                    frame.__updateTabs();
+                                    if($(target).length > 0) {
+                                        target.focus();
+                                    }
+                                }, 10);
+                                e.stopPropagation();
+                                return;
+                            }
+                        }
                     }
                 }
             }

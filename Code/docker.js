@@ -1367,6 +1367,9 @@ define([
             // Clicking on a panel frame button.
             $('body').on('click', '.wcFrameButtonBar > .wcFrameButton', __onClickPanelButton);
 
+            // Space/Enter keyup on a panel frame button.
+            $('body').on('keyup', '.wcFrameButtonBar > .wcFrameButton', __onKeyUpPanelButton)
+
             // Escape key to cancel drag operations.
             $('body').on('keyup', __onKeyup);
 
@@ -1700,6 +1703,55 @@ define([
                         customTab.__updateTabs();
                         event.stopPropagation();
                         return;
+                    }
+                }
+            }
+
+            // on keyup for .wcFrameButtonBar > .wcFrameButton
+            function __onKeyUpPanelButton(e) {
+                if(e.which === 13 || e.which === 32) {
+                    // Class wcDisableSelection will disable text selection, remove it before performing respective action
+                    $('body').removeClass('wcDisableSelection');
+                    // Get frame instance on which event is triggered and perform respective action
+                    for (var i = 0; i < self._frameList.length; ++i) {
+                        var frame = self._frameList[i];
+                        // Check if event target is in frame container
+                        if(frame.$frame.find(e.target).length > 0) {
+                            if(frame.$close[0] == e.target) {
+                                self.__closePanel(frame.panel());
+                                e.stopPropagation();
+                                return;
+                            } else if(frame.$tabLeft[0] == e.target) {
+                                frame._tabScrollPos -= frame.$tabBar.width() / 2;
+                                if (frame._tabScrollPos < 0) {
+                                    frame._tabScrollPos = 0;
+                                }
+                                // Storing e.target in a variable to make sure focus is triggered on correct button
+                                var target = e.target;
+                                // Perform tab scroll in async mode and set focus back to scroll left button
+                                setTimeout(function() {
+                                    frame.__updateTabs();
+                                    if($(target).length > 0) {
+                                        target.focus();
+                                    }
+                                }, 10);
+                                e.stopPropagation();
+                                return;
+                            } else if(frame.$tabRight[0] == e.target) {
+                                frame._tabScrollPos += frame.$tabBar.width() / 2;
+                                // Storing e.target in a variable to make sure focus is triggered on correct button
+                                var target = e.target;
+                                // Perform tab scroll in async mode and set focus back to scroll right button
+                                setTimeout(function() {
+                                    frame.__updateTabs();
+                                    if($(target).length > 0) {
+                                        target.focus();
+                                    }
+                                }, 10);
+                                e.stopPropagation();
+                                return;
+                            }
+                        }
                     }
                 }
             }

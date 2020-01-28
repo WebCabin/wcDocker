@@ -406,9 +406,9 @@ define([
             this.$tabBar = $('<div class="wcFrameTitleBar wcCustomTabTitle wcWide">');
             this.$tabScroll = $('<div class="wcTabScroller">');
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
-            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left"><span class="fa fa-chevron-left"></span></div>');
-            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right"><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel"><span class="fa fa-close"></span></div>');
+            this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left" tabindex="0"><span class="fa fa-chevron-left"></span></div>');
+            this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right" tabindex="0"><span class="fa fa-chevron-right"></span></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><span class="fa fa-close"></span></div>');
 
             //this.$maximize = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-expand"></span>X</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -562,8 +562,8 @@ define([
             this._canScrollTabs = false;
             if (totalWidth > tabWidth - buttonSize) {
                 this._canScrollTabs = true;
-                this.$buttonBar.append(this.$tabRight);
                 this.$buttonBar.append(this.$tabLeft);
+                this.$buttonBar.append(this.$tabRight);
                 buttonSize += this.$tabRight.outerWidth();
                 buttonSize += this.$tabLeft.outerWidth();
 
@@ -612,8 +612,8 @@ define([
                 }
 
                 if (this._canScrollTabs) {
-                    this.$tabBar.append(this.$tabRight);
                     this.$tabBar.append(this.$tabLeft);
+                    this.$tabBar.append(this.$tabRight);
 
                     buttonSize += this.$tabRight.outerWidth() + this.$tabLeft.outerWidth();
                 }
