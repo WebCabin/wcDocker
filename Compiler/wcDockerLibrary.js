@@ -41,5 +41,4 @@ require([
     window['wcTabFrame'] = wcTabFrame;
     window['wcIFrame'] = wcIFrame;
     window['wcThemeBuilder'] = wcThemeBuilder;
-    console.log('exported wcDocker');
 }, undefined, true);    // Force synchronous loading so we don't have to wait.
