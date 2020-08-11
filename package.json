@@ -8,8 +8,8 @@
   "description": "Dynamic docking panels for your app.",
   "main": "Build/wcDocker.min.js",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.14.0",
     "FileSaver": "^0.10.0",
-    "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "jquery-contextmenu": "^2.6.4"
   },

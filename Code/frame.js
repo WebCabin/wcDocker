@@ -374,7 +374,7 @@ define([
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
             this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left" tabindex="0"><span class="fa fa-chevron-left"></span></div>');
             this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right" tabindex="0"><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><div class="fa fa-close"></div></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><div class="fa fa-times"></div></div>');
 
             this.$collapse = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -827,7 +827,7 @@ define([
                         if (this.isCollapser()) {
                             // Un-collapse
                             var $icon = this.$collapse.children('div');
-                            $icon[0].className = 'fa fa-sign-out';
+                            $icon[0].className = 'fa fa-sign-out-alt';
                             switch (this._parent._position) {
                                 case wcDocker.DOCK.LEFT:
                                     $icon.addClass('wcCollapseLeft');
@@ -901,7 +901,7 @@ define([
 
                             if (directionLabel) {
                                 var $icon = this.$collapse.children('div');
-                                $icon[0].className = 'fa fa-sign-in';
+                                $icon[0].className = 'fa fa-sign-in-alt';
                                 $icon.addClass(directionClass);
                                 $icon.addClass('wcCollapsible');
                                 this.$collapse.show();

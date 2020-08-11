@@ -3480,7 +3480,7 @@ define('wcDocker/frame',[
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
             this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left" tabindex="0"><span class="fa fa-chevron-left"></span></div>');
             this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right" tabindex="0"><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><div class="fa fa-close"></div></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><div class="fa fa-times"></div></div>');
 
             this.$collapse = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -3933,7 +3933,7 @@ define('wcDocker/frame',[
                         if (this.isCollapser()) {
                             // Un-collapse
                             var $icon = this.$collapse.children('div');
-                            $icon[0].className = 'fa fa-sign-out';
+                            $icon[0].className = 'fa fa-sign-out-alt';
                             switch (this._parent._position) {
                                 case wcDocker.DOCK.LEFT:
                                     $icon.addClass('wcCollapseLeft');
@@ -4007,7 +4007,7 @@ define('wcDocker/frame',[
 
                             if (directionLabel) {
                                 var $icon = this.$collapse.children('div');
-                                $icon[0].className = 'fa fa-sign-in';
+                                $icon[0].className = 'fa fa-sign-in-alt';
                                 $icon.addClass(directionClass);
                                 $icon.addClass('wcCollapsible');
                                 this.$collapse.show();
@@ -6094,7 +6094,7 @@ define('wcDocker/tabframe',[
             this.$center = $('<div class="wcFrameCenter wcPanelBackground">');
             this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left" tabindex="0"><span class="fa fa-chevron-left"></span></div>');
             this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right" tabindex="0"><span class="fa fa-chevron-right"></span></div>');
-            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><span class="fa fa-close"></span></div>');
+            this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><span class="fa fa-times"></span></div>');
 
             //this.$maximize = $('<div class="wcFrameButton" title="Close the currently active panel tab"><span class="fa fa-expand"></span>X</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -24032,15 +24032,15 @@ define('wcDocker/docker',[
 
                         collapseTypes[wcDocker.DOCK.LEFT] = {
                             name: wcDocker.DOCK.LEFT,
-                            faicon: 'sign-in wcCollapseLeft wcCollapsible'
+                            faicon: 'sign-in-alt wcCollapseLeft wcCollapsible'
                         };
                         collapseTypes[wcDocker.DOCK.RIGHT] = {
                             name: wcDocker.DOCK.RIGHT,
-                            faicon: 'sign-in wcCollapseRight wcCollapsible'
+                            faicon: 'sign-in-alt wcCollapseRight wcCollapsible'
                         };
                         collapseTypes[wcDocker.DOCK.BOTTOM] = {
                             name: wcDocker.DOCK.BOTTOM,
-                            faicon: 'sign-in wcCollapseBottom wcCollapsible'
+                            faicon: 'sign-in-alt wcCollapseBottom wcCollapsible'
                         };
                     }
 
@@ -24054,21 +24054,21 @@ define('wcDocker/docker',[
                         if (isTitle) {
                             items['Close Panel'] = {
                                 name: 'Remove Panel',
-                                faicon: 'close',
+                                faicon: 'times',
                                 disabled: !myFrame.panel().closeable()
                             };
                             if (self.isCollapseEnabled()) {
                                 if (!myFrame.isCollapser()) {
                                     items.fold1 = {
                                         name: 'Collapse Panel',
-                                        faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
+                                        faicon: 'sign-in-alt' + defaultCollapse + ' wcCollapsible',
                                         items: collapseTypes,
                                         disabled: !myFrame.panel().moveable()
                                     }
                                 } else {
                                     items['Attach Panel'] = {
                                         name: 'Dock Panel',
-                                        faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                                        faicon: 'sign-out-alt' + defaultCollapse + ' wcCollapsed',
                                         disabled: !myFrame.panel().moveable()
                                     }
                                 }
@@ -24076,7 +24076,7 @@ define('wcDocker/docker',[
                             if (!myFrame._isFloating) {
                                 items['Detach Panel'] = {
                                     name: 'Detach Panel',
-                                    faicon: 'level-up',
+                                    faicon: 'level-up-alt',
                                     disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                 };
                             }
@@ -24094,21 +24094,21 @@ define('wcDocker/docker',[
                             if (myFrame) {
                                 items['Close Panel'] = {
                                     name: 'Remove Panel',
-                                    faicon: 'close',
+                                    faicon: 'times',
                                     disabled: !myFrame.panel().closeable()
                                 };
                                 if (self.isCollapseEnabled()) {
                                     if (!myFrame.isCollapser()) {
                                         items.fold1 = {
                                             name: 'Collapse Panel',
-                                            faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
+                                            faicon: 'sign-in-alt' + defaultCollapse + ' wcCollapsible',
                                             items: collapseTypes,
                                             disabled: !myFrame.panel().moveable()
                                         }
                                     } else {
                                         items['Attach Panel'] = {
                                             name: 'Dock Panel',
-                                            faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                                            faicon: 'sign-out-alt' + defaultCollapse + ' wcCollapsed',
                                             disabled: !myFrame.panel().moveable()
                                         }
                                     }
@@ -24116,7 +24116,7 @@ define('wcDocker/docker',[
                                 if (!myFrame._isFloating) {
                                     items['Detach Panel'] = {
                                         name: 'Detach Panel',
-                                        faicon: 'level-up',
+                                        faicon: 'level-up-alt',
                                         disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                     };
                                 }
@@ -31318,8 +31318,8 @@ require([
     window['wcTabFrame'] = wcTabFrame;
     window['wcIFrame'] = wcIFrame;
     window['wcThemeBuilder'] = wcThemeBuilder;
-    console.log('exported wcDocker');
-}, undefined, true);    // Force synchronous loading so we don't have to wait.;
+}, undefined, true);    // Force synchronous loading so we don't have to wait.
+;
 define("wcDockerLibrary", function(){});
 
 }());

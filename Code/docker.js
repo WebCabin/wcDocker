@@ -906,15 +906,15 @@ define([
 
                         collapseTypes[wcDocker.DOCK.LEFT] = {
                             name: wcDocker.DOCK.LEFT,
-                            faicon: 'sign-in wcCollapseLeft wcCollapsible'
+                            faicon: 'sign-in-alt wcCollapseLeft wcCollapsible'
                         };
                         collapseTypes[wcDocker.DOCK.RIGHT] = {
                             name: wcDocker.DOCK.RIGHT,
-                            faicon: 'sign-in wcCollapseRight wcCollapsible'
+                            faicon: 'sign-in-alt wcCollapseRight wcCollapsible'
                         };
                         collapseTypes[wcDocker.DOCK.BOTTOM] = {
                             name: wcDocker.DOCK.BOTTOM,
-                            faicon: 'sign-in wcCollapseBottom wcCollapsible'
+                            faicon: 'sign-in-alt wcCollapseBottom wcCollapsible'
                         };
                     }
 
@@ -928,21 +928,21 @@ define([
                         if (isTitle) {
                             items['Close Panel'] = {
                                 name: 'Remove Panel',
-                                faicon: 'close',
+                                faicon: 'times',
                                 disabled: !myFrame.panel().closeable()
                             };
                             if (self.isCollapseEnabled()) {
                                 if (!myFrame.isCollapser()) {
                                     items.fold1 = {
                                         name: 'Collapse Panel',
-                                        faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
+                                        faicon: 'sign-in-alt' + defaultCollapse + ' wcCollapsible',
                                         items: collapseTypes,
                                         disabled: !myFrame.panel().moveable()
                                     }
                                 } else {
                                     items['Attach Panel'] = {
                                         name: 'Dock Panel',
-                                        faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                                        faicon: 'sign-out-alt' + defaultCollapse + ' wcCollapsed',
                                         disabled: !myFrame.panel().moveable()
                                     }
                                 }
@@ -950,7 +950,7 @@ define([
                             if (!myFrame._isFloating) {
                                 items['Detach Panel'] = {
                                     name: 'Detach Panel',
-                                    faicon: 'level-up',
+                                    faicon: 'level-up-alt',
                                     disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                 };
                             }
@@ -968,21 +968,21 @@ define([
                             if (myFrame) {
                                 items['Close Panel'] = {
                                     name: 'Remove Panel',
-                                    faicon: 'close',
+                                    faicon: 'times',
                                     disabled: !myFrame.panel().closeable()
                                 };
                                 if (self.isCollapseEnabled()) {
                                     if (!myFrame.isCollapser()) {
                                         items.fold1 = {
                                             name: 'Collapse Panel',
-                                            faicon: 'sign-in' + defaultCollapse + ' wcCollapsible',
+                                            faicon: 'sign-in-alt' + defaultCollapse + ' wcCollapsible',
                                             items: collapseTypes,
                                             disabled: !myFrame.panel().moveable()
                                         }
                                     } else {
                                         items['Attach Panel'] = {
                                             name: 'Dock Panel',
-                                            faicon: 'sign-out' + defaultCollapse + ' wcCollapsed',
+                                            faicon: 'sign-out-alt' + defaultCollapse + ' wcCollapsed',
                                             disabled: !myFrame.panel().moveable()
                                         }
                                     }
@@ -990,7 +990,7 @@ define([
                                 if (!myFrame._isFloating) {
                                     items['Detach Panel'] = {
                                         name: 'Detach Panel',
-                                        faicon: 'level-up',
+                                        faicon: 'level-up-alt',
                                         disabled: !myFrame.panel().moveable() || !myFrame.panel().detachable() || myFrame.panel()._isPlaceholder
                                     };
                                 }
