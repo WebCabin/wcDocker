@@ -118,6 +118,7 @@ define([
             this._resizeVisible = true;
             this._isVisible = false;
             this._isLayoutMember = true;
+            this._isRenamable = false;
 
             if(typeof this._options.isLayoutMember != 'undefined' ||
                 this._options.isLayoutMember != null) {
@@ -666,6 +667,17 @@ define([
             return this._closeable;
         },
 
+        renamable: function(enabled) {
+            if (typeof enabled !== 'undefined') {
+                this._isRenamable = enabled ? true : false;
+                if (this._parent) {
+                    this._parent.__update();
+                }
+            }
+
+            return this._isRenamable;
+        },
+
         /**
          * Forces the window to close.
          * @function module:wcPanel#close
@@ -673,7 +685,16 @@ define([
         close: function () {
             var docker = this.docker();
             if (docker) {
-                docker.__closePanel(this);
+                if(this.closeable()) {
+                    docker.__closePanel(this);
+                }
+
+            }
+        },
+
+        rename: function() {
+            if(this.renamable()) {
+                this.__trigger(wcDocker.EVENT.RENAME, this);
             }
         },
 

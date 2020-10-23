@@ -103,7 +103,8 @@ define([], function () {
         RESTORE_LAYOUT: 'layoutRestore',
         CUSTOM_TAB_CHANGED: 'customTabChanged',
         CUSTOM_TAB_CLOSED: 'customTabClosed',
-        LAYOUT_CHANGED: 'layoutCanged'
+        LAYOUT_CHANGED: 'layoutCanged',
+        RENAME: 'panelRename'
     };
 
     /**

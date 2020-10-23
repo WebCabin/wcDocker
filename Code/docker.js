@@ -931,6 +931,13 @@ define([
                                 faicon: 'times',
                                 disabled: !myFrame.panel().closeable()
                             };
+
+                            items['Rename Panel'] = {
+                                name: 'Rename Panel',
+                                faicon: 'fas fa-edit',
+                                disabled: !myFrame.panel().renamable()
+                            };
+
                             if (self.isCollapseEnabled()) {
                                 if (!myFrame.isCollapser()) {
                                     items.fold1 = {
@@ -971,6 +978,13 @@ define([
                                     faicon: 'times',
                                     disabled: !myFrame.panel().closeable()
                                 };
+
+                                items['Rename Panel'] = {
+                                    name: 'Rename Panel',
+                                    faicon: 'fas fa-edit',
+                                    disabled: !myFrame.panel().renamable()
+                                };
+
                                 if (self.isCollapseEnabled()) {
                                     if (!myFrame.isCollapser()) {
                                         items.fold1 = {
@@ -1021,7 +1035,10 @@ define([
                                 setTimeout(function () {
                                     myFrame.panel().close();
                                 }, 10);
-                            } else if (key === 'Detach Panel') {
+                            } else if (key == 'Rename Panel') {
+                                myFrame.panel().rename();
+                            }
+                            else if (key === 'Detach Panel') {
                                 self.movePanel(myFrame.panel(), wcDocker.DOCK.FLOAT, false);
                             } else if (key === 'Attach Panel') {
                                 var $icon = myFrame.$collapse.children('div');
