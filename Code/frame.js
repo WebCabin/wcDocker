@@ -30,6 +30,7 @@ define([
             this.$container = $(container);
             this._parent = parent;
             this._isFloating = isFloating;
+            this._isMaximize = false;
 
             /**
              * The outer frame element.
@@ -44,6 +45,7 @@ define([
             this.$tabLeft = null;
             this.$tabRight = null;
             this.$close = null;
+            this.$maximizeRestore = null;
             this.$collapse = null;
             this.$top = null;
             this.$bottom = null;
@@ -213,6 +215,17 @@ define([
         },
 
         /**
+        * Logic to enable button in the frame already added during initialization.
+        * @function module:wcFrame#enableBtns
+        * @param [panel] - param having required attribute to check.
+        */
+        enableBtns: function(panel) {
+            if(panel.maxRestorable()) {
+                this.$maximizeRestore.removeClass('wcDisplayNone');
+            }
+        },
+
+        /**
          * Adds a given panel as a new tab item to the frame.
          * @function module:wcFrame#addPanel
          * @param {module:wcPanel} panel         - The panel to add.
@@ -375,6 +388,7 @@ define([
             this.$tabLeft = $('<div class="wcFrameButton" title="Scroll tabs to the left." aria-label="Scroll left" tabindex="0"><span class="fa fa-chevron-left"></span></div>');
             this.$tabRight = $('<div class="wcFrameButton" title="Scroll tabs to the right." aria-label="Scroll right" tabindex="0"><span class="fa fa-chevron-right"></span></div>');
             this.$close = $('<div class="wcFrameButton" title="Close the currently active panel tab" aria-label="Close panel" tabindex="0"><div class="fa fa-times"></div></div>');
+            this.$maximizeRestore = $('<div class="wcFrameButton wcDisplayNone" title="Maximize active panel tab" aria-label="Maximize Panel" tabindex="0"><div class="fa fa-expand-alt"></div></div>');
 
             this.$collapse = $('<div class="wcFrameButton" title="Collapse the active panel"><div class="fa fa-download"></div>C</div>');
             this.$buttonBar = $('<div class="wcFrameButtonBar">');
@@ -383,6 +397,7 @@ define([
             this.$tabBar.append(this.$tabScroll);
             this.$tabBar.append(this.$tabButtonBar);
             this.$frame.append(this.$buttonBar);
+            this.$buttonBar.append(this.$maximizeRestore);
             this.$buttonBar.append(this.$close);
             this.$buttonBar.append(this.$collapse);
             this.$frame.append(this.$center);
@@ -423,29 +438,56 @@ define([
 
             // Floating windows manage their own sizing.
             if (this._isFloating) {
-                var left = (this._pos.x * width) - this._size.x / 2;
-                var top = (this._pos.y * height) - this._size.y / 2;
 
-                if (top < 0) {
-                    top = 0;
+                // If window is maximised, reset left & top
+                if(this._isMaximize) {
+                    top = left = 0;
+                    // pgAdmin specific changes for getting additional height of navbar
+                    var navbarHeight = 0;
+                    if (typeof $('.navbar').height() != "undefined") {
+                        navbarHeight = $('.navbar').height();
+                    }
+                    height += navbarHeight;
                 }
+                else {
 
-                if (left + this._size.x / 2 < 0) {
-                    left = -this._size.x / 2;
-                }
+                    var left = (this._pos.x * width) - this._size.x / 2;
+                    var top = (this._pos.y * height) - this._size.y / 2;
 
-                if (left + this._size.x / 2 > width) {
-                    left = width - this._size.x / 2;
-                }
+                    if (top < 0) {
+                        top = 0;
+                    }
 
-                if (top + parseInt(this.$center.css('top')) > height) {
-                    top = height - parseInt(this.$center.css('top'));
+                    if (left + this._size.x / 2 < 0) {
+                        left = -this._size.x / 2;
+                    }
+
+                    if (left + this._size.x / 2 > width) {
+                        left = width - this._size.x / 2;
+                    }
+
+                    if (top + parseInt(this.$center.css('top')) > height) {
+                        top = height - parseInt(this.$center.css('top'));
+                    }
+
+                    width = this._size.x;
+                    height = this._size.y;
                 }
 
                 this.$frame.css('left', left + 'px');
                 this.$frame.css('top', top + 'px');
-                this.$frame.css('width', this._size.x + 'px');
-                this.$frame.css('height', this._size.y + 'px');
+
+                var docker = this.docker();
+                if (docker) {
+                    width = docker.pxToVW(width);
+                    height = docker.pxToVH(height);
+                    this.$frame.css('width', width + 'vw');
+                    this.$frame.css('height', height + 'vh');
+                }
+                else {
+                    this.$frame.css('width', width + 'px');
+                    this.$frame.css('height', height + 'px');
+                }
             }
 
             if (width !== this._lastSize.x || height !== this._lastSize.y) {

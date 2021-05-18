@@ -119,6 +119,7 @@ define([
             this._isVisible = false;
             this._isLayoutMember = true;
             this._isRenamable = false;
+            this._allowMaxRestore = false;
 
             if(typeof this._options.isLayoutMember != 'undefined' ||
                 this._options.isLayoutMember != null) {
@@ -676,6 +677,17 @@ define([
             }
 
             return this._isRenamable;
+        },
+
+        maxRestorable: function(enabled) {
+            if (typeof enabled !== 'undefined') {
+                this._allowMaxRestore = enabled ? true : false;
+                if (this._parent) {
+                    this._parent.__update();
+                }
+            }
+
+            return this._allowMaxRestore;
         },
 
         /**

@@ -266,6 +266,7 @@ define([
             faicon: 'trophy',
             onCreate: function (myPanel) {
                 myPanel.initSize(400, 400);
+                myPanel.maxRestorable(true);
 
                 // We need at least one element in the main layout that can hold the splitter.  We give it classes wcWide and wcTall
                 // to size it to the full size of the panel.
@@ -334,6 +335,7 @@ define([
         myDocker.registerPanelType('Chat Panel', {
             faicon: 'comment-o',
             onCreate: function (myPanel) {
+                myPanel.maxRestorable(true);
                 myPanel.layout().scene().css('padding', '10px');
 
                 // Create our chat window.

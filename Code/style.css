@@ -673,3 +673,12 @@ html, body {
   background-color: rgba(0, 0, 0, 0.25);
   border-radius: 20px;
 }
+
+.wcDisplayNone {
+    display: none !important;
+}
+
+.context-menu-list .context-menu-disabled {
+  pointer-events: none;
+  background-color: transparent;
+}
