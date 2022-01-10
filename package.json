@@ -4,6 +4,10 @@
 		"name": "WebCabin",
 		"url": "http://docker.webcabin.org"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WebCabin/wcDocker.git"
+	},
 	"version": "2.2.5",
 	"description": "Dynamic docking panels for your app.",
 	"main": "Build/wcDocker.min.js",
