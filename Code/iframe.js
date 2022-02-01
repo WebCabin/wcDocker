@@ -79,7 +79,7 @@ define([
             this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load', function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -111,7 +111,7 @@ define([
             this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load', function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
@@ -141,7 +141,7 @@ define([
             this.$iFrame.hover(this.__onHoverEnter.bind(this), this.__onHoverExit.bind(this));
 
             var self = this;
-            this.$iFrame.load(function () {
+            this.$iFrame.on('load', function () {
                 for (var i = 0; i < self._onLoadFuncs.length; ++i) {
                     self._onLoadFuncs[i]();
                 }
